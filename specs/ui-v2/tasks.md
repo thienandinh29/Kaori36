@@ -9,4 +9,4 @@
 | 5 | Shell: header + phone tab bar; Sena on home and in answer feedback | done |
 | 6 | Strings in `vi.ts` and `en.ts`; lint, typecheck, tests, format | done |
 | 7 | Screenshots against the running stack on the owner's laptop; e2e in CI | next (owner) |
-| 8 | Restyle level test, vocabulary, writing pages | planned (later PR) |
+| 8 | Restyle level test, vocabulary, writing pages (Sena, progress, CEFR scale, flash card, prompt cards) | done (second PR) |

@@ -9,6 +9,7 @@ import {
   type Step,
 } from "@/lib/english/types";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
 import { QuestionCard } from "./question-card";
 import { useLearner } from "./use-learner";
@@ -70,9 +71,14 @@ export function LevelTest() {
     );
   }
   return (
-    <section className="en-card">
-      <h1>{t.level.title}</h1>
-      <p>{t.level.intro}</p>
+    <section className="en-card nt-intro">
+      <div className="nt-intro-head">
+        <Sena pose="wave" label={t.senaSays.wave} className="nt-intro-sena" />
+        <div>
+          <h1>{t.level.title}</h1>
+          <p>{t.level.intro}</p>
+        </div>
+      </div>
       <fieldset className="en-targets">
         <legend>{t.level.target}</legend>
         {[null, ...TARGETS].map((level) => (
@@ -108,7 +114,13 @@ export function LevelTest() {
 export function LevelResultView({ result }: { result: LevelResult }) {
   return (
     <section className="en-card en-result">
-      <h1>{t.level.resultTitle}</h1>
+      <div className="nt-intro-head">
+        <Sena pose="think" label={t.senaSays.think} className="nt-intro-sena" />
+        <div>
+          <h1>{t.level.resultTitle}</h1>
+          <p className="en-muted">{t.level.estimateNote}</p>
+        </div>
+      </div>
       <div className="en-levels">
         <div>
           <span>{t.level.grammar}</span>
@@ -119,14 +131,34 @@ export function LevelResultView({ result }: { result: LevelResult }) {
           <strong>{result.vocab_level}</strong>
         </div>
       </div>
+      <LevelScale grammar={result.grammar_level} vocab={result.vocab_level} />
       <p className="en-ielts">{result.ielts_vi}</p>
       <p className="en-muted">
         {t.level.questions}: {result.questions}
       </p>
-      <p className="en-muted">{t.level.estimateNote}</p>
       <Link className="en-button" href="/lo-trinh">
         {t.level.toRoadmap}
       </Link>
     </section>
+  );
+}
+
+/** Where the two estimates sit on the CEFR scale; a band, not a score. */
+function LevelScale({ grammar, vocab }: { grammar: Level; vocab: Level }) {
+  return (
+    <ol className="nt-scale" aria-label={t.level.scale}>
+      {LEVELS.map((level) => {
+        const marks = [
+          grammar === level ? t.level.grammar : null,
+          vocab === level ? t.level.vocab : null,
+        ].filter((m): m is string => m !== null);
+        return (
+          <li key={level} className={marks.length ? "is-here" : ""}>
+            <b>{level}</b>
+            {marks.length > 0 && <span>{marks.join(" · ")}</span>}
+          </li>
+        );
+      })}
+    </ol>
   );
 }

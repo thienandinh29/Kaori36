@@ -5,8 +5,9 @@ export function WordCard({ card }: { card: Card }) {
     <div className="en-word">
       <div className="en-word-top">
         <strong lang="en">{card.lemma}</strong>
-        <span>
-          {card.pos} · {card.level}
+        <span className="nt-chips">
+          <span>{card.pos}</span>
+          <span>{card.level}</span>
         </span>
       </div>
       <p lang="en">{card.definition}</p>

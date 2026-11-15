@@ -1326,3 +1326,318 @@ svg.nt-trail {
   width: 96px;
   flex: none;
 }
+
+/* ---------- UI v2: shared pieces on every English page (specs/ui-v2, pages PR) ---------- */
+.en-main:not(.is-wide) {
+  max-width: 820px;
+  padding: 24px 16px 32px;
+}
+.en-card {
+  border: 1.5px solid var(--nt-line);
+  border-radius: var(--nt-radius);
+  background: var(--nt-card);
+}
+.en-card h1 {
+  font-size: 30px;
+}
+.en-button {
+  border-radius: 14px;
+  background: var(--nt-known);
+  color: #fff;
+  border: 0;
+  font-weight: 700;
+  box-shadow: 0 4px 0 var(--nt-known-dark);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s;
+}
+.en-button:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--nt-known-dark);
+}
+.en-button.secondary {
+  background: var(--nt-paper-2);
+  color: var(--nt-ink);
+  border: 0;
+  box-shadow: 0 3px 0 var(--nt-line);
+}
+.en-link {
+  color: var(--nt-known);
+  font-weight: 700;
+}
+.en-badge {
+  background: oklch(0.95 0.06 90);
+  color: oklch(0.42 0.08 75);
+}
+.en-badge.next {
+  background: var(--nt-known-soft);
+  color: var(--nt-known);
+}
+.nt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+.nt-chips > span {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--nt-paper-2);
+  color: var(--nt-ink-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Intro blocks with Sena: level test, writing */
+.nt-intro-head {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.nt-intro-sena {
+  width: 110px;
+}
+.nt-intro-head p {
+  margin: 6px 0 0;
+}
+@media (max-width: 520px) {
+  .nt-intro-head {
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+  }
+  .nt-intro-sena {
+    width: 80px;
+  }
+  .en-card h1 {
+    font-size: 25px;
+  }
+}
+
+/* Questions (level test, milestone tests, practice, vocabulary) */
+.nt-q-head {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.nt-q-sena {
+  width: 64px;
+}
+.nt-q-meta {
+  display: grid;
+  gap: 6px;
+}
+.nt-progress {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--nt-paper-2);
+  overflow: hidden;
+}
+.nt-progress i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--nt-known);
+  transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.en-prompt {
+  font: 600 22px/1.45 var(--nt-body);
+  color: var(--nt-ink);
+}
+.en-option {
+  border: 1.5px solid var(--nt-line);
+  border-radius: 14px;
+  background: var(--nt-card);
+  box-shadow: 0 3px 0 var(--nt-line);
+  font-weight: 600;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s,
+    border-color 0.1s;
+}
+.en-option:hover:not(:disabled) {
+  border-color: var(--nt-known-mid);
+}
+.en-option:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--nt-line);
+}
+.en-option kbd {
+  background: var(--nt-paper-2);
+  color: var(--nt-ink-2);
+  font-family: var(--nt-body);
+}
+.en-option.is-chosen {
+  border-color: var(--nt-known);
+  background: var(--nt-known-soft);
+  box-shadow: 0 3px 0 var(--nt-known-mid);
+}
+.en-option.is-chosen kbd {
+  background: var(--nt-known);
+  color: #fff;
+}
+.en-feedback {
+  border-radius: 16px;
+}
+
+/* Level test: target chips and the result scale */
+.en-targets label {
+  border: 1.5px solid var(--nt-line);
+  border-radius: 999px;
+  background: var(--nt-card);
+  font-weight: 600;
+  min-height: 44px;
+}
+.en-targets label.is-chosen {
+  border-color: var(--nt-known);
+  background: var(--nt-known-soft);
+  color: var(--nt-known);
+}
+.en-levels div {
+  background: var(--nt-known-soft);
+  border-radius: 16px;
+}
+.en-levels strong {
+  font: 800 44px/1.1 var(--nt-display);
+  color: var(--nt-known);
+}
+.nt-scale {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+.nt-scale li {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  padding: 8px 2px;
+  border-radius: 10px;
+  background: var(--nt-paper-2);
+  color: var(--nt-ink-2);
+  text-align: center;
+}
+.nt-scale li b {
+  font: 800 18px var(--nt-display);
+}
+.nt-scale li span {
+  font-size: 11.5px;
+  line-height: 1.25;
+}
+.nt-scale li.is-here {
+  background: var(--nt-known);
+  color: #fff;
+}
+
+/* Vocabulary: session head, progress dots, flash card */
+.nt-vocab-head {
+  gap: 10px;
+}
+.nt-dots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nt-dots li {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--nt-paper-2);
+  box-shadow: inset 0 0 0 1.5px var(--nt-line);
+}
+.nt-dots li.is-done {
+  background: var(--nt-known);
+  box-shadow: none;
+}
+.nt-dots li.is-now {
+  background: var(--nt-card);
+  box-shadow: inset 0 0 0 3px var(--nt-known);
+}
+.en-word {
+  border-radius: 18px;
+  background: var(--nt-paper);
+  border: 1.5px solid var(--nt-line);
+  padding: 18px;
+}
+.en-word-top {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.en-word-top strong {
+  font: 800 36px/1.1 var(--nt-display);
+  color: var(--nt-ink);
+}
+.en-word-vi {
+  color: var(--nt-known);
+  font-size: 18px;
+}
+.nt-flash {
+  background: linear-gradient(var(--nt-card), var(--nt-card)) padding-box;
+}
+.en-typed input {
+  border: 1.5px solid var(--nt-line);
+  border-radius: 14px;
+  background: var(--nt-card);
+}
+.en-typed input:focus {
+  border-color: var(--nt-known);
+  outline: 3px solid var(--nt-known-soft);
+}
+
+/* Writing: prompts as a grid of cards, essay states */
+.nt-prompts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 12px;
+}
+.nt-prompts li,
+.nt-prompts li:last-child {
+  border: 1.5px solid var(--nt-line);
+  border-radius: 18px;
+  padding: 16px;
+  background: var(--nt-paper);
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+.nt-prompts li p {
+  margin: 0;
+}
+.nt-prompts .en-button {
+  justify-self: start;
+}
+.nt-state {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  background: var(--nt-paper-2);
+  color: var(--nt-ink);
+}
+.nt-state.is-done {
+  background: var(--nt-known-soft);
+  color: var(--nt-known);
+}
+.nt-state.is-failed {
+  background: var(--nt-gap-soft);
+  color: var(--nt-gap-ink);
+}
+.en-essay textarea {
+  border: 1.5px solid var(--nt-line);
+  border-radius: 16px;
+  background: var(--nt-card);
+  font-size: 17px;
+  line-height: 1.7;
+}
+.en-essay textarea:focus {
+  border-color: var(--nt-known);
+  outline: 3px solid var(--nt-known-soft);
+}
