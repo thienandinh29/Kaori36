@@ -1,0 +1,20 @@
+/* Sena's motion: alive but quiet. Everything stops under reduced motion. */
+.sena { display: block; width: 100%; height: auto; overflow: visible; }
+.sena .sena-eyes { transform-box: fill-box; transform-origin: center; animation: sena-blink 5.2s infinite; }
+.sena .sena-body { transform-box: view-box; transform-origin: 120px 300px; animation: sena-breathe 4s ease-in-out infinite; }
+.sena .sena-head { transform-box: view-box; transform-origin: 120px 210px; animation: sena-nod 6s ease-in-out infinite; }
+.sena .sena-tail { transform-box: view-box; transform-origin: 170px 268px; animation: sena-tail 3.4s ease-in-out infinite; }
+.sena .sena-wave { transform-box: view-box; transform-origin: 70px 230px; animation: sena-wave 1.6s ease-in-out infinite; }
+.sena .sena-prop { transform-box: fill-box; transform-origin: center; animation: sena-float 2.8s ease-in-out infinite; }
+.sena--sleep .sena-body { animation-duration: 6s; }
+.sena-pop .sena { animation: sena-pop .42s cubic-bezier(.3,1.6,.5,1); }
+@keyframes sena-blink { 0%, 93%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(.1); } }
+@keyframes sena-breathe { 50% { transform: translateY(1.5px) scaleY(.992); } }
+@keyframes sena-nod { 50% { transform: rotate(-2deg); } }
+@keyframes sena-tail { 50% { transform: rotate(7deg); } }
+@keyframes sena-wave { 50% { transform: rotate(14deg); } }
+@keyframes sena-float { 50% { transform: translateY(-4px); } }
+@keyframes sena-pop { 0% { transform: scale(.92); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .sena *, .sena-pop .sena { animation: none !important; }
+}

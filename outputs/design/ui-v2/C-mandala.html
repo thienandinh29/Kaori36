@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NodeTrail · Mandala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/sena.css">
+<script src="shared/sena.js"></script>
+<script src="shared/course.js"></script>
+<style>
+/* Rings grow outward like knowledge does: A2 core, C1 rim. Indigo from Sena's tablet = known; fur tan hatching = gap. */
+:root {
+  --bg: oklch(0.955 0.018 78);
+  --disc: oklch(0.99 0.006 80);
+  --ink: oklch(0.23 0.02 45);
+  --ink-2: oklch(0.46 0.025 50);
+  --rule: oklch(0.86 0.03 70);
+  --fur: oklch(0.52 0.07 55);
+  --tan: oklch(0.74 0.07 65);
+  --known: oklch(0.45 0.2 278);
+  --known-mid: oklch(0.64 0.13 278);
+  --known-soft: oklch(0.94 0.035 278);
+  --gap: oklch(0.71 0.1 58);
+  --gap-soft: oklch(0.96 0.025 65);
+  --d: "Bricolage Grotesque", "Be Vietnam Pro", system-ui, sans-serif;
+  --f: "Be Vietnam Pro", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--f); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--known-mid); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; font-family: var(--d); line-height: 1.15; text-wrap: balance; }
+p { text-wrap: pretty; }
+
+.top { display: flex; align-items: center; gap: 20px; padding: 16px 32px; }
+.brand { font: 800 22px var(--d); display: flex; align-items: center; gap: 8px; }
+.brand svg { width: 28px; height: 28px; }
+.pills { display: flex; gap: 4px; background: var(--disc); border-radius: 999px; padding: 4px; margin-left: auto; box-shadow: 0 1px 0 var(--rule); }
+.pills a { padding: 8px 16px; border-radius: 999px; text-decoration: none; color: var(--ink-2); font-weight: 600; font-size: 15px; }
+.pills a[aria-current] { background: var(--known); color: #fff; }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 24px; padding: 0 32px 40px; max-width: 1480px; margin: 0 auto; align-items: start; }
+.mandala-card { position: sticky; top: 16px; }
+.m-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 8px 8px 0; }
+.m-head h1 { font-size: 40px; letter-spacing: -.01em; }
+.m-head p { margin: 0; color: var(--ink-2); font-size: 15px; max-width: 46ch; }
+svg.mandala { display: block; width: 100%; max-height: calc(100vh - 150px); margin: 0 auto; }
+.ring-label { font: 800 18px var(--d); fill: var(--fur); }
+.arc { cursor: pointer; }
+.arc .hit { fill: transparent; }
+.arc .outline { fill: none; stroke: var(--disc); stroke-width: 3; }
+.arc:hover .outline, .arc.sel .outline { stroke: var(--ink); stroke-width: 4; }
+.arc .pill { fill: var(--disc); }
+.arc .lab { font: 700 15px var(--f); fill: var(--ink); text-anchor: middle; }
+.arc .lab2 { font: 600 13px var(--f); fill: var(--ink-2); text-anchor: middle; }
+.arc.dim { opacity: .45; }
+.link { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 3 6; stroke-linecap: round; }
+
+/* side rail */
+.rail { display: grid; gap: 16px; }
+.panel { background: var(--disc); border-radius: 28px; padding: 24px; }
+.hello { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: center; }
+.hello .sena-wrap { width: 120px; }
+.hello h2 { font-size: 26px; }
+.hello p { margin: 6px 0 0; font-size: 15px; color: var(--ink-2); }
+.next { margin-top: 20px; padding: 20px; border-radius: 20px; background: var(--known); color: #fff; }
+.next small { opacity: .8; font-size: 13px; }
+.next h3 { font-size: 22px; margin: 4px 0 14px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 0; font-weight: 700; cursor: pointer; }
+.btn.light { background: #fff; color: var(--known); }
+.btn.dark { background: var(--ink); color: #fff; }
+.btn.line { background: transparent; box-shadow: inset 0 0 0 2px var(--ink); }
+.why { margin-top: 12px; font-size: 14px; }
+.why summary { cursor: pointer; font-weight: 600; }
+.why p { opacity: .9; }
+.balance h3 { font-size: 20px; }
+.balance .row { display: flex; gap: 6px; height: 40px; margin: 14px 0 10px; }
+.balance .row div { border-radius: 10px; display: flex; align-items: center; padding: 0 10px; font: 800 18px var(--d); color: #fff; min-width: 40px; }
+.balance .s { background: var(--known); } .balance .g { background: var(--known-mid); }
+.balance .h { background: repeating-linear-gradient(-45deg, var(--gap) 0 2px, var(--gap-soft) 2px 7px); color: var(--ink) !important; box-shadow: inset 0 0 0 1.5px var(--gap); }
+.balance .key { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); }
+.balance .key span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.balance .key .ks::before { background: var(--known); } .balance .key .kg::before { background: var(--known-mid); } .balance .key .kh::before { background: repeating-linear-gradient(-45deg, var(--gap) 0 2px, var(--gap-soft) 2px 5px); }
+.illus { font-size: 12.5px; color: var(--ink-2); margin: 12px 0 0; }
+.detail .k { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+.detail h2 { font-size: 30px; margin: 4px 0 6px; }
+.detail .sum { margin: 0 0 16px; color: var(--ink-2); }
+.hn { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.hn .top-row { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; font-size: 15px; }
+.hn .top-row b { font: 800 18px var(--d); }
+.pbar { height: 12px; border-radius: 6px; margin-top: 6px; background: repeating-linear-gradient(-45deg, var(--gap) 0 2px, var(--gap-soft) 2px 6px); overflow: hidden; }
+.pbar i { display: block; height: 100%; border-radius: 6px; background: var(--known); transition: width .6s; }
+.hn small { color: var(--ink-2); font-size: 12.5px; }
+.acts { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+.acts .btn { flex: 1; }
+.quiz { margin-top: 20px; padding: 18px; border-radius: 22px; background: var(--bg); }
+.qh { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: center; }
+.qh .sena-wrap { width: 72px; }
+.qh p { margin: 0; font-size: 14.5px; }
+.q { font: 600 20px/1.35 var(--f); margin: 14px 0 12px; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opt { min-height: 48px; border-radius: 16px; border: 0; background: var(--disc); font-weight: 600; cursor: pointer; box-shadow: inset 0 0 0 1.5px var(--rule); }
+.opt.right { box-shadow: inset 0 0 0 2.5px var(--known); background: var(--known-soft); }
+.opt.wrong { box-shadow: inset 0 0 0 2.5px var(--gap); background: var(--gap-soft); }
+.draft { font-size: 12px; color: var(--ink-2); margin: 10px 0 0; }
+.legend-list { display: none; }
+
+.tabbar { display: none; }
+@media (max-width: 1100px) {
+  .stage { grid-template-columns: 1fr; }
+  .mandala-card { position: static; }
+  svg.mandala { max-height: none; max-width: 760px; }
+}
+@media (max-width: 700px) {
+  body { padding-bottom: 76px; }
+  .top { padding: 12px 16px; }
+  .pills { display: none; }
+  .stage { padding: 0 16px 24px; gap: 16px; display: flex; flex-direction: column; }
+  .rail { display: contents; }
+  .hello-panel { order: 1; }
+  .mandala-card { order: 2; }
+  .balance { order: 3; }
+  .detail { order: 4; }
+  .m-head h1 { font-size: 30px; }
+  .panel { padding: 18px; border-radius: 22px; }
+  .hello { grid-template-columns: 96px 1fr; }
+  .hello .sena-wrap { width: 96px; }
+  .hello h2 { font-size: 22px; }
+  .legend-list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; list-style: none; padding: 0; margin: 4px 0 0; }
+  .legend-list button { width: 100%; text-align: left; display: flex; gap: 8px; align-items: center; min-height: 44px; padding: 6px 10px; border: 0; border-radius: 12px; background: var(--disc); font-size: 13.5px; font-weight: 600; cursor: pointer; }
+  .legend-list b { font: 800 15px var(--d); min-width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-size: 12px; }
+  .legend-list span { flex: 1; }
+  .legend-list em { font-style: normal; color: var(--ink-2); font-size: 12.5px; }
+  .tabbar { display: flex; position: fixed; inset: auto 12px 12px 12px; z-index: 25; background: var(--ink); border-radius: 24px; padding: 6px; }
+  .tabbar a { flex: 1; display: grid; place-items: center; min-height: 52px; text-decoration: none; color: oklch(0.8 0.02 70); font-size: 12px; font-weight: 600; border-radius: 18px; }
+  .tabbar a[aria-current] { background: var(--known); color: #fff; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="none" stroke="oklch(0.45 0.2 278)" stroke-width="3"/><circle cx="14" cy="14" r="6" fill="oklch(0.45 0.2 278)"/></svg>NodeTrail</div>
+  <nav class="pills" aria-label="Chính"><a href="#" aria-current="page">Hôm nay</a><a href="#">Từ vựng</a><a href="#">Viết</a><a href="#">Kiểm tra trình độ</a></nav>
+</header>
+
+<div class="stage">
+  <main class="mandala-card">
+    <div class="m-head">
+      <h1>Vòng tròn kiến thức</h1>
+      <p>Lõi là nền tảng A2, vòng ngoài là C1. Phần tô tím mọc từ trong ra là phần bạn đã nắm; phần gạch chéo là phần còn hổng.</p>
+    </div>
+    <svg class="mandala" id="mandala" viewBox="0 0 900 900" role="group" aria-label="Bản đồ khóa học dạng vòng tròn"></svg>
+    <ul class="legend-list" id="legend" aria-label="Các cột mốc"></ul>
+  </main>
+
+  <div class="rail">
+    <section class="panel hello-panel">
+      <div class="hello">
+        <div class="sena-wrap" data-sena="wave" data-sena-label="Sena vẫy chào"></div>
+        <div><h2>Chào bạn!</h2><p>6 thẻ ôn đang chờ. Ôn xong, mình lấp tiếp chỗ hổng ở vòng B1 nhé.</p></div>
+      </div>
+      <div class="next">
+        <small>Bước tiếp theo · B1 · trình độ ngữ pháp ước lượng: B1</small>
+        <h3>Cấu trúc hiện tại hoàn thành: ever và never</h3>
+        <button class="btn light" type="button" data-open="perfect-tenses">Học phần này</button>
+        <details class="why"><summary>Vì sao là phần này?</summary><p id="trace"></p></details>
+      </div>
+    </section>
+
+    <section class="panel balance" aria-labelledby="bal-h">
+      <h3 id="bal-h">Cán cân của bạn</h3>
+      <div class="row" id="balrow" role="img"></div>
+      <div class="key"><span class="ks">Vững</span><span class="kg">Đang lên</span><span class="kh">Còn hổng</span></div>
+      <p class="illus" id="illus"></p>
+    </section>
+
+    <section class="panel detail" id="detail" aria-live="polite"></section>
+  </div>
+</div>
+
+<nav class="tabbar" aria-label="Chính"><a href="#" aria-current="page">Hôm nay</a><a href="#">Từ vựng</a><a href="#">Viết</a><a href="#">Kiểm tra</a></nav>
+
+<script>
+(function () {
+  const K = window.Course, NS = "http://www.w3.org/2000/svg";
+  document.getElementById("trace").textContent = K.trace;
+  document.getElementById("illus").textContent = K.illustrative + ".";
+  const T = K.totals, N = K.all.length;
+  const balrow = document.getElementById("balrow");
+  balrow.setAttribute("aria-label", `${T.strong} vững, ${T.growing} đang lên, ${T.gap} còn hổng trên ${N} phần`);
+  balrow.innerHTML = `<div class="s" style="flex:${T.strong}">${T.strong}</div><div class="g" style="flex:${T.growing}">${T.growing}</div><div class="h" style="flex:${T.gap}">${T.gap}</div>`;
+
+  // sectors: children sit outward of what they need
+  const RINGS = { A2: [118, 205], B1: [213, 285], B2: [293, 350], C1: [358, 400] };
+  const SECT = {
+    "past-and-future": [-100, 100], "present-tenses": [100, 170], "comparison": [170, 222], "nouns-articles": [222, 260],
+    "perfect-tenses": [-100, -34], "conditionals-1-2": [-34, 34], "passive": [34, 100],
+    "narrative-tenses": [-100, -34], "conditional-3": [-34, 34],
+    "conditionals-mixed": [-34, 34],
+  };
+  const C = 450, rad = (d) => (d - 90) * Math.PI / 180;
+  const P = (r, d) => [C + r * Math.cos(rad(d)), C + r * Math.sin(rad(d))];
+  const band = (r0, r1, a0, a1) => {
+    const [x0, y0] = P(r1, a0), [x1, y1] = P(r1, a1), [x2, y2] = P(r0, a1), [x3, y3] = P(r0, a0), L = a1 - a0 > 180 ? 1 : 0;
+    return `M${x0} ${y0} A${r1} ${r1} 0 ${L} 1 ${x1} ${y1} L${x2} ${y2} A${r0} ${r0} 0 ${L} 0 ${x3} ${y3}Z`;
+  };
+  const svg = document.getElementById("mandala");
+  const el = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
+  let small = null, arcs = {}, current = null;
+
+  function draw() {
+    const s = window.matchMedia("(max-width: 700px)").matches;
+    if (s === small) return; small = s; svg.innerHTML = ""; arcs = {};
+    el("defs", {}).innerHTML = `<pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="oklch(0.96 0.025 65)"/><rect width="2.2" height="7" fill="oklch(0.71 0.1 58)"/></pattern>`;
+    el("circle", { cx: C, cy: C, r: 440, fill: "oklch(0.99 0.006 80)" });
+    // faint guide rings, the mandala's rhythm
+    for (let r = 60; r <= 440; r += 20) el("circle", { cx: C, cy: C, r, fill: "none", stroke: "oklch(0.9 0.025 70)", "stroke-width": r % 80 === 0 ? 1.2 : .5 });
+    Object.entries(RINGS).forEach(([lv, [r0, r1]]) => {
+      if (lv === "A2") return; // A2 is the full inner ring, named in the heading
+      const [lx, ly] = P((r0 + r1) / 2, 180);
+      const t = el("text", { x: lx, y: ly + 6, class: "ring-label", "text-anchor": "middle" }); t.textContent = lv;
+    });
+    const links = el("g", { id: "links" });
+    K.milestones.forEach((m, idx) => {
+      const [r0, r1] = RINGS[m.level], [a0, a1] = SECT[m.slug];
+      const g = el("g", { class: "arc", tabindex: 0, role: "button", "aria-label": `${m.name}, ${m.level}, đã nắm ${K.pct(m.p)}` });
+      const k = m.hidden.length, gap = 1.2, span = (a1 - a0 - gap * (k + 1)) / k;
+      m.hidden.forEach((h, i) => {
+        const b0 = a0 + gap + i * (span + gap), b1 = b0 + span, rk = r0 + 4 + (r1 - r0 - 8) * h.p;
+        el("path", { d: band(r0 + 4, r1 - 4, b0, b1), fill: "url(#h)" }, g);
+        if (h.p > .01) el("path", { d: band(r0 + 4, rk, b0, b1), fill: h.p >= .85 ? "oklch(0.45 0.2 278)" : "oklch(0.64 0.13 278)" }, g);
+      });
+      el("path", { d: band(r0 + 2, r1 - 2, a0 + .4, a1 - .4), class: "outline" }, g);
+      el("path", { d: band(r0, r1, a0, a1), class: "hit" }, g);
+      const mid = (a0 + a1) / 2, la = { "perfect-tenses": -52, "narrative-tenses": -80 }[m.slug] ?? mid, [lx, ly] = P((r0 + r1) / 2, la);
+      if (s) {
+        el("circle", { cx: lx, cy: ly, r: 24, class: "pill" }, g);
+        const t = el("text", { x: lx, y: ly + 9, class: "lab", style: "font-size:26px;font-weight:800" }, g); t.textContent = idx + 1;
+      } else {
+        const w = Math.max(m.short.length * 8.4, 44) + 16;
+        el("rect", { x: lx - w / 2, y: ly - 22, width: w, height: 42, rx: 12, class: "pill", opacity: .94 }, g);
+        const t = el("text", { x: lx, y: ly - 4, class: "lab" }, g); t.textContent = m.short;
+        const t2 = el("text", { x: lx, y: ly + 13, class: "lab2" }, g); t2.textContent = K.pct(m.p);
+      }
+      g.addEventListener("click", () => select(m.slug));
+      g.addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), select(m.slug)));
+      arcs[m.slug] = { g, mid, r: (r0 + r1) / 2 };
+    });
+    // Sena sits in the core
+    el("circle", { cx: C, cy: C, r: 108, fill: "oklch(0.94 0.035 278)" });
+    const fo = el("foreignObject", { x: C - 74, y: C - 104, width: 148, height: 185 });
+    fo.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" style="clip-path:circle(52% at 50% 46%)" data-sena="idle" data-sena-label="Sena ở giữa vòng tròn"></div>`;
+    Sena.render(fo.firstChild);
+    if (current) select(current, true);
+  }
+
+  // mobile legend
+  const legend = document.getElementById("legend");
+  K.milestones.forEach((m, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<button type="button"><b>${i + 1}</b><span>${m.short}</span><em>${K.pct(m.p)}</em></button>`;
+    li.querySelector("button").addEventListener("click", () => select(m.slug));
+    legend.appendChild(li);
+  });
+
+  const detail = document.getElementById("detail");
+  function select(slug, quiet) {
+    current = slug; const m = K.bySlug[slug];
+    Object.entries(arcs).forEach(([s, a]) => a.g.classList.toggle("sel", s === slug));
+    const links = svg.querySelector("#links"); links.innerHTML = "";
+    m.needs.forEach((s) => { const A = arcs[slug], B = arcs[s];
+      const [x1, y1] = P(A.r, A.mid), [x2, y2] = P(B.r, B.mid);
+      const p = document.createElementNS(NS, "path"); p.setAttribute("class", "link"); const [cx, cy] = P(Math.min(A.r, B.r) - 30, (A.mid + B.mid) / 2); p.setAttribute("d", `M${x1} ${y1} Q${cx} ${cy} ${x2} ${y2}`); links.appendChild(p); });
+    svg.appendChild(links);
+    const needs = m.needs.map((s) => K.bySlug[s].name).join(", ");
+    const mastered = m.hidden.every((h) => h.p >= .85);
+    detail.innerHTML = `<div class="k">Cột mốc ${m.level}${needs ? " · cần trước: " + needs : " · nền tảng"}</div>
+      <h2>${m.name}</h2>
+      <p class="sum">Đã nắm ${K.pct(m.p)}, còn thiếu ${100 - Math.round(m.p * 100)}%.</p>
+      ${mastered ? `<div class="qh" style="margin-bottom:16px"><div class="sena-wrap" data-sena="heart"></div><p>Bạn đã vững cả ${m.hidden.length} phần. Sena sẽ hẹn bạn ôn lại trước khi kịp quên.</p></div>` : ""}
+      <ul class="hn">${m.hidden.map((h) => `<li data-h="${h.slug}"><div class="top-row"><span>${h.name}</span><b>${K.pct(h.p)}</b></div><div class="pbar"><i style="width:${h.p * 100}%"></i></div><small>${h.level} · ${K.bandVi[K.band(h.p)]}</small></li>`).join("")}</ul>
+      <div class="acts"><button class="btn dark" type="button">Luyện tập</button><button class="btn line" type="button">Kiểm tra cột mốc</button></div>
+      ${slug === K.learnNext.milestone ? `<section class="quiz" aria-label="Luyện thử một câu"><div class="qh"><div class="sena-wrap" id="qs" data-sena="focus"></div><p id="qsay">Thử một câu nha, tập trung nào.</p></div>
+        <p class="q">${K.quiz.prompt}</p><div class="opts">${K.quiz.options.map((o) => `<button class="opt" type="button">${o}</button>`).join("")}</div>
+        <p class="draft">Câu hỏi soạn tay, bản nháp chưa được giáo viên duyệt.</p></section>` : ""}`;
+    detail.querySelectorAll("[data-sena]").forEach((e) => Sena.render(e));
+    if (slug === K.learnNext.milestone) wireQuiz(m);
+    if (!quiet && window.matchMedia("(max-width: 1100px)").matches) detail.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function wireQuiz(m) {
+    const qs = detail.querySelector("#qs"), say = detail.querySelector("#qsay"), h = m.hidden.find((x) => x.slug === K.learnNext.node);
+    detail.querySelectorAll(".opt").forEach((b) => b.addEventListener("click", () => {
+      const right = b.textContent === K.quiz.key;
+      detail.querySelectorAll(".opt").forEach((o) => { o.disabled = true; if (o.textContent === K.quiz.key) o.classList.add("right"); });
+      if (!right) { b.classList.add("wrong"); Sena.render(qs, "oops"); say.textContent = "Ối, chưa đúng. " + K.quiz.wrong[b.textContent]; }
+      else { Sena.render(qs, "idle"); const before = h.p; h.p = Math.min(.99, h.p + .17);
+        say.textContent = `${K.quiz.right} Mức nắm vững: ${K.dec(before)} lên ${K.dec(h.p)}.`;
+        const li = detail.querySelector(`[data-h="${h.slug}"]`); li.querySelector(".pbar i").style.width = h.p * 100 + "%"; li.querySelector("b").textContent = K.pct(h.p); }
+      setTimeout(() => detail.querySelectorAll(".opt").forEach((o) => { o.disabled = false; o.classList.remove("right", "wrong"); }), 4000);
+    }));
+  }
+  document.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => select(b.dataset.open)));
+  draw(); window.addEventListener("resize", draw);
+  select(K.learnNext.milestone, true);
+})();
+</script>
+</body>
+</html>
