@@ -102,3 +102,34 @@ def test_only_sentences_the_tools_did_not_flag_are_sent() -> None:
 
 def test_the_shipped_error_map_is_used() -> None:
     assert load_error_map is not None and MAP.status in ("draft", "reviewed")
+
+
+def test_a_grammar_error_repeated_under_lexical_resource_is_dropped_once() -> None:
+    # The pattern seen live (14 Nov): the agreement error reported under both lr and gra.
+    essay = (
+        "I agree with this idea because plastic bags pollutes rivers and seas. "
+        "Many animals dies after eating plastic. We should do a big effort to stop it."
+    )
+    gra = criterion(point("plastic bags pollutes rivers and seas",
+                          "Many animals dies after eating plastic", kind="issue"))  # fmt: skip
+    lr = criterion(
+        point("plastic bags pollutes rivers", kind="issue"),  # inside a gra quote: a repeat
+        point("do a big effort", kind="issue"),  # word choice: a genuine lr point
+        point("Many animals dies after eating plastic"),  # a strength is never a repeat
+    )
+    tr = criterion(point("plastic bags pollutes rivers and seas", kind="issue"))  # other reason
+    fb = verify(essay, out(gra=gra, lr=lr, tr=tr, cc=criterion(point("I agree with this"))))
+    assert fb.duplicates == 1 and fb.dropped == 0
+    assert [p.quotes for p in fb.criteria["lr"]] == [
+        ("do a big effort",),
+        ("Many animals dies after eating plastic",),
+    ]
+    assert len(fb.criteria["tr"]) == 1 and len(fb.criteria["gra"]) == 1
+    assert verify(essay, out(gra=gra, lr=lr, tr=tr)).to_json("m")["duplicates"] == 1
+
+
+def test_the_prompt_states_the_rules_the_code_cannot_check() -> None:
+    from app.writing.feedback import SYSTEM
+
+    for rule in ("show exactly what its point says", "one criterion only", "belong to gra"):
+        assert rule in SYSTEM

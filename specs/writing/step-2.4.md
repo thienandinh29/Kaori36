@@ -94,6 +94,16 @@ skipped without it. Web unit tests and one Playwright test (self-correction acce
   learner, cost from `LLM_PRICE_*`, deliberately high by default), migration `0017` (`llm_calls` tokens and task,
   `essay_corrections`). The model's own criterion bands are stored under a `_` key the API never returns. Model features
   only for `DRAFT_ITEM_LEARNERS` (the owner's decision). A live test runs only with `WRITING_LIVE_LLM=1` and a key.
+- **Live check (15 Nov 2026, `deepseek-flash`, one 52-word test essay with two agreement errors).** Valid JSON;
+  18/18 and 17/17 quotes real; both errors found; AI corrections exactly minimal. But a real quote does not mean a
+  supported point: the first run filed the agreement error under both lr and gra, quoted a sentence starting with
+  "However" for "missing linking words", and gave a vocabulary point a quote that did not show it. The prompt now
+  says each error belongs to one criterion and each quote must show its point, and code drops an lr issue whose quotes
+  all repeat a gra issue's (`duplicates`). The second run removed the repeat and that contradiction, but made a new
+  one ("missing 'because'" quoting a sentence with "because") and **called a correct sentence ungrammatical**. Prompt
+  rules reduce these mistakes but cannot remove them: the owner's 20-essay faithfulness rating measures how often they
+  happen. If false grammar claims are common, a later option is to label gra issues no tool confirmed as "AI nhận
+  xét, chưa được công cụ xác nhận" (not built: LanguageTool's low recall would also label correct points).
 - **2.4b:** the rewrite and saved phrases, with their own migration (`0018`), replacing the `0017` tables named above.
 
 ## Not in this step
