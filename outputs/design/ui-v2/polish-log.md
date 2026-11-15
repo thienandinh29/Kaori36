@@ -20,3 +20,19 @@ Left open: Sena still touches the "B2 Gần đỉnh" label at 1440 px.
 1. Selecting a milestone dimmed the rest of the course to 45% and the default view looked washed out. Removed dimming; selection = outline + prerequisite links.
 2. B1+ sectors used only 170° so half the disc was empty. Widened to 200°; ring labels moved into the empty lower half.
 3. "Hoàn thành" and "Thì kể chuyện" pills overlapped; links passed through Sena. Staggered label angles; links curve outside the core.
+
+# Final: A + B's skyline (`NodeTrail-UI-v2.html`)
+Round 1
+1. Desktop map left wide empty bands and ~12 px labels. Rows compressed (viewBox 960 → 890) so the map scales up.
+2. Sena still touched the "B2 Gần đỉnh" label. Sena moved beside "Hiện tại hoàn thành", level labels re-spaced.
+3. Detail summary read "0 vững, 0 đang lên, 2 còn hổng". Only non-zero counts are named now.
+Round 2
+1. The contour paper stopped at the map's box, so the map looked framed. Contours bleed across the whole column.
+2. "Kiểm tra cột mốc" wrapped to two lines. Buttons keep one line and wrap as a row instead.
+3. Tablet (900 px): the closed side panel's shadow showed at the right edge. Shadow only when open; closed panel hidden.
+Round 3
+1. Right/wrong answers differed by colour only. Added "· bạn chọn" and "· đúng" text.
+2. Phone sheet: "Đóng" pushed the content down, then overlapped the kicker. Close floats top-right with room kept.
+3. Checked by script on 390 px: open the next step, answer wrong (Sena "oops" + explanation), close, open "So sánh"
+   (fully known, Sena "heart"); no console errors.
+Left open: the map heading sits just below the fold on a 390 × 844 phone (the "Hôm nay" block comes first by design).
