@@ -621,3 +621,60 @@
   text-decoration: none;
   font-weight: 700;
 }
+
+/* Task 1 chart (specs/writing/step-2.5.md) */
+.en-figure {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--white);
+}
+.en-figure svg {
+  width: 100%;
+  height: auto;
+  max-width: 560px;
+}
+.en-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 14px;
+}
+.en-legend span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  vertical-align: -1px;
+}
+.en-pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.en-pie svg {
+  width: 200px;
+}
+.en-pie .en-legend {
+  display: grid;
+}
+.en-table {
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.en-table th,
+.en-table td {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  text-align: right;
+}
+.en-table th[scope="row"] {
+  text-align: left;
+}

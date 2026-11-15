@@ -7,7 +7,7 @@ import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.curriculum.course import Level
-from app.curriculum.figures import Ident
+from app.curriculum.figures import ChartFigure, Ident
 
 PromptType = Literal[
     "opinion", "discussion", "problem-solution", "advantages-disadvantages", "two-part", "chart"
@@ -22,6 +22,15 @@ class Prompt(BaseModel):
     level: Level
     status: Literal["draft", "reviewed"]
     prompt: str = Field(min_length=20, max_length=1000)
+    figure: ChartFigure | None = None  # Task 1: the chart the learner describes (step 2.5)
+
+    @model_validator(mode="after")
+    def _figure_matches_task(self) -> Self:
+        if (self.task == 1) != (self.figure is not None):
+            raise ValueError(
+                "a Task 1 prompt needs a figure, and a Task 2 prompt must not have one"
+            )
+        return self
 
 
 class PromptBank(BaseModel):

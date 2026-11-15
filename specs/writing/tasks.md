@@ -38,5 +38,5 @@
       the gate waits on the owner's essays
 - [x] 2.4 feedback with verified quotes, the correction loop, rewrites, phrases to FSRS (spec:
       `specs/writing/step-2.4.md`): 2.4a and 2.4b built (feedback, AI corrections, hint-first loop, budget, rewrites, saved phrases)
-- [ ] 2.5 Task 1
+- [x] 2.5 Task 1
 - [ ] Gate report
