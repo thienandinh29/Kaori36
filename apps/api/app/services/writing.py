@@ -29,7 +29,7 @@ from app.engine.trace import fmt_p
 from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
 from app.services.vocabulary import start_of_day
-from app.writing import feedback, llm_corrections
+from app.writing import feedback, llm_corrections, task1
 from app.writing.analysis import analyse, load_linking_words, words
 from app.writing.error_map import ErrorMap, load_error_map
 from app.writing.feedback import FeedbackOut
@@ -415,7 +415,7 @@ def load_grammar_step(
 
 def model_features(
     text: str,
-    task_prompt: str,
+    prompt: Prompt | None,
     result: dict[str, Any],
     grammar: GrammarResult | None,
     learner: UUID,
@@ -453,9 +453,13 @@ def model_features(
             measures["languagetool_errors"] = [
                 {"text": i.text, "type": i.errant_type} for i in grammar.issues[:30]
             ]
-        out_fb = model.complete(learner, "writing_feedback", feedback.SYSTEM,
-                                feedback.prompt(task_prompt, text, measures),
-                                FeedbackOut)  # fmt: skip
+        task_prompt = prompt.prompt if prompt else ""
+        if prompt is not None and prompt.figure is not None:  # Task 1 (step 2.5)
+            system = feedback.SYSTEM_TASK1
+            user = feedback.task1_prompt(task_prompt, text, measures, task1.describe(prompt.figure))
+        else:
+            system, user = feedback.SYSTEM, feedback.prompt(task_prompt, text, measures)
+        out_fb = model.complete(learner, "writing_feedback", system, user, FeedbackOut)
         fb = feedback.verify(text, out_fb)
         result["feedback"] = fb.to_json(model.last_model)
         result["feedback_unavailable_vi"] = None
@@ -482,6 +486,8 @@ def band_for(
     Never a point: only the range from the calibration (specs/writing/step-2.3.md). While the
     scorer is a draft, only DRAFT_ITEM_LEARNERS see it.
     """
+    if task != 2:  # Task 1 never gets a band, whatever the scorer's state (step 2.5)
+        return None, BAND_REASONS_VI["task1"]
     config = step.scorer_config
     if config is None or step.scorer is None:
         return None, BAND_OFF_VI
@@ -632,14 +638,15 @@ def process_next_essay(
             prompt = load_prompts(writing_dir / "prompts.yaml").get(prompt_id)
             task = prompt.task if prompt else 2
             result, grammar = _analyse(text, task, writing_dir, step)
+            result["task"] = task
+            if prompt is not None and prompt.figure is not None:
+                result["task1"] = task1.check(text, prompt.figure).to_json()
             ai_issues: list[Issue] = []
             if step is not None:
                 result["score"], result["score_unavailable_vi"] = band_for(
                     text, task, result["words"], learner, step
                 )
-                ai_issues = model_features(
-                    text, prompt.prompt if prompt else "", result, grammar, learner, step
-                )
+                ai_issues = model_features(text, prompt, result, grammar, learner, step)
             with conn.transaction():
                 if grammar is not None and step is not None:
                     issues, moved = _apply_evidence(

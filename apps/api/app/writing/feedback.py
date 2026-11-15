@@ -68,6 +68,32 @@ SYSTEM = (
 )
 
 
+SYSTEM_TASK1 = (
+    "You are an experienced IELTS Writing teacher giving feedback to a Vietnamese learner on a "
+    "Task 1 report that describes a chart. Write every point in Vietnamese, simply and kindly, and "
+    "be specific. The four criteria are tr = Task Achievement (key features selected and reported "
+    "accurately, a clear overview, comparisons), cc = Coherence and Cohesion, lr = Lexical "
+    "Resource, gra = Grammatical Range and Accuracy. A number or comparison in the report is "
+    "correct only if the data table and key facts below support it: say so when one is wrong or "
+    "missing, and never invent data. Give 1 to 3 points per criterion; each point is a strength or "
+    "an issue and must include 1 to 3 quotes copied EXACTLY from the report, each at least 3 words "
+    "long, character for character. Each quote must itself show exactly what its point says. Put "
+    "each error under one criterion only: grammar, verb forms, agreement, articles and spelling "
+    "belong to gra; word choice and range of vocabulary belong to lr. Do not repeat the same error "
+    "in two criteria. Also give your band for each criterion (0 to 9 in steps of 0.5). Do not "
+    "mention any other score. Return JSON only."
+)
+
+
+def task1_prompt(task_prompt: str, essay: str, measures: dict[str, Any], chart_text: str) -> str:
+    """The Task 1 user message: the task, the chart's data and exact facts, the tools' measures."""
+    return (
+        f"Task 1 question:\n{task_prompt}\n\nThe chart (exact data and facts):\n{chart_text}\n\n"
+        f"Measured by tools (for context; do not repeat the numbers):\n"
+        f"{json.dumps(measures, ensure_ascii=False)}\n\nReport:\n{essay}"
+    )
+
+
 def prompt(task_prompt: str, essay: str, measures: dict[str, Any]) -> str:
     """The user message: the task, the essay, and what the tools measured (never the band)."""
     return (

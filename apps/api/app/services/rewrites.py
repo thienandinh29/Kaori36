@@ -67,6 +67,8 @@ def request_rewrite(
         ).fetchone()
         if row is None:
             raise HTTPException(404, "Không tìm thấy bài viết.")
+        if (row[1] or {}).get("task") == 1:
+            raise HTTPException(422, "Chưa viết lại được bài Task 1: số liệu có thể bị sai.")
         if not 0 <= paragraph < len(rw.split_paragraphs(row[0])):
             raise HTTPException(422, "Không có đoạn văn này.")
         count = conn.execute(
