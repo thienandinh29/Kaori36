@@ -40,3 +40,78 @@ prompts:
     prompt: >-
       In many countries the proportion of older people is increasing. Why is this happening, and what effects will it
       have on society?
+  # Task 1 (specs/writing/step-2.5.md): charts built from invented data, never a real survey or past paper.
+  - id: t1-internet-access
+    task: 1
+    type: chart
+    level: B2
+    status: draft
+    prompt: >-
+      The graph below shows the percentage of households with internet access in three countries between 2000 and
+      2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+    figure:
+      title: Households with internet access
+      alt_vi: "Biểu đồ đường: tỉ lệ hộ gia đình có internet ở ba quốc gia từ năm 2000 đến 2020, cả ba đều tăng."
+      chart_type: line
+      categories: ["2000", "2005", "2010", "2015", "2020"]
+      series:
+        - {name: Country A, values: [5, 18, 40, 68, 85]}
+        - {name: Country B, values: [2, 8, 22, 45, 70]}
+        - {name: Country C, values: [12, 30, 55, 72, 80]}
+      unit: "%"
+      x_label: Year
+      y_label: Households (%)
+  - id: t1-student-time
+    task: 1
+    type: chart
+    level: B2
+    status: draft
+    prompt: >-
+      The chart below shows the average number of hours per week that students spent on four activities in 2010 and
+      2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+    figure:
+      title: Weekly hours of students by activity
+      alt_vi: "Biểu đồ cột: số giờ mỗi tuần sinh viên dành cho bốn hoạt động năm 2010 và 2020."
+      chart_type: bar
+      categories: [Studying, Social media, Sport, Part-time work]
+      series:
+        - {name: "2010", values: [18, 3, 6, 5]}
+        - {name: "2020", values: [20, 9, 4, 7]}
+      unit: hours
+      x_label: Activity
+      y_label: Hours per week
+  - id: t1-family-spending
+    task: 1
+    type: chart
+    level: B2
+    status: draft
+    prompt: >-
+      The pie chart below shows how one family in a city spent its monthly income in 2023. Summarise the information by
+      selecting and reporting the main features, and make comparisons where relevant.
+    figure:
+      title: Family spending, 2023
+      alt_vi: "Biểu đồ tròn: một gia đình chi tiêu thu nhập hằng tháng, nhiều nhất cho nhà ở và ăn uống."
+      chart_type: pie
+      categories: [Housing, Food, Transport, Education, Savings, Other]
+      series:
+        - {name: Share of income, values: [32, 24, 12, 14, 10, 8]}
+      unit: "%"
+  - id: t1-museum-visitors
+    task: 1
+    type: chart
+    level: B2
+    status: draft
+    prompt: >-
+      The table below shows the number of visitors, in thousands, to four museums between 2018 and 2021. Summarise the
+      information by selecting and reporting the main features, and make comparisons where relevant.
+    figure:
+      title: Museum visitors (thousands)
+      alt_vi: "Bảng: số khách (nghìn người) đến bốn bảo tàng từ 2018 đến 2021; năm 2020 giảm mạnh ở tất cả."
+      chart_type: table
+      categories: ["2018", "2019", "2020", "2021"]
+      series:
+        - {name: History Museum, values: [420, 450, 120, 260]}
+        - {name: Science Museum, values: [380, 400, 90, 310]}
+        - {name: Art Gallery, values: [250, 240, 80, 150]}
+        - {name: City Museum, values: [150, 160, 60, 140]}
+      unit: thousand
