@@ -58,6 +58,11 @@ SYSTEM = (
     "Resource, gra = Grammatical Range and Accuracy) give 1 to 3 points; each point is a "
     "strength or an issue and must include 1 to 3 quotes copied EXACTLY from the essay, each at "
     "least 3 words long, character for character. Never invent text that is not in the essay. "
+    "Each quote must itself show exactly what its point says: if a point says something is "
+    "missing or repeated, quote the place where that is visible, and never quote a sentence "
+    "that contradicts the point. Put each error under one criterion only: grammar, verb forms, "
+    "agreement, articles and spelling belong to gra; word choice, collocation and range of "
+    "vocabulary belong to lr. Do not repeat the same error in two criteria. "
     "Also give your band for each criterion (0 to 9 in steps of 0.5). Do not mention any other "
     "score. Return JSON only."
 )
@@ -96,6 +101,7 @@ class Feedback:
     dropped: int  # points removed because no quote was found in the essay
     quotes_checked: int
     quotes_kept: int
+    duplicates: int = 0  # lr issues removed because they repeat a gra issue's quotes
 
     def to_json(self, model: str) -> dict[str, Any]:
         return {
@@ -106,6 +112,7 @@ class Feedback:
             "dropped": self.dropped,
             "quotes_checked": self.quotes_checked,
             "quotes_kept": self.quotes_kept,
+            "duplicates": self.duplicates,
             "model": model,
         }
 
@@ -130,8 +137,30 @@ def verify(essay: str, out: FeedbackOut) -> Feedback:
             else:
                 dropped += 1
         criteria[c] = points
+    criteria["lr"], duplicates = _without_grammar_repeats(criteria["lr"], criteria["gra"])
     return Feedback(criteria, {c: float(getattr(out, c).band) for c in CRITERIA}, dropped,
-                    checked, kept)  # fmt: skip
+                    checked, kept, duplicates)  # fmt: skip
+
+
+def _overlaps(a: str, b: str) -> bool:
+    return a in b or b in a
+
+
+def _without_grammar_repeats(lr: list[Point], gra: list[Point]) -> tuple[list[Point], int]:
+    """Drop a Lexical Resource issue whose every quote overlaps a Grammar issue's quote.
+
+    The model sometimes reports one grammar error under both criteria. Only issues, only
+    lr against gra: Task Response and Coherence points may quote the same sentences for other
+    reasons ("this reason is not developed"), and strengths are not repeats.
+    """
+    grammar_quotes = [q for p in gra if p.kind == "issue" for q in p.quotes]
+    kept = [
+        p
+        for p in lr
+        if p.kind != "issue"
+        or not all(any(_overlaps(q, g) for g in grammar_quotes) for q in p.quotes)
+    ]
+    return kept, len(lr) - len(kept)
 
 
 def overall_band(bands: Sequence[float]) -> float:
