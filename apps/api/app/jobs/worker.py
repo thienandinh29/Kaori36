@@ -168,6 +168,7 @@ def loop(
     pipeline_factory: Callable[[str], TopicPipeline] | None = None,
     processor: Callable[[dict[str, Any]], None] | None = None,
 ) -> None:
+    from app.services.rewrites import process_next_rewrite
     from app.services.writing import load_grammar_step, process_next_essay
 
     settings = get_settings()
@@ -185,6 +186,8 @@ def loop(
         try:
             if process_next_essay(database_url, writing_dir, grammar):
                 continue  # essays are short: drain them before the next topic job
+            if process_next_rewrite(database_url, grammar):
+                continue
             if not run_once(
                 database_url,
                 allow_fixture=allow_fixture,

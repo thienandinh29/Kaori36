@@ -189,6 +189,49 @@ export interface CorrectionState {
   answer_shown: boolean;
 }
 
+/** One change in a rewrite, found by the code's own diff; the reason only when it matches. */
+export interface RewriteChange {
+  original: string;
+  revised: string;
+  why_vi: string | null;
+}
+
+export type CheckState = "passed" | "failed" | "not_run";
+
+export interface Rewrite {
+  id: string;
+  paragraph: number;
+  target_band: number;
+  status: "queued" | "working" | "done" | "rejected" | "failed";
+  result: {
+    original: string;
+    rewrite: string;
+    changes: RewriteChange[];
+    checks: Record<"length" | "languagetool" | "scorer" | "cefr", CheckState>;
+  } | null;
+  reason_vi: string | null;
+}
+
+export interface PhraseEntry {
+  phrase_id: string;
+  prompt: string;
+  hint: string;
+  is_new: boolean;
+  /** shown only before the first question */
+  phrase: string | null;
+}
+
+export interface PhraseSession {
+  saved: number;
+  entries: PhraseEntry[];
+}
+
+export interface PhraseAnswer {
+  correct: boolean;
+  accepted: string;
+  due_at: string;
+}
+
 export interface CorrectionResult {
   accepted: boolean;
   tries: number;
@@ -248,4 +291,6 @@ export interface Essay {
   failure_vi: string | null;
   /** issue id -> the learner's self-correction (step 2.4) */
   corrections: Record<string, CorrectionState>;
+  /** paragraph rewrites, oldest first (step 2.4b) */
+  rewrites: Rewrite[];
 }

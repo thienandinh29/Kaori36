@@ -314,13 +314,17 @@ class WritingService:
         if row is None:
             raise HTTPException(404, "Không tìm thấy bài viết.")
         prompt = self.bank().get(row[1])
+        from app.services.rewrites import rewrites_of
+
         with self.pool().connection() as conn:
+            rewrites = rewrites_of(conn, row[0])
             states = conn.execute(
                 "select issue_id, tries, accepted, answer_shown from essay_corrections "
                 "where essay_id=%s",
                 (row[0],),
             ).fetchall()
         return {
+            "rewrites": rewrites,
             "corrections": {
                 str(s[0]): {"tries": s[1], "accepted": s[2], "answer_shown": s[3]} for s in states
             },
@@ -360,6 +364,7 @@ class GrammarStep:
     scorer: ScorerClient | None = None  # None: SCORER_URL not set, no band (step 2.3)
     scorer_config: ScorerConfig | None = None
     model: WritingModel | None = None  # None: no model key; no feedback (step 2.4)
+    writing_dir: Path = Path("data/writing")
     _ids: tuple[UUID, dict[str, UUID]] | None = None
 
     def evidence_allowed(self, learner: UUID) -> bool:
@@ -404,6 +409,7 @@ def load_grammar_step(
         scorer=ScorerClient(scorer_url) if scorer_url else None,
         scorer_config=load_scorer_config(writing_dir / "scorer.yaml"),
         model=model,
+        writing_dir=writing_dir,
     )
 
 

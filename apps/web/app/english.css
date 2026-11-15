@@ -595,3 +595,29 @@
   border: 2px solid var(--line);
   border-radius: 10px;
 }
+
+/* Rewrites and saved phrases (specs/writing/step-2.4.md) */
+.en-paragraphs {
+  display: grid;
+  gap: 14px;
+  padding-left: 18px;
+}
+.en-rewrite {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--lime);
+}
+.en-changes {
+  display: grid;
+  gap: 6px;
+  padding-left: 0;
+  list-style: none;
+}
+.en-changes del {
+  color: var(--muted);
+}
+.en-changes ins {
+  text-decoration: none;
+  font-weight: 700;
+}

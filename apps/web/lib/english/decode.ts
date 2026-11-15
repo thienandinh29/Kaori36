@@ -7,8 +7,12 @@ import {
   CRITERIA,
   type BandRange,
   type Complexity,
+  type CheckState,
   type CorrectionResult,
   type CorrectionState,
+  type PhraseAnswer,
+  type PhraseSession,
+  type Rewrite,
   type Criterion,
   type EssayFeedback,
   type FeedbackPoint,
@@ -377,6 +381,83 @@ function parseCorrections(value: unknown): Record<string, CorrectionState> {
   return out;
 }
 
+const REWRITE_STATUSES = ["queued", "working", "done", "rejected", "failed"];
+const CHECK_STATES = ["passed", "failed", "not_run"];
+
+function checkState(value: unknown): CheckState {
+  const v = string(value);
+  if (!CHECK_STATES.includes(v)) throw new DataError("contract");
+  return v as CheckState;
+}
+
+function parseRewrite(value: unknown): Rewrite {
+  const d = record(value);
+  const status = string(d.status);
+  if (!REWRITE_STATUSES.includes(status)) throw new DataError("contract");
+  let result: Rewrite["result"] = null;
+  if (d.result !== null && d.result !== undefined) {
+    const r = record(d.result);
+    const c = record(r.checks);
+    result = {
+      original: string(r.original),
+      rewrite: string(r.rewrite),
+      changes: array(r.changes).map((x) => {
+        const ch = record(x);
+        return {
+          original: string(ch.original),
+          revised: string(ch.revised),
+          why_vi: optionalString(ch.why_vi),
+        };
+      }),
+      checks: {
+        length: checkState(c.length),
+        languagetool: checkState(c.languagetool),
+        scorer: checkState(c.scorer),
+        cefr: checkState(c.cefr),
+      },
+    };
+  }
+  if ((status === "done") !== (result !== null))
+    throw new DataError("contract");
+  return {
+    id: string(d.id),
+    paragraph: int(d.paragraph),
+    target_band: nonNegative(d.target_band),
+    status: status as Rewrite["status"],
+    result,
+    reason_vi: optionalString(d.reason_vi),
+  };
+}
+
+export function parsePhraseSession(value: unknown): PhraseSession {
+  const d = record(value);
+  return {
+    saved: int(d.saved),
+    entries: array(d.entries).map((x) => {
+      const e = record(x);
+      const isNew = bool(e.is_new);
+      const phrase = optionalString(e.phrase);
+      if (isNew !== (phrase !== null)) throw new DataError("contract");
+      return {
+        phrase_id: string(e.phrase_id),
+        prompt: string(e.prompt),
+        hint: string(e.hint),
+        is_new: isNew,
+        phrase,
+      };
+    }),
+  };
+}
+
+export function parsePhraseAnswer(value: unknown): PhraseAnswer {
+  const d = record(value);
+  return {
+    correct: bool(d.correct),
+    accepted: string(d.accepted),
+    due_at: timestamp(d.due_at),
+  };
+}
+
 export function parseCorrection(value: unknown): CorrectionResult {
   const d = record(value);
   return {
@@ -503,5 +584,7 @@ export function parseEssay(value: unknown): Essay {
     result,
     failure_vi: optionalString(d.failure_vi),
     corrections: parseCorrections(d.corrections),
+    rewrites:
+      d.rewrites === undefined ? [] : array(d.rewrites).map(parseRewrite),
   };
 }

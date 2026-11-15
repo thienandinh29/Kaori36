@@ -15,6 +15,7 @@ import { stillWorking } from "@/lib/english/writing";
 import { vi } from "@/messages/vi";
 import { EssayFeedbackView } from "./essay-feedback";
 import { Problem } from "./problem";
+import { pendingRewrite, RewritePanel } from "./rewrite-panel";
 import { SelfCorrect } from "./self-correct";
 import { useLearner } from "./use-learner";
 
@@ -230,7 +231,12 @@ export function EssayView({ essayId }: { essayId: string }) {
 
   useEffect(() => {
     if (!learner) return;
-    if (essay && (!stillWorking(essay.status) || polls >= POLL_LIMIT)) return;
+    if (
+      essay &&
+      ((!stillWorking(essay.status) && !pendingRewrite(essay)) ||
+        polls >= POLL_LIMIT)
+    )
+      return;
     let live = true;
     const timer = setTimeout(
       () =>
@@ -304,6 +310,21 @@ export function EssayView({ essayId }: { essayId: string }) {
       {essay.result && <EssayFeedbackView result={essay.result} />}
       {essay.result && (
         <Grammar result={essay.result} essay={essay} learner={learner} />
+      )}
+      {essay.status === "done" && (
+        <RewritePanel
+          learner={learner}
+          essay={essay}
+          onRequested={() =>
+            englishClient()
+              .essay(learner, essayId)
+              .then((e) => {
+                setEssay(e);
+                setPolls(0);
+              })
+              .catch((e: unknown) => setError(e))
+          }
+        />
       )}
       <section className="en-card">
         <h2>{w.yourText}</h2>
