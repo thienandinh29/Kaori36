@@ -6,6 +6,8 @@ import {
   type Essay,
   CRITERIA,
   type BandRange,
+  type ChartFigure,
+  type Task1Check,
   type Complexity,
   type CheckState,
   type CorrectionResult,
@@ -297,13 +299,74 @@ function nonNegative(value: unknown): number {
   return value;
 }
 
+const CHART_TYPES = ["line", "bar", "pie", "table"];
+
+function parseFigure(value: unknown): ChartFigure {
+  const d = record(value);
+  const type = string(d.chart_type);
+  if (!CHART_TYPES.includes(type)) throw new DataError("contract");
+  const categories = strings(d.categories);
+  const series = array(d.series).map((x) => {
+    const r = record(x);
+    const values = array(r.values).map((n) => {
+      if (typeof n !== "number" || !Number.isFinite(n))
+        throw new DataError("contract");
+      return n;
+    });
+    return { name: string(r.name), values };
+  });
+  if (
+    categories.length === 0 ||
+    series.length === 0 ||
+    series.some((s) => s.values.length !== categories.length) ||
+    (type === "pie" &&
+      (series.length !== 1 || series[0].values.some((v) => v < 0)))
+  )
+    throw new DataError("contract");
+  return {
+    title: string(d.title),
+    alt_vi: string(d.alt_vi),
+    chart_type: type as ChartFigure["chart_type"],
+    categories,
+    series,
+    unit: d.unit === undefined ? "" : string(d.unit),
+    x_label: d.x_label === undefined ? "" : string(d.x_label),
+    y_label: d.y_label === undefined ? "" : string(d.y_label),
+  };
+}
+
+function parseTask1(value: unknown): Task1Check {
+  const d = record(value);
+  return {
+    numbers: array(d.numbers).map((x) => {
+      const r = record(x);
+      return { text: string(r.text), supported: bool(r.supported) };
+    }),
+    features: array(d.features).map((x) => {
+      const r = record(x);
+      return {
+        kind: string(r.kind),
+        series: optionalString(r.series),
+        category: optionalString(r.category),
+        text: string(r.text),
+        covered: bool(r.covered),
+      };
+    }),
+    overview: bool(d.overview),
+  };
+}
+
 export function parseWritingPrompt(value: unknown): WritingPrompt {
   const d = record(value);
   const status = string(d.status);
   if (d.task !== 1 && d.task !== 2) throw new DataError("contract");
   if (status !== "draft" && status !== "reviewed")
     throw new DataError("contract");
+  const figure =
+    d.figure === null || d.figure === undefined ? null : parseFigure(d.figure);
+  if ((d.task === 1) !== (figure !== null)) throw new DataError("contract");
   return {
+    figure,
     id: string(d.id),
     task: d.task,
     type: string(d.type),
@@ -547,6 +610,8 @@ export function parseEssayResult(value: unknown): EssayResult {
     longest_sentence_words: int(d.longest_sentence_words),
     linking: parseLinking(d.linking),
     linking_groups_used: int(d.linking_groups_used),
+    ...(d.task === 1 || d.task === 2 ? { task: d.task } : {}),
+    ...(d.task1 !== undefined && { task1: parseTask1(d.task1) }),
     ...(v2 && {
       grammar:
         d.grammar === null

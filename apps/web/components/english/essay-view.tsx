@@ -13,10 +13,12 @@ import {
 } from "@/lib/english/types";
 import { stillWorking } from "@/lib/english/writing";
 import { vi } from "@/messages/vi";
+import { ChartFigureView } from "./chart-figure";
 import { EssayFeedbackView } from "./essay-feedback";
 import { Problem } from "./problem";
 import { pendingRewrite, RewritePanel } from "./rewrite-panel";
 import { SelfCorrect } from "./self-correct";
+import { Task1Checks } from "./task1-checks";
 import { useLearner } from "./use-learner";
 
 const t = vi.english;
@@ -297,6 +299,9 @@ export function EssayView({ essayId }: { essayId: string }) {
             {essay.prompt.prompt}
           </p>
         )}
+        {essay.prompt?.figure && (
+          <ChartFigureView chart={essay.prompt.figure} />
+        )}
         {working && (
           <p className="en-muted" aria-live="polite">
             {polls >= POLL_LIMIT ? w.slow : w.waiting}
@@ -307,11 +312,12 @@ export function EssayView({ essayId }: { essayId: string }) {
         )}
       </section>
       {essay.result && <Result result={essay.result} />}
+      {essay.result && <Task1Checks result={essay.result} />}
       {essay.result && <EssayFeedbackView result={essay.result} />}
       {essay.result && (
         <Grammar result={essay.result} essay={essay} learner={learner} />
       )}
-      {essay.status === "done" && (
+      {essay.status === "done" && essay.result?.task !== 1 && (
         <RewritePanel
           learner={learner}
           essay={essay}

@@ -30,6 +30,19 @@ data table plus its facts in the user message. The four criteria are Task Achiev
 Resource, Grammatical Range and Accuracy. The prompt tells the model that a number is correct only if it is in the data table.
 No LLM corrections change; LanguageTool and ERRANT run as for Task 2.
 
+## Built (15 Nov 2026)
+`app/writing/task1.py` and the Task 1 prompts in `prompts.yaml`; `result.task` and `result.task1`; the chart as plain SVG
+(`components/english/chart-figure.tsx`, geometry in `lib/english/chart.ts`); a "Kiểm tra bài tả biểu đồ" section on the result
+page. Two decisions made while building: bare integers up to 10 are not checked as data (they are usually counts of things, so
+"three countries" is not flagged, and a wrong small number also passes); and a feature counts as covered only when its series is
+named in the same sentence together with its value, or with a fitting word (highest, rose, ...) within 70 characters after the name
+(a first, looser version credited "highest" in one clause to a series named in the next). A number written with an invented
+decimal (85.2% for 85%) is flagged on purpose.
+
+**Live (deepseek-flash, one planted error).** An essay with "Country B reached 90% in 2020" (the data says 70%): the code flagged
+90%, and the model, given the data table and facts, said the same with the right figure. The same feedback also called "all three
+countries rose a lot" illogical, an over-correction of the kind recorded in step 2.4; the owner's 20-essay rating covers it.
+
 ## Not in this step
 A band for Task 1; rewrites of Task 1 paragraphs (the rewrite could introduce wrong numbers; it answers 422 for Task 1 essays);
 maps, processes and diagrams (the figure models exist; the checks would need their own facts); real exam charts.

@@ -130,6 +130,18 @@ export const LINKING_GROUPS = [
 ] as const;
 export type LinkingGroup = (typeof LINKING_GROUPS)[number];
 
+/** A chart built from data (step 2.5); the page draws it, never a picture a model made. */
+export interface ChartFigure {
+  title: string;
+  alt_vi: string;
+  chart_type: "line" | "bar" | "pie" | "table";
+  categories: string[];
+  series: { name: string; values: number[] }[];
+  unit: string;
+  x_label: string;
+  y_label: string;
+}
+
 export interface WritingPrompt {
   id: string;
   task: 1 | 2;
@@ -137,6 +149,21 @@ export interface WritingPrompt {
   level: Level;
   status: "draft" | "reviewed";
   prompt: string;
+  /** Task 1 only */
+  figure: ChartFigure | null;
+}
+
+/** What the code found when it checked a Task 1 essay against its chart (step 2.5). */
+export interface Task1Check {
+  numbers: { text: string; supported: boolean }[];
+  features: {
+    kind: string;
+    series: string | null;
+    category: string | null;
+    text: string;
+    covered: boolean;
+  }[];
+  overview: boolean;
 }
 
 export interface EssaySummary {
@@ -273,6 +300,9 @@ export interface EssayResult {
   grammar?: { issues: GrammarIssue[] } | null;
   grammarUnavailableVi?: string | null;
   complexity?: Complexity | null;
+  /** which task this essay answered; absent on essays analysed before step 2.5 */
+  task?: 1 | 2;
+  task1?: Task1Check;
   /** step 2.3 on; null when no band is shown (then `scoreUnavailableVi` says why) */
   score?: BandRange | null;
   scoreUnavailableVi?: string | null;

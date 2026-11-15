@@ -558,6 +558,7 @@ export const vi = {
         opinion: "Nêu quan điểm",
         "problem-solution": "Vấn đề – giải pháp",
         "advantages-disadvantages": "Lợi ích – bất lợi",
+        chart: "Mô tả biểu đồ",
         "two-part": "Hai câu hỏi",
       } as Record<string, string>,
       editor: "Bài viết của bạn (bằng tiếng Anh)",
@@ -597,6 +598,20 @@ export const vi = {
         "Ước lượng từ một mô hình nhỏ, không phải điểm thi. Khoảng này rộng vì mô hình còn sai số.",
       bandDraft: "Chưa kiểm chứng với điểm giám khảo.",
       bandTruncated: "Bài dài: mô hình chỉ đọc khoảng 380 từ đầu.",
+      task1Criterion: "Task Achievement (nêu đúng và đủ số liệu chính)",
+      task1Title: "Kiểm tra bài tả biểu đồ",
+      task1Note:
+        "Máy so bài của bạn với số liệu của biểu đồ. Đây là gợi ý để bạn đọc lại, không phải kết luận: máy không hiểu cả câu (ví dụ “gấp đôi”, “một phần tư”).",
+      task1Numbers: "Các con số",
+      task1NumbersOk: "Mọi con số bạn viết đều có trong số liệu của biểu đồ.",
+      task1NotFound:
+        "không tìm thấy trong biểu đồ (kể cả số chênh lệch hay tổng). Bạn kiểm tra lại nhé.",
+      task1Features: "Đặc điểm chính chưa được nhắc tới",
+      task1FeaturesOk:
+        "Bạn đã nhắc tới các đặc điểm chính của từng nhóm số liệu.",
+      task1OverviewYes: "Bài có câu tổng quan (overall / in general…).",
+      task1OverviewNo:
+        "Chưa thấy câu tổng quan (ví dụ bắt đầu bằng “Overall, …”). Task 1 cần một câu tổng quan.",
       feedback: "Nhận xét theo 4 tiêu chí",
       feedbackNote:
         "Do AI viết, dựa trên các câu trích từ bài của bạn (máy đã kiểm tra mỗi câu trích có thật trong bài). Đây là gợi ý, không phải điểm.",

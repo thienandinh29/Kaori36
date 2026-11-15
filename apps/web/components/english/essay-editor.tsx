@@ -14,6 +14,7 @@ import {
   rememberConsent,
 } from "@/lib/english/writing";
 import { vi } from "@/messages/vi";
+import { ChartFigureView } from "./chart-figure";
 import { Problem, problemText } from "./problem";
 import { useLearner } from "./use-learner";
 import { promptTypeLabel } from "./writing-home";
@@ -101,6 +102,7 @@ export function EssayEditor({ promptId }: { promptId: string }) {
       <p lang="en" className="en-prompt">
         {prompt.prompt}
       </p>
+      {prompt.figure && <ChartFigureView chart={prompt.figure} />}
       <label className="en-essay">
         <span>{w.editor}</span>
         <textarea
