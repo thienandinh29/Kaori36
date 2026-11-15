@@ -6,6 +6,7 @@ import { parseOutcome } from "@/lib/english/decode";
 import type { RunOutcome, Step } from "@/lib/english/types";
 import { percent } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 import { Feedback } from "./feedback";
 import { Problem } from "./problem";
 import { QuestionCard } from "./question-card";
@@ -172,7 +173,14 @@ function Outcomes({
       {last.kind === "milestone" && <p>{t.run[last.result]}</p>}
       {last.kind === "practice" &&
         (last.mastered ? (
-          <p className="en-praise">{t.run.mastered}</p>
+          <div className="en-praise nt-sena-line">
+            <Sena
+              pose="heart"
+              label={t.senaSays.mastered}
+              className="nt-sena-sm"
+            />
+            <p>{t.run.mastered}</p>
+          </div>
         ) : (
           <p>
             {t.run.notYet}: {percent(last.p_known)}%. {t.run.notYetNote}

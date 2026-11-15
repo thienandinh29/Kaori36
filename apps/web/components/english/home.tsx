@@ -1,11 +1,11 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { englishClient } from "@/lib/english/client";
 import type { VocabSession } from "@/lib/english/types";
 import { emptyVocabReason } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
 import { useRoadmap } from "./roadmap-view";
 import { TraceNote } from "./trace-note";
@@ -37,7 +37,7 @@ export function EnglishHome() {
   return (
     <>
       <section className="en-card en-hello">
-        <Image src="/sena.svg" width={72} height={72} alt={vi.sena} />
+        <Sena pose="wave" label={t.senaSays.wave} />
         <div>
           <h1>{t.home.hello}</h1>
           <p className="en-muted">{t.home.senaRule}</p>

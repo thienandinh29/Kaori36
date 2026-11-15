@@ -23,5 +23,12 @@ export const en = {
     retry: "Try again",
     about: "About",
     vocabulary: "Vocabulary",
+    roadmap: {
+      mapTitle: "Course map",
+      here: "You are here",
+      skyTitle: "What is solid, what is still a gap",
+      bands: { strong: "Known", growing: "Growing", gap: "Gap" },
+      close: "Close",
+    },
   },
 };

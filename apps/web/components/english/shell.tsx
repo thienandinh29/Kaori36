@@ -1,6 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
+import {
+  BookOpen,
+  ClipboardCheck,
+  House,
+  PenLine,
+  Route,
+  type LucideIcon,
+} from "lucide-react";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 
 const t = vi.english;
 const LINKS = [
@@ -12,25 +20,34 @@ const LINKS = [
   { href: "/gioi-thieu", label: t.about.nav },
   { href: "/kham-pha", label: t.nav.explore },
 ] as const;
+type Href = (typeof LINKS)[number]["href"];
+
+// The phone tab bar: the five places a learner goes every day (specs/ui-v2).
+const TABS: { href: Href; label: string; icon: LucideIcon }[] = [
+  { href: "/", label: t.tabs.today, icon: House },
+  { href: "/lo-trinh", label: t.tabs.roadmap, icon: Route },
+  { href: "/tu-vung", label: t.tabs.vocab, icon: BookOpen },
+  { href: "/viet", label: t.tabs.writing, icon: PenLine },
+  { href: "/kiem-tra", label: t.tabs.test, icon: ClipboardCheck },
+];
 
 export function EnglishShell({
   active,
+  wide = false,
   children,
 }: {
-  active: (typeof LINKS)[number]["href"];
+  active: Href;
+  /** Full-width pages (the roadmap); others keep a reading column. */
+  wide?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="en-shell">
       <header className="en-header">
         <Link href="/" className="en-brand">
-          <Image
-            src="/sena.svg"
-            width={36}
-            height={36}
-            alt={vi.sena}
-            priority
-          />
+          <span className="en-brand-face" aria-hidden="true">
+            <Sena pose="idle" label={vi.sena} />
+          </span>
           <span>
             <strong>{vi.app}</strong>
             <small>{t.brandSub}</small>
@@ -47,8 +64,23 @@ export function EnglishShell({
             </Link>
           ))}
         </nav>
+        <Link className="en-about-link" href="/gioi-thieu">
+          {t.about.nav}
+        </Link>
       </header>
-      <main className="en-main">{children}</main>
+      <main className={wide ? "en-main is-wide" : "en-main"}>{children}</main>
+      <nav className="en-tabbar" aria-label={t.tabs.label}>
+        {TABS.map(({ href, label, icon: Icon }) => (
+          <Link
+            key={href}
+            href={href}
+            aria-current={href === active ? "page" : undefined}
+          >
+            <Icon aria-hidden="true" size={22} strokeWidth={2} />
+            {label}
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { englishClient } from "@/lib/english/client";
 import type { Roadmap } from "@/lib/english/types";
-import { byLevel, percent, showHidden, statusLabel } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
+import { MilestonePanel } from "./milestone-panel";
 import { Problem } from "./problem";
+import { Skyline } from "./skyline";
 import { TraceNote } from "./trace-note";
+import { TrailMap } from "./trail-map";
 import { useLearner } from "./use-learner";
 
 const t = vi.english;
@@ -42,40 +44,54 @@ export function useRoadmap(): {
   };
 }
 
-/** Milestones by CEFR level; hidden nodes under a milestone when it needs review or is opened. */
+/** The whole course as one graph (specs/ui-v2): trail map, skyline, and the chosen milestone's panel. */
 export function RoadmapView() {
   const { roadmap, error, reload } = useRoadmap();
-  const [opened, setOpened] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<string | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const onKey = (e: KeyboardEvent) =>
+      e.key === "Escape" && setSheetOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [sheetOpen]);
   if (error) return <Problem error={error} onRetry={reload} />;
   if (!roadmap) return <p className="en-muted">{t.loading}</p>;
   const names: Record<string, string> = {};
+  const parent: Record<string, string> = {};
   roadmap.milestones.forEach((m) => {
     names[m.slug] = m.name_vi;
-    m.hidden.forEach((h) => (names[h.slug] = h.name_vi));
-  });
-  const toggle = (slug: string) =>
-    setOpened((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug);
-      else next.add(slug);
-      return next;
+    m.hidden.forEach((h) => {
+      names[h.slug] = h.name_vi;
+      parent[h.slug] = m.slug;
     });
+  });
+  const here =
+    (roadmap.learn_next && parent[roadmap.learn_next]) ??
+    roadmap.next_milestone ??
+    null;
+  const current = selected ?? here;
+  const chosen = roadmap.milestones.find((m) => m.slug === current) ?? null;
+  const choose = (slug: string) => {
+    setSelected(slug);
+    setSheetOpen(true);
+  };
   return (
-    <>
-      <section className="en-card">
+    <div className="nt-roadmap">
+      <div className="nt-rail">
         <h1>{t.roadmap.title}</h1>
-        <p className="en-muted">{t.roadmap.subtitle}</p>
         {!roadmap.level_test && (
           <p>
             {t.roadmap.noTest} <Link href="/kiem-tra">{t.nav.levelTest}</Link>
           </p>
         )}
         {roadmap.learn_next && (
-          <div className="en-learn-next">
-            <span>{t.roadmap.learnNext}</span>
-            <strong>{names[roadmap.learn_next] ?? roadmap.learn_next}</strong>
+          <section className="nt-next-card">
+            <small>{t.roadmap.learnNext}</small>
+            <h2>{names[roadmap.learn_next] ?? roadmap.learn_next}</h2>
             <Link
-              className="en-button small"
+              className="nt-btn primary"
               href={`/on-tap/phan/${roadmap.learn_next}`}
             >
               {t.run.practiseNow}
@@ -83,74 +99,44 @@ export function RoadmapView() {
             {roadmap.learn_next_trace && (
               <TraceNote trace={roadmap.learn_next_trace} names={names} />
             )}
-          </div>
+          </section>
         )}
+        <Skyline
+          milestones={roadmap.milestones}
+          selected={current}
+          onSelect={choose}
+        />
+      </div>
+      <section className="nt-map" aria-labelledby="nt-map-h">
+        <h2 id="nt-map-h">{t.roadmap.mapTitle}</h2>
+        <p className="nt-sub">{t.roadmap.mapHint}</p>
+        <TrailMap
+          milestones={roadmap.milestones}
+          selected={current}
+          here={here}
+          onSelect={choose}
+        />
       </section>
-      {byLevel(roadmap).map(([level, milestones]) => (
-        <section key={level} className="en-tier" aria-label={level}>
-          <h2>{level}</h2>
-          {milestones.map((m) => {
-            const isNext = m.slug === roadmap.next_milestone;
-            const open = showHidden(m, opened.has(m.slug));
-            return (
-              <article
-                key={m.slug}
-                className={`en-milestone is-${m.status}${isNext ? " is-next" : ""}`}
-              >
-                <div className="en-milestone-top">
-                  <strong>{m.name_vi}</strong>
-                  <span className="en-status">
-                    {statusLabel(m.status, t.roadmap.status)}
-                  </span>
-                  {isNext && (
-                    <span className="en-badge next">{t.roadmap.next}</span>
-                  )}
-                </div>
-                {m.needs.length > 0 && (
-                  <p className="en-muted">
-                    {t.roadmap.needs}:{" "}
-                    {m.needs.map((n) => names[n] ?? n).join(", ")}
-                  </p>
-                )}
-                <div className="en-actions">
-                  <Link
-                    className="en-button small"
-                    href={`/on-tap/cot-moc/${m.slug}`}
-                  >
-                    {t.run.takeTest}
-                  </Link>
-                  <button
-                    type="button"
-                    className="en-link"
-                    onClick={() => toggle(m.slug)}
-                  >
-                    {open ? t.roadmap.hide : t.roadmap.show}
-                  </button>
-                </div>
-                {open && (
-                  <ul className="en-parts" aria-label={t.roadmap.parts}>
-                    {m.hidden.map((h) => (
-                      <li key={h.slug} className={h.known ? "is-known" : ""}>
-                        <span>{h.name_vi}</span>
-                        <span
-                          className="en-bar"
-                          aria-label={`${percent(h.p_known)}%`}
-                        >
-                          <span style={{ width: `${percent(h.p_known)}%` }} />
-                        </span>
-                        <small>{percent(h.p_known)}%</small>
-                        <Link href={`/on-tap/phan/${h.slug}`}>
-                          {t.run.practise}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </article>
-            );
-          })}
-        </section>
-      ))}
-    </>
+      <div
+        className={`nt-scrim${sheetOpen ? " is-open" : ""}`}
+        onClick={() => setSheetOpen(false)}
+        aria-hidden="true"
+      />
+      <aside
+        className={`nt-panel${sheetOpen ? " is-open" : ""}`}
+        aria-live="polite"
+      >
+        {chosen ? (
+          <MilestonePanel
+            milestone={chosen}
+            names={names}
+            isNext={chosen.slug === roadmap.next_milestone}
+            onClose={() => setSheetOpen(false)}
+          />
+        ) : (
+          <p className="en-muted">{t.roadmap.pick}</p>
+        )}
+      </aside>
+    </div>
   );
 }

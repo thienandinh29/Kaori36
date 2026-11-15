@@ -1,0 +1,56 @@
+/* UI v2 tokens (specs/ui-v2). Colours are sampled from Sena: paper = sweater cream, ink = hair,
+   trail = fur brown, known = the tablet's indigo, gap = knit tan hatching. Light theme only for now. */
+:root {
+  --nt-paper: oklch(0.975 0.012 80);
+  --nt-paper-2: oklch(0.945 0.02 75);
+  --nt-card: oklch(0.995 0.004 80);
+  --nt-ink: oklch(0.24 0.015 45);
+  --nt-ink-2: oklch(0.45 0.02 50);
+  --nt-line: oklch(0.88 0.025 70);
+  --nt-fur: oklch(0.52 0.07 55);
+  --nt-contour: oklch(0.82 0.04 70);
+  --nt-known: oklch(0.45 0.2 278);
+  --nt-known-dark: oklch(0.33 0.17 278);
+  --nt-known-mid: oklch(0.62 0.14 278);
+  --nt-known-soft: oklch(0.93 0.04 278);
+  --nt-gap: oklch(0.7 0.11 55);
+  --nt-gap-soft: oklch(0.95 0.03 60);
+  --nt-gap-ink: oklch(0.45 0.09 50);
+  --nt-hatch: repeating-linear-gradient(
+    -45deg,
+    var(--nt-gap) 0 2px,
+    var(--nt-gap-soft) 2px 6px
+  );
+  --nt-radius: 20px;
+  --nt-display: var(--font-display), "Be Vietnam Pro", system-ui, sans-serif;
+  --nt-body: var(--font-body), system-ui, sans-serif;
+}
+
+/* The English pages read the older names; inside the shell they now point at the v2 tokens. */
+.en-shell {
+  --paper: var(--nt-paper);
+  --ink: var(--nt-ink);
+  --muted: var(--nt-ink-2);
+  --line: var(--nt-line);
+  --forest: var(--nt-ink);
+  --lime: var(--nt-known-soft);
+  --green: var(--nt-known);
+  --white: var(--nt-card);
+  font-family: var(--nt-body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.en-shell h1,
+.en-shell h2,
+.en-shell h3 {
+  font-family: var(--nt-display);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.en-shell p {
+  text-wrap: pretty;
+}
+.en-shell :focus-visible {
+  outline: 3px solid var(--nt-known-mid);
+  outline-offset: 2px;
+}

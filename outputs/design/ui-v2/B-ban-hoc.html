@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NodeTrail · Bàn học</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/sena.css">
+<script src="shared/sena.js"></script>
+<script src="shared/course.js"></script>
+<style>
+/* One family, a strict 8px grid, colour only for knowing: indigo from Sena's tablet = known; fur tan hatching = gap. */
+:root {
+  --bg: oklch(0.985 0.004 85);
+  --panel: #fff;
+  --ink: oklch(0.22 0.012 50);
+  --ink-2: oklch(0.47 0.015 55);
+  --rule: oklch(0.9 0.008 70);
+  --known: oklch(0.45 0.2 278);
+  --known-mid: oklch(0.66 0.12 278);
+  --known-soft: oklch(0.95 0.025 278);
+  --gap: oklch(0.72 0.09 60);
+  --gap-soft: oklch(0.965 0.02 65);
+  --fur: oklch(0.52 0.07 55);
+  --hatch: repeating-linear-gradient(-45deg, var(--gap) 0 1.5px, var(--gap-soft) 1.5px 6px);
+  --f: "Be Vietnam Pro", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--f); font-variant-numeric: tabular-nums; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--known-mid); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; line-height: 1.25; text-wrap: balance; }
+p { text-wrap: pretty; }
+
+.top { display: flex; align-items: center; gap: 32px; height: 64px; padding: 0 40px; border-bottom: 1px solid var(--rule); background: var(--panel); }
+.logo { font-weight: 800; font-size: 19px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+.logo i { width: 12px; height: 12px; background: var(--known); border-radius: 50%; }
+.top nav { display: flex; gap: 28px; height: 100%; }
+.top nav a { display: flex; align-items: center; text-decoration: none; color: var(--ink-2); font-weight: 500; font-size: 15px; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.top nav a[aria-current] { color: var(--ink); border-color: var(--ink); font-weight: 700; }
+.top .course { margin-left: auto; color: var(--ink-2); font-size: 14px; }
+
+.page { max-width: 1360px; margin: 0 auto; padding: 32px 40px 64px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+
+/* today */
+.today { grid-column: span 4; background: var(--panel); border: 1px solid var(--rule); padding: 24px; display: flex; flex-direction: column; }
+.today-head { display: grid; grid-template-columns: 1fr 120px; gap: 8px; align-items: end; }
+.today-head .sena-wrap { width: 120px; margin: -12px 0 -24px; }
+.today h1 { font-size: 30px; font-weight: 800; letter-spacing: -.015em; }
+.today .lead { color: var(--ink-2); margin: 8px 0 0; font-size: 15px; }
+.say { margin: 24px 0 0; padding: 16px; background: var(--known-soft); font-size: 15px; position: relative; }
+.say::before { content: ""; position: absolute; right: 48px; top: -10px; border: 10px solid transparent; border-top: 0; border-bottom-color: var(--known-soft); }
+.step { margin-top: 24px; border-top: 2px solid var(--ink); padding-top: 16px; }
+.step .k { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+.step h2 { font-size: 22px; font-weight: 700; margin: 4px 0 16px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; border: 2px solid var(--ink); background: var(--ink); color: #fff; font-weight: 700; cursor: pointer; text-decoration: none; }
+.btn:hover { background: var(--known); border-color: var(--known); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: #fff; }
+.why { margin-top: 16px; font-size: 14px; color: var(--ink-2); }
+.why summary { cursor: pointer; color: var(--ink); font-weight: 600; }
+.facts { margin-top: auto; padding-top: 24px; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule); }
+.facts div { padding: 16px 0 0; }
+.facts div + div { border-left: 1px solid var(--rule); padding-left: 16px; }
+.facts strong { display: block; font-size: 32px; font-weight: 800; line-height: 1.1; }
+.facts span { font-size: 13px; color: var(--ink-2); }
+
+/* skyline: every hidden node as a bar, grouped by milestone */
+.sky { grid-column: span 8; background: var(--panel); border: 1px solid var(--rule); padding: 24px; }
+.sky-head { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; }
+.sky-head h2 { font-size: 22px; font-weight: 700; }
+.sky-head p { margin: 0; color: var(--ink-2); font-size: 14px; }
+.totals { display: grid; grid-template-columns: repeat(3, 1fr); margin: 24px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.totals div { padding: 12px 16px 12px 0; display: flex; gap: 12px; align-items: center; }
+.totals div + div { border-left: 1px solid var(--rule); padding-left: 16px; }
+.totals b { font-size: 36px; font-weight: 800; line-height: 1; }
+.totals span { font-size: 14px; line-height: 1.35; }
+.sw { width: 16px; height: 16px; flex: none; }
+.sw.strong { background: var(--known); } .sw.growing { background: var(--known-mid); } .sw.gap { background: var(--hatch); outline: 1px solid var(--gap); }
+.chart { position: relative; display: flex; gap: 10px; align-items: stretch; height: 360px; padding-left: 40px; }
+.axis { position: absolute; left: 0; top: 0; bottom: 72px; width: 100%; pointer-events: none; }
+.axis span { position: absolute; left: 0; font-size: 12px; color: var(--ink-2); transform: translateY(-50%); }
+.axis .line { position: absolute; left: 36px; right: 0; border-top: 1px dashed var(--ink); opacity: .45; }
+.grp { flex: var(--n) 1 0; min-width: 56px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; border: 0; background: none; padding: 0; text-align: left; }
+.grp .bars { flex: 1; display: flex; gap: 3px; align-items: stretch; }
+.grp .b { flex: 1; background: var(--hatch); position: relative; display: flex; align-items: flex-end; }
+.grp .b i { display: block; width: 100%; background: var(--known); transition: height .6s cubic-bezier(.2,.8,.2,1); }
+.grp .b i.mid { background: var(--known-mid); }
+.grp .lbl { height: 64px; font-size: 12px; line-height: 1.3; color: var(--ink-2); border-top: 2px solid var(--rule); padding-top: 6px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; hyphens: auto; }
+.grp .lbl b { display: block; color: var(--ink); font-weight: 700; }
+.grp:hover .lbl, .grp[aria-pressed="true"] .lbl { border-color: var(--ink); color: var(--ink); }
+.note { font-size: 12.5px; color: var(--ink-2); margin-top: 16px; }
+
+/* graph */
+.graph { grid-column: span 8; background: var(--panel); border: 1px solid var(--rule); padding: 24px; position: relative; }
+.graph-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.graph-head h2 { font-size: 22px; font-weight: 700; }
+.graph-head p { margin: 0; color: var(--ink-2); font-size: 14px; }
+.rows { position: relative; display: grid; gap: 40px; }
+.row { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; position: relative; z-index: 1; }
+.row .lv { font-weight: 800; font-size: 15px; padding-top: 18px; border-top: 2px solid var(--ink); }
+.row .lv small { display: block; font-weight: 500; font-size: 12px; color: var(--ink-2); }
+.cards { display: flex; gap: 16px; flex-wrap: wrap; }
+.card { flex: 1 1 0; min-width: 180px; max-width: 280px; border: 1px solid var(--rule); background: var(--panel); padding: 12px 14px 14px; cursor: pointer; text-align: left; display: grid; gap: 8px; }
+.card:hover { border-color: var(--ink); }
+.card[aria-pressed="true"] { border: 2px solid var(--ink); padding: 11px 13px 13px; box-shadow: 4px 4px 0 var(--known); }
+.card .t { font-weight: 700; font-size: 15px; line-height: 1.35; }
+.card .m { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--ink-2); }
+.card .m b { font-size: 22px; color: var(--ink); font-weight: 800; }
+.seg { display: flex; gap: 3px; height: 10px; }
+.seg span { flex: 1; background: var(--hatch); display: flex; }
+.seg span i { background: var(--known); display: block; height: 100%; }
+.seg span i.mid { background: var(--known-mid); }
+.card .now { font-size: 12px; font-weight: 700; color: var(--known); display: flex; align-items: center; gap: 6px; }
+.card .now::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--known); }
+svg.edges { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
+svg.edges path { fill: none; stroke: var(--rule); stroke-width: 2; }
+svg.edges path.on { stroke: var(--ink); }
+
+/* detail */
+.detail { grid-column: span 4; background: var(--panel); border: 1px solid var(--rule); padding: 24px; align-self: start; position: sticky; top: 24px; }
+.detail .close { display: none; }
+.d-k { font-size: 13px; color: var(--ink-2); font-weight: 600; }
+.detail h2 { font-size: 26px; font-weight: 800; letter-spacing: -.01em; margin: 4px 0 8px; }
+.d-sum { margin: 0 0 16px; color: var(--ink-2); font-size: 15px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 600; color: var(--ink-2); font-size: 12.5px; padding: 0 0 8px; border-bottom: 2px solid var(--ink); }
+td { padding: 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.num { text-align: right; font-weight: 800; font-size: 16px; width: 56px; }
+.hb { height: 8px; margin-top: 6px; background: var(--hatch); display: flex; }
+.hb i { background: var(--known); display: block; height: 100%; transition: width .6s; }
+.tag { font-size: 12px; color: var(--ink-2); }
+.d-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.quiz { margin-top: 24px; border-top: 2px solid var(--ink); padding-top: 16px; }
+.qhead { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: center; }
+.qhead .sena-wrap { width: 72px; }
+.qhead p { margin: 0; font-size: 14.5px; }
+.q { font-size: 19px; font-weight: 700; margin: 16px 0 12px; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opt { min-height: 48px; border: 1px solid var(--ink); background: var(--panel); font-weight: 600; cursor: pointer; }
+.opt:hover { background: var(--known-soft); }
+.opt.right { background: var(--known); color: #fff; border-color: var(--known); }
+.opt.right::after { content: "  đúng"; font-weight: 500; }
+.opt.wrong { background: var(--gap-soft); border-color: var(--gap); text-decoration: line-through; }
+.draft { font-size: 12px; color: var(--ink-2); margin: 12px 0 0; }
+
+.tabbar { display: none; }
+.scrim { display: none; }
+@media (max-width: 1100px) {
+  .today, .sky { grid-column: span 12; }
+  .graph { grid-column: span 12; }
+  .detail { position: fixed; inset: auto 0 0 0; max-height: 86vh; overflow: auto; z-index: 30; transform: translateY(105%); transition: transform .3s cubic-bezier(.2,.8,.2,1); border: 0; border-top: 2px solid var(--ink); }
+  .detail.open { transform: none; }
+  .detail:not(.open) { visibility: hidden; }
+  .detail .close { display: inline-flex; float: right; min-height: 44px; padding: 0 16px; }
+  .scrim.on { display: block; position: fixed; inset: 0; background: oklch(0.2 0.01 50 / .35); z-index: 29; }
+}
+@media (max-width: 700px) {
+  body { padding-bottom: 72px; }
+  .top { padding: 0 16px; height: 56px; }
+  .top nav, .top .course { display: none; }
+  .page { padding: 16px 16px 32px; gap: 16px; }
+  .today, .sky, .graph { padding: 16px; }
+  .today h1 { font-size: 26px; }
+  .today-head { grid-template-columns: 1fr 96px; }
+  .today-head .sena-wrap { width: 96px; }
+  .totals b { font-size: 28px; }
+  .totals div { flex-direction: column; align-items: flex-start; gap: 4px; padding-right: 8px; }
+  .totals span { font-size: 12.5px; }
+  .chart { height: 220px; gap: 6px; padding-left: 30px; }
+  .axis { bottom: 30px; }
+  .axis .line { left: 28px; }
+  .grp { min-width: 0; }
+  .grp .lbl { font-size: 0; height: 22px; }
+  .grp .lbl b { font-size: 11px; }
+  .row { grid-template-columns: 1fr; gap: 8px; }
+  .row .lv { padding-top: 8px; display: flex; gap: 8px; align-items: baseline; }
+  .row .lv small { display: inline; }
+  .cards { gap: 8px; }
+  .card { min-width: calc(50% - 4px); max-width: none; }
+  .rows { gap: 28px; }
+  .detail { padding: 16px 16px 88px; }
+  .tabbar { display: flex; position: fixed; inset: auto 0 0 0; z-index: 25; background: var(--panel); border-top: 1px solid var(--rule); padding-bottom: env(safe-area-inset-bottom); }
+  .tabbar a { flex: 1; min-height: 60px; display: grid; place-items: center; align-content: center; gap: 2px; text-decoration: none; color: var(--ink-2); font-size: 12px; font-weight: 600; border-top: 3px solid transparent; }
+  .tabbar a[aria-current] { color: var(--ink); border-color: var(--ink); }
+  .tabbar svg { width: 22px; height: 22px; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo"><i></i>NodeTrail</div>
+  <nav aria-label="Chính"><a href="#" aria-current="page">Hôm nay</a><a href="#">Từ vựng</a><a href="#">Viết</a><a href="#">Kiểm tra trình độ</a></nav>
+  <div class="course">Ngữ pháp tiếng Anh cho IELTS</div>
+</header>
+
+<main class="page">
+  <section class="today" aria-labelledby="today-h">
+    <div class="today-head">
+      <div><h1 id="today-h">Chào bạn</h1><p class="lead">Thứ Bảy, 15/11. Một buổi học khoảng 20 phút.</p></div>
+      <div class="sena-wrap" data-sena="wave" data-sena-label="Sena vẫy chào"></div>
+    </div>
+    <p class="say">Ôn 6 thẻ đến hạn trước nhé, rồi mình làm tiếp phần hiện tại hoàn thành. Phần này đang là chỗ hổng lớn nhất ngay trên nền bạn đã vững.</p>
+    <div class="step">
+      <div class="k">Bước tiếp theo</div>
+      <h2>Cấu trúc hiện tại hoàn thành: ever và never</h2>
+      <button class="btn" type="button" data-open="perfect-tenses">Học phần này</button>
+      <details class="why"><summary>Vì sao là phần này?</summary><p id="trace"></p></details>
+    </div>
+    <div class="facts">
+      <div><strong>6</strong><span>thẻ ôn đến hạn</span></div>
+      <div><strong>B1</strong><span>ngữ pháp, ước lượng sau bài kiểm tra</span></div>
+    </div>
+  </section>
+
+  <section class="sky" aria-labelledby="sky-h">
+    <div class="sky-head"><h2 id="sky-h">Phần nào vững, phần nào còn hổng</h2><p>Mỗi cột là một phần nhỏ. Tô đậm: đã nắm. Gạch chéo: còn thiếu.</p></div>
+    <div class="totals" id="totals"></div>
+    <div class="chart" id="chart" role="group" aria-label="Biểu đồ mức nắm vững theo từng phần">
+      <div class="axis" aria-hidden="true"><span style="top:0">100</span><span style="top:15%">85</span><div class="line" style="top:15%"></div><span style="top:50%">50</span><span style="top:100%">0</span></div>
+    </div>
+    <p class="note" id="illus"></p>
+  </section>
+
+  <section class="graph" aria-labelledby="graph-h">
+    <div class="graph-head"><h2 id="graph-h">Bản đồ khóa học</h2><p>Học từ trên xuống. Đường nối: phần trên là nền của phần dưới.</p></div>
+    <div class="rows" id="rows"><svg class="edges" id="edges" aria-hidden="true"></svg></div>
+  </section>
+
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</main>
+<div class="scrim" id="scrim"></div>
+
+<nav class="tabbar" aria-label="Chính">
+  <a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/><path d="M7 10v4a3 3 0 0 0 3 3h4"/></svg>Hôm nay</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="14"/><path d="M8 10h8M8 14h5"/></svg>Từ vựng</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 19l3-1 10-10-2-2L6 16z"/></svg>Viết</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Kiểm tra</a>
+</nav>
+
+<script>
+(function () {
+  const K = window.Course;
+  document.getElementById("trace").textContent = K.trace;
+  document.getElementById("illus").textContent = K.illustrative + ". Đường đứt: ngưỡng vững 85%.";
+  const fill = (p) => `<i class="${p >= .85 ? "" : "mid"}" style="height:${p * 100}%"></i>`;
+
+  // totals
+  const T = K.totals;
+  document.getElementById("totals").innerHTML = [["strong", "phần đã vững"], ["growing", "phần đang lên"], ["gap", "phần còn hổng"]]
+    .map(([b, l]) => `<div><i class="sw ${b}"></i><b>${T[b]}</b><span>${l}<br>trên ${K.all.length}</span></div>`).join("");
+
+  // skyline
+  const chart = document.getElementById("chart");
+  K.milestones.forEach((m) => {
+    const b = document.createElement("button");
+    b.className = "grp"; b.type = "button"; b.dataset.slug = m.slug; b.style.setProperty("--n", m.hidden.length);
+    b.setAttribute("aria-label", `${m.name}: ${m.hidden.map((h) => h.name + " " + K.pct(h.p)).join(", ")}`);
+    b.innerHTML = `<span class="bars">${m.hidden.map((h) => `<span class="b" title="${h.name}: ${K.pct(h.p)}">${fill(h.p)}</span>`).join("")}</span>
+      <span class="lbl"><b>${m.level}</b>${m.short}</span>`;
+    b.addEventListener("click", () => select(m.slug));
+    chart.appendChild(b);
+  });
+
+  // graph rows by depth
+  const depth = {};
+  const d = (s) => depth[s] ?? (depth[s] = K.bySlug[s].needs.length ? 1 + Math.max(...K.bySlug[s].needs.map(d)) : 0);
+  K.milestones.forEach((m) => d(m.slug));
+  const rowsEl = document.getElementById("rows"), cards = {};
+  const maxD = Math.max(...Object.values(depth));
+  for (let r = 0; r <= maxD; r++) {
+    const ms = K.milestones.filter((m) => depth[m.slug] === r);
+    const lv = [...new Set(ms.map((m) => m.level))].join("/");
+    const row = document.createElement("div"); row.className = "row";
+    row.innerHTML = `<div class="lv">${lv}<small>${r === 0 ? "bắt đầu" : "bậc " + (r + 1)}</small></div><div class="cards"></div>`;
+    ms.forEach((m) => {
+      const c = document.createElement("button"); c.type = "button"; c.className = "card"; c.dataset.slug = m.slug;
+      c.setAttribute("aria-label", `${m.name}, ${m.level}, đã nắm ${K.pct(m.p)}`);
+      c.innerHTML = `<span class="t">${m.name}</span>
+        <span class="seg">${m.hidden.map((h) => `<span><i class="${h.p >= .85 ? "" : "mid"}" style="width:${h.p * 100}%"></i></span>`).join("")}</span>
+        <span class="m"><span>${m.counts.strong}/${m.hidden.length} phần vững</span><b>${K.pct(m.p)}</b></span>
+        ${m.slug === K.learnNext.milestone ? `<span class="now">Bạn đang học ở đây</span>` : ""}`;
+      c.addEventListener("click", () => select(m.slug));
+      row.querySelector(".cards").appendChild(c); cards[m.slug] = c;
+    });
+    rowsEl.appendChild(row);
+  }
+  const edgesSvg = document.getElementById("edges");
+  function drawEdges() {
+    const box = rowsEl.getBoundingClientRect(); let html = "";
+    K.milestones.forEach((m) => m.needs.forEach((f) => {
+      const a = cards[f].getBoundingClientRect(), b = cards[m.slug].getBoundingClientRect();
+      const x1 = a.left + a.width / 2 - box.left, y1 = a.bottom - box.top, x2 = b.left + b.width / 2 - box.left, y2 = b.top - box.top, my = (y1 + y2) / 2;
+      const far = b.top - a.bottom > 120; // skips a row: run down the free column, enter from the side
+      const d = far ? `M${x1} ${y1} V${(b.top + b.bottom) / 2 - box.top} H${b.right - box.left}` : `M${x1} ${y1} V${my} H${x2} V${y2}`;
+      html += `<path data-f="${f}" data-t="${m.slug}" d="${d}"/>`;
+    }));
+    edgesSvg.innerHTML = html; mark();
+  }
+
+  // detail
+  const detail = document.getElementById("detail"), scrim = document.getElementById("scrim");
+  let current = null;
+  function mark() {
+    edgesSvg.querySelectorAll("path").forEach((p) => p.classList.toggle("on", p.dataset.t === current || p.dataset.f === current));
+    Object.entries(cards).forEach(([s, c]) => c.setAttribute("aria-pressed", s === current));
+    chart.querySelectorAll(".grp").forEach((g) => g.setAttribute("aria-pressed", g.dataset.slug === current));
+  }
+  function select(slug, quiet) {
+    current = slug; const m = K.bySlug[slug]; mark();
+    const needs = m.needs.map((s) => K.bySlug[s].name).join(", ");
+    const mastered = m.hidden.every((h) => h.p >= .85);
+    detail.innerHTML = `<button class="btn ghost close" type="button" id="close">Đóng</button>
+      <div class="d-k">Cột mốc ${m.level}${needs ? " · cần trước: " + needs : ""}</div>
+      <h2>${m.name}</h2>
+      <p class="d-sum">Đã nắm ${K.pct(m.p)}, còn thiếu ${100 - Math.round(m.p * 100)}%.</p>
+      ${mastered ? `<div class="qhead" style="margin-bottom:16px"><div class="sena-wrap" data-sena="heart"></div><p>Cả ${m.hidden.length} phần đều đã vững. Sena hẹn bạn ôn lại trước khi kịp quên.</p></div>` : ""}
+      <table><thead><tr><th>Phần nhỏ</th><th style="text-align:right">Nắm</th></tr></thead><tbody>
+      ${m.hidden.map((h) => `<tr data-h="${h.slug}"><td>${h.name} <span class="tag">${h.level} · ${K.bandVi[K.band(h.p)]}</span><div class="hb"><i style="width:${h.p * 100}%"></i></div></td><td class="num">${K.pct(h.p)}</td></tr>`).join("")}
+      </tbody></table>
+      <div class="d-actions"><button class="btn" type="button">Luyện tập</button><button class="btn ghost" type="button">Kiểm tra cột mốc</button></div>
+      ${slug === K.learnNext.milestone ? `<section class="quiz" aria-label="Luyện thử một câu">
+        <div class="qhead"><div class="sena-wrap" id="qs" data-sena="focus"></div><p id="qsay">Một câu thử. Tập trung nào.</p></div>
+        <p class="q">${K.quiz.prompt}</p>
+        <div class="opts">${K.quiz.options.map((o) => `<button class="opt" type="button">${o}</button>`).join("")}</div>
+        <p class="draft">Câu hỏi soạn tay, bản nháp chưa được giáo viên duyệt.</p></section>` : ""}`;
+    detail.querySelectorAll("[data-sena]").forEach((e) => Sena.render(e));
+    detail.querySelector("#close").addEventListener("click", close);
+    if (slug === K.learnNext.milestone) wireQuiz(m);
+    if (!quiet) { detail.classList.add("open"); scrim.classList.add("on"); }
+  }
+  function close() { detail.classList.remove("open"); scrim.classList.remove("on"); }
+  scrim.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => e.key === "Escape" && close());
+  document.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => select(b.dataset.open)));
+  function wireQuiz(m) {
+    const qs = detail.querySelector("#qs"), say = detail.querySelector("#qsay"), h = m.hidden.find((x) => x.slug === K.learnNext.node);
+    detail.querySelectorAll(".opt").forEach((b) => b.addEventListener("click", () => {
+      const right = b.textContent === K.quiz.key;
+      detail.querySelectorAll(".opt").forEach((o) => { o.disabled = true; if (o.textContent === K.quiz.key) o.classList.add("right"); });
+      if (!right) { b.classList.add("wrong"); Sena.render(qs, "oops"); say.textContent = "Ối, chưa đúng. " + K.quiz.wrong[b.textContent]; }
+      else {
+        Sena.render(qs, "idle"); const before = h.p; h.p = Math.min(.99, h.p + .17);
+        say.textContent = `${K.quiz.right} Mức nắm vững: ${K.dec(before)} lên ${K.dec(h.p)}.`;
+        const tr = detail.querySelector(`[data-h="${h.slug}"]`); tr.querySelector(".hb i").style.width = h.p * 100 + "%"; tr.querySelector(".num").textContent = K.pct(h.p);
+      }
+      setTimeout(() => detail.querySelectorAll(".opt").forEach((o) => { o.disabled = false; o.classList.remove("right", "wrong"); }), 4000);
+    }));
+  }
+
+  window.addEventListener("resize", drawEdges);
+  drawEdges();
+  document.fonts && document.fonts.ready.then(drawEdges);
+  select(K.learnNext.milestone, !window.matchMedia("(min-width: 1101px)").matches ? true : false);
+  if (!window.matchMedia("(min-width: 1101px)").matches) close();
+})();
+</script>
+</body>
+</html>
