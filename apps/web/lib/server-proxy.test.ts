@@ -263,7 +263,12 @@ describe("graph confirmation session proxy", () => {
         ),
         context(path.split("/")),
       );
-    for (const path of ["writing/prompts", "essays", `essays/${id}`])
+    for (const path of [
+      "writing/prompts",
+      "essays",
+      `essays/${id}`,
+      "phrases/session",
+    ])
       expect((await get(path)).status).toBe(200);
     const corrections = await POST(
       new NextRequest(
@@ -300,9 +305,12 @@ describe("graph confirmation session proxy", () => {
       403,
     );
     expect((await del("essays", "http://localhost:3000")).status).toBe(405);
+    expect((await del(`phrases/${id}`, "http://localhost:3000")).status).toBe(
+      204,
+    );
     expect((await del("vocab/answers", "http://localhost:3000")).status).toBe(
       405,
     );
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(2); // the essay and the phrase; nothing refused
   });
 });

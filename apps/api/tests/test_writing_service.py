@@ -331,7 +331,8 @@ def writing_model(db: str, fake: FakeDeepSeek, cap: float = 1.0, calls: int = 30
     from app.writing.model_calls import Prices, WritingModel
 
     route = Route(provider="deepseek", model="deepseek-test", family="deepseek")
-    routing = Routing(tiers={"free": {"writing_feedback": [route], "writing_correct": [route]}})
+    tasks = ("writing_feedback", "writing_correct", "writing_rewrite")
+    routing = Routing(tiers={"free": {t: [route] for t in tasks}})
     return WritingModel(Gateway(routing, {"deepseek": fake}), db, Budget(cap, calls),
                         Prices(1.0, 4.0), clock=lambda: NOW)  # fmt: skip
 
@@ -483,3 +484,151 @@ def test_showing_the_answer_and_what_cannot_be_corrected(setup: Setup) -> None:
         with pytest.raises(HTTPException) as err:
             call()
         assert err.value.status_code == code
+
+
+# --- step 2.4b: rewrites and saved phrases (specs/writing/step-2.4.md, points 4 and 5) ----------
+
+
+class FakeRewriter(FakeDeepSeek):
+    """Returns the scripted rewrites in order; feedback and corrections as FakeDeepSeek."""
+
+    def __init__(self, *rewrites: str) -> None:
+        super().__init__()
+        self.rewrites = list(rewrites)
+
+    async def generate(self, route: Any, system: str, messages: Any, schema: Any) -> Any:
+        from app.llm.gateway import ProviderReply
+
+        if "Rewrite the paragraph" not in system:
+            return await super().generate(route, system, messages, schema)
+        self.calls.append("rewrite")
+        text = self.rewrites.pop(0)
+        body = {
+            "paragraph": text,
+            "changes": [
+                {"original": "go", "revised": "goes", "why_vi": "Chủ ngữ 'She' đi với 'goes'."}
+            ],
+        }
+        return ProviderReply(json.dumps(body), 800, 150)  # fmt: skip
+
+
+def run_rewrites(db: str, step: GrammarStep) -> int:
+    """Process every queued rewrite: the test database is shared across the run."""
+    from app.services.rewrites import process_next_rewrite
+
+    n = 0
+    while process_next_rewrite(db, step):
+        n += 1
+    return n
+
+
+def rewrite_setup(svc: WritingService, learner: str, db: str, fake: FakeRewriter) -> tuple[
+    str, GrammarStep
+]:  # fmt: skip
+    step = replace(step_for(learner), client=SentenceChecker(), model=writing_model(db, fake))
+    essay = own_essay(svc, learner, db, replace(step, model=None, client=RecordedLanguageTool()),
+                      FIXTURES["smoke"]["text"])  # fmt: skip
+    return essay["id"], step
+
+
+def test_an_accepted_rewrite_keeps_reasons_only_on_real_changes(setup: Setup) -> None:
+    from app.services.rewrites import request_rewrite
+
+    svc, learner, db = setup
+    essay_id, step = rewrite_setup(svc, learner, db, FakeRewriter("She goes to school every day."))
+    rid = request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    assert run_rewrites(db, step) >= 1
+    done = svc.get(learner, essay_id)["rewrites"][0]
+    assert done["id"] == rid and done["status"] == "done" and done["target_band"] == 6.5
+    r = done["result"]
+    assert r["changes"] == [{"original": "go", "revised": "goes",
+                             "why_vi": "Chủ ngữ 'She' đi với 'goes'."}]  # fmt: skip
+    assert r["checks"] == {"length": "passed", "languagetool": "passed", "scorer": "not_run",
+                           "cefr": "not_run"}  # fmt: skip
+
+
+def test_a_rewrite_with_errors_is_regenerated_once_then_rejected(setup: Setup) -> None:
+    from app.services.rewrites import LT_ERRORS_VI, request_rewrite
+
+    svc, learner, db = setup
+    # first attempt still has the error; the second is clean: accepted after 2 attempts
+    fake = FakeRewriter("Every day she go to school.", "She goes to school every day.")
+    essay_id, step = rewrite_setup(svc, learner, db, fake)
+    request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    run_rewrites(db, step)
+    with psycopg.connect(db) as conn:
+        attempts = conn.execute(
+            "select attempts from essay_rewrites where essay_id=%s", (essay_id,)
+        ).fetchone()
+    assert svc.get(learner, essay_id)["rewrites"][0]["status"] == "done" and attempts == (2,)
+    # both attempts bad: rejected with the reason, never shown as a rewrite
+    fake.rewrites = ["Every day she go to school.", "Daily she go to school."]
+    request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    run_rewrites(db, step)
+    last = svc.get(learner, essay_id)["rewrites"][1]
+    assert last["status"] == "rejected" and last["reason_vi"] == LT_ERRORS_VI
+    assert last["result"] is None
+
+
+def test_rewrite_requests_and_failures(setup: Setup) -> None:
+    from app.services.rewrites import (
+        NO_LANGUAGETOOL_VI,
+        TOO_DIFFERENT_VI,
+        request_rewrite,
+    )
+
+    svc, learner, db = setup
+    essay_id, step = rewrite_setup(svc, learner, db, FakeRewriter(
+        "She goes to school every single day of the week without any exception at all.",
+        "She goes to school every day, always on foot, and she never misses a single class.",
+    ))  # fmt: skip
+    cases: list[tuple[Callable[[], object], int]] = [
+        (lambda: request_rewrite(svc.pool, set(), learner, essay_id, 0), 403),
+        (lambda: request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 3), 422),
+        (lambda: request_rewrite(svc.pool, svc.draft_learners, learner, "nope", 0), 404),
+    ]
+    for call, code in cases:
+        with pytest.raises(HTTPException) as err:
+            call()
+        assert err.value.status_code == code
+    request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    run_rewrites(db, step)  # both attempts far longer than the 6-word paragraph
+    assert svc.get(learner, essay_id)["rewrites"][0]["reason_vi"] == TOO_DIFFERENT_VI
+    request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    run_rewrites(db, replace(step, client=None))
+    assert svc.get(learner, essay_id)["rewrites"][1]["reason_vi"] == NO_LANGUAGETOOL_VI
+    request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    with pytest.raises(HTTPException) as err:  # at most 3 per essay
+        request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    assert err.value.status_code == 429
+    run_rewrites(db, replace(step, client=None))  # leave no queued rewrite for other tests
+
+
+def test_a_saved_phrase_is_reviewed_with_fsrs_and_can_be_deleted(setup: Setup) -> None:
+    from app.services.rewrites import PhraseService, request_rewrite
+
+    svc, learner, db = setup
+    essay_id, step = rewrite_setup(svc, learner, db, FakeRewriter("She goes to school every day."))
+    rid = request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    run_rewrites(db, step)
+    phrases = PhraseService(svc.pool)
+    pid = phrases.save(learner, rid, 0)
+    with pytest.raises(HTTPException) as err:
+        phrases.save(learner, rid, 0)
+    assert err.value.status_code == 409
+    first = phrases.session(learner, now=NOW)
+    entry = first["entries"][0]
+    assert first["saved"] == 1 and entry["is_new"] and entry["phrase"] == "goes"
+    assert entry["prompt"] == "She _____ to school every day." and entry["hint"] == "g"
+    right = phrases.answer(learner, pid, "goes", now=NOW)
+    assert right["correct"] and right["due_at"] > NOW
+    assert phrases.session(learner, now=NOW)["entries"] == []  # scheduled for later
+    later = phrases.session(learner, now=NOW + timedelta(days=60))["entries"]
+    assert later[0]["phrase"] is None and not later[0]["is_new"]  # a review hides the answer
+    assert not phrases.answer(learner, pid, "go", now=NOW + timedelta(days=60))["correct"]
+    phrases.delete(learner, pid)
+    with psycopg.connect(db) as conn:
+        left = conn.execute(
+            "select count(*) from vocab_cards where list_slug='my-phrases' and learner_id=%s",
+            (learner,)).fetchone()  # fmt: skip
+    assert left == (0,) and phrases.session(learner, now=NOW)["saved"] == 0

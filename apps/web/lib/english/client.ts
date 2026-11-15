@@ -1,6 +1,8 @@
 // The English pack's calls, through the same-origin proxy (/api/backend): the API key stays on the server.
 import { DataError } from "@/lib/decode";
 import {
+  parsePhraseAnswer,
+  parsePhraseSession,
   parseCorrection,
   parseEssay,
   parseEssaySummaries,
@@ -13,6 +15,8 @@ import {
 } from "./decode";
 import type {
   CorrectionResult,
+  PhraseAnswer,
+  PhraseSession,
   Essay,
   EssaySummary,
   Level,
@@ -194,6 +198,48 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
           issue_id: issueId,
           sentence,
           show_answer: showAnswer,
+        }),
+      );
+    },
+    async requestRewrite(
+      learnerId: string,
+      essayId: string,
+      paragraph: number,
+    ): Promise<string> {
+      const d = (await post(`essays/${encodeURIComponent(essayId)}/rewrites`, {
+        learner_id: learnerId,
+        paragraph,
+      })) as { rewrite_id?: unknown };
+      if (typeof d?.rewrite_id !== "string") throw new DataError("contract");
+      return d.rewrite_id;
+    },
+    async savePhrase(
+      learnerId: string,
+      rewriteId: string,
+      change: number,
+    ): Promise<string> {
+      const d = (await post("phrases", {
+        learner_id: learnerId,
+        rewrite_id: rewriteId,
+        change,
+      })) as { phrase_id?: unknown };
+      if (typeof d?.phrase_id !== "string") throw new DataError("contract");
+      return d.phrase_id;
+    },
+    async phraseSession(learnerId: string): Promise<PhraseSession> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePhraseSession(await request(`phrases/session?${q}`));
+    },
+    async answerPhrase(
+      learnerId: string,
+      phraseId: string,
+      answer: string,
+    ): Promise<PhraseAnswer> {
+      return parsePhraseAnswer(
+        await post("phrases/answers", {
+          learner_id: learnerId,
+          phrase_id: phraseId,
+          answer,
         }),
       );
     },

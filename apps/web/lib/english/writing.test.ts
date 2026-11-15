@@ -2,8 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 import { DataError } from "@/lib/decode";
 import { submitProblem } from "@/components/english/essay-editor";
 import { bandText, notCountedReason } from "@/components/english/essay-view";
+import { paragraphsOf } from "@/components/english/rewrite-panel";
 import { englishClient } from "./client";
-import { parseEssay, parseEssaySummaries, parseWritingPrompts } from "./decode";
+import {
+  parseEssay,
+  parseEssaySummaries,
+  parsePhraseSession,
+  parseWritingPrompts,
+} from "./decode";
 import {
   CONSENT,
   CONSENT_KEY,
@@ -411,6 +417,104 @@ describe("feedback and self-correction (step 2.4)", () => {
       issue_id: 0,
       sentence: "She goes.",
       show_answer: false,
+    });
+  });
+});
+
+describe("rewrites and saved phrases (step 2.4b)", () => {
+  const done = {
+    id: ID,
+    paragraph: 0,
+    target_band: 6.5,
+    status: "done",
+    reason_vi: null,
+    result: {
+      original: "She go to school.",
+      rewrite: "She goes to school.",
+      changes: [{ original: "go", revised: "goes", why_vi: "Chủ ngữ số ít." }],
+      checks: {
+        length: "passed",
+        languagetool: "passed",
+        scorer: "not_run",
+        cefr: "not_run",
+      },
+      unmatched_reasons: 0,
+      model: "deepseek-flash",
+    },
+  };
+  it("reads a rewrite and its checks; a rejected one has only its reason", () => {
+    const e = parseEssay({ ...essay, rewrites: [done] });
+    expect(e.rewrites[0].result?.changes[0].revised).toBe("goes");
+    expect(e.rewrites[0].result?.checks.scorer).toBe("not_run");
+    const rejected = {
+      ...done,
+      status: "rejected",
+      result: null,
+      reason_vi: "Lỗi",
+    };
+    expect(
+      parseEssay({ ...essay, rewrites: [rejected] }).rewrites[0].reason_vi,
+    ).toBe("Lỗi");
+    expect(() =>
+      parseEssay({ ...essay, rewrites: [{ ...done, result: null }] }),
+    ).toThrow(DataError);
+    expect(parseEssay(essay).rewrites).toEqual([]);
+  });
+  it("splits paragraphs like the API", () => {
+    expect(paragraphsOf("One two.\n\n  \n\nThree four.\n")).toEqual([
+      "One two.",
+      "Three four.",
+    ]);
+  });
+  it("shows a saved phrase only before its first question", () => {
+    const s = parsePhraseSession({
+      saved: 2,
+      entries: [
+        {
+          phrase_id: ID,
+          prompt: "She _____.",
+          hint: "g",
+          is_new: true,
+          phrase: "goes",
+        },
+        {
+          phrase_id: ID,
+          prompt: "A _____.",
+          hint: "h",
+          is_new: false,
+          phrase: null,
+        },
+      ],
+    });
+    expect(s.entries.map((x) => x.phrase)).toEqual(["goes", null]);
+    expect(() =>
+      parsePhraseSession({
+        saved: 1,
+        entries: [
+          {
+            phrase_id: ID,
+            prompt: "x",
+            hint: "x",
+            is_new: false,
+            phrase: "leak",
+          },
+        ],
+      }),
+    ).toThrow(DataError);
+  });
+  it("requests a rewrite of one paragraph", async () => {
+    const fetcher = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ rewrite_id: ID, status: "queued" }), {
+        status: 202,
+      }),
+    );
+    expect(await englishClient(fetcher).requestRewrite(LEARNER, ID, 1)).toBe(
+      ID,
+    );
+    expect(fetcher.mock.calls[0][0]).toBe(`/api/backend/essays/${ID}/rewrites`);
+    expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({
+      learner_id: LEARNER,
+      paragraph: 1,
     });
   });
 });

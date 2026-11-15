@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import APIRouter, Query, Response
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.services.rewrites import PhraseService, request_rewrite
 from app.services.writing import MAX_CHARS, WritingService
 from app.writing.prompts import Prompt
 
@@ -35,6 +36,26 @@ class CorrectionOut(BaseModel):
     feedback_vi: str
 
 
+class RewriteIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    learner_id: str = Field(min_length=1, max_length=200)
+    paragraph: int = Field(ge=0, le=50)
+
+
+class PhraseIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    learner_id: str = Field(min_length=1, max_length=200)
+    rewrite_id: str = Field(min_length=1, max_length=40)
+    change: int = Field(ge=0, le=100)
+
+
+class PhraseAnswerIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    learner_id: str = Field(min_length=1, max_length=200)
+    phrase_id: str = Field(min_length=1, max_length=40)
+    answer: str = Field(max_length=100)
+
+
 class EssayQueued(BaseModel):
     essay_id: str
     status: str
@@ -57,10 +78,12 @@ class Essay(BaseModel):
     result: dict[str, Any] | None
     failure_vi: str | None
     corrections: dict[str, dict[str, Any]] = {}  # issue id -> self-correction state
+    rewrites: list[dict[str, Any]] = []  # step 2.4b
 
 
-def create_router(service: WritingService) -> APIRouter:
+def create_router(service: WritingService, phrases: PhraseService | None = None) -> APIRouter:
     router = APIRouter(tags=["writing"])
+    phrase_service = phrases or PhraseService(service.pool)
 
     @router.get("/writing/prompts")
     def prompts(learner_id: str = Learner) -> list[Prompt]:
@@ -85,6 +108,29 @@ def create_router(service: WritingService) -> APIRouter:
             body.learner_id, essay_id, body.issue_id, body.sentence, show_answer=body.show_answer
         )
         return CorrectionOut(**result)
+
+    @router.post("/essays/{essay_id}/rewrites", status_code=202)
+    def rewrite(essay_id: str, body: RewriteIn) -> dict[str, str]:
+        rid = request_rewrite(service.pool, service.draft_learners, body.learner_id, essay_id,
+                              body.paragraph)  # fmt: skip
+        return {"rewrite_id": rid, "status": "queued"}
+
+    @router.post("/phrases", status_code=201)
+    def save_phrase(body: PhraseIn) -> dict[str, str]:
+        return {"phrase_id": phrase_service.save(body.learner_id, body.rewrite_id, body.change)}
+
+    @router.get("/phrases/session")
+    def phrase_session(learner_id: str = Learner) -> dict[str, Any]:
+        return phrase_service.session(learner_id)
+
+    @router.post("/phrases/answers")
+    def phrase_answer(body: PhraseAnswerIn) -> dict[str, Any]:
+        return phrase_service.answer(body.learner_id, body.phrase_id, body.answer)
+
+    @router.delete("/phrases/{phrase_id}", status_code=204)
+    def delete_phrase(phrase_id: str, learner_id: str = Learner) -> Response:
+        phrase_service.delete(learner_id, phrase_id)
+        return Response(status_code=204)
 
     @router.delete("/essays/{essay_id}", status_code=204)
     def delete(essay_id: str, learner_id: str = Learner) -> Response:

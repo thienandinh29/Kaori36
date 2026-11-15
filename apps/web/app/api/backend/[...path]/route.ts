@@ -10,10 +10,11 @@ const SLUG = "[a-z0-9]+(?:-[a-z0-9]+)*";
 const allowedEnglish = new RegExp(
   `^(level-tests|level-tests/${UUID}/answers|roadmap|milestones/${SLUG}/tests|` +
     `nodes/${SLUG}/practice|grammar-runs/${UUID}/answers|vocab/session|vocab/answers|` +
-    `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections)$`,
+    `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
+    `phrases|phrases/session|phrases/answers|phrases/${UUID})$`,
 );
 // The only path a learner may DELETE: their own essay (specs/writing/step-2.1.md).
-const deletable = new RegExp(`^essays/${UUID}$`);
+const deletable = new RegExp(`^(essays|phrases)/${UUID}$`);
 const forwardedParams = [
   "learner_id",
   "subject",

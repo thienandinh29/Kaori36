@@ -104,7 +104,17 @@ skipped without it. Web unit tests and one Playwright test (self-correction acce
   rules reduce these mistakes but cannot remove them: the owner's 20-essay faithfulness rating measures how often they
   happen. If false grammar claims are common, a later option is to label gra issues no tool confirmed as "AI nhận
   xét, chưa được công cụ xác nhận" (not built: LanguageTool's low recall would also label correct points).
-- **2.4b:** the rewrite and saved phrases, with their own migration (`0018`), replacing the `0017` tables named above.
+- **2.4b (15 Nov 2026):** `POST /essays/{id}/rewrites` queues a rewrite (owner only, at most 3 per essay); the worker
+  runs it (task `writing_rewrite`): length within 0.6–1.6× of the paragraph, at least one real change, LanguageTool
+  clean, and higher on the scorer once calibrated (otherwise "not_run"; CEFR always "not_run" until a licensed list);
+  regenerated once, then rejected with the reason. The code's word diff decides what changed; a model entry gives its
+  reason only if its before-text is really in the paragraph and its after-text really in the rewrite, and an entry
+  covering several edits becomes one combined change. Saved phrases (`POST /phrases`, `GET /phrases/session`,
+  `POST /phrases/answers`, `DELETE /phrases/{id}`) are gap-fills of their sentence with FSRS cards in `vocab_cards`
+  (list `my-phrases`), reviewed on `/tu-vung`. Migration `0018` (`essay_rewrites`, `learner_phrases`).
+  **Live (deepseek-flash):** a 47-word paragraph with four errors was rewritten on the first attempt, LanguageTool
+  clean, all four errors fixed, the learner's example kept. The first matcher put a three-edit explanation on the
+  wrong small change; the combined-change rule fixed it (4 of 4 changes with the right reason on the rerun).
 
 ## Not in this step
 Task 1 (2.5), speaking, an LLM-written hint (the deterministic hint comes first), showing the LLM's band.
