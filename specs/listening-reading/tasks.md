@@ -18,3 +18,6 @@
 - [ ] 4.3 Reading practice, skill nodes, evidence
 - [ ] 4.4 Listening audio and items
 - [ ] 4.5 gate report
+
+**4.1 built (15 Nov 2026):** `specs/listening-reading/step-4.1.md`; `app/texts/` (bank loader tied to verified sources, level
+features, CLI). No texts are shipped: the owner adds them once a source is verified.
