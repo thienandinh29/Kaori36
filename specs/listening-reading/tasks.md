@@ -21,3 +21,6 @@
 
 **4.1 built (15 Nov 2026):** `specs/listening-reading/step-4.1.md`; `app/texts/` (bank loader tied to verified sources, level
 features, CLI). No texts are shipped: the owner adds them once a source is verified.
+
+**4.2a built (15 Nov 2026):** `specs/listening-reading/step-4.2a.md`; `app/reading/items.py` (four question types, checks
+against the passage, answer-key grading). 4.2b (generation, blind verification, review queue) waits on the verifier decision.
