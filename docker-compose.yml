@@ -35,6 +35,8 @@ services:
   db:
     image: pgvector/pgvector:pg16
     container_name: nodetrail-db
+    # Comes back after a reboot or a Docker restart, like the services that depend on it.
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
