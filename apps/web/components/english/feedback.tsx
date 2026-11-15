@@ -1,5 +1,6 @@
 import type { Feedback as FeedbackData } from "@/lib/english/types";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 
 const t = vi.english;
 
@@ -7,16 +8,22 @@ const t = vi.english;
 export function Feedback({ feedback }: { feedback: FeedbackData }) {
   return (
     <div
-      className={`en-feedback ${feedback.correct ? "is-right" : "is-wrong"}`}
+      className={`en-feedback has-sena ${feedback.correct ? "is-right" : "is-wrong"}`}
       role="status"
     >
-      <strong>{feedback.correct ? t.run.right : t.run.wrong}</strong>
-      {!feedback.correct && (
-        <p>
-          {t.run.answerWas}: <b lang="en">{feedback.key}</b>
-        </p>
-      )}
-      {feedback.misconception_vi && <p>{feedback.misconception_vi}</p>}
+      <Sena
+        pose={feedback.correct ? "idle" : "oops"}
+        label={feedback.correct ? t.senaSays.right : t.senaSays.wrong}
+      />
+      <div>
+        <strong>{feedback.correct ? t.run.right : t.run.wrong}</strong>
+        {!feedback.correct && (
+          <p>
+            {t.run.answerWas}: <b lang="en">{feedback.key}</b>
+          </p>
+        )}
+        {feedback.misconception_vi && <p>{feedback.misconception_vi}</p>}
+      </div>
     </div>
   );
 }

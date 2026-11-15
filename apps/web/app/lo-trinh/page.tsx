@@ -3,7 +3,7 @@ import { EnglishShell } from "@/components/english/shell";
 
 export default function Page() {
   return (
-    <EnglishShell active="/lo-trinh">
+    <EnglishShell active="/lo-trinh" wide>
       <RoadmapView />
     </EnglishShell>
   );

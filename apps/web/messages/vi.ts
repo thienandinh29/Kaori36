@@ -467,6 +467,25 @@ export const vi = {
       why: "Vì sao?",
       noTest:
         "Làm bài kiểm tra trình độ để Sena đánh dấu những gì bạn đã biết.",
+      mapTitle: "Bản đồ khóa học",
+      mapHint:
+        "Đi từ chân dốc lên đỉnh. Mỗi vòng tròn là một cột mốc: phần tô tím là phần bạn đã nắm, phần gạch chéo là phần còn thiếu.",
+      here: "Bạn ở đây",
+      senaHere: "Sena đứng ở cột mốc bạn nên học tiếp",
+      skyTitle: "Phần nào vững, phần nào còn hổng",
+      skyHint:
+        "Mỗi cột là một phần nhỏ. Tô tím: đã nắm. Gạch chéo: còn thiếu. Bấm một nhóm để mở cột mốc đó.",
+      skyLabel: "Mức nắm vững từng phần nhỏ, theo cột mốc",
+      knownLine: "ngưỡng đã biết",
+      bands: { strong: "Đã biết", growing: "Đang lên", gap: "Còn hổng" },
+      partsOf: "trên",
+      partsWord: "phần",
+      known: "Đã nắm",
+      missing: "còn thiếu",
+      milestone: "Cột mốc",
+      start: "điểm xuất phát",
+      close: "Đóng",
+      pick: "Chọn một cột mốc trên bản đồ để xem các phần bên trong.",
     },
     trace: {
       before: "Trước",
@@ -520,6 +539,21 @@ export const vi = {
       next: "Tiếp",
       done: "Xong phiên ôn tập. Quay lại khi có từ đến hạn nhé.",
       start: "Bắt đầu ôn",
+    },
+    tabs: {
+      label: "Điều hướng nhanh",
+      today: "Hôm nay",
+      roadmap: "Lộ trình",
+      vocab: "Từ vựng",
+      writing: "Viết",
+      test: "Kiểm tra",
+    },
+    senaSays: {
+      wave: "Sena vẫy chào",
+      right: "Sena mỉm cười",
+      wrong: "Sena che miệng: ối, chưa đúng",
+      mastered: "Sena bắn tim: bạn đã nắm vững",
+      focus: "Sena đang tập trung",
     },
     homeToday: {
       vocabTitle: "Từ vựng",
