@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Question } from "@/lib/english/types";
 import { optionForKey, progressText } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 
 const t = vi.english;
 
@@ -36,11 +37,27 @@ export function QuestionCard({
       aria-busy={busy}
       data-item-id={question.item_id}
     >
-      <div className="en-question-top">
-        <span>{progressText(question.number, question.total, t.question)}</span>
-        {question.draft && <span className="en-badge">{t.draft}</span>}
+      <div className="nt-q-head">
+        <Sena pose="focus" label={t.senaSays.focus} className="nt-q-sena" />
+        <div className="nt-q-meta">
+          <div className="en-question-top">
+            <span>
+              {progressText(question.number, question.total, t.question)}
+            </span>
+            {question.draft && <span className="en-badge">{t.draft}</span>}
+          </div>
+          {question.total !== null && (
+            <div className="nt-progress" aria-hidden="true">
+              <i
+                style={{
+                  width: `${Math.min(100, (100 * question.number) / question.total)}%`,
+                }}
+              />
+            </div>
+          )}
+          <p className="en-instruction">{instruction ?? t.choose}</p>
+        </div>
       </div>
-      <p className="en-instruction">{instruction ?? t.choose}</p>
       <p className="en-prompt" lang="en">
         {question.prompt}
       </p>

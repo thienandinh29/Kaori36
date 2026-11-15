@@ -8,6 +8,7 @@ import type {
 } from "@/lib/english/types";
 import { emptyVocabReason } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
 import { QuestionCard } from "./question-card";
 import { TraceNote } from "./trace-note";
@@ -54,11 +55,26 @@ export function VocabSession() {
 
   const entry = session.entries[index];
   const header = (
-    <section className="en-card">
+    <section className="en-card nt-vocab-head">
       <h1>{t.vocab.title}</h1>
-      <p className="en-muted">
-        {session.due} {t.vocab.due} · {session.new_left_today} {t.vocab.newLeft}
+      <p className="nt-chips">
+        <span>
+          {session.due} {t.vocab.due}
+        </span>
+        <span>
+          {session.new_left_today} {t.vocab.newLeft}
+        </span>
       </p>
+      {session.entries.length > 0 && (
+        <ol className="nt-dots" aria-label={t.vocab.progress}>
+          {session.entries.map((e, i) => (
+            <li
+              key={e.item.id}
+              className={i < index ? "is-done" : i === index ? "is-now" : ""}
+            />
+          ))}
+        </ol>
+      )}
     </section>
   );
   if (!entry)
@@ -99,7 +115,7 @@ export function VocabSession() {
     return (
       <>
         {header}
-        <section className="en-card">
+        <section className="en-card nt-flash">
           <span className="en-badge next">{t.vocab.newWord}</span>
           <WordCard card={entry.card} />
           <button
@@ -120,15 +136,21 @@ export function VocabSession() {
         {header}
         <section className="en-card">
           <div
-            className={`en-feedback ${answer.correct ? "is-right" : "is-wrong"}`}
+            className={`en-feedback has-sena ${answer.correct ? "is-right" : "is-wrong"}`}
             role="status"
           >
-            <strong>{answer.correct ? t.vocab.right : t.vocab.wrong}</strong>
-            {!answer.correct && (
-              <p>
-                {t.vocab.answerWas}: <b lang="en">{answer.accepted}</b>
-              </p>
-            )}
+            <Sena
+              pose={answer.correct ? "idle" : "oops"}
+              label={answer.correct ? t.senaSays.right : t.senaSays.wrong}
+            />
+            <div>
+              <strong>{answer.correct ? t.vocab.right : t.vocab.wrong}</strong>
+              {!answer.correct && (
+                <p>
+                  {t.vocab.answerWas}: <b lang="en">{answer.accepted}</b>
+                </p>
+              )}
+            </div>
           </div>
           <WordCard card={answer.card} />
           <p className="en-muted">

@@ -447,6 +447,7 @@ export const vi = {
       estimateNote:
         "Đây là ước lượng từ một bài kiểm tra ngắn, có thể sai. Sena sẽ điều chỉnh khi bạn học tiếp.",
       toRoadmap: "Xem lộ trình của bạn",
+      scale: "Vị trí ước lượng trên thang CEFR",
     },
     roadmap: {
       title: "Lộ trình của bạn",
@@ -539,6 +540,7 @@ export const vi = {
       next: "Tiếp",
       done: "Xong phiên ôn tập. Quay lại khi có từ đến hạn nhé.",
       start: "Bắt đầu ôn",
+      progress: "Tiến độ phiên ôn",
     },
     tabs: {
       label: "Điều hướng nhanh",
@@ -554,6 +556,7 @@ export const vi = {
       wrong: "Sena che miệng: ối, chưa đúng",
       mastered: "Sena bắn tim: bạn đã nắm vững",
       focus: "Sena đang tập trung",
+      think: "Sena đang suy nghĩ",
     },
     homeToday: {
       vocabTitle: "Từ vựng",

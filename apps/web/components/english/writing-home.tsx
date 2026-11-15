@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { englishClient } from "@/lib/english/client";
 import type { EssaySummary, WritingPrompt } from "@/lib/english/types";
 import { vi } from "@/messages/vi";
+import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
 import { useLearner } from "./use-learner";
 
@@ -47,14 +48,23 @@ export function WritingHome() {
 
   return (
     <>
-      <section className="en-card">
-        <h1>{w.title}</h1>
-        <p className="en-muted">{w.intro}</p>
+      <section className="en-card nt-intro">
+        <div className="nt-intro-head">
+          <Sena
+            pose="idle"
+            label={t.senaSays.right}
+            className="nt-intro-sena"
+          />
+          <div>
+            <h1>{w.title}</h1>
+            <p className="en-muted">{w.intro}</p>
+          </div>
+        </div>
       </section>
       <section className="en-card">
         <h2>{w.prompts}</h2>
         {prompts.length === 0 && <p className="en-muted">{w.noPrompts}</p>}
-        <ul className="en-essays">
+        <ul className="en-essays nt-prompts">
           {prompts.map((p) => (
             <li key={p.id}>
               <div className="en-actions">
@@ -84,8 +94,10 @@ export function WritingHome() {
                 {promptText.get(e.prompt_id) ?? e.prompt_id}
               </p>
               <p className="en-muted">
-                {new Date(e.submitted_at).toLocaleString("vi-VN")} ·{" "}
-                {w.status[e.status]}
+                <span className={`nt-state is-${e.status}`}>
+                  {w.status[e.status]}
+                </span>{" "}
+                {new Date(e.submitted_at).toLocaleString("vi-VN")}
                 {e.words !== null && ` · ${e.words} ${w.words}`}
               </p>
               <Link className="en-link" href={`/bai-viet/${e.id}`}>
