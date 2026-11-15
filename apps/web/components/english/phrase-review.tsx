@@ -4,6 +4,7 @@ import { englishClient } from "@/lib/english/client";
 import type { PhraseAnswer, PhraseSession } from "@/lib/english/types";
 import { vi } from "@/messages/vi";
 import { Problem } from "./problem";
+import { SpeakButton } from "./speak-button";
 import { useLearner } from "./use-learner";
 
 const w = vi.english.writing;
@@ -41,7 +42,8 @@ export function PhraseReview() {
         <>
           {entry.is_new && entry.phrase && (
             <p>
-              {w.phraseNew}: <strong lang="en">{entry.phrase}</strong>
+              {w.phraseNew}: <strong lang="en">{entry.phrase}</strong>{" "}
+              <SpeakButton text={entry.phrase} private />
             </p>
           )}
           <p lang="en">{entry.prompt}</p>
@@ -81,6 +83,7 @@ export function PhraseReview() {
                   ? w.phraseRight
                   : `${w.phraseWrong} ${result.accepted}`}
               </p>
+              <SpeakButton text={result.accepted} private />
               <button
                 type="button"
                 className="en-button"

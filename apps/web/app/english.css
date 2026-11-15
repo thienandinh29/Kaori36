@@ -1641,3 +1641,25 @@ svg.nt-trail {
   border-color: var(--nt-known);
   outline: 3px solid var(--nt-known-soft);
 }
+
+/* The listen buttons next to English text (specs/speech). */
+.nt-speak {
+  display: inline-flex;
+  gap: 4px;
+  vertical-align: middle;
+}
+.nt-speak button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--nt-line, currentColor);
+  border-radius: 999px;
+  background: var(--nt-card, transparent);
+  color: inherit;
+  cursor: pointer;
+}
+.nt-speak button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}

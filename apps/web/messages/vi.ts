@@ -542,6 +542,12 @@ export const vi = {
       start: "Bắt đầu ôn",
       progress: "Tiến độ phiên ôn",
     },
+    speech: {
+      listen: "Nghe",
+      listenSlow: "Nghe chậm",
+      machineVoice:
+        "Giọng đọc máy của trình duyệt, không phải mẫu phát âm chuẩn",
+    },
     tabs: {
       label: "Điều hướng nhanh",
       today: "Hôm nay",
