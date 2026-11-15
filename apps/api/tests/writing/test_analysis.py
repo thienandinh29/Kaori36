@@ -62,5 +62,6 @@ def test_a_short_essay_is_flagged_and_a_long_one_is_not() -> None:
 
 def test_the_prompts_and_linking_files_load() -> None:
     bank = load_prompts(DATA / "prompts.yaml")
-    assert len(bank.prompts) >= 5 and all(p.task == 2 for p in bank.prompts)
+    assert len([p for p in bank.prompts if p.task == 2]) >= 5
+    assert len([p for p in bank.prompts if p.task == 1]) >= 4  # charts, step 2.5
     assert {"contrast", "addition", "conclusion"} <= set(LINKING)

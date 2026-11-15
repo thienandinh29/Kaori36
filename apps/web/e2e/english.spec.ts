@@ -161,3 +161,33 @@ test("an essay is written, measured by the worker, and deleted", async ({
   await page.getByRole("button", { name: "Xóa bài viết" }).click();
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
 });
+
+test("a Task 1 report is checked against its chart, with no band", async ({
+  page,
+}) => {
+  await asLearner(page, LEARNER); // the chart prompts are drafts
+  await page.goto("/viet/t1-internet-access");
+  await expect(page.getByTestId("chart")).toBeVisible();
+  await expect(page.getByTestId("chart").locator("svg")).toBeVisible();
+  await page
+    .getByRole("textbox")
+    .fill(
+      "The graph shows internet access. Overall, all three countries rose. Country A grew from 5% in 2000 to 85% in 2020, while Country B reached 90% in 2020.",
+    );
+  await page.getByLabel("Tôi đã đọc và đồng ý").check();
+  await page.getByRole("button", { name: "Gửi bài" }).click();
+  await expect(page.getByRole("heading", { name: "Đã phân tích" })).toBeVisible(
+    {
+      timeout: 30_000,
+    },
+  );
+  const checks = page.getByTestId("task1-checks");
+  await expect(checks.getByTestId("unsupported-number")).toHaveCount(1);
+  await expect(checks.getByTestId("unsupported-number")).toContainText("90%");
+  await expect(page.getByTestId("chart")).toBeVisible(); // the chart stays beside the result
+  await expect(page.getByTestId("essay-band")).toHaveCount(0); // Task 1 never gets a band
+  await expect(page.getByText("Chưa ước lượng band cho Task 1.")).toBeVisible();
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Xóa bài viết" }).click();
+  await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
+});

@@ -234,8 +234,9 @@ def own_essay(
     step: GrammarStep,
     text: str,
     now: datetime = NOW,
+    prompt_id: str = "t2-plastic-ban",
 ) -> dict[str, Any]:
-    essay_id = svc.submit(learner, "t2-plastic-ban", text, CONSENT, now=now)
+    essay_id = svc.submit(learner, prompt_id, text, CONSENT, now=now)
     drain(db, WRITING, step)
     return svc.get(learner, essay_id)
 
@@ -632,3 +633,66 @@ def test_a_saved_phrase_is_reviewed_with_fsrs_and_can_be_deleted(setup: Setup) -
             "select count(*) from vocab_cards where list_slug='my-phrases' and learner_id=%s",
             (learner,)).fetchone()  # fmt: skip
     assert left == (0,) and phrases.session(learner, now=NOW)["saved"] == 0
+
+
+# --- step 2.5: Task 1 (specs/writing/step-2.5.md) -------------------------------------------
+
+TASK1_ESSAY = (
+    "The graph shows internet access in three countries. Overall, all of them rose. "
+    "Country A grew from 5% in 2000 to 85% in 2020, while Country B reached 90% in 2020. "
+    "Country C started at 12% and ended at 80%."
+)
+
+
+class RecordingDeepSeek(FakeDeepSeek):
+    """Remembers what the model was sent."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.sent: list[tuple[str, str]] = []
+
+    async def generate(self, route: Any, system: str, messages: Any, schema: Any) -> Any:
+        self.sent.append((system, messages[0].content))
+        return await super().generate(route, system, messages, schema)
+
+
+def test_a_task_1_essay_is_checked_against_its_chart_and_gets_no_band(setup: Setup) -> None:
+    svc, learner, db = setup
+    step = replace(step_for(learner), client=None)  # LanguageTool is not what is tested here
+    essay = own_essay(svc, learner, db, step, TASK1_ESSAY, prompt_id="t1-internet-access")
+    r = essay["result"]
+    assert essay["status"] == "done" and r["task"] == 1 and r["min_words"] == 150
+    assert essay["prompt"]["figure"]["chart_type"] == "line"
+    numbers = {n["text"]: n["supported"] for n in r["task1"]["numbers"]}
+    assert numbers["90%"] is False and numbers["85%"] is True and numbers["12%"] is True
+    assert r["task1"]["overview"] is True
+    assert any(f["covered"] for f in r["task1"]["features"])
+    assert r["score"] is None and "Task 1" in r["score_unavailable_vi"]  # never a band
+    t2 = own_essay(svc, learner, db, step, FIXTURES["smoke"]["text"])["result"]
+    assert t2["task"] == 2 and "task1" not in t2
+
+
+def test_the_task_1_model_sees_the_chart_facts_and_never_a_band(setup: Setup) -> None:
+    from tests.writing.test_band import CALIBRATED, FakeScorer
+
+    svc, learner, db = setup
+    fake = RecordingDeepSeek()
+    step = replace(step_for(learner), client=None, model=writing_model(db, fake),
+                   scorer=FakeScorer(4.0), scorer_config=CALIBRATED)  # fmt: skip
+    r = own_essay(svc, learner, db, step, TASK1_ESSAY, prompt_id="t1-internet-access")["result"]
+    system, user = fake.sent[-1]
+    assert "Task 1" in system and "Task Achievement" in system
+    assert "Country A: 5, 18, 40, 68, 85" in user and "Key facts:" in user
+    assert "band_low" not in user and "uncertain" not in user  # the model never sees a band
+    assert r["feedback"] is not None and r["score"] is None
+
+
+def test_task_1_essays_cannot_be_rewritten(setup: Setup) -> None:
+    from app.services.rewrites import request_rewrite
+
+    svc, learner, db = setup
+    step = replace(step_for(learner), client=None)
+    essay_id = own_essay(svc, learner, db, step, TASK1_ESSAY, prompt_id="t1-internet-access")["id"]
+    with pytest.raises(HTTPException) as err:
+        request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
+    assert err.value.status_code == 422

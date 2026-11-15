@@ -21,7 +21,11 @@ export function EssayFeedbackView({ result }: { result: EssayResult }) {
       {CRITERIA.map((c) =>
         fb.criteria[c].length === 0 ? null : (
           <div key={c} className="en-criterion">
-            <h3>{w.criteria[c]}</h3>
+            <h3>
+              {c === "tr" && result.task === 1
+                ? w.task1Criterion
+                : w.criteria[c]}
+            </h3>
             <ul>
               {fb.criteria[c].map((p, i) => (
                 <li key={i} data-kind={p.kind}>
