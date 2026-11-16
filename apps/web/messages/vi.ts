@@ -548,8 +548,9 @@ export const vi = {
       levelPick: "Học từ mới ở cấp độ",
       cardsTitle: "Thẻ từ {i}/{n}",
       cardsIntro:
-        "Xem từng thẻ. Bấm lật thẻ để xem nghĩa. Xem hết thì viết lại từng từ từ trí nhớ.",
+        "Xem từng thẻ: từ, nghĩa và câu ví dụ. Lật thẻ để xem định nghĩa tiếng Anh. Xem hết thì viết lại từng từ từ trí nhớ.",
       flip: "Lật thẻ",
+      noVi: "(chưa có nghĩa tiếng Việt)",
       flipBack: "Xem mặt trước",
       nextCard: "Thẻ tiếp",
       startRecall: "Đã xem hết, bắt đầu viết từ",

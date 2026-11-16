@@ -287,10 +287,17 @@ export function VocabSession() {
                 </span>
               )}
               <SpeakButton text={current.card!.lemma} />
+              <span className="nt-card-vi">
+                {current.card!.vi ?? t.vocab.noVi}
+              </span>
               <span className="nt-chips">
                 <span>{current.card!.pos}</span>
                 <span>{originLabels(current.card!).level}</span>
               </span>
+              <p className="nt-card-example" lang="en">
+                “{current.card!.example}”{" "}
+                <SpeakButton text={current.card!.example} />
+              </p>
             </div>
           )}
           <div className="nt-actions">
