@@ -24,7 +24,7 @@ Planned entries are marked _(planned)_ until they exist.
 | `.claude/settings.json` | Pre-approved commands for Claude Code |
 | `.claude/skills/verify/` | `/verify` — run all lint, type checks, tests |
 | `.env.example` | Every env var the project uses (copy to `.env`) |
-| `docker-compose.yml` | The whole stack in one command: db, migrate, api, worker, sandbox, runner, web; TEI, LanguageTool (`writing`) and the scorer (`scoring`) as opt-in profiles (`specs/one-command-start/`) |
+| `docker-compose.yml` | The whole stack in one command: db, migrate, api, worker, sandbox, runner, web; TEI, LanguageTool (`writing`), the scorer (`scoring`) and the voice (`speech`) as opt-in profiles (`specs/one-command-start/`) |
 | `apps/api/Dockerfile`, `apps/web/Dockerfile` | Images for the API/worker/migrations and the web app |
 | `scripts/stack-smoke.sh` | End-to-end checks of a running stack (also the CI `stack` job) |
 | `.github/workflows/ci.yml` | CI: ruff, mypy, pytest against a pgvector service, evaluation gates, sandbox escape tests, grader self-test, the full stack |
@@ -82,7 +82,7 @@ Planned entries are marked _(planned)_ until they exist.
 | `docs/v2/web-handoff.md` | Handoff for redesigning the web app: pages and their API calls, the rules to keep, how to run and test |
 | `apps/api/app/reading/items.py` | Step 4.2a: Reading question types (T/F/NG, multiple choice, completion, headings), checks against the passage, answer-key grading; only approved items are served |
 | `docs/v2/tts-candidates.md` | Text-to-speech candidates for the self-hosted voice (speech S2): licences of weights, voices, training data and code; Kokoro vs Piper; the owner's decisions |
-| `specs/speech/`; `apps/web/lib/english/speech.ts`, `components/english/speak-button.tsx` | Hearing English: S1 the browser's voice (listen and slow buttons on word cards and saved phrases; on-device voices only for the learner's own text); S2 a self-hosted voice, after the owner's licence decision (`docs/v2/tts-candidates.md`) |
+| `specs/speech/`; `apps/web/lib/english/speech.ts`, `components/english/speak-button.tsx`; `apps/api/app/api/speech.py`; `tts/` | Hearing English: listen and slow buttons on word cards and saved phrases. S2 (preferred): the self-hosted Piper voice `en_GB-cori-high` (`tts/`, compose profile `speech`, GPL-3.0, pinned by SHA-256) through `/speech`; S1 fallback: the browser's voice (on-device only for the learner's own text) |
 | `specs/pronunciation/` | Phase 3 spec and the owner's decision list (not built): pipeline, target sounds, voice policy, evaluation on speechocean762 and on the owner's own recordings, the gate |
 | `apps/api/app/writing/export_review.py`; `apps/api/app/evalkit/writing_review.py`; `docs/v2/writing-eval.md` | The owner's hand ratings: export feedback points and AI corrections to a private sheet, score them with exact intervals; the phase 2 gate report with every number to fill and the commands |
 | `apps/api/app/writing/task1.py`; `apps/web/components/english/chart-figure.tsx`, `task1-checks.tsx`, `lib/english/chart.ts` | Step 2.5: Task 1 checks against the chart's data (numbers, key features, overview), the SVG chart and the checks section |

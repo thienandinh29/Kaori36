@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_SPEAK_CHARS,
   canSpeak,
+  parseSpeechStatus,
   pickVoice,
+  serverAudio,
+  serverVoiceAvailable,
   speakable,
   type VoiceLike,
 } from "./speech";
@@ -65,5 +68,41 @@ describe("canSpeak", () => {
     expect(
       canSpeak({ speechSynthesis: {}, SpeechSynthesisUtterance: class {} }),
     ).toBe(true);
+  });
+});
+
+describe("the server voice", () => {
+  it("reads the status strictly", () => {
+    expect(parseSpeechStatus({ available: true, voice: "v" })).toBe(true);
+    expect(parseSpeechStatus({ available: false, voice: null })).toBe(false);
+    expect(parseSpeechStatus({ available: "yes" })).toBe(false);
+    expect(parseSpeechStatus(null)).toBe(false);
+  });
+
+  it("treats any failure as unavailable", async () => {
+    const ok = async () =>
+      new Response(JSON.stringify({ available: true, voice: "v" }));
+    expect(await serverVoiceAvailable(ok)).toBe(true);
+    const down = async () => new Response(null, { status: 502 });
+    expect(await serverVoiceAvailable(down)).toBe(false);
+    const broken = async (): Promise<Response> => {
+      throw new TypeError("network");
+    };
+    expect(await serverVoiceAvailable(broken)).toBe(false);
+  });
+
+  it("returns audio only when the server sends WAV", async () => {
+    let sent = "";
+    const wav = async (_: RequestInfo | URL, init?: RequestInit) => {
+      sent = String(init?.body);
+      return new Response(new Uint8Array([82, 73, 70, 70]), {
+        headers: { "content-type": "audio/wav" },
+      });
+    };
+    const blob = await serverAudio("important", "slow", wav);
+    expect(blob.size).toBe(4);
+    expect(JSON.parse(sent)).toEqual({ text: "important", pace: "slow" });
+    const json = async () => new Response("{}");
+    await expect(serverAudio("important", "normal", json)).rejects.toThrow();
   });
 });

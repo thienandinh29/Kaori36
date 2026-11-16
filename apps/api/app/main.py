@@ -135,6 +135,13 @@ def create_app(
     )
     app.include_router(writing_routes.create_router(writing))
     app.include_router(graph_confirmation.create_router())
+    from app.api import speech as speech_routes
+
+    app.include_router(
+        speech_routes.create_router(
+            speech_routes.SpeechClient(settings.tts_url) if settings.tts_url else None
+        )
+    )
 
     @app.middleware("http")
     async def request_context(

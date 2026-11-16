@@ -268,8 +268,18 @@ describe("graph confirmation session proxy", () => {
       "essays",
       `essays/${id}`,
       "phrases/session",
+      "speech/status",
     ])
       expect((await get(path)).status).toBe(200);
+    const speech = await POST(
+      new NextRequest("http://localhost:3000/api/backend/speech", {
+        method: "POST",
+        headers: { origin: "http://localhost:3000" },
+        body: '{"text":"important"}',
+      }),
+      context(["speech"]),
+    );
+    expect(speech.status).toBe(200);
     const corrections = await POST(
       new NextRequest(
         `http://localhost:3000/api/backend/essays/${id}/corrections`,

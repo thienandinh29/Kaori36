@@ -17,3 +17,8 @@ each keeps the licence recorded in its `source.json`.
 The fonts in `apps/web/app/fonts/` (Baloo 2 and Be Vietnam Pro, cut to Latin and Vietnamese characters and
 converted to WOFF2) are licensed under the SIL Open Font License 1.1, not the Apache License; their licence
 files are kept next to them.
+
+The `tts/` directory (the text-to-speech service) is licensed under GPL-3.0-or-later, not the Apache License, because it
+imports piper-tts (GPL-3.0-or-later, which includes espeak-ng). It runs as a separate program in its own container; the rest
+of NodeTrail only sends it HTTP requests. Its voice, en_GB-cori-high from rhasspy/piper-voices, was trained on public-domain
+LibriVox recordings according to its model card.

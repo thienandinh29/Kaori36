@@ -30,6 +30,8 @@ x-api-env: &api-env
     LANGUAGETOOL_URL: ${LANGUAGETOOL_URL:-}
     # Set by --profile scoring (the scorer service); empty: essays get no band.
     SCORER_URL: ${SCORER_URL:-}
+    # Set by --profile speech (the tts service); empty: the web uses the browser's own voice.
+    TTS_URL: ${TTS_URL:-}
 
 services:
   db:
@@ -152,6 +154,23 @@ services:
       - scorer-models:/models
     mem_limit: ${SCORER_MEMORY_LIMIT:-1500m}
 
+  # Hearing English with one pinned voice (tts/README.md, GPL-3.0 in its own container). Opt-in:
+  # --profile speech, and set TTS_URL=http://tts:8030 so the API uses it; else the browser's voice.
+  tts:
+    image: nodetrail-tts:local
+    build: tts
+    profiles: [speech]
+    restart: unless-stopped
+    environment:
+      TTS_VOICE: en_GB-cori-high
+      TTS_PATH: en/en_GB/cori/high
+      TTS_REVISION: e9ab671f2a0e50a701b34361136ba3e6a3a9eb0c
+      TTS_MODEL_SHA256: 470b4dd634c98f8a4850d7626ffc3dfc90774628eeef6605a6dd8f88f30a5903
+      TTS_CONFIG_SHA256: 9e7fb5b5671612c22f3c81cbe46c1ae87b031a4632bcb509e499dad6f1e2adec
+    volumes:
+      - tts-models:/models
+    mem_limit: ${TTS_MEMORY_LIMIT:-600m}
+
   # bge-m3 embeddings for indexing and retrieval (docker/TEI.md). Opt-in: about 2.3 GB of weights.
   tei:
     image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.9
@@ -182,5 +201,6 @@ services:
 
 volumes:
   scorer-models:
+  tts-models:
   tei-data:
   nodetrail-db:
