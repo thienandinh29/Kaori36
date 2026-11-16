@@ -22,7 +22,7 @@ from app.engine import srs
 from app.engine.trace import DecisionTrace
 from app.services.backend import learner_uuid, save_trace
 from app.vocabulary import items as vitems
-from app.vocabulary.wordlist import WordList, load_wordlist
+from app.vocabulary.wordlist import WordList, shared_wordlist
 
 DEFAULT_LIMIT = 20
 DEFAULT_NEW_PER_DAY = 10
@@ -102,9 +102,15 @@ def start_of_day(now: datetime) -> datetime:
 
 
 class VocabPractice:
-    def __init__(self, pool: Callable[[], ConnectionPool], lists_dir: Path) -> None:
+    def __init__(
+        self,
+        pool: Callable[[], ConnectionPool],
+        lists_dir: Path,
+        imported_dir: Path | None = None,
+    ) -> None:
         self.pool = pool
         self.lists_dir = lists_dir
+        self.imported_dir = imported_dir  # imported words of the same list (vocabulary-import)
         self._lists: dict[str, WordList] = {}
 
     def wordlist(self, slug: str) -> WordList:
@@ -113,7 +119,7 @@ class VocabPractice:
         path = self.lists_dir / f"{slug}.yaml"
         if not slug.replace("-", "").isalnum() or not path.is_file():
             raise HTTPException(404, "Không tìm thấy danh sách từ vựng.")
-        self._lists[slug] = load_wordlist(path)
+        self._lists[slug] = shared_wordlist(path, self.imported_dir)
         return self._lists[slug]
 
     def _learner(self, conn: psycopg.Connection[Any], learner_id: str) -> UUID:

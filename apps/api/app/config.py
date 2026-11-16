@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     runner_token: SecretStr = SecretStr("")
     courses_dir: Path = REPO_ROOT / "data" / "courses"
     vocab_dir: Path = REPO_ROOT / "data" / "vocabulary"
+    # Imported words (CC BY-SA 4.0, specs/vocabulary-import), merged into the list of the same name.
+    vocab_imported_dir: Path = REPO_ROOT / "data-sa" / "vocabulary"
     items_dir: Path = REPO_ROOT / "data" / "items"
     writing_dir: Path = REPO_ROOT / "data" / "writing"
     writing_daily_essays: int = 3  # essays per learner per day

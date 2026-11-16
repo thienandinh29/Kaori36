@@ -24,6 +24,7 @@ import {
   type EssaySummary,
   type LinkingGroup,
   type WritingPrompt,
+  type WordOrigin,
   type Feedback,
   type HiddenNode,
   type Level,
@@ -183,6 +184,15 @@ function parseVocabItem(value: unknown): VocabItem {
   };
 }
 
+const WORD_ORIGINS: readonly WordOrigin[] = ["authored", "ngsl", "nawl"];
+
+function wordOrigin(value: unknown): WordOrigin {
+  const origin = string(value);
+  if (!(WORD_ORIGINS as readonly string[]).includes(origin))
+    throw new DataError("contract");
+  return origin as WordOrigin;
+}
+
 export function parseWordCard(value: unknown): WordCard {
   const d = record(value);
   return {
@@ -191,6 +201,7 @@ export function parseWordCard(value: unknown): WordCard {
     pos: string(d.pos),
     level: string(d.level),
     ipa: ipa(d.ipa),
+    origin: wordOrigin(d.origin),
     definition: string(d.definition),
     vi: optionalString(d.vi),
     example: string(d.example),

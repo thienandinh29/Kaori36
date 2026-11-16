@@ -66,6 +66,8 @@ Planned entries are marked _(planned)_ until they exist.
 | `apps/api/app/llm/` | LLM gateway (DeepSeek generation, Gemini verification; legacy Vertex AI, Bedrock and OpenRouter adapters), `routing.yaml`, smoke CLI and setup README |
 | `data/courses/` | Course specs: `english-ielts.yaml` (first real course: grammar roadmap of milestones with hidden nodes, A1–C1, starter draft), Python basics, IELTS Academic Writing, introductory statistics |
 | `data/sources/` | Open-education allowlist, library manifests and acquisition/index reports; `catalog.yaml` + `catalog-report.json` for v2 structured sources; `english-candidates.yaml` (English sources awaiting licence checks, rules in `app/sources/candidates.py`) |
+| `data-sa/` | CC BY-SA 4.0 data (`LICENSE.md` with attribution): `vocabulary/core-seed.yaml` = 3,533 words imported from NGSL/NAWL 1.2 (merged with `data/vocabulary/core-seed.yaml` when loaded), `import-report.json`, `sources.json` (official files' SHA-256), later `review-sample.yaml` |
+| `apps/api/app/vocabulary/importer.py`, `headwords.py`, `ipa.py` | The NGSL/NAWL import (`specs/vocabulary-import/`): official files → headwords and levels, model entries checked by code, IPA only where espeak-ng (`tts` `/phonemize`) agrees |
 | `data/vocabulary/` | Word lists: `core-seed.yaml` (130 authored words A2–C1 in 11 IELTS topics, with British IPA; draft until the owner reviews it) |
 | `data/kg/` _(planned)_ | Knowledge Graph YAML fixtures |
 | `data/items/` | Authored grammar items per course: `english-ielts.yaml` (76 draft MCQs, 4 per hidden node, a misconception on every wrong option); `misconceptions.vi.yaml` (each misconception explained in Vietnamese, draft) |

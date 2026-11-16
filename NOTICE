@@ -1,11 +1,15 @@
 NodeTrail v2
 Copyright 2026 Sena Empire team and NodeTrail contributors
 
-The source code in this repository (everything outside the `data/` directory) is licensed under the
+The source code in this repository (everything outside the `data/` and `data-sa/` directories) is licensed under the
 Apache License, Version 2.0 (see LICENSE).
 
 The `data/` directory is licensed separately under CC BY-NC-SA 4.0 (see data/LICENSE.md), because it
 contains material derived from CC BY-NC-SA textbooks. It is not covered by the Apache License.
+
+The `data-sa/` directory is licensed under CC BY-SA 4.0 (see data-sa/LICENSE.md): it holds the vocabulary adapted from
+the New General Service List and New Academic Word List 1.2 by Browne, C., Culligan, B., and Phillips, J. (CC BY-SA 4.0,
+https://www.newgeneralservicelist.com). It is not covered by the Apache License.
 
 This project started as the NodeTrail contest build of team Sena Empire (hackathon 2026, repository
 thienandinh29/SenaEmpire36); the code inherited from that build is the work of the whole team.

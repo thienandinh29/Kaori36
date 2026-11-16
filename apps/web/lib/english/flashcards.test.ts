@@ -8,6 +8,7 @@ const card = (key: string) => ({
   pos: "noun",
   level: "B1",
   ipa: null,
+  origin: "authored" as const,
   definition: `meaning of ${key}`,
   vi: null,
   example: `An example with ${key}.`,

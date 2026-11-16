@@ -106,7 +106,9 @@ def create_app(
     from app.services.vocabulary import VocabPractice
 
     app.include_router(
-        vocab_routes.create_router(VocabPractice(lambda: app.state.pool, settings.vocab_dir))
+        vocab_routes.create_router(
+            VocabPractice(lambda: app.state.pool, settings.vocab_dir, settings.vocab_imported_dir)
+        )
     )
     from app.api import grammar as grammar_routes
     from app.services.grammar import GrammarService
@@ -117,6 +119,7 @@ def create_app(
         settings.items_dir,
         settings.vocab_dir,
         settings.draft_item_learners,
+        vocab_imported_dir=settings.vocab_imported_dir,
     )
     app.include_router(grammar_routes.create_router(grammar))
     from app.api import writing as writing_routes

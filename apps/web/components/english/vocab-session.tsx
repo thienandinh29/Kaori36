@@ -27,6 +27,7 @@ import { useLearner } from "./use-learner";
 import { VocabLevelPicker, VocabTopicPicker } from "./vocab-levels";
 import { SpeakButton } from "./speak-button";
 import { WordCard } from "./word-card";
+import { originLabels } from "@/lib/english/word-origin";
 
 const t = vi.english;
 const LEVEL_KEY = "nodetrail_vocab_level";
@@ -277,14 +278,18 @@ export function VocabSession() {
             <div className="nt-card-front">
               <strong lang="en">{current.card!.lemma}</strong>
               {current.card!.ipa && (
-                <span className="nt-ipa" lang="en-fonipa">
+                <span
+                  className="nt-ipa"
+                  lang="en-fonipa"
+                  title={originLabels(current.card!).ipaTitle}
+                >
                   {current.card!.ipa}
                 </span>
               )}
               <SpeakButton text={current.card!.lemma} />
               <span className="nt-chips">
                 <span>{current.card!.pos}</span>
-                <span>{current.card!.level}</span>
+                <span>{originLabels(current.card!).level}</span>
               </span>
             </div>
           )}

@@ -51,6 +51,8 @@ class WordCard(BaseModel):
     pos: str
     level: str
     ipa: str | None
+    # authored, or ngsl/nawl: imported, so the level is a frequency estimate and the IPA automatic
+    origin: str = "authored"
     definition: str
     vi: str | None
     example: str
@@ -165,6 +167,7 @@ def card(word: Word) -> WordCard:
         pos=word.pos,
         level=word.level,
         ipa=word.ipa,
+        origin=word.origin,
         definition=word.definition,
         vi=word.vi,
         example=word.examples[0].text,

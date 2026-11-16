@@ -133,3 +133,20 @@ def test_the_real_voice_speaks_and_slow_is_longer() -> None:
     assert normal[:4] == b"RIFF" and seconds(normal) > 1.0
     assert seconds(slow) > seconds(normal) * 1.2
     assert speaker("It is important to sleep well.", "normal") is normal  # from the cache
+
+
+def test_phonemize_returns_espeak_ipa_per_word() -> None:
+    app = create_app(PIN, fake_wav, lambda w: f"!{w}")
+    r = TestClient(app).post("/phonemize", json={"words": ["decision", "data"]})
+    assert r.status_code == 200
+    assert r.json() == {"voice": "en-gb-x-rp", "ipa": {"decision": "!decision", "data": "!data"}}
+    assert TestClient(app).post("/phonemize", json={"words": ["<b>"]}).status_code == 422
+    assert TestClient(app).post("/phonemize", json={"words": []}).status_code == 422
+
+
+def test_the_real_espeak_gives_british_ipa() -> None:
+    from nodetrail_tts.phonemes import espeak
+
+    say = espeak()
+    assert say("decision") == "dɪsˈɪʒən"  # noqa: RUF001
+    assert say("water") == "wˈɔːtɐ"  # noqa: RUF001 (non-rhotic: no r)

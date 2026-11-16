@@ -561,6 +561,11 @@ export const vi = {
       topicPick: "Chủ đề",
       topicAll: "Tất cả",
       ipaTitle: "Phiên âm (giọng Anh), bản nháp tự soạn",
+      ipaAuto:
+        "Phiên âm tự động (giọng Anh): chỉ hiện khi espeak-ng và AI cho cùng kết quả",
+      levelEstimated: "ước lượng theo tần suất",
+      importedFrom:
+        "Từ và định nghĩa: {list} 1.2 (Browne, Culligan & Phillips, CC BY-SA 4.0). Nghĩa tiếng Việt, câu ví dụ: bản nháp tự động.",
       levelSuggested: "gợi ý",
       levelLeft: "còn {n} từ mới",
       levelAllStarted: "đã học hết",
@@ -611,6 +616,8 @@ export const vi = {
       drafts:
         "Câu hỏi và giải thích có nhãn “Bản nháp” do AI soạn, chưa được người duyệt. Nếu thấy sai, hãy ghi lại.",
       data: "Dữ liệu học của bạn nằm trên máy chủ của dự án; mã người học được lưu trong trình duyệt này.",
+      wordLists:
+        "Danh sách từ: New General Service List và New Academic Word List 1.2 của Browne, C., Culligan, B. và Phillips, J., giấy phép CC BY-SA 4.0 (newgeneralservicelist.com). Phần từ vựng nhập từ hai danh sách này cũng theo CC BY-SA 4.0; cấp độ là ước lượng theo tần suất, nghĩa tiếng Việt và câu ví dụ do AI soạn (bản nháp).",
     },
     writing: {
       title: "Luyện viết",

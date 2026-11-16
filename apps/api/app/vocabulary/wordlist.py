@@ -6,6 +6,7 @@ a learner.
 """
 
 import re
+from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Literal, Self
 
@@ -20,18 +21,28 @@ Slug = Annotated[str, Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$", max_length=40
 # A phonemic transcription between slashes, as in the word list (no spaces at the ends, no digits).
 Ipa = Annotated[str, Field(pattern=r"^/[^/\s0-9][^/0-9]*[^/\s0-9]/$|^/[^/\s0-9]/$", max_length=60)]
 BLANK = "___"
+# libyaml when available: the imported list has thousands of words (about 0.5 s instead of 3 s).
+_Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+def _read(path: Path) -> object:
+    with path.open(encoding="utf-8") as f:
+        return yaml.load(f, Loader=_Loader)  # a safe loader, C or Python
+
+
+@lru_cache(maxsize=16384)  # one pattern per word; `re`'s own cache holds only 512
+def _whole_word(word: str) -> re.Pattern[str]:
+    return re.compile(rf"(?<![A-Za-z']){re.escape(word)}(?![A-Za-z'])", re.IGNORECASE)
 
 
 def occurrences(word: str, text: str) -> int:
     """How many times `word` occurs in `text` as a whole word, ignoring case."""
-    return len(re.findall(rf"(?<![A-Za-z']){re.escape(word)}(?![A-Za-z'])", text, re.IGNORECASE))
+    return len(_whole_word(word).findall(text))
 
 
 def blank_out(word: str, text: str) -> str:
     """`text` with the one whole-word occurrence of `word` replaced by the blank."""
-    return re.sub(
-        rf"(?<![A-Za-z']){re.escape(word)}(?![A-Za-z'])", BLANK, text, count=1, flags=re.IGNORECASE
-    )
+    return _whole_word(word).sub(BLANK, text, count=1)
 
 
 class _Model(BaseModel):
@@ -79,10 +90,16 @@ class Form(_Model):
         return self
 
 
+Origin = Literal["authored", "ngsl", "nawl"]
+
+
 class Word(_Model):
     lemma: Lemma
     pos: Pos
     level: Level
+    # authored: written for this project; ngsl/nawl: imported (specs/vocabulary-import), so the
+    # level is estimated from frequency and the IPA was kept only where espeak-ng agreed.
+    origin: Origin = "authored"
     ipa: Ipa | None = None  # British pronunciation, shown next to the word
     topic: Slug | None = None  # one of the list's topics (specs/vocabulary, topics)
     definition: str = Field(min_length=5)
@@ -139,5 +156,40 @@ class WordList(_Model):
         return LEVELS.index(word.level)
 
 
-def load_wordlist(path: Path) -> WordList:
-    return WordList.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")))
+def load_wordlist(path: Path, imported_dir: Path | None = None) -> WordList:
+    """The list at `path`, plus the imported words of the same slug in `imported_dir` when there.
+
+    One list for the learner (specs/vocabulary-import): the authored entry wins over an imported
+    one for the same lemma, the topics are the authored list's, and the result is a draft when
+    either part is.
+    """
+    authored = WordList.model_validate(_read(path))
+    extra = imported_dir / path.name if imported_dir else None
+    if extra is None or not extra.is_file():
+        return authored
+    imported = WordList.model_validate(_read(extra))
+    if imported.slug != authored.slug:
+        raise ValueError(f"{extra}: slug {imported.slug!r} is not {authored.slug!r}")
+    lemmas = {w.lemma for w in authored.words}
+    return WordList.model_validate(
+        {
+            **authored.model_dump(),
+            "status": "draft" if "draft" in (authored.status, imported.status) else "reviewed",
+            "words": [*authored.words, *(w for w in imported.words if w.lemma not in lemmas)],
+        }
+    )
+
+
+def _mtime(path: Path) -> float:
+    return path.stat().st_mtime if path.is_file() else -1.0
+
+
+@lru_cache(maxsize=8)
+def _cached(path: Path, imported_dir: Path | None, _stamps: tuple[float, float]) -> WordList:
+    return load_wordlist(path, imported_dir)
+
+
+def shared_wordlist(path: Path, imported_dir: Path | None = None) -> WordList:
+    """`load_wordlist`, loaded once per process and shared by the services (reloaded on change)."""
+    extra = imported_dir / path.name if imported_dir else path
+    return _cached(path, imported_dir, (_mtime(path), _mtime(extra)))

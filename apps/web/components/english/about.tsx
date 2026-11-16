@@ -37,6 +37,7 @@ export function About() {
         <li>{t.estimates}</li>
         <li>{t.drafts}</li>
         <li>{t.data}</li>
+        <li>{t.wordLists}</li>
       </ul>
     </section>
   );
