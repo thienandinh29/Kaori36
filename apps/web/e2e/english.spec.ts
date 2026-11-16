@@ -111,6 +111,9 @@ test("new words are flashcards first, then typed from memory", async ({
     lemmas.push(
       (await card.locator(".nt-card-front strong").innerText()).trim(),
     );
+    // The front already shows the Vietnamese meaning and an example containing the word.
+    await expect(card.locator(".nt-card-vi")).not.toBeEmpty();
+    await expect(card.locator(".nt-card-example")).not.toBeEmpty();
     await card.getByRole("button", { name: "Lật thẻ" }).click();
     await expect(card.locator(".en-word")).toBeVisible();
     const start = card.getByRole("button", {
