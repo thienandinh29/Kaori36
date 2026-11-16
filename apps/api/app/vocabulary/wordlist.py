@@ -84,6 +84,7 @@ class Word(_Model):
     pos: Pos
     level: Level
     ipa: Ipa | None = None  # British pronunciation, shown next to the word
+    topic: Slug | None = None  # one of the list's topics (specs/vocabulary, topics)
     definition: str = Field(min_length=5)
     vi: str | None = Field(default=None, min_length=1)
     examples: tuple[Example, ...] = Field(min_length=1)
@@ -101,11 +102,17 @@ class Word(_Model):
         return f"{self.lemma}:{self.pos}"
 
 
+class Topic(_Model):
+    slug: Slug
+    name_vi: str = Field(min_length=1)
+
+
 class WordList(_Model):
     slug: Slug
     title_vi: str = Field(min_length=1)
     title_en: str = Field(min_length=1)
     status: Literal["draft", "reviewed"]  # reviewed = the owner has checked every entry
+    topics: tuple[Topic, ...] = ()
     words: tuple[Word, ...] = Field(min_length=4)  # four options for a meaning question
 
     @model_validator(mode="after")
@@ -113,6 +120,16 @@ class WordList(_Model):
         keys = [w.key for w in self.words]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate lemma and part of speech")
+        return self
+
+    @model_validator(mode="after")
+    def _topics_are_listed(self) -> Self:
+        slugs = [t.slug for t in self.topics]
+        if len(set(slugs)) != len(slugs):
+            raise ValueError("duplicate topic")
+        for w in self.words:
+            if w.topic is not None and w.topic not in slugs:
+                raise ValueError(f"{w.lemma}: topic {w.topic!r} is not in the list's topics")
         return self
 
     def get(self, key: str) -> Word | None:

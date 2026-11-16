@@ -93,9 +93,17 @@ export interface VocabLevel {
   due: number;
 }
 
+export interface VocabTopic {
+  slug: string;
+  name_vi: string;
+  words: number;
+  started: number;
+}
+
 export interface VocabLevels {
   levels: VocabLevel[];
   suggested: Level;
+  topics: VocabTopic[];
 }
 
 export interface VocabAnswer {

@@ -140,19 +140,22 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     async vocabSession(
       learnerId: string,
       chosen?: Level,
+      topic?: string,
     ): Promise<VocabSession> {
       const q = new URLSearchParams({
         learner_id: learnerId,
         list: VOCAB_LIST,
       });
       if (chosen) q.set("level", chosen);
+      if (topic) q.set("topic", topic);
       return parseVocabSession(await request(`vocab/session?${q}`));
     },
-    async vocabLevels(learnerId: string): Promise<VocabLevels> {
+    async vocabLevels(learnerId: string, topic?: string): Promise<VocabLevels> {
       const q = new URLSearchParams({
         learner_id: learnerId,
         list: VOCAB_LIST,
       });
+      if (topic) q.set("topic", topic);
       return parseVocabLevels(await request(`vocab/levels?${q}`));
     },
     async vocabAnswer(

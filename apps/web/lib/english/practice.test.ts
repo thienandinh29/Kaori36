@@ -177,6 +177,7 @@ describe("vocabulary", () => {
         { level: "B1", words: 14, started: 0, due: 0 },
       ],
       suggested: "A2",
+      topics: [{ slug: "travel", name_vi: "Du lịch", words: 10, started: 2 }],
     };
     expect(parseVocabLevels(levels).levels[1]).toEqual({
       level: "B1",
@@ -215,6 +216,33 @@ describe("vocabulary", () => {
     await client.vocabSession(ID, "B1");
     expect(fetcher.mock.calls[1][0]).toBe(
       `/api/backend/vocab/session?learner_id=${ID}&list=${VOCAB_LIST}&level=B1`,
+    );
+    expect(parseVocabLevels(levels).topics[0].name_vi).toBe("Du lịch");
+    expect(() =>
+      parseVocabLevels({ ...levels, topics: [{ slug: "travel" }] }),
+    ).toThrow(DataError);
+    const topical = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify(levels)))
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            entries: [],
+            due: 0,
+            new_today: 0,
+            new_left_today: 10,
+            new_available: 8,
+          }),
+        ),
+      );
+    const c2 = englishClient(topical);
+    await c2.vocabLevels(ID, "travel");
+    expect(topical.mock.calls[0][0]).toBe(
+      `/api/backend/vocab/levels?learner_id=${ID}&list=${VOCAB_LIST}&topic=travel`,
+    );
+    await c2.vocabSession(ID, "B2", "travel");
+    expect(topical.mock.calls[1][0]).toBe(
+      `/api/backend/vocab/session?learner_id=${ID}&list=${VOCAB_LIST}&level=B2&topic=travel`,
     );
   });
   it("decodes an answer and calls the right routes", async () => {

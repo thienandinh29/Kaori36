@@ -66,7 +66,7 @@ Planned entries are marked _(planned)_ until they exist.
 | `apps/api/app/llm/` | LLM gateway (DeepSeek generation, Gemini verification; legacy Vertex AI, Bedrock and OpenRouter adapters), `routing.yaml`, smoke CLI and setup README |
 | `data/courses/` | Course specs: `english-ielts.yaml` (first real course: grammar roadmap of milestones with hidden nodes, A1–C1, starter draft), Python basics, IELTS Academic Writing, introductory statistics |
 | `data/sources/` | Open-education allowlist, library manifests and acquisition/index reports; `catalog.yaml` + `catalog-report.json` for v2 structured sources; `english-candidates.yaml` (English sources awaiting licence checks, rules in `app/sources/candidates.py`) |
-| `data/vocabulary/` | Word lists: `core-seed.yaml` (30 authored words A2–C1, status draft until the owner reviews it) |
+| `data/vocabulary/` | Word lists: `core-seed.yaml` (130 authored words A2–C1 in 11 IELTS topics, with British IPA; draft until the owner reviews it) |
 | `data/kg/` _(planned)_ | Knowledge Graph YAML fixtures |
 | `data/items/` | Authored grammar items per course: `english-ielts.yaml` (76 draft MCQs, 4 per hidden node, a misconception on every wrong option); `misconceptions.vi.yaml` (each misconception explained in Vietnamese, draft) |
 | `apps/api/app/engine/milestones.py` | Milestones and hidden nodes: status, milestone-test outcome (pass, gap, fail), what to learn next, locks (locked until the milestones before are known; test to unlock), level test on milestones, level estimate; traced (`specs/level-test/`) |

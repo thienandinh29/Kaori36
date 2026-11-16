@@ -246,6 +246,15 @@ describe("graph confirmation session proxy", () => {
     ).toBe(200);
     expect(lastUrl().searchParams.get("level")).toBe("B2");
     expect(
+      (
+        await get(
+          "vocab/session",
+          `?learner_id=${id}&list=core-seed&topic=travel`,
+        )
+      ).status,
+    ).toBe(200);
+    expect(lastUrl().searchParams.get("topic")).toBe("travel");
+    expect(
       (await get("vocab/levels", `?learner_id=${id}&list=core-seed`)).status,
     ).toBe(200);
     for (const path of [

@@ -546,6 +546,8 @@ export const vi = {
       start: "Bắt đầu ôn",
       progress: "Tiến độ phiên ôn",
       levelPick: "Học từ mới ở cấp độ",
+      topicPick: "Chủ đề",
+      topicAll: "Tất cả",
       ipaTitle: "Phiên âm (giọng Anh), bản nháp tự soạn",
       levelSuggested: "gợi ý",
       levelLeft: "còn {n} từ mới",
