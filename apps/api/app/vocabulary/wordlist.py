@@ -79,10 +79,16 @@ class Form(_Model):
         return self
 
 
+Origin = Literal["authored", "ngsl", "nawl"]
+
+
 class Word(_Model):
     lemma: Lemma
     pos: Pos
     level: Level
+    # authored: written for this project; ngsl/nawl: imported (specs/vocabulary-import), so the
+    # level is estimated from frequency and the IPA was kept only where espeak-ng agreed.
+    origin: Origin = "authored"
     ipa: Ipa | None = None  # British pronunciation, shown next to the word
     topic: Slug | None = None  # one of the list's topics (specs/vocabulary, topics)
     definition: str = Field(min_length=5)
@@ -139,5 +145,25 @@ class WordList(_Model):
         return LEVELS.index(word.level)
 
 
-def load_wordlist(path: Path) -> WordList:
-    return WordList.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")))
+def load_wordlist(path: Path, imported_dir: Path | None = None) -> WordList:
+    """The list at `path`, plus the imported words of the same slug in `imported_dir` when there.
+
+    One list for the learner (specs/vocabulary-import): the authored entry wins over an imported
+    one for the same lemma, the topics are the authored list's, and the result is a draft when
+    either part is.
+    """
+    authored = WordList.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")))
+    extra = imported_dir / path.name if imported_dir else None
+    if extra is None or not extra.is_file():
+        return authored
+    imported = WordList.model_validate(yaml.safe_load(extra.read_text(encoding="utf-8")))
+    if imported.slug != authored.slug:
+        raise ValueError(f"{extra}: slug {imported.slug!r} is not {authored.slug!r}")
+    lemmas = {w.lemma for w in authored.words}
+    return WordList.model_validate(
+        {
+            **authored.model_dump(),
+            "status": "draft" if "draft" in (authored.status, imported.status) else "reviewed",
+            "words": [*authored.words, *(w for w in imported.words if w.lemma not in lemmas)],
+        }
+    )

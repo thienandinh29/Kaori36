@@ -11,6 +11,8 @@ tiers:
     writing_feedback: *free
     writing_correct: *free
     writing_rewrite: *free
+    # The vocabulary import (specs/vocabulary-import): entries checked by code, marked draft.
+    vocab_import: *free
     verify: &verify
       - {provider: gemini, model: '${GEMINI_VERIFY_MODEL}', family: gemini}
       - {provider: vertex, model: '${VERTEX_VERIFY_MODEL}', family: gemini}

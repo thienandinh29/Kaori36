@@ -1,4 +1,4 @@
-"""POST /speak {text, pace} -> audio/wav; GET /health.
+"""POST /speak {text, pace} -> audio/wav; POST /phonemize {words} -> {ipa}; GET /health.
 
     TTS_VOICE=en_GB-cori-high TTS_PATH=en/en_GB/cori/high TTS_REVISION=<commit> \
     TTS_MODEL_SHA256=... TTS_CONFIG_SHA256=... python -m nodetrail_tts.server
@@ -11,14 +11,17 @@ import os
 import unicodedata
 from collections.abc import Callable
 from pathlib import Path
+from typing import Annotated
 
 from fastapi import FastAPI
 from fastapi.responses import Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from nodetrail_tts.phonemes import VOICE, Phonemize, espeak
 from nodetrail_tts.voice import Pace, Pin, Speaker, fetch
 
 MAX_CHARS = 300  # a word, a phrase or a sentence; the web hides the button above this
+Word = Annotated[str, Field(pattern=r"^[A-Za-z][A-Za-z' -]{0,39}$")]
 
 
 class SpeakIn(BaseModel):
@@ -35,7 +38,14 @@ class SpeakIn(BaseModel):
         return text
 
 
-def create_app(pin: Pin, speak: Callable[[str, Pace], bytes]) -> FastAPI:
+class PhonemizeIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    words: list[Word] = Field(min_length=1, max_length=100)
+
+
+def create_app(
+    pin: Pin, speak: Callable[[str, Pace], bytes], phonemize: Phonemize | None = None
+) -> FastAPI:
     app = FastAPI(title="NodeTrail tts", docs_url=None, redoc_url=None)
 
     @app.get("/health")
@@ -49,6 +59,13 @@ def create_app(pin: Pin, speak: Callable[[str, Pace], bytes]) -> FastAPI:
             media_type="audio/wav",
             headers={"X-Voice": pin.voice},
         )
+
+    @app.post("/phonemize")
+    def phonemize_words(body: PhonemizeIn) -> dict[str, object]:
+        nonlocal phonemize
+        if phonemize is None:
+            phonemize = espeak()
+        return {"voice": VOICE, "ipa": {w: phonemize(w) for w in body.words}}
 
     return app
 

@@ -112,10 +112,13 @@ class GrammarService:
         vocab_dir: Path,
         draft_learners: str = "",
         vocab_list: str = "core-seed",
+        vocab_imported_dir: Path | None = None,
     ) -> None:
         self.pool = pool
         self.courses_dir, self.items_dir, self.vocab_dir = courses_dir, items_dir, vocab_dir
         self.vocab_list = vocab_list
+        self.vocab_imported_dir = vocab_imported_dir
+        self._wordlist: WordList | None = None
         self.draft_learners = {
             learner_uuid(x.strip()) for x in draft_learners.split(",") if x.strip()
         }
@@ -145,7 +148,11 @@ class GrammarService:
         return bundle
 
     def wordlist(self) -> WordList:
-        return load_wordlist(self.vocab_dir / f"{self.vocab_list}.yaml")
+        if self._wordlist is None:  # thousands of words with the import: load once
+            self._wordlist = load_wordlist(
+                self.vocab_dir / f"{self.vocab_list}.yaml", self.vocab_imported_dir
+            )
+        return self._wordlist
 
     def _synced_ids(
         self, conn: psycopg.Connection[Any], course: CourseSpec
