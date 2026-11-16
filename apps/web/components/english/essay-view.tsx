@@ -120,7 +120,13 @@ function Preview({ preview: p }: { preview: ScorePreview }) {
   return (
     <div className="nt-preview" data-testid="score-preview">
       <p>
-        {w.previewTitle}: <strong>{p.raw.toFixed(2)}</strong>
+        {w.previewTitle}:{" "}
+        <strong>
+          {p.raw.toLocaleString("vi-VN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </strong>
       </p>
       <p className="en-muted">
         {p.compared === 0 ? w.previewFirst : fill(w.previewCompared)}{" "}
