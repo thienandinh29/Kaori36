@@ -461,6 +461,10 @@ export const vi = {
       },
       next: "Tiếp theo",
       needs: "Cần trước",
+      locked: "Đang khóa",
+      lockedWhy:
+        "Cần nắm {names} trước. Bạn vẫn có thể làm bài kiểm tra cột mốc để mở khóa ngay.",
+      testToUnlock: "Kiểm tra để mở khóa",
       parts: "Các phần bên trong",
       show: "Xem các phần",
       hide: "Ẩn các phần",

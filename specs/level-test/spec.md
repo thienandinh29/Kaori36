@@ -59,3 +59,13 @@ items are authored, grading is by answer key, decisions are the engine's and com
 
 ## Not in scope
 Generated items (1.3b), the web screens (1.4), Writing evidence (phase 2, only the reopening hook is built here).
+
+## Locked milestones (the owner's rule, 16 Nov 2026)
+`engine/milestones.py` `milestone_locks`: a milestone is **locked** when the learner knows none of it (`unknown`), has not
+worked on any of its parts (no evidence), and a milestone directly before it is not settled (known or mastered).
+- What the level test or practice showed the learner partly or fully knows is never locked (the owner's choice a).
+- A milestone the learner worked on stays open, so the engine never recommends something locked (its suggestions always
+  have evidence).
+- The milestone test is always allowed: passing it settles the milestone, which unlocks it and what follows (choice b).
+- `/roadmap` returns `locked` and `waiting_for` per milestone; practice on a locked milestone's part answers 409 with the
+  reason in Vietnamese. The map shows 🔒 and dims it; its panel says what it waits for and offers "Kiểm tra để mở khóa".

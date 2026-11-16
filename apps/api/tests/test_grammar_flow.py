@@ -169,6 +169,22 @@ def test_checks_end_with_the_most_foundational_weak_part(setup: Setup) -> None:
     done = answer_all(svc, learner, step, lambda s: wrong(svc, s), svc.answer_run)
     assert done.finished is not None and done.finished["learn_next"] == "third-conditional"
     assert any(t.kind == "root_cause" for t in done.traces)
+    # past perfect is in a locked, untouched milestone: practice is refused until it opens
+    with pytest.raises(HTTPException) as locked:
+        svc.start_run(learner, "english-ielts", "practice", "past-perfect")
+    assert locked.value.status_code == 409 and "khóa" in str(locked.value.detail)
+    road = svc.roadmap(learner, "english-ielts")
+    by = {m["slug"]: m for m in road["milestones"]}
+    assert by["narrative-tenses"]["locked"] is True
+    assert by["narrative-tenses"]["waiting_for"] == ["perfect-tenses"]
+    assert by["conditional-3"]["locked"] is False  # worked on: the engine sends the learner there
+    # passing what comes before it opens it (the same as a test to unlock)
+    for m in ("present-tenses", "past-and-future", "perfect-tenses"):
+        step = svc.start_run(learner, "english-ielts", "milestone", m)
+        answer_all(svc, learner, step, lambda s: key(svc, s.question.item_id),  # type: ignore[union-attr]
+                   svc.answer_run)  # fmt: skip
+    road = svc.roadmap(learner, "english-ielts")
+    assert {m["slug"]: m for m in road["milestones"]}["narrative-tenses"]["locked"] is False
     # with evidence that past perfect is weak, the root cause moves to it
     weak = svc.start_run(learner, "english-ielts", "practice", "past-perfect")
     answer_all(svc, learner, weak, lambda s: wrong(svc, s), svc.answer_run)
@@ -192,11 +208,11 @@ def test_one_slip_in_four_passes_with_a_gap(setup: Setup) -> None:
 
 def test_practice_updates_mastery_and_reports_it(setup: Setup) -> None:
     svc, learner, _ = setup
-    step = svc.start_run(learner, "english-ielts", "practice", "past-perfect")
+    step = svc.start_run(learner, "english-ielts", "practice", "present-simple")
     assert step.question and step.question.total == 3
     done = answer_all(svc, learner, step, lambda s: key(svc, s.question.item_id),  # type: ignore[union-attr]
                       svc.answer_run)  # fmt: skip
-    assert done.finished and done.finished["node"] == "past-perfect"
+    assert done.finished and done.finished["node"] == "present-simple"
     # three right answers from the prior give 0.948: not yet mastery (0.95 and 2 unaided wins)
     assert 0.9 < done.finished["p_known"] < 0.95 and done.finished["mastered"] is False
     assert [t.kind for t in done.traces] == ["bkt_update"]
@@ -206,7 +222,7 @@ def test_answers_out_of_turn_or_from_someone_else_are_refused(
     setup: Setup, database_url: str
 ) -> None:
     svc, learner, _ = setup
-    step = svc.start_run(learner, "english-ielts", "practice", "past-perfect")
+    step = svc.start_run(learner, "english-ielts", "practice", "present-simple")
     assert step.run_id and step.question
     with pytest.raises(HTTPException) as err:
         svc.answer_run(learner, step.run_id, "be-present-1", "is")
@@ -251,8 +267,12 @@ def test_routes_end_to_end(setup: Setup) -> None:
         assert road.status_code == 200 and len(road.json()["milestones"]) == 10
         m = client.post("/milestones/passive/tests", json={"learner_id": learner})
         assert m.status_code == 200 and m.json()["kind"] == "milestone"
-        p = client.post("/nodes/past-perfect/practice", json={"learner_id": learner})
+        p = client.post("/nodes/present-simple/practice", json={"learner_id": learner})
         assert p.status_code == 200
+        lock = client.post("/nodes/mixed-conditionals/practice", json={"learner_id": learner})
+        assert lock.status_code == 409 and "khóa" in lock.json()["detail"]
+        roadmap = {m["slug"]: m for m in road.json()["milestones"]}
+        assert {"locked", "waiting_for"} <= set(roadmap["passive"])
         bad = client.post("/level-tests", json={"learner_id": learner, "target": "Z9"})
         assert bad.status_code == 422
 
@@ -280,7 +300,7 @@ def test_every_run_answer_says_right_or_wrong_and_explains_the_mistake_in_vietna
     setup: Setup,
 ) -> None:
     svc, learner, _ = setup
-    step = svc.start_run(learner, "english-ielts", "practice", "past-simple")
+    step = svc.start_run(learner, "english-ielts", "practice", "present-simple")
     assert step.question and step.run_id
     item_id = step.question.item_id
     bad = svc.answer_run(learner, step.run_id, item_id, wrong(svc, step))

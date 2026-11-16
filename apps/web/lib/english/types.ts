@@ -119,6 +119,10 @@ export interface Milestone {
   level: Level;
   status: MilestoneStatus;
   needs: string[];
+  /** Locked: none of it known or worked on, and a milestone before it is not known yet. */
+  locked: boolean;
+  /** Milestones directly before this one that are not known yet. */
+  waiting_for: string[];
   hidden: HiddenNode[];
 }
 

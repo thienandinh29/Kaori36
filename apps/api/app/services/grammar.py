@@ -37,6 +37,7 @@ from app.engine.milestones import (
     known_milestones,
     level_from,
     level_test_next,
+    milestone_locks,
     milestone_outcome,
     milestone_status,
     next_to_learn,
@@ -388,6 +389,7 @@ class GrammarService:
                 (learner, course_slug),
             ).fetchone()
         status = milestone_status(rm, p, unaided)
+        locks = milestone_locks(rm, status, p)
         settled = {m for m, s in status.items() if s in ("known", "mastered")}
         next_milestone = next(
             (m for m in rm.milestones.order
@@ -407,6 +409,8 @@ class GrammarService:
                     "level": rm.level[m],
                     "status": status[m],
                     "needs": list(rm.milestones.parents[m]),
+                    "locked": locks[m].locked,
+                    "waiting_for": list(locks[m].waiting_for),
                     "hidden": [
                         {
                             "slug": n,
@@ -444,6 +448,17 @@ class GrammarService:
             else:
                 if target not in rm.hidden_nodes:
                     raise HTTPException(404, "Không tìm thấy phần học này.")
+                milestone = rm.milestone_of(target)
+                known_now = self._p_known(conn, learner, course_slug)
+                status = milestone_status(rm, known_now, self._unaided(conn, learner, course_slug))
+                lock = milestone_locks(rm, status, known_now)[milestone]
+                if lock.locked:
+                    names = ", ".join(f"«{rm.graph.name_vi(m)}»" for m in lock.waiting_for)
+                    raise HTTPException(
+                        409,
+                        f"Cột mốc «{rm.graph.name_vi(milestone)}» đang khóa: cần nắm {names} "
+                        "trước, hoặc làm bài kiểm tra cột mốc để mở khóa.",
+                    )
                 items = self._servable(b, learner, target, seen)[:PRACTICE_SIZE]
                 if not items:
                     raise HTTPException(409, "Phần học này chưa có câu hỏi được duyệt.")

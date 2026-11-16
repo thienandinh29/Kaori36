@@ -61,6 +61,8 @@ const roadmap = {
       level: "A2",
       status: "known",
       needs: [],
+      locked: false,
+      waiting_for: [],
       hidden: [
         { slug: "be-present", name_vi: "To be", p_known: 0.9, known: true },
       ],
@@ -71,6 +73,8 @@ const roadmap = {
       level: "B2",
       status: "partial",
       needs: ["present-tenses"],
+      locked: false,
+      waiting_for: [],
       hidden: [
         {
           slug: "third-conditional",
@@ -85,7 +89,9 @@ const roadmap = {
       name_vi: "Bị động",
       level: "B1",
       status: "unknown",
-      needs: [],
+      needs: ["conditional-3"],
+      locked: true,
+      waiting_for: ["conditional-3"],
       hidden: [],
     },
   ],
@@ -115,6 +121,9 @@ describe("decoders", () => {
     expect(levelResultOf(done)?.ielts_vi).toContain("ước lượng");
     const r = parseRoadmap(roadmap);
     expect(r.learn_next_trace?.prior).toBe(0.3);
+    const passive = r.milestones.find((x) => x.slug === "passive");
+    expect(passive?.locked).toBe(true);
+    expect(passive?.waiting_for).toEqual(["conditional-3"]);
   });
   it.each([
     [{ ...question, options: ["a"] }],
@@ -134,6 +143,8 @@ describe("decoders", () => {
         milestones: [{ ...m, hidden: [{ ...m.hidden[0], p_known: 1.5 }] }],
       },
       { ...roadmap, next_milestone: "nowhere" },
+      { ...roadmap, milestones: [{ ...m, locked: "no" }] },
+      { ...roadmap, milestones: [{ ...m, waiting_for: [1] }] },
     ])
       expect(() => parseRoadmap(bad)).toThrow(DataError);
   });

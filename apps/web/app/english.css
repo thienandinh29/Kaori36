@@ -1699,3 +1699,21 @@ svg.nt-trail {
 .nt-levels-tag {
   font-weight: 600;
 }
+
+/* Locked milestones (the owner's rule, specs/level-test, locks). */
+.nt-node.is-locked .nt-disc,
+.nt-node.is-locked path,
+.nt-node.is-locked .nt-pct,
+.nt-node.is-locked .nt-lv {
+  opacity: 0.45;
+}
+.nt-lock {
+  font-size: 18px;
+  text-anchor: middle;
+}
+.nt-locked {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--nt-gap-soft, rgba(0, 0, 0, 0.05));
+}

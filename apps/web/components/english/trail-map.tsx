@@ -115,11 +115,11 @@ export function TrailMap({
         return (
           <g
             key={m.slug}
-            className={`nt-node${m.slug === selected ? " is-selected" : ""}`}
+            className={`nt-node${m.slug === selected ? " is-selected" : ""}${m.locked ? " is-locked" : ""}`}
             tabIndex={0}
             role="button"
             aria-pressed={m.slug === selected}
-            aria-label={`${m.name_vi}, ${m.level}, ${t.known.toLowerCase()} ${known}%`}
+            aria-label={`${m.name_vi}, ${m.level}, ${t.known.toLowerCase()} ${known}%${m.locked ? `, ${t.locked.toLowerCase()}` : ""}`}
             onClick={choose}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -153,6 +153,16 @@ export function TrailMap({
             <text className="nt-lv" x={n.x} y={n.y + 24}>
               {m.level}
             </text>
+            {m.locked && (
+              <text
+                className="nt-lock"
+                x={n.x + L.r * 0.72}
+                y={n.y - L.r * 0.62}
+                aria-hidden="true"
+              >
+                🔒
+              </text>
+            )}
             <rect
               className="nt-tag"
               x={n.x - tagW(name) / 2}

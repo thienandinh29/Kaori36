@@ -269,6 +269,8 @@ function parseMilestone(value: unknown): Milestone {
     level: level(d.level),
     status: status as MilestoneStatus,
     needs: strings(d.needs),
+    locked: bool(d.locked),
+    waiting_for: strings(d.waiting_for),
     hidden: array(d.hidden).map(parseHidden),
   };
 }
