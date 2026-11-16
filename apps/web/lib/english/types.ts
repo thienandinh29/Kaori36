@@ -47,7 +47,8 @@ export type RunOutcome =
   | { kind: "checks"; learn_next: string | null }
   | { kind: "practice"; node: string; p_known: number; mastered: boolean };
 
-export type VocabKind = "meaning" | "gapfill" | "collocation" | "wordform";
+export type VocabKind =
+  "meaning" | "gapfill" | "collocation" | "wordform" | "recall";
 
 export interface VocabItem {
   id: string;
@@ -104,6 +105,13 @@ export interface VocabLevels {
   levels: VocabLevel[];
   suggested: Level;
   topics: VocabTopic[];
+}
+
+/** A retry's verdict in the flashcard test (POST /vocab/checks): never scheduled. */
+export interface VocabCheck {
+  correct: boolean;
+  accepted: string;
+  card: WordCard;
 }
 
 export interface VocabAnswer {

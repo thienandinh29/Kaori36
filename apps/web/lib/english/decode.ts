@@ -37,6 +37,7 @@ import {
   type VocabAnswer,
   type VocabEntry,
   type ScorePreview,
+  type VocabCheck,
   type VocabItem,
   type VocabLevels,
   type VocabKind,
@@ -161,6 +162,7 @@ const VOCAB_KINDS: readonly VocabKind[] = [
   "gapfill",
   "collocation",
   "wordform",
+  "recall",
 ];
 
 function parseVocabItem(value: unknown): VocabItem {
@@ -241,6 +243,15 @@ export function parseVocabLevels(value: unknown): VocabLevels {
         started: int(t.started),
       };
     }),
+  };
+}
+
+export function parseVocabCheck(value: unknown): VocabCheck {
+  const d = record(value);
+  return {
+    correct: bool(d.correct),
+    accepted: string(d.accepted),
+    card: parseWordCard(d.card),
   };
 }
 

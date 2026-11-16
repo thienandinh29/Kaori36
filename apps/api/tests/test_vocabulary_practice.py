@@ -50,7 +50,8 @@ def test_a_new_learner_gets_new_words_taught_before_they_are_asked(setup: Setup)
     s = practice.session(learner, "core-seed", now=NOW)
     assert len(s.entries) == 10 and s.due == 0 and s.new_left_today == 10
     first = s.entries[0]
-    assert first.is_new and first.card is not None and first.item.kind == "meaning"
+    assert first.is_new and first.card is not None and first.item.kind == "recall"
+    assert first.item.options is None and first.item.hint  # typed from memory after the cards
     assert first.card.definition and first.card.example  # taught first
     again = practice.session(learner, "core-seed", now=NOW)
     assert [e.item.id for e in s.entries] == [e.item.id for e in again.entries]  # deterministic
@@ -81,7 +82,7 @@ def test_a_right_answer_schedules_the_word_later_and_a_wrong_one_counts_a_lapse(
         ).fetchall()
     assert sorted((c[0], c[1]) for c in cards) == [(1, 0), (1, 1)]  # one lapse, the wrong answer
     assert all(c[2] > NOW for c in cards)
-    assert log == [("meaning", True, first_card.lemma), ("meaning", False, "definitely-not-it")]
+    assert log == [("recall", True, first_card.lemma), ("recall", False, "definitely-not-it")]
     assert traces == [("review",), ("review",)]
     assert bad.trace.kind == "review" and "ôn" in bad.trace.rule_vi.lower()
 
@@ -167,8 +168,9 @@ def test_routes_end_to_end_without_leaking_the_key(setup: Setup) -> None:
         assert first["is_new"] and first["card"]["lemma"] == WL.words[0].lemma
         assert "accepted" not in r.text and "word_key" not in r.text
         item = first["item"]
-        assert item["kind"] == "meaning" and len(item["options"]) == 4
-        wrong = next(o for o in item["options"] if o != first["card"]["lemma"])
+        assert item["kind"] == "recall" and item["options"] is None
+        assert item["hint"] == first["card"]["lemma"][0]
+        wrong = "definitely-not-it"
 
         def post(iid: str, answer: str, **extra: object) -> httpx.Response:
             body = {"learner_id": learner, "item_id": iid, "answer": answer, **extra}
@@ -180,6 +182,17 @@ def test_routes_end_to_end_without_leaking_the_key(setup: Setup) -> None:
         assert bad.json()["accepted"] == first["card"]["lemma"]
         assert bad.json()["trace"]["kind"] == "review"
         assert post(item["id"], first["card"]["lemma"]).json()["correct"] is True
+        # A retry is checked but never scheduled: the card's reviews stay as they were.
+        check = client.post("/vocab/checks", json={"item_id": item["id"], "answer": wrong})
+        assert check.status_code == 200 and check.json()["correct"] is False
+        assert check.json()["accepted"] == first["card"]["lemma"] and "trace" not in check.json()
+        assert client.post(
+            "/vocab/checks", json={"item_id": item["id"], "answer": first["card"]["lemma"]}
+        ).json()["correct"]
+        assert (
+            client.post("/vocab/checks", json={"item_id": "x|y|z|0", "answer": "a"}).status_code
+            == 422
+        )
         assert post("x|y|z|0", "a").status_code == 422
         assert post(item["id"], "a", extra=1).status_code == 422
         too_high = client.get("/vocab/session", params={"learner_id": learner, "max_level": "Z9"})
@@ -198,12 +211,26 @@ def test_the_routes_are_mounted_in_the_app(database_url: str) -> None:
     assert {"/vocab/session", "/vocab/answers"} <= set(app.openapi()["paths"])
 
 
-def test_pick_matches_what_a_session_asks(setup: Setup) -> None:
+def test_new_words_are_recalled_and_reviews_follow_pick(setup: Setup) -> None:
     practice, learner, _ = setup
     e = practice.session(learner, "core-seed", new_limit=1, now=NOW).entries[0]
     word = WL.words[0]
-    kind, n = pick(word, 0)
-    assert e.item.id == item_id("core-seed", word.key, kind, n)
+    assert e.item.id == item_id("core-seed", word.key, "recall", 0)
+    answer_correctly(practice, learner, e.item.id, NOW)
+    later = practice.session(learner, "core-seed", new_limit=0, now=NOW + timedelta(days=60))
+    kind, n = pick(word, 1)  # reviewed once: the next kind in the rotation
+    assert later.entries[0].item.id == item_id("core-seed", word.key, kind, n)
+
+
+def test_a_check_never_touches_the_card(setup: Setup) -> None:
+    practice, learner, db = setup
+    e = practice.session(learner, "core-seed", new_limit=1, now=NOW).entries[0]
+    correct, accepted, card = practice.check(e.item.id, "wrong")
+    assert not correct and accepted == WL.words[0].lemma and card.lemma == accepted
+    with psycopg.connect(db) as conn:
+        assert conn.execute(
+            "select count(*) from vocab_cards where learner_id=%s", (learner,)
+        ).fetchone() == (0,)
 
 
 def test_new_words_go_one_level_above_the_level_test_s_vocabulary_level(setup: Setup) -> None:

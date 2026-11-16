@@ -10,6 +10,7 @@ import {
   parseRoadmap,
   parseStep,
   parseVocabAnswer,
+  parseVocabCheck,
   parseVocabLevels,
   parseVocabSession,
   parseWritingPrompts,
@@ -25,6 +26,7 @@ import type {
   Roadmap,
   Step,
   VocabAnswer,
+  VocabCheck,
   VocabLevels,
   VocabSession,
   WritingPrompt,
@@ -169,6 +171,12 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
           item_id: itemId,
           answer,
         }),
+      );
+    },
+    /** A retry in the flashcard test: graded, never scheduled. */
+    async vocabCheck(itemId: string, answer: string): Promise<VocabCheck> {
+      return parseVocabCheck(
+        await post("vocab/checks", { item_id: itemId, answer }),
       );
     },
     async writingPrompts(learnerId: string): Promise<WritingPrompt[]> {

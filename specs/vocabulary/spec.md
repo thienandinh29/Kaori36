@@ -73,3 +73,16 @@ Vietnamese meanings, examples, collocations, word forms, British IPA, approximat
   falls back to the suggestion when the chosen topic has no words at the chosen level.
 - Larger open sources (NGSL/NAWL, Wiktionary via Kaikki, WordNet) remain the way to thousands of words, after the owner's
   licence checks; they would map into these topics.
+
+## Flashcards, then writing from memory (16 Nov 2026)
+The owner's request: learn new words as flashcards, then type each word by hand once the batch (today's new words in the
+chosen topic and level) has been seen.
+- **Reviews first**, unchanged: due words, one question each (the kinds rotate, now including `recall`).
+- **Then flashcards** for every new word: the front shows the word, IPA, listen buttons, part of speech and level; flipping
+  shows the definition, the Vietnamese meaning and the example. No grading.
+- **Then the recall test** for the whole batch: item kind `recall` (prompt = the definition and the Vietnamese meaning,
+  answer = the word, typed, exact after normalisation, first letter as the hint). A wrong word goes to the end of the
+  test as a retry until it is right. **Only the first try is scheduled** (`POST /vocab/answers`, FSRS); retries use
+  `POST /vocab/checks`, which grades and shows the key but never touches the learner's card or the review log.
+- The batch ends with a summary: new words learned and how many were right on the first try.
+- Migration `0020_vocab_recall.sql` widens `vocab_reviews.item_kind` to allow `recall` (no data change).

@@ -1,12 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
 import { englishClient } from "@/lib/english/client";
+import {
+  afterAttempt,
+  recallQueue,
+  splitSession,
+  type RecallTask,
+} from "@/lib/english/flashcards";
 import type {
   Level,
   Question,
   VocabAnswer,
+  VocabCheck,
+  VocabItem,
   VocabLevels,
   VocabSession as Session,
+  WordCard as WordCardData,
 } from "@/lib/english/types";
 import { emptyVocabReason, newWordsToday } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
@@ -16,6 +25,7 @@ import { QuestionCard } from "./question-card";
 import { TraceNote } from "./trace-note";
 import { useLearner } from "./use-learner";
 import { VocabLevelPicker, VocabTopicPicker } from "./vocab-levels";
+import { SpeakButton } from "./speak-button";
 import { WordCard } from "./word-card";
 
 const t = vi.english;
@@ -52,12 +62,21 @@ function storedLevel(levels: VocabLevels): Level | null {
   }
 }
 
-/** Today's vocabulary: due words first, new words taught before they are asked (specs/web-english, 5). */
+/**
+ * Today's vocabulary: due words first; then the new words as flashcards, then each one typed
+ * from memory (specs/vocabulary, flashcards). Only the first try at a word is scheduled.
+ */
 export function VocabSession() {
   const { learner, error: learnerError, retry } = useLearner();
   const [session, setSession] = useState<Session | null>(null);
   const [index, setIndex] = useState(0);
-  const [taught, setTaught] = useState(false);
+  const [card, setCard] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [queue, setQueue] = useState<RecallTask[] | null>(null);
+  const [recalled, setRecalled] = useState<VocabAnswer | VocabCheck | null>(
+    null,
+  );
+  const [firstRight, setFirstRight] = useState(0);
   const [answer, setAnswer] = useState<VocabAnswer | null>(null);
   const [typed, setTyped] = useState("");
   const [busy, setBusy] = useState(false);
@@ -99,7 +118,11 @@ export function VocabSession() {
         if (!live) return;
         setSession(s);
         setIndex(0);
-        setTaught(false);
+        setCard(0);
+        setFlipped(false);
+        setQueue(null);
+        setRecalled(null);
+        setFirstRight(0);
         setAnswer(null);
         setError(null);
       })
@@ -132,7 +155,7 @@ export function VocabSession() {
     return <Problem error={error} onRetry={() => setVersion((n) => n + 1)} />;
   if (!learner || !session) return <p className="en-muted">{t.loading}</p>;
 
-  const entry = session.entries[index];
+  const { reviews, fresh } = splitSession(session.entries);
   const header = (
     <section className="en-card nt-vocab-head">
       <h1>{t.vocab.title}</h1>
@@ -155,19 +178,67 @@ export function VocabSession() {
       {levels && chosen && (
         <VocabLevelPicker levels={levels} chosen={chosen} onChoose={choose} />
       )}
-      {session.entries.length > 0 && (
-        <ol className="nt-dots" aria-label={t.vocab.progress}>
-          {session.entries.map((e, i) => (
-            <li
-              key={e.item.id}
-              className={i < index ? "is-done" : i === index ? "is-now" : ""}
-            />
-          ))}
-        </ol>
-      )}
     </section>
   );
-  if (!entry)
+
+  const entry = reviews[index]; // reviews first, one question each, as before
+
+  async function submit(value: string) {
+    setBusy(true);
+    setError(null);
+    try {
+      setAnswer(
+        await englishClient().vocabAnswer(learner!, entry!.item.id, value),
+      );
+    } catch (e) {
+      setError(e);
+    } finally {
+      setBusy(false);
+    }
+  }
+  function next() {
+    setIndex((i) => i + 1);
+    setAnswer(null);
+    setTyped("");
+  }
+
+  // --- reviews (due words) -----------------------------------------------------------
+  if (entry) {
+    if (answer)
+      return (
+        <>
+          {header}
+          <Verdict
+            correct={answer.correct}
+            accepted={answer.accepted}
+            card={answer.card}
+            dueAt={answer.due_at}
+            onNext={next}
+          >
+            <TraceNote trace={answer.trace} names={{}} />
+          </Verdict>
+        </>
+      );
+    return (
+      <>
+        {header}
+        {error != null && <Problem error={error} />}
+        <Ask
+          key={entry.item.id}
+          item={entry.item}
+          number={index + 1}
+          total={reviews.length}
+          busy={busy}
+          typed={typed}
+          setTyped={setTyped}
+          onAnswer={submit}
+        />
+      </>
+    );
+  }
+
+  // --- nothing at all ------------------------------------------------------------------
+  if (fresh.length === 0)
     return (
       <>
         {header}
@@ -184,145 +255,267 @@ export function VocabSession() {
       </>
     );
 
-  async function submit(value: string) {
+  // --- new words, step 1: flashcards ---------------------------------------------------
+  if (queue === null) {
+    const current = fresh[card]!;
+    const last = card === fresh.length - 1;
+    return (
+      <>
+        {header}
+        <section className="en-card nt-flash" data-testid="flashcard">
+          <p className="en-muted">
+            {t.vocab.cardsTitle
+              .replace("{i}", String(card + 1))
+              .replace("{n}", String(fresh.length))}
+          </p>
+          {card === 0 && !flipped && (
+            <p className="en-muted">{t.vocab.cardsIntro}</p>
+          )}
+          {flipped ? (
+            <WordCard card={current.card!} />
+          ) : (
+            <div className="nt-card-front">
+              <strong lang="en">{current.card!.lemma}</strong>
+              {current.card!.ipa && (
+                <span className="nt-ipa" lang="en-fonipa">
+                  {current.card!.ipa}
+                </span>
+              )}
+              <SpeakButton text={current.card!.lemma} />
+              <span className="nt-chips">
+                <span>{current.card!.pos}</span>
+                <span>{current.card!.level}</span>
+              </span>
+            </div>
+          )}
+          <div className="nt-actions">
+            <button
+              type="button"
+              className="en-button ghost"
+              aria-pressed={flipped}
+              onClick={() => setFlipped((f) => !f)}
+            >
+              {flipped ? t.vocab.flipBack : t.vocab.flip}
+            </button>
+            <button
+              type="button"
+              className="en-button"
+              autoFocus
+              onClick={() => {
+                setFlipped(false);
+                if (last) {
+                  setQueue(recallQueue(fresh));
+                  setTyped("");
+                } else setCard((c) => c + 1);
+              }}
+            >
+              {last ? t.vocab.startRecall : t.vocab.nextCard}
+            </button>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  // --- new words, step 2: write each word from memory ----------------------------------
+  const task = queue[0];
+  if (!task)
+    return (
+      <>
+        {header}
+        <section className="en-card" role="status">
+          <div className="en-feedback has-sena is-right">
+            <Sena pose="heart" label={t.senaSays.right} />
+            <p>
+              {t.vocab.batchDone
+                .replace(/\{n\}/g, String(fresh.length))
+                .replace("{k}", String(firstRight))}
+            </p>
+          </div>
+        </section>
+      </>
+    );
+
+  async function attempt(value: string) {
     setBusy(true);
     setError(null);
     try {
-      setAnswer(
-        await englishClient().vocabAnswer(learner!, entry.item.id, value),
-      );
+      const client = englishClient();
+      const result = task!.first
+        ? await client.vocabAnswer(learner!, task!.entry.item.id, value)
+        : await client.vocabCheck(task!.entry.item.id, value);
+      if (task!.first && result.correct) setFirstRight((k) => k + 1);
+      setRecalled(result);
     } catch (e) {
       setError(e);
     } finally {
       setBusy(false);
     }
   }
-  function next() {
-    setIndex((i) => i + 1);
-    setTaught(false);
-    setAnswer(null);
-    setTyped("");
-  }
 
-  if (entry.is_new && entry.card && !taught)
+  if (recalled)
     return (
       <>
         {header}
-        <section className="en-card nt-flash">
-          <span className="en-badge next">{t.vocab.newWord}</span>
-          <WordCard card={entry.card} />
-          <button
-            type="button"
-            className="en-button"
-            autoFocus
-            onClick={() => setTaught(true)}
-          >
-            {t.vocab.gotIt}
-          </button>
-        </section>
+        <Verdict
+          correct={recalled.correct}
+          accepted={recalled.accepted}
+          card={recalled.card}
+          dueAt={"due_at" in recalled ? recalled.due_at : null}
+          onNext={() => {
+            setQueue(afterAttempt(queue, recalled.correct));
+            setRecalled(null);
+            setTyped("");
+          }}
+        />
       </>
     );
 
-  if (answer)
-    return (
-      <>
-        {header}
-        <section className="en-card">
-          <div
-            className={`en-feedback has-sena ${answer.correct ? "is-right" : "is-wrong"}`}
-            role="status"
-          >
-            <Sena
-              pose={answer.correct ? "idle" : "oops"}
-              label={answer.correct ? t.senaSays.right : t.senaSays.wrong}
-            />
-            <div>
-              <strong>{answer.correct ? t.vocab.right : t.vocab.wrong}</strong>
-              {!answer.correct && (
-                <p>
-                  {t.vocab.answerWas}: <b lang="en">{answer.accepted}</b>
-                </p>
-              )}
-            </div>
-          </div>
-          <WordCard card={answer.card} />
-          <p className="en-muted">
-            {t.vocab.comesBack}:{" "}
-            {new Date(answer.due_at).toLocaleDateString("vi-VN")}
-          </p>
-          <TraceNote trace={answer.trace} names={{}} />
-          <button type="button" className="en-button" autoFocus onClick={next}>
-            {t.vocab.next}
-          </button>
-        </section>
-      </>
-    );
+  return (
+    <>
+      {header}
+      {error != null && <Problem error={error} />}
+      <p className="en-muted nt-recall-head">
+        <b>{t.vocab.recallTitle}</b> ·{" "}
+        {t.vocab.recallLeft.replace("{n}", String(queue.length))}
+        {!task.first && <span className="nt-retry"> {t.vocab.retryNote}</span>}
+      </p>
+      <Ask
+        key={`${task.entry.item.id}-${task.first}-${queue.length}`}
+        item={task.entry.item}
+        number={fresh.length - queue.length + 1}
+        total={fresh.length}
+        busy={busy}
+        typed={typed}
+        setTyped={setTyped}
+        onAnswer={attempt}
+      />
+    </>
+  );
+}
 
-  const item = entry.item;
+/** The verdict after an answer: right or wrong, the key, the word, and when it comes back. */
+function Verdict({
+  correct,
+  accepted,
+  card,
+  dueAt,
+  onNext,
+  children,
+}: {
+  correct: boolean;
+  accepted: string;
+  card: WordCardData;
+  dueAt: string | null;
+  onNext: () => void;
+  children?: React.ReactNode;
+}) {
+  return (
+    <section className="en-card">
+      <div
+        className={`en-feedback has-sena ${correct ? "is-right" : "is-wrong"}`}
+        role="status"
+      >
+        <Sena
+          pose={correct ? "idle" : "oops"}
+          label={correct ? t.senaSays.right : t.senaSays.wrong}
+        />
+        <div>
+          <strong>{correct ? t.vocab.right : t.vocab.wrong}</strong>
+          {!correct && (
+            <p>
+              {t.vocab.answerWas}: <b lang="en">{accepted}</b>
+            </p>
+          )}
+        </div>
+      </div>
+      <WordCard card={card} />
+      {dueAt && (
+        <p className="en-muted">
+          {t.vocab.comesBack}: {new Date(dueAt).toLocaleDateString("vi-VN")}
+        </p>
+      )}
+      {children}
+      <button type="button" className="en-button" autoFocus onClick={onNext}>
+        {t.vocab.next}
+      </button>
+    </section>
+  );
+}
+
+/** One question: multiple choice when it has options, typed otherwise (with the first letter). */
+function Ask({
+  item,
+  number,
+  total,
+  busy,
+  typed,
+  setTyped,
+  onAnswer,
+}: {
+  item: VocabItem;
+  number: number;
+  total: number;
+  busy: boolean;
+  typed: string;
+  setTyped: (v: string) => void;
+  onAnswer: (value: string) => void;
+}) {
   if (item.options) {
     const question: Question = {
       item_id: item.id,
       prompt: item.prompt,
       options: item.options,
       draft: false,
-      number: index + 1,
-      total: session.entries.length,
+      number,
+      total,
     };
     return (
-      <>
-        {header}
-        {error != null && <Problem error={error} />}
-        <QuestionCard
-          key={item.id}
-          question={question}
-          instruction={item.instruction_vi}
-          busy={busy}
-          onAnswer={submit}
-        />
-      </>
+      <QuestionCard
+        question={question}
+        instruction={item.instruction_vi}
+        busy={busy}
+        onAnswer={onAnswer}
+      />
     );
   }
   return (
-    <>
-      {header}
-      {error != null && <Problem error={error} />}
-      <form
-        className="en-card en-question"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (typed.trim()) void submit(typed);
-        }}
+    <form
+      className="en-card en-question"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (typed.trim()) onAnswer(typed);
+      }}
+    >
+      <p className="en-instruction">{item.instruction_vi}</p>
+      <p className="en-prompt" lang={item.kind === "recall" ? undefined : "en"}>
+        {item.prompt}
+      </p>
+      <label className="en-typed">
+        <span className="en-muted">
+          {t.vocab.hint} “{item.hint}”
+        </span>
+        <input
+          value={typed}
+          onChange={(e) => setTyped(e.target.value)}
+          placeholder={t.vocab.typeHere}
+          autoFocus
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="none"
+          spellCheck={false}
+          lang="en"
+          maxLength={100}
+          aria-label={t.vocab.typeHere}
+        />
+      </label>
+      <button
+        type="submit"
+        className="en-button"
+        disabled={busy || !typed.trim()}
       >
-        <p className="en-instruction">{item.instruction_vi}</p>
-        <p className="en-prompt" lang="en">
-          {item.prompt}
-        </p>
-        <label className="en-typed">
-          <span className="en-muted">
-            {t.vocab.hint} “{item.hint}”
-          </span>
-          <input
-            value={typed}
-            onChange={(e) => setTyped(e.target.value)}
-            placeholder={t.vocab.typeHere}
-            autoFocus
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="none"
-            spellCheck={false}
-            lang="en"
-            maxLength={100}
-            aria-label={t.vocab.typeHere}
-          />
-        </label>
-        <button
-          type="submit"
-          className="en-button"
-          disabled={busy || !typed.trim()}
-        >
-          {t.submit}
-        </button>
-      </form>
-    </>
+        {vi.english.submit}
+      </button>
+    </form>
   );
 }
