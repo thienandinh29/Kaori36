@@ -22,3 +22,10 @@
 - [ ] 3.4 roadmap nodes, observation parameters, marks in the UI
 - [ ] 3.5 optional fine-tuning
 - [ ] Gate report in `docs/v2/pronunciation-eval.md`
+
+**The owner's idea (16 Nov 2026): repeat each new word.** After a new word is taught in vocabulary, the learner says it
+and phase 3's scoring checks each target sound (option C, chosen over browser or plain speech recognition).
+- Built in phase 3, after 3.1–3.4, on top of the same per-sound scoring; uses the listen buttons already there (Piper).
+- Optional at first, labelled "chưa kiểm chứng", and never blocking: a learner may skip it (no microphone, a quiet place).
+- A blocking "must repeat correctly before the next word" mode is allowed only after the gate (false alarms ≤ 10% on the
+  owner's labelled recordings), and only as a setting the learner turns on.
