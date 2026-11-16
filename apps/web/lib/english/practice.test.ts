@@ -5,6 +5,7 @@ import {
   parseOutcome,
   parseStep,
   parseVocabAnswer,
+  parseVocabLevels,
   parseVocabSession,
 } from "./decode";
 
@@ -120,6 +121,7 @@ describe("vocabulary", () => {
       due: 1,
       new_today: 0,
       new_left_today: 9,
+      new_available: 12,
     });
     expect(s.entries[0].card?.vi).toBe("quyết định");
     expect(s.entries[1].item.hint).toBe("d");
@@ -145,8 +147,64 @@ describe("vocabulary", () => {
           due: 0,
           new_today: 0,
           new_left_today: 0,
+          new_available: 0,
         }),
       ).toThrow(DataError);
+    expect(() =>
+      parseVocabSession({
+        entries: [],
+        due: 0,
+        new_today: 0,
+        new_left_today: 0,
+      }),
+    ).toThrow(DataError); // new_available is part of the contract
+  });
+  it("decodes the levels strictly and asks for a chosen level", async () => {
+    const levels = {
+      levels: [
+        { level: "A2", words: 3, started: 3, due: 0 },
+        { level: "B1", words: 14, started: 0, due: 0 },
+      ],
+      suggested: "A2",
+    };
+    expect(parseVocabLevels(levels).levels[1]).toEqual({
+      level: "B1",
+      words: 14,
+      started: 0,
+      due: 0,
+    });
+    expect(() => parseVocabLevels({ ...levels, suggested: "Z9" })).toThrow(
+      DataError,
+    );
+    expect(() =>
+      parseVocabLevels({
+        levels: [{ level: "B1", words: "14" }],
+        suggested: "B1",
+      }),
+    ).toThrow(DataError);
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify(levels)))
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            entries: [],
+            due: 0,
+            new_today: 0,
+            new_left_today: 10,
+            new_available: 14,
+          }),
+        ),
+      );
+    const client = englishClient(fetcher);
+    expect((await client.vocabLevels(ID)).suggested).toBe("A2");
+    expect(fetcher.mock.calls[0][0]).toBe(
+      `/api/backend/vocab/levels?learner_id=${ID}&list=${VOCAB_LIST}`,
+    );
+    await client.vocabSession(ID, "B1");
+    expect(fetcher.mock.calls[1][0]).toBe(
+      `/api/backend/vocab/session?learner_id=${ID}&list=${VOCAB_LIST}&level=B1`,
+    );
   });
   it("decodes an answer and calls the right routes", async () => {
     const answer = {
@@ -166,6 +224,7 @@ describe("vocabulary", () => {
             due: 0,
             new_today: 0,
             new_left_today: 10,
+            new_available: 3,
           }),
         ),
       )

@@ -528,7 +528,7 @@ export const vi = {
       newLeft: "từ mới còn lại hôm nay",
       empty: "Hôm nay bạn đã ôn xong. Hẹn gặp lại vào lần ôn tới!",
       noMoreWords:
-        "Không còn từ đến hạn, và bạn đã học hết các từ mới có sẵn ở trình độ này. Danh sách từ sẽ được mở rộng.",
+        "Không còn từ mới ở cấp được gợi ý cho bạn. Vào Từ vựng để chọn cấp khác; danh sách từ sẽ được mở rộng.",
       newWord: "Từ mới",
       gotIt: "Tôi đã đọc, hỏi tôi đi",
       typeHere: "Gõ câu trả lời",
@@ -541,6 +541,13 @@ export const vi = {
       done: "Xong phiên ôn tập. Quay lại khi có từ đến hạn nhé.",
       start: "Bắt đầu ôn",
       progress: "Tiến độ phiên ôn",
+      levelPick: "Học từ mới ở cấp độ",
+      levelSuggested: "gợi ý",
+      levelLeft: "còn {n} từ mới",
+      levelAllStarted: "đã học hết",
+      levelStarted: "đã bắt đầu {started}/{words}",
+      noMoreAtLevel:
+        "Bạn đã học hết từ mới ở cấp {level}. Chọn cấp khác ở trên. Từ đến hạn ôn vẫn luôn xuất hiện trước.",
     },
     speech: {
       listen: "Nghe",

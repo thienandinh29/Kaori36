@@ -30,6 +30,19 @@ class VocabSession(BaseModel):
     due: int
     new_today: int
     new_left_today: int
+    new_available: int  # new words not started yet at the chosen level(s)
+
+
+class VocabLevel(BaseModel):
+    level: Literal["A1", "A2", "B1", "B2", "C1"]
+    words: int
+    started: int
+    due: int
+
+
+class VocabLevels(BaseModel):
+    levels: list[VocabLevel]
+    suggested: Literal["A1", "A2", "B1", "B2", "C1"]
 
 
 class VocabAnswerInput(BaseModel):
@@ -59,9 +72,15 @@ def create_router(practice: VocabPractice) -> APIRouter:
         limit: int = Query(default=DEFAULT_LIMIT, ge=1, le=50),
         new_limit: int = Query(default=DEFAULT_NEW_PER_DAY, ge=0, le=50),
         max_level: Literal["A1", "A2", "B1", "B2", "C1"] | None = None,
+        level: Literal["A1", "A2", "B1", "B2", "C1"] | None = None,
     ) -> VocabSession:
         result = practice.session(
-            learner_id, list_slug, limit=limit, new_limit=new_limit, max_level=max_level
+            learner_id,
+            list_slug,
+            limit=limit,
+            new_limit=new_limit,
+            max_level=max_level,
+            level=level,
         )
         return VocabSession(
             entries=[
@@ -71,6 +90,23 @@ def create_router(practice: VocabPractice) -> APIRouter:
             due=result.due,
             new_today=result.new_today,
             new_left_today=result.new_left_today,
+            new_available=result.new_available,
+        )
+
+    @router.get("/levels")
+    def levels(
+        learner_id: str = Query(min_length=1, max_length=200),
+        list_slug: str = Query(
+            default="core-seed", alias="list", min_length=1, max_length=40, pattern=SLUG_PATTERN
+        ),
+    ) -> VocabLevels:
+        result = practice.levels(learner_id, list_slug)
+        return VocabLevels(
+            levels=[
+                VocabLevel(level=c.level, words=c.words, started=c.started, due=c.due)
+                for c in result.levels
+            ],
+            suggested=result.suggested,
         )
 
     @router.post("/answers")

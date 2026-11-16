@@ -239,6 +239,15 @@ describe("graph confirmation session proxy", () => {
       ).status,
     ).toBe(200);
     expect(lastUrl().searchParams.get("max_level")).toBe("B1");
+    // The level picker's choice must reach the API, not be dropped (specs/vocabulary, levels).
+    expect(
+      (await get("vocab/session", `?learner_id=${id}&list=core-seed&level=B2`))
+        .status,
+    ).toBe(200);
+    expect(lastUrl().searchParams.get("level")).toBe("B2");
+    expect(
+      (await get("vocab/levels", `?learner_id=${id}&list=core-seed`)).status,
+    ).toBe(200);
     for (const path of [
       "level-tests/not-a-uuid/answers",
       "milestones/UPPER/tests",

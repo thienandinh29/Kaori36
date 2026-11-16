@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { englishClient } from "@/lib/english/client";
 import type { VocabSession } from "@/lib/english/types";
-import { emptyVocabReason } from "@/lib/english/view";
+import { emptyVocabReason, newWordsToday } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
 import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
@@ -57,7 +57,9 @@ export function EnglishHome() {
         <section className="en-card">
           <h2>{t.homeToday.vocabTitle}</h2>
           <p className="en-muted">
-            {vocab.due} {t.vocab.due} · {vocab.new_left_today} {t.vocab.newLeft}
+            {vocab.due} {t.vocab.due} ·{" "}
+            {newWordsToday(vocab.new_left_today, vocab.new_available)}{" "}
+            {t.vocab.newLeft}
           </p>
           {vocab.entries.length > 0 ? (
             <Link className="en-button" href="/tu-vung">
@@ -65,7 +67,8 @@ export function EnglishHome() {
             </Link>
           ) : (
             <p>
-              {emptyVocabReason(vocab.new_left_today) === "done"
+              {emptyVocabReason(vocab.new_left_today, vocab.new_available) ===
+              "done"
                 ? t.vocab.empty
                 : t.vocab.noMoreWords}
             </p>

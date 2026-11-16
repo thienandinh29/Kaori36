@@ -45,6 +45,21 @@ export function percent(p: number): number {
 }
 
 /** Why a vocabulary session is empty: today's work is done, or the list has no new words left. */
-export function emptyVocabReason(newLeftToday: number): "done" | "noMoreWords" {
-  return newLeftToday === 0 ? "done" : "noMoreWords";
+/**
+ * Why an empty session is empty: today's new-word allowance is used ("done"), or there are no new
+ * words left at the chosen level ("noMoreWords": choose another level).
+ */
+export function emptyVocabReason(
+  newLeftToday: number,
+  newAvailable: number,
+): "done" | "noMoreWords" {
+  return newLeftToday > 0 && newAvailable === 0 ? "noMoreWords" : "done";
+}
+
+/** New words that can really come today: the daily allowance, but never more than exist. */
+export function newWordsToday(
+  newLeftToday: number,
+  newAvailable: number,
+): number {
+  return Math.max(0, Math.min(newLeftToday, newAvailable));
 }
