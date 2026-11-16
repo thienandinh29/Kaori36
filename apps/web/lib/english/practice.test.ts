@@ -5,6 +5,7 @@ import {
   parseOutcome,
   parseStep,
   parseVocabAnswer,
+  parseVocabCheck,
   parseVocabLevels,
   parseWordCard,
   parseVocabSession,
@@ -169,6 +170,64 @@ describe("vocabulary", () => {
       DataError,
     );
     expect(() => parseWordCard({ ...card, ipa: 3 })).toThrow(DataError);
+  });
+  it("reads a recall item and a retry check strictly", () => {
+    const recall = {
+      id: "core-seed|decision:noun|recall|0",
+      kind: "recall",
+      instruction_vi: "Viết từ tiếng Anh có nghĩa sau:",
+      prompt: "a choice (quyết định)",
+      options: null,
+      hint: "d",
+    };
+    const s = parseVocabSession({
+      entries: [{ item: recall, is_new: true, card, due_at: null }],
+      due: 0,
+      new_today: 0,
+      new_left_today: 10,
+      new_available: 5,
+    });
+    expect(s.entries[0].item.kind).toBe("recall");
+    expect(() =>
+      parseVocabSession({
+        entries: [
+          {
+            item: { ...recall, options: ["a", "b"] },
+            is_new: true,
+            card,
+            due_at: null,
+          },
+        ],
+        due: 0,
+        new_today: 0,
+        new_left_today: 10,
+        new_available: 5,
+      }),
+    ).toThrow(DataError); // only "meaning" has options
+    expect(
+      parseVocabCheck({ correct: false, accepted: "decision", card }).accepted,
+    ).toBe("decision");
+    expect(() =>
+      parseVocabCheck({ correct: "no", accepted: "x", card }),
+    ).toThrow(DataError);
+  });
+  it("sends a retry to the check route, not the schedule", async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({ correct: true, accepted: "decision", card }),
+        ),
+      );
+    await englishClient(fetcher).vocabCheck(
+      "core-seed|decision:noun|recall|0",
+      "decision",
+    );
+    expect(fetcher.mock.calls[0][0]).toBe("/api/backend/vocab/checks");
+    expect(JSON.parse(fetcher.mock.calls[0][1].body)).toEqual({
+      item_id: "core-seed|decision:noun|recall|0",
+      answer: "decision",
+    });
   });
   it("decodes the levels strictly and asks for a chosen level", async () => {
     const levels = {

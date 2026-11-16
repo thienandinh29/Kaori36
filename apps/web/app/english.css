@@ -1732,3 +1732,31 @@ svg.nt-trail {
   font-size: 1.05rem;
   color: var(--nt-ink-2, inherit);
 }
+
+/* Flashcards and the recall test (specs/vocabulary, flashcards). */
+.nt-card-front {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-height: 120px;
+  padding: 16px 0;
+}
+.nt-card-front > strong {
+  font-family: var(--nt-display, inherit);
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
+.nt-flash .nt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.en-button.ghost {
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--nt-line, currentColor);
+}
+.nt-recall-head .nt-retry {
+  color: var(--nt-gap, inherit);
+}

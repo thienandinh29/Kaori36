@@ -40,6 +40,20 @@ class VocabLevel(BaseModel):
     due: int
 
 
+class VocabCheckInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    item_id: str = Field(min_length=1, max_length=200)
+    answer: str = Field(max_length=MAX_ANSWER_CHARS)
+
+
+class VocabCheckResult(BaseModel):
+    """A retry's verdict: graded like an answer, never scheduled."""
+
+    correct: bool
+    accepted: str
+    card: WordCard
+
+
 class VocabTopic(BaseModel):
     slug: str
     name_vi: str
@@ -123,6 +137,11 @@ def create_router(practice: VocabPractice) -> APIRouter:
                 for t in result.topics
             ],
         )
+
+    @router.post("/checks")
+    def check(body: VocabCheckInput) -> VocabCheckResult:
+        correct, accepted, card = practice.check(body.item_id, body.answer)
+        return VocabCheckResult(correct=correct, accepted=accepted, card=card)
 
     @router.post("/answers")
     def answer(body: VocabAnswerInput) -> VocabAnswerResult:

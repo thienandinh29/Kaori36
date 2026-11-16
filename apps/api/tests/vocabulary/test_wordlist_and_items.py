@@ -172,9 +172,19 @@ def test_kinds_rotate_with_the_number_of_reviews() -> None:
     w = WL.get("decision:noun")
     assert w is not None
     seen = [pick(w, r)[0] for r in range(len(kinds_for(w)) * 2)]
-    assert seen[:4] == ["meaning", "gapfill", "collocation", "wordform"] == seen[4:]
-    assert pick(w, 0) == ("meaning", 0)  # a new word is asked its meaning first
+    assert seen[:5] == ["meaning", "gapfill", "collocation", "wordform", "recall"] == seen[5:]
+    assert pick(w, 0) == ("meaning", 0)  # reviews rotate through every kind, recall included
     assert set(KINDS) >= set(seen)
+
+
+def test_recall_asks_for_the_word_from_its_meaning() -> None:
+    w = WL.get("decision:noun")
+    assert w is not None
+    item = build_item(WL, w, "recall", 0)
+    assert item.options is None and item.hint == "d" and item.accepted == ("decision",)
+    assert w.definition in item.prompt and "decision" not in item.prompt.lower()
+    assert w.vi and w.vi in item.prompt
+    assert grade(item, " Decision ") and not grade(item, "decison")  # spelling counts
 
 
 def test_the_yaml_round_trips_through_the_models() -> None:
