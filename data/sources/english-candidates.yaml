@@ -11,13 +11,25 @@ candidates:
     url: https://www.newgeneralservicelist.com/
     use: core general vocabulary (about 2,800 words), the A1-B1 word set
     believed_licence: CC BY-SA 4.0
-    status: to_check
+    status: verified
+    licence: CC BY-SA 4.0
+    checked_on: 2026-11-16
+    licence_page: https://www.newgeneralservicelist.com/new-general-service-list
+    # Read by the owner on the list's own page: "NGSL 1.2 by Browne, C., Culligan, B., and Phillips, J. is licensed
+    # under a Creative Commons Attribution-ShareAlike 4.0 International License". The site also offers the list
+    # with definitions in easy English (same page). Official site: .com only (the .org domain is not theirs).
   - slug: nawl
     name: New Academic Word List (NAWL)
     url: https://www.newgeneralservicelist.com/new-academic-word-list
     use: academic vocabulary for IELTS (about 960 words), B2-C1
     believed_licence: CC BY-SA 4.0
-    status: to_check
+    status: verified
+    licence: CC BY-SA 4.0
+    checked_on: 2026-11-16
+    licence_page: https://www.newgeneralservicelist.com/new-academic-word-list
+    # Read by the owner on the list's own page: "NAWL 1.2 by Browne, C., Culligan, B., and Phillips, J. is licensed
+    # under a Creative Commons Attribution-ShareAlike 4.0 International License". The site also offers the list
+    # with definitions in easy English (same page). Official site: .com only (the .org domain is not theirs).
   - slug: wiktionary
     name: English Wiktionary
     url: https://en.wiktionary.org/

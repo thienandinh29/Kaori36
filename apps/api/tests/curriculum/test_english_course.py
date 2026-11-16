@@ -67,10 +67,13 @@ def test_the_checker_reports_every_problem_at_once(tmp_path: Path) -> None:
     assert main([str(ENGLISH)]) == 0
 
 
-def test_the_candidates_file_is_valid_and_nothing_is_usable_until_checked() -> None:
+def test_the_candidates_file_is_valid_and_only_owner_checked_sources_are_usable() -> None:
     candidates = load_candidates(DATA / "sources" / "english-candidates.yaml")
     assert {"ngsl", "nawl", "tatoeba", "wiktionary"} <= {c.slug for c in candidates.candidates}
-    assert candidates.usable() == ()  # nothing verified yet: the owner reads each licence page
+    # Only what the owner read on the source's own page (16 Nov 2026: NGSL and NAWL).
+    usable = {c.slug: c for c in candidates.usable()}
+    assert set(usable) == {"ngsl", "nawl"}
+    assert all(c.licence == "CC BY-SA 4.0" and not c.non_commercial for c in usable.values())
     assert any("Cambridge" in e.name for e in candidates.excluded)
 
 
