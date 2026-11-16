@@ -128,6 +128,29 @@ def no_band_reason(task: int, words: int, calibration: Calibration | None) -> st
     return None
 
 
+# --- the owner's uncalibrated preview (16 Nov 2026) --------------------------------------------
+
+# Formatting alone (two spaces after each full stop) moved a raw output by 0.19 (step 2.3), so
+# smaller differences between two essays are treated as the same.
+PREVIEW_NOISE = 0.25
+
+
+@dataclass(frozen=True)
+class RawComparison:
+    higher: int  # earlier essays this one beats by more than the noise
+    lower: int  # earlier essays that beat this one by more than the noise
+    same: int  # earlier essays within the noise
+
+
+def compare_raw(
+    raw: float, earlier: Sequence[float], noise: float = PREVIEW_NOISE
+) -> RawComparison:
+    """How a raw score compares with the learner's earlier ones. Raw scores are not bands."""
+    higher = sum(1 for e in earlier if raw - e > noise)
+    lower = sum(1 for e in earlier if e - raw > noise)
+    return RawComparison(higher, lower, len(earlier) - higher - lower)
+
+
 # --- metrics -------------------------------------------------------------------------------
 
 

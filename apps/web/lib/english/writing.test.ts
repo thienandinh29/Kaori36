@@ -294,6 +294,49 @@ describe("the band (step 2.3)", () => {
     expect(r?.scoreUnavailableVi).toBe("Chưa ước lượng");
     expect(parseEssay(essay).result?.score).toBeUndefined();
   });
+  it("reads the owner's raw-score preview strictly, never as a band", () => {
+    const preview = {
+      raw: 4.46,
+      compared: 3,
+      higher: 1,
+      lower: 1,
+      same: 1,
+      truncated: false,
+    };
+    const r = parseEssay({
+      ...essay,
+      result: {
+        ...v2,
+        score: null,
+        score_unavailable_vi: "x",
+        score_preview: preview,
+      },
+    }).result;
+    expect(r?.scorePreview).toEqual(preview);
+    expect(r?.score).toBeNull();
+    for (const bad of [
+      { ...preview, higher: 2 }, // counts must add up to `compared`
+      { ...preview, raw: "4.46" },
+      { ...preview, raw: Number.NaN },
+    ])
+      expect(() =>
+        parseEssay({
+          ...essay,
+          result: {
+            ...v2,
+            score: null,
+            score_unavailable_vi: "x",
+            score_preview: bad,
+          },
+        }),
+      ).toThrow(DataError);
+    expect(
+      parseEssay({
+        ...essay,
+        result: { ...v2, score: null, score_unavailable_vi: "x" },
+      }).result?.scorePreview,
+    ).toBeUndefined();
+  });
   it.each([
     ["a band off the half steps", { ...band, band_low: 5.3 }],
     ["a reversed range", { ...band, band_low: 7, band_high: 6 }],

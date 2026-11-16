@@ -326,6 +326,8 @@ export interface EssayResult {
   /** step 2.3 on; null when no band is shown (then `scoreUnavailableVi` says why) */
   score?: BandRange | null;
   scoreUnavailableVi?: string | null;
+  /** The owner's preview while the scorer is uncalibrated: a raw score, never a band. */
+  scorePreview?: ScorePreview | null;
   /** step 2.4 on; null when there is none (then `feedbackUnavailableVi` says why) */
   feedback?: EssayFeedback | null;
   feedbackUnavailableVi?: string | null;
@@ -343,4 +345,14 @@ export interface Essay {
   corrections: Record<string, CorrectionState>;
   /** paragraph rewrites, oldest first (step 2.4b) */
   rewrites: Rewrite[];
+}
+
+/** The model's raw output compared with the learner's earlier essays (not on the IELTS scale). */
+export interface ScorePreview {
+  raw: number;
+  compared: number;
+  higher: number;
+  lower: number;
+  same: number;
+  truncated: boolean;
 }
