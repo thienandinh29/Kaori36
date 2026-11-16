@@ -15,6 +15,7 @@ from pydantic import BaseModel
 
 from app.llm.gateway import Attempt, Gateway
 from app.services.budget import Budget, spent_today
+from app.services.plans import Plans
 
 
 class BudgetExceeded(Exception):
@@ -43,6 +44,7 @@ class WritingModel:
         *,
         tier: str = "free",
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
+        plans: Plans | None = None,
     ) -> None:
         self.gateway = gateway
         self.database_url = database_url
@@ -50,13 +52,18 @@ class WritingModel:
         self.prices = prices
         self.tier = tier
         self.clock = clock
+        self.plans = plans  # per-plan call limits (specs/plans); without them, `budget` for all
         self.last_model = ""
 
     def complete[T: BaseModel](
         self, learner: UUID, task: str, system: str, user: str, schema: type[T]
     ) -> T:
         with psycopg.connect(self.database_url) as conn:
-            if not spent_today(conn, learner, now=self.clock()).allows(self.budget):
+            budget = self.budget
+            if self.plans is not None:
+                _, limits = self.plans.limits_of(conn, learner)
+                budget = Budget(self.budget.cost_cap_usd, limits.model_calls_per_day)
+            if not spent_today(conn, learner, now=self.clock()).allows(budget):
                 raise BudgetExceeded
         attempts: list[Attempt] = []
         gateway = Gateway(

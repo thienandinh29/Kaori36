@@ -120,6 +120,7 @@ def create_app(
     )
     app.include_router(grammar_routes.create_router(grammar))
     from app.api import writing as writing_routes
+    from app.services.plans import plans_from_settings
     from app.services.writing import WritingService
     from app.writing.languagetool import LanguageToolClient
 
@@ -128,6 +129,7 @@ def create_app(
         settings.writing_dir,
         draft_learners=settings.draft_item_learners,
         daily_essays=settings.writing_daily_essays,
+        plans=plans_from_settings(settings),
         languagetool=LanguageToolClient(settings.languagetool_url, timeout=5)
         if settings.languagetool_url
         else None,

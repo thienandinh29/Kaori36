@@ -149,6 +149,7 @@ def writing_model(settings: Any) -> Any:
 
     from app.llm.providers import default_gateway
     from app.services.budget import Budget
+    from app.services.plans import plans_from_settings
     from app.writing.model_calls import Prices, WritingModel
 
     if not (os.environ.get("DEEPSEEK_API_KEY") and os.environ.get("DEEPSEEK_FREE_MODEL")):
@@ -158,6 +159,7 @@ def writing_model(settings: Any) -> Any:
         settings.database_url,
         Budget(settings.llm_daily_cost_cap_usd, settings.llm_daily_calls_per_learner),
         Prices(settings.llm_price_input_per_mtok, settings.llm_price_output_per_mtok),
+        plans=plans_from_settings(settings),
     )
 
 
