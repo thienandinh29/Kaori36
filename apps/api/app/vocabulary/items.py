@@ -50,6 +50,7 @@ class WordCard(BaseModel):
     lemma: str
     pos: str
     level: str
+    ipa: str | None
     definition: str
     vi: str | None
     example: str
@@ -157,6 +158,7 @@ def card(word: Word) -> WordCard:
         lemma=word.lemma,
         pos=word.pos,
         level=word.level,
+        ipa=word.ipa,
         definition=word.definition,
         vi=word.vi,
         example=word.examples[0].text,

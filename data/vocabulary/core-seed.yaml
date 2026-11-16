@@ -3,6 +3,7 @@
 # Levels are approximate. Practice items are built from this file; a typed answer is graded exactly, so list real
 # spelling variants (colour/color) under `accepted`.
 #
+# `ipa`: British (RP-style) pronunciation with stress marks, authored for this list (draft like the rest).
 # Per word: `examples` (a sentence; `answer` is the part the learner types), `collocations` (a phrase and the
 # `blank` word), `forms` (the learner sees `base` and types the form that fits the sentence).
 slug: core-seed
@@ -12,6 +13,7 @@ status: draft
 words:
 - lemma: important
   pos: adjective
+  ipa: /ɪmˈpɔːtənt/
   level: A2
   definition: having great value or a strong effect on something
   vi: quan trọng
@@ -24,6 +26,7 @@ words:
     answer: importance
 - lemma: choose
   pos: verb
+  ipa: /tʃuːz/
   level: A2
   definition: to decide which one you want from a number of things
   vi: chọn
@@ -36,6 +39,7 @@ words:
     answer: choice
 - lemma: education
   pos: noun
+  ipa: /ˌedʒuˈkeɪʃən/
   level: A2
   definition: the process of teaching and learning, usually at school or university
   vi: giáo dục
@@ -48,6 +52,7 @@ words:
     answer: education
 - lemma: advantage
   pos: noun
+  ipa: /ədˈvɑːntɪdʒ/
   level: B1
   definition: something that helps you to be better or more successful than other people
   vi: lợi thế
@@ -59,6 +64,7 @@ words:
     blank: take
 - lemma: decision
   pos: noun
+  ipa: /dɪˈsɪʒən/
   level: B1
   definition: a choice that you make after thinking about the possibilities
   vi: quyết định
@@ -74,6 +80,7 @@ words:
     answer: decision
 - lemma: environment
   pos: noun
+  ipa: /ɪnˈvaɪrənmənt/
   level: B1
   definition: the natural world, including land, water, air, plants and animals
   vi: môi trường
@@ -89,6 +96,7 @@ words:
     answer: environment
 - lemma: pollution
   pos: noun
+  ipa: /pəˈluːʃən/
   level: B1
   definition: damage caused to air, water or land by harmful substances
   vi: ô nhiễm
@@ -101,6 +109,7 @@ words:
     answer: pollution
 - lemma: increase
   pos: verb
+  ipa: /ɪnˈkriːs/
   level: B1
   definition: to become greater in amount, number or value
   vi: tăng
@@ -109,6 +118,7 @@ words:
     answer: increase
 - lemma: reduce
   pos: verb
+  ipa: /rɪˈdjuːs/
   level: B1
   definition: to make something smaller or less in amount, size or price
   vi: giảm
@@ -117,6 +127,7 @@ words:
     answer: reduce
 - lemma: risk
   pos: noun
+  ipa: /rɪsk/
   level: B1
   definition: the possibility that something bad or dangerous may happen
   vi: rủi ro
@@ -128,6 +139,7 @@ words:
     blank: take
 - lemma: benefit
   pos: noun
+  ipa: /ˈbenɪfɪt/
   level: B1
   definition: a good or helpful result that something gives you
   vi: lợi ích
@@ -136,6 +148,7 @@ words:
     answer: benefits
 - lemma: effect
   pos: noun
+  ipa: /ɪˈfekt/
   level: B1
   definition: a change that is caused by something
   vi: tác động
@@ -147,6 +160,7 @@ words:
     blank: have
 - lemma: affect
   pos: verb
+  ipa: /əˈfekt/
   level: B1
   definition: to have an influence on someone or something
   vi: ảnh hưởng
@@ -155,6 +169,7 @@ words:
     answer: affect
 - lemma: opportunity
   pos: noun
+  ipa: /ˌɒpəˈtjuːnəti/
   level: B1
   definition: a chance to do something good or useful
   vi: cơ hội
@@ -166,6 +181,7 @@ words:
     blank: miss
 - lemma: compare
   pos: verb
+  ipa: /kəmˈpeə/
   level: B1
   definition: to look at two or more things to see how they are similar or different
   vi: so sánh
@@ -174,6 +190,7 @@ words:
     answer: compares
 - lemma: society
   pos: noun
+  ipa: /səˈsaɪəti/
   level: B1
   definition: all the people who live in a country or area, and their way of life
   vi: xã hội
@@ -182,6 +199,7 @@ words:
     answer: society
 - lemma: ability
   pos: noun
+  ipa: /əˈbɪləti/
   level: B1
   definition: the power or skill to do something
   vi: khả năng
@@ -194,6 +212,7 @@ words:
     answer: ability
 - lemma: significant
   pos: adjective
+  ipa: /sɪɡˈnɪfɪkənt/
   level: B2
   definition: large or important enough to have a noticeable effect
   vi: đáng kể
@@ -206,6 +225,7 @@ words:
     answer: significantly
 - lemma: contribute
   pos: verb
+  ipa: /kənˈtrɪbjuːt/
   level: B2
   definition: to give something, such as money, time or ideas, to help achieve something
   vi: đóng góp
@@ -218,6 +238,7 @@ words:
     answer: contribution
 - lemma: reliable
   pos: adjective
+  ipa: /rɪˈlaɪəbəl/
   level: B2
   definition: that you can trust to work well or to tell the truth
   vi: đáng tin cậy
@@ -226,6 +247,7 @@ words:
     answer: reliable
 - lemma: consequence
   pos: noun
+  ipa: /ˈkɒnsɪkwəns/
   level: B2
   definition: a result of something that has happened
   vi: hậu quả
@@ -237,6 +259,7 @@ words:
     blank: face
 - lemma: challenge
   pos: noun
+  ipa: /ˈtʃælɪndʒ/
   level: B2
   definition: something difficult that tests your ability or determination
   vi: thách thức
@@ -248,6 +271,7 @@ words:
     blank: face
 - lemma: awareness
   pos: noun
+  ipa: /əˈweənəs/
   level: B2
   definition: knowledge or understanding of a situation or subject
   vi: nhận thức
@@ -259,6 +283,7 @@ words:
     blank: raise
 - lemma: tackle
   pos: verb
+  ipa: /ˈtækəl/
   level: B2
   definition: to try to deal with a difficult problem
   vi: giải quyết
@@ -267,6 +292,7 @@ words:
     answer: tackle
 - lemma: inevitable
   pos: adjective
+  ipa: /ɪˈnevɪtəbəl/
   level: C1
   definition: certain to happen and impossible to avoid
   vi: không thể tránh khỏi
@@ -279,6 +305,7 @@ words:
     answer: inevitably
 - lemma: mitigate
   pos: verb
+  ipa: /ˈmɪtɪɡeɪt/
   level: C1
   definition: to make something less harmful, serious or severe
   vi: giảm nhẹ
@@ -287,6 +314,7 @@ words:
     answer: mitigate
 - lemma: fluctuate
   pos: verb
+  ipa: /ˈflʌktʃueɪt/
   level: C1
   definition: to change often, rising and falling, especially in amount or level
   vi: dao động
@@ -299,6 +327,7 @@ words:
     answer: fluctuation
 - lemma: implication
   pos: noun
+  ipa: /ˌɪmplɪˈkeɪʃən/
   level: C1
   definition: a possible effect or result of an action or decision
   vi: hệ quả
@@ -307,6 +336,7 @@ words:
     answer: implications
 - lemma: advocate
   pos: verb
+  ipa: /ˈædvəkeɪt/
   level: C1
   definition: to publicly support a plan or way of doing something
   vi: ủng hộ
@@ -315,6 +345,7 @@ words:
     answer: advocate
 - lemma: sustainable
   pos: adjective
+  ipa: /səˈsteɪnəbəl/
   level: C1
   definition: able to continue for a long time without harming the environment
   vi: bền vững

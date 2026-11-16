@@ -72,6 +72,9 @@ def test_whole_word_matching_ignores_case_and_longer_words() -> None:
         ({"forms": [{"base": "x", "sentence": "no blank here", "answer": "y"}]}, "exactly one ___"),
         ({"forms": [{"base": "x", "sentence": "___ and ___", "answer": "y"}]}, "exactly one ___"),
         ({"level": "D9"}, "level"),
+        ({"ipa": "ɪmˈpɔːtənt"}, "ipa"),  # noqa: RUF001 (IPA)
+        ({"ipa": "/ ˈæpəl/"}, "ipa"),  # noqa: RUF001 (IPA)
+        ({"ipa": "/ap1/"}, "ipa"),  # digits are not IPA
         ({"examples": []}, "at least 1"),
     ],
 )
@@ -177,3 +180,13 @@ def test_kinds_rotate_with_the_number_of_reviews() -> None:
 def test_the_yaml_round_trips_through_the_models() -> None:
     raw = yaml.safe_load(SEED.read_text(encoding="utf-8"))
     assert WordList.model_validate(raw) == WL
+
+
+def test_every_seed_word_has_a_british_pronunciation_on_its_card() -> None:
+    from app.vocabulary.items import card
+
+    for w in WL.words:
+        assert w.ipa and w.ipa.startswith("/") and w.ipa.endswith("/"), w.lemma
+        assert card(w).ipa == w.ipa
+    ipa = WL.get("important:adjective").ipa  # type: ignore[union-attr]
+    assert ipa == "/ɪmˈpɔːtənt/"  # noqa: RUF001 (IPA)
