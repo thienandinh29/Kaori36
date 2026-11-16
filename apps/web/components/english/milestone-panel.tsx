@@ -22,6 +22,7 @@ export function MilestonePanel({
 }) {
   const [known, missing] = knownMissing(milestoneShare(m));
   const mastered = m.status === "mastered";
+  const waiting = m.waiting_for.map((n) => `«${names[n] ?? n}»`).join(", ");
   return (
     <div className="nt-panel-body">
       <button type="button" className="nt-btn ghost nt-close" onClick={onClose}>
@@ -41,6 +42,12 @@ export function MilestonePanel({
         {t.roadmap.known} <b>{known}%</b>, {t.roadmap.missing} {missing}%.
         {isNext && <span className="nt-next"> {t.roadmap.next}</span>}
       </p>
+      {m.locked && (
+        <p className="nt-locked" role="note">
+          <span aria-hidden>🔒</span> <b>{t.roadmap.locked}.</b>{" "}
+          {t.roadmap.lockedWhy.replace("{names}", waiting)}
+        </p>
+      )}
       {mastered && (
         <div className="nt-sena-line">
           <Sena
@@ -69,7 +76,9 @@ export function MilestonePanel({
               </div>
               <div className="nt-part-foot">
                 <span className={`nt-badge is-${b}`}>{t.roadmap.bands[b]}</span>
-                <Link href={`/on-tap/phan/${h.slug}`}>{t.run.practise}</Link>
+                {!m.locked && (
+                  <Link href={`/on-tap/phan/${h.slug}`}>{t.run.practise}</Link>
+                )}
               </div>
             </li>
           );
@@ -77,7 +86,7 @@ export function MilestonePanel({
       </ul>
       <div className="nt-actions">
         <Link className="nt-btn primary" href={`/on-tap/cot-moc/${m.slug}`}>
-          {t.run.takeTest}
+          {m.locked ? t.roadmap.testToUnlock : t.run.takeTest}
         </Link>
       </div>
     </div>

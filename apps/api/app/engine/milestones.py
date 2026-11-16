@@ -79,6 +79,41 @@ def milestone_status(
     return out
 
 
+SETTLED: frozenset[Status] = frozenset({"known", "mastered"})
+
+
+@dataclass(frozen=True)
+class Lock:
+    locked: bool
+    waiting_for: tuple[str, ...]  # milestones directly before this one that are not settled yet
+
+
+def milestone_locks(
+    roadmap: Roadmap, status: Mapping[str, Status], p_known: Mapping[str, float]
+) -> dict[str, Lock]:
+    """Which milestones are locked (the owner's rule, 16 Nov 2026).
+
+    A milestone is locked when the learner knows none of it yet (`unknown`), has not worked on any
+    of its parts yet (no evidence in `p_known`), and a milestone directly before it is not settled
+    (known or mastered). So:
+    - anything the level test or practice showed the learner partly or fully knows stays open;
+    - a milestone the learner has worked on stays open: the engine only ever sends a learner to
+      parts with evidence (a failed test's parts, a weak prerequisite it has seen), so it never
+      recommends something locked;
+    - a locked milestone opens as soon as every milestone before it is settled, and its milestone
+      test is always allowed: passing it settles the milestone (test to unlock).
+    """
+    out: dict[str, Lock] = {}
+    for m in roadmap.milestones.order:
+        waiting = tuple(x for x in roadmap.milestones.parents[m] if status.get(x) not in SETTLED)
+        touched = any(n in p_known for n in roadmap.hidden[m])
+        out[m] = Lock(
+            locked=status.get(m) == "unknown" and not touched and bool(waiting),
+            waiting_for=waiting,
+        )
+    return out
+
+
 def questions_in_test(hidden_count: int) -> int:
     """Questions in a milestone test: 4 when there are 4 or more parts, else at least 3."""
     return max(MIN_TEST_SIZE, min(MAX_TEST_SIZE, hidden_count))

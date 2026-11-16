@@ -69,7 +69,7 @@ Planned entries are marked _(planned)_ until they exist.
 | `data/vocabulary/` | Word lists: `core-seed.yaml` (30 authored words A2–C1, status draft until the owner reviews it) |
 | `data/kg/` _(planned)_ | Knowledge Graph YAML fixtures |
 | `data/items/` | Authored grammar items per course: `english-ielts.yaml` (76 draft MCQs, 4 per hidden node, a misconception on every wrong option); `misconceptions.vi.yaml` (each misconception explained in Vietnamese, draft) |
-| `apps/api/app/engine/milestones.py` | Milestones and hidden nodes: status, milestone-test outcome (pass, gap, fail), what to learn next, level test on milestones, level estimate; traced (`specs/level-test/`) |
+| `apps/api/app/engine/milestones.py` | Milestones and hidden nodes: status, milestone-test outcome (pass, gap, fail), what to learn next, locks (locked until the milestones before are known; test to unlock), level test on milestones, level estimate; traced (`specs/level-test/`) |
 | `apps/api/app/services/grammar.py`, `apps/api/app/api/grammar.py` | Grammar roadmap API: `/level-tests`, `/roadmap`, `/milestones/{slug}/tests`, `/nodes/{slug}/practice`, `/grammar-runs/{id}/answers`; draft items only for `DRAFT_ITEM_LEARNERS` |
 | `apps/api/app/writing/`, `apps/api/app/services/writing.py`, `apps/api/app/api/writing.py` | Writing (`specs/writing/`): prompts, deterministic essay analysis, `/writing/prompts`, `/essays`; the worker analyses queued essays; `services/budget.py` daily model budget |
 | `data/writing/` | Writing prompts (authored, draft until reviewed), linking words by function, `error-map.yaml` (ERRANT type → hidden node, draft, with the writing observation model) |

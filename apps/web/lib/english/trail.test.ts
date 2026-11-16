@@ -30,6 +30,8 @@ const m = (
   level,
   status: "unknown",
   needs,
+  locked: false,
+  waiting_for: [],
   hidden,
 });
 

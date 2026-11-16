@@ -14,6 +14,7 @@ from app.engine.milestones import (
     known_milestones,
     level_from,
     level_test_next,
+    milestone_locks,
     milestone_outcome,
     milestone_status,
     next_to_learn,
@@ -194,3 +195,69 @@ def test_the_english_gate_baseline_is_committed_and_honest() -> None:
     cells = {(c["learner"], c["budget"]): c for c in baseline["cells"]}
     assert set(cells) == {(m, b) for m in ("single_gap", "any_state") for b in (6, 10, 15, 20)}
     assert cells[("any_state", 20)]["level_exact"] >= cells[("any_state", 6)]["level_exact"]
+
+
+# --- locks (the owner's rule, 16 Nov 2026) ----------------------------------------------------
+
+
+def status_with(p: dict[str, float]) -> dict[str, str]:
+    return milestone_status(RM, p, {})  # type: ignore[return-value]
+
+
+def test_a_new_learner_has_only_the_first_milestone_open() -> None:
+    locks = milestone_locks(RM, milestone_status(RM, {}, {}), {})
+    assert [m for m, lock in locks.items() if not lock.locked] == ["present-tenses"]
+    assert locks["comparison"].waiting_for == ("present-tenses",)
+    assert locks["conditional-3"].waiting_for == ("conditionals-1-2", "narrative-tenses")
+
+
+def test_a_milestone_opens_when_every_milestone_before_it_is_known() -> None:
+    locks = milestone_locks(
+        RM, milestone_status(RM, known("present-tenses"), {}), known("present-tenses")
+    )
+    for m in ("comparison", "nouns-articles", "past-and-future"):
+        assert not locks[m].locked and locks[m].waiting_for == ()
+    assert locks["passive"].locked and locks["passive"].waiting_for == ("past-and-future",)
+    both = known("present-tenses", "past-and-future", "perfect-tenses", "narrative-tenses")
+    locks = milestone_locks(RM, milestone_status(RM, both, {}), both)
+    assert locks["conditional-3"].locked  # still waits for conditionals-1-2
+    assert locks["conditional-3"].waiting_for == ("conditionals-1-2",)
+
+
+def test_what_the_learner_already_knows_is_never_locked() -> None:
+    # The owner's own map: later milestones known from the level test stay open (rule a).
+    p = known("present-tenses", "past-and-future", "conditionals-1-2")
+    status = milestone_status(RM, p, {})
+    locks = milestone_locks(RM, status, p)
+    assert not locks["conditionals-1-2"].locked
+    assert locks["narrative-tenses"].locked  # waits for perfect-tenses
+    # Partly known, though what comes before it is not: open, with what it waits for shown.
+    assert len(RM.hidden["perfect-tenses"]) >= 2
+    partly = known("present-tenses") | {RM.hidden["perfect-tenses"][0]: ASSUMED_KNOWN}
+    status = milestone_status(RM, partly, {})
+    lock = milestone_locks(RM, status, partly)["perfect-tenses"]
+    assert status["perfect-tenses"] == "partial" and not lock.locked
+    assert lock.waiting_for == ("past-and-future",)
+    known_only = known("conditionals-mixed")  # known without anything before it
+    status = milestone_status(RM, known_only, {})
+    assert not milestone_locks(RM, status, known_only)["conditionals-mixed"].locked
+
+
+def test_passing_a_locked_milestones_test_unlocks_it() -> None:
+    before = milestone_status(RM, {}, {})
+    assert milestone_locks(RM, before, {})["comparison"].locked
+    nodes = RM.hidden["comparison"]
+    outcome = milestone_outcome(RM, "comparison", [NodeAnswer(n, True) for n in nodes], {})
+    raised = dict(outcome.raised)
+    after = milestone_status(RM, raised, {})
+    assert after["comparison"] == "known"
+    assert not milestone_locks(RM, after, raised)["comparison"].locked
+
+
+def test_a_milestone_the_learner_worked_on_stays_open() -> None:
+    # A failed test leaves evidence (low p_known) on its parts: the engine sends the learner there.
+    tried = {RM.hidden["conditional-3"][0]: 0.12}
+    status = milestone_status(RM, tried, {})
+    locks = milestone_locks(RM, status, tried)
+    assert status["conditional-3"] == "unknown" and not locks["conditional-3"].locked
+    assert locks["conditionals-mixed"].locked  # untouched, waits for conditional-3
