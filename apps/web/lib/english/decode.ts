@@ -98,6 +98,13 @@ function optionalString(value: unknown): string | null {
   return value === null || value === undefined ? null : string(value);
 }
 
+/** A transcription between slashes, or null; anything else is a broken contract. */
+function ipa(value: unknown): string | null {
+  const v = optionalString(value);
+  if (v !== null && !/^\/[^/]+\/$/.test(v)) throw new DataError("contract");
+  return v;
+}
+
 function parseFeedback(value: unknown): Feedback | null {
   if (value === null || value === undefined) return null;
   const d = record(value);
@@ -181,6 +188,7 @@ export function parseWordCard(value: unknown): WordCard {
     lemma: string(d.lemma),
     pos: string(d.pos),
     level: string(d.level),
+    ipa: ipa(d.ipa),
     definition: string(d.definition),
     vi: optionalString(d.vi),
     example: string(d.example),

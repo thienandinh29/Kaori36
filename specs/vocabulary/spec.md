@@ -52,3 +52,10 @@ The owner's request: see the words by level and choose where new words come from
   another level.
 - The 30-word seed list stays the content until a licensed larger list is imported (`data/sources/english-candidates.yaml`:
   NGSL and NAWL wait on the owner's licence check).
+
+## Pronunciation next to the word (16 Nov 2026)
+The owner's request. Each word may carry `ipa`: a British (RP-style) phonemic transcription between slashes with stress
+marks, authored for the seed list and **draft** like every other field until the owner reviews it. Checked on load (slashes,
+no spaces at the ends, no digits). The word card shows it after the word, before the listen buttons, in a font with IPA
+symbols (the app's own fonts are cut to Latin and Vietnamese). An imported list (NGSL) will need an open IPA source too
+(Wiktionary is listed in `data/sources/english-candidates.yaml`, licence still to check).

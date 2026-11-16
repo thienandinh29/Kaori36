@@ -1725,3 +1725,10 @@ svg.nt-trail {
   border: 1px dashed var(--nt-line, currentColor);
   border-radius: 12px;
 }
+
+/* The pronunciation next to a word (specs/vocabulary). */
+.nt-ipa {
+  font-family: "Segoe UI", "Noto Sans", "DejaVu Sans", system-ui, sans-serif;
+  font-size: 1.05rem;
+  color: var(--nt-ink-2, inherit);
+}

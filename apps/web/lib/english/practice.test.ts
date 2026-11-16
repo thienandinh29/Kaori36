@@ -6,6 +6,7 @@ import {
   parseStep,
   parseVocabAnswer,
   parseVocabLevels,
+  parseWordCard,
   parseVocabSession,
 } from "./decode";
 
@@ -32,6 +33,7 @@ const card = {
   lemma: "decision",
   pos: "noun",
   level: "B1",
+  ipa: "/dɪˈsɪʒən/",
   definition: "a choice that you make after thinking about the possibilities",
   vi: "quyết định",
   example: "It was a difficult decision to move abroad.",
@@ -158,6 +160,15 @@ describe("vocabulary", () => {
         new_left_today: 0,
       }),
     ).toThrow(DataError); // new_available is part of the contract
+  });
+  it("reads the pronunciation strictly", () => {
+    expect(parseWordCard(card).ipa).toBe("/dɪˈsɪʒən/");
+    expect(parseWordCard({ ...card, ipa: null }).ipa).toBeNull();
+    expect(parseWordCard({ ...card, ipa: undefined }).ipa).toBeNull();
+    expect(() => parseWordCard({ ...card, ipa: "dɪˈsɪʒən" })).toThrow(
+      DataError,
+    );
+    expect(() => parseWordCard({ ...card, ipa: 3 })).toThrow(DataError);
   });
   it("decodes the levels strictly and asks for a chosen level", async () => {
     const levels = {
