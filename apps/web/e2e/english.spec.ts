@@ -98,20 +98,60 @@ test("a failed milestone test explains each mistake and opens quick checks", asy
   await expect(page.getByRole("link", { name: "Luyện ngay" })).toBeVisible();
 });
 
-test("a new word is taught, asked, and scheduled", async ({ page }) => {
+test("new words are flashcards first, then typed from memory", async ({
+  page,
+}) => {
   await asLearner(page, null); // a fresh learner: vocabulary needs no draft permission
   await page.goto("/tu-vung");
-  await expect(page.getByText("Từ mới", { exact: true })).toBeVisible();
-  const lemma = (await page.locator(".en-word-top strong").innerText()).trim();
-  await page.getByRole("button", { name: "Tôi đã đọc, hỏi tôi đi" }).click();
-  const options = page.getByRole("radio");
-  const texts = await options.allInnerTexts();
-  await options
-    .nth(texts.findIndex((t) => t.split("\n").at(-1)?.trim() === lemma))
-    .click();
-  await page.getByRole("button", { name: "Gửi" }).click();
+  const card = page.getByTestId("flashcard");
+  await expect(card).toBeVisible();
+  // Step 1: every new word as a card; the back shows the meaning.
+  const lemmas: string[] = [];
+  for (;;) {
+    lemmas.push(
+      (await card.locator(".nt-card-front strong").innerText()).trim(),
+    );
+    await card.getByRole("button", { name: "Lật thẻ" }).click();
+    await expect(card.locator(".en-word")).toBeVisible();
+    const start = card.getByRole("button", {
+      name: "Đã xem hết, bắt đầu viết từ",
+    });
+    if (await start.count()) {
+      await start.click();
+      break;
+    }
+    await card.getByRole("button", { name: "Thẻ tiếp" }).click();
+  }
+  expect(lemmas.length).toBeGreaterThan(1);
+  // Step 2: type each word from its meaning; a miss comes back at the end, as a retry.
+  const write = async (word: string) => {
+    await page.getByLabel("Gõ câu trả lời").fill(word);
+    await page.getByRole("button", { name: "Gửi" }).click();
+  };
+  await write(lemmas[0]);
   await expect(page.getByText("Đúng rồi.")).toBeVisible();
-  await expect(page.getByText("Ôn lại vào")).toBeVisible();
+  await expect(page.getByText("Ôn lại vào")).toBeVisible(); // the first try is scheduled
+  await page.getByRole("button", { name: "Tiếp" }).click();
+  await write("definitely-wrong");
+  await expect(page.getByText("Chưa đúng.")).toBeVisible();
+  await page.getByRole("button", { name: "Tiếp" }).click();
+  for (const word of lemmas.slice(2)) {
+    await write(word);
+    await expect(page.getByText("Đúng rồi.")).toBeVisible();
+    await page.getByRole("button", { name: "Tiếp" }).click();
+  }
+  await expect(
+    page.getByText("Viết lại từ này", { exact: false }),
+  ).toBeVisible();
+  await write(lemmas[1]);
+  await expect(page.getByText("Đúng rồi.")).toBeVisible();
+  await expect(page.getByText("Ôn lại vào")).not.toBeVisible(); // a retry is not scheduled
+  await page.getByRole("button", { name: "Tiếp" }).click();
+  await expect(
+    page.getByText(`đúng ngay lần đầu ${lemmas.length - 1}/${lemmas.length}`, {
+      exact: false,
+    }),
+  ).toBeVisible();
 });
 
 test("an essay is written, measured by the worker, and deleted", async ({

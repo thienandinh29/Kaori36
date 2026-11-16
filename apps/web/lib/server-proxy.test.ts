@@ -298,6 +298,15 @@ describe("graph confirmation session proxy", () => {
       context(["speech"]),
     );
     expect(speech.status).toBe(200);
+    const check = await POST(
+      new NextRequest("http://localhost:3000/api/backend/vocab/checks", {
+        method: "POST",
+        headers: { origin: "http://localhost:3000" },
+        body: '{"item_id":"a","answer":"b"}',
+      }),
+      context(["vocab", "checks"]),
+    );
+    expect(check.status).toBe(200);
     const corrections = await POST(
       new NextRequest(
         `http://localhost:3000/api/backend/essays/${id}/corrections`,

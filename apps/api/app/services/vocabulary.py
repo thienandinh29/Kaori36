@@ -196,7 +196,7 @@ class VocabPractice:
         else:
             fresh = [w for w in pool if wl.level_index(w) <= top]
         for word in fresh[: min(new_left, max(limit - len(entries), 0))]:
-            kind, n = vitems.pick(word, 0)
+            kind, n = "recall", 0  # new words: flashcards first, then typed from memory
             item = vitems.build_item(wl, word, kind, n)
             entries.append(SessionEntry(vitems.learner_view(item), True, vitems.card(word), None))
         return Session(entries, len(due), new_today[0], new_left, len(fresh))
@@ -251,6 +251,24 @@ class VocabPractice:
         return Levels(counts, suggested, topics)
 
     # --- an answer -----------------------------------------------------------------------------
+
+    def check(self, item_id: str, answer: str) -> tuple[bool, str, vitems.WordCard]:
+        """Grade a retry without touching the learner's card: only the first try is scheduled."""
+        if len(answer) > MAX_ANSWER_CHARS:
+            raise HTTPException(422, "Câu trả lời quá dài.")
+        try:
+            list_slug, key, kind, n = vitems.parse_item_id(item_id)
+        except ValueError:
+            raise HTTPException(422, "Mã câu hỏi không hợp lệ.") from None
+        wl = self.wordlist(list_slug)
+        word = wl.get(key)
+        if word is None:
+            raise HTTPException(404, "Không tìm thấy từ này.")
+        try:
+            item = vitems.build_item(wl, word, kind, n)
+        except ValueError:
+            raise HTTPException(404, "Không tìm thấy câu hỏi này.") from None
+        return vitems.grade(item, answer), item.accepted[0], vitems.card(word)
 
     def answer(
         self, learner_id: str, item_id: str, answer: str, *, now: datetime | None = None

@@ -546,6 +546,18 @@ export const vi = {
       start: "Bắt đầu ôn",
       progress: "Tiến độ phiên ôn",
       levelPick: "Học từ mới ở cấp độ",
+      cardsTitle: "Thẻ từ {i}/{n}",
+      cardsIntro:
+        "Xem từng thẻ. Bấm lật thẻ để xem nghĩa. Xem hết thì viết lại từng từ từ trí nhớ.",
+      flip: "Lật thẻ",
+      flipBack: "Xem mặt trước",
+      nextCard: "Thẻ tiếp",
+      startRecall: "Đã xem hết, bắt đầu viết từ",
+      recallTitle: "Viết từ từ trí nhớ",
+      recallLeft: "Còn {n} từ",
+      retryNote: "Viết lại từ này. Lần này không tính vào lịch ôn, chỉ để nhớ.",
+      batchDone:
+        "Xong! Bạn đã học {n} từ mới, đúng ngay lần đầu {k}/{n}. Các từ sẽ quay lại để ôn đúng lúc.",
       topicPick: "Chủ đề",
       topicAll: "Tất cả",
       ipaTitle: "Phiên âm (giọng Anh), bản nháp tự soạn",

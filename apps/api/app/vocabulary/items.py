@@ -15,8 +15,8 @@ from pydantic import BaseModel
 from app.graders.typed import grade_typed, normalise
 from app.vocabulary.wordlist import Word, WordList, blank_out
 
-Kind = Literal["meaning", "gapfill", "collocation", "wordform"]
-KINDS: tuple[Kind, ...] = ("meaning", "gapfill", "collocation", "wordform")
+Kind = Literal["meaning", "gapfill", "collocation", "wordform", "recall"]
+KINDS: tuple[Kind, ...] = ("meaning", "gapfill", "collocation", "wordform", "recall")
 DISTRACTORS = 3
 
 
@@ -75,6 +75,7 @@ def kinds_for(word: Word) -> list[Kind]:
         kinds.append("collocation")
     if word.forms:
         kinds.append("wordform")
+    kinds.append("recall")  # type the word from its meaning (the flashcard test, specs/vocabulary)
     return kinds
 
 
@@ -85,6 +86,7 @@ def count_for(word: Word, kind: Kind) -> int:
         "gapfill": len(word.examples),
         "collocation": len(word.collocations),
         "wordform": len(word.forms),
+        "recall": 1,
     }[kind]
 
 
@@ -129,6 +131,10 @@ def build_item(wordlist: WordList, word: Word, kind: Kind, n: int) -> Item:
         return Item(iid, kind, word.key, blank_out(col.blank, col.phrase),
                     "Điền từ còn thiếu để tạo cụm từ:", None, col.blank[0].lower(),
                     (col.blank, *col.accepted))  # fmt: skip
+    if kind == "recall":
+        meaning = f"{word.definition} ({word.vi})" if word.vi else word.definition
+        return Item(iid, kind, word.key, meaning, "Viết từ tiếng Anh có nghĩa sau:", None,
+                    word.lemma[0].lower(), (word.lemma,))  # fmt: skip
     form = word.forms[n]
     return Item(iid, kind, word.key, form.sentence,
                 f"Dùng dạng đúng của từ “{form.base}” để điền vào chỗ trống:", None,

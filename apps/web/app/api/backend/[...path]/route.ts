@@ -9,7 +9,7 @@ const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 const SLUG = "[a-z0-9]+(?:-[a-z0-9]+)*";
 const allowedEnglish = new RegExp(
   `^(level-tests|level-tests/${UUID}/answers|roadmap|milestones/${SLUG}/tests|` +
-    `nodes/${SLUG}/practice|grammar-runs/${UUID}/answers|vocab/session|vocab/levels|vocab/answers|` +
+    `nodes/${SLUG}/practice|grammar-runs/${UUID}/answers|vocab/session|vocab/levels|vocab/answers|vocab/checks|` +
     `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status)$`,
 );
