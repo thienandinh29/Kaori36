@@ -49,3 +49,42 @@ export function VocabLevelPicker({
     </div>
   );
 }
+
+/** Choose the topic new words come from; "Tất cả" is every topic (specs/vocabulary, topics). */
+export function VocabTopicPicker({
+  levels,
+  topic,
+  onChoose,
+}: {
+  levels: Levels;
+  topic: string;
+  onChoose: (topic: string) => void;
+}) {
+  if (levels.topics.length === 0) return null;
+  const all = { slug: "", name_vi: t.topicAll, words: 0, started: 0 };
+  return (
+    <div className="nt-levels nt-topics" role="group" aria-label={t.topicPick}>
+      <p className="en-muted">{t.topicPick}</p>
+      <div className="nt-levels-row">
+        {[all, ...levels.topics].map((x) => (
+          <button
+            key={x.slug || "all"}
+            type="button"
+            aria-pressed={x.slug === topic}
+            className={x.slug === topic ? "is-chosen" : undefined}
+            onClick={() => onChoose(x.slug)}
+          >
+            <strong>{x.name_vi}</strong>
+            {x.slug && (
+              <small>
+                {t.levelStarted
+                  .replace("{started}", String(x.started))
+                  .replace("{words}", String(x.words))}
+              </small>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}

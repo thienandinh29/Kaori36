@@ -116,7 +116,9 @@ def test_the_daily_new_word_limit_resets_at_midnight_in_vietnam(setup: Setup) ->
 def test_max_level_and_limit_cap_the_new_words(setup: Setup) -> None:
     practice, learner, _ = setup
     a2 = practice.session(learner, "core-seed", max_level="A2", now=NOW)
-    assert {e.card.level for e in a2.entries if e.card} == {"A2"} and len(a2.entries) == 3
+    a2_words = sum(1 for w in WL.words if w.level == "A2")
+    assert {e.card.level for e in a2.entries if e.card} == {"A2"}
+    assert len(a2.entries) == min(a2_words, 10)  # the daily new-word limit
     assert len(practice.session(learner, "core-seed", limit=2, now=NOW).entries) == 2
 
 
@@ -289,3 +291,52 @@ def test_level_routes(setup: Setup) -> None:
         assert s["new_available"] == sum(1 for w in WL.words if w.level == "B2")
         bad = client.get("/vocab/session", params={"learner_id": learner, "level": "Z9"})
         assert bad.status_code == 422
+
+
+def test_a_chosen_topic_gives_new_words_of_that_topic_only(setup: Setup) -> None:
+    practice, learner, _ = setup
+    s = practice.session(learner, "core-seed", topic="travel", new_limit=50, limit=50, now=NOW)
+    travel = [w for w in WL.words if w.topic == "travel"]
+    assert {e.card.key for e in s.entries if e.card} == {w.key for w in travel}
+    assert s.new_available == len(travel)
+    b2 = practice.session(learner, "core-seed", topic="travel", level="B2", now=NOW)
+    assert b2.entries and all(e.card and e.card.level == "B2" for e in b2.entries)
+    with pytest.raises(HTTPException) as err:
+        practice.session(learner, "core-seed", topic="astrology", now=NOW)
+    assert err.value.status_code == 404
+
+
+def test_due_words_from_any_topic_still_come_first(setup: Setup) -> None:
+    practice, learner, _ = setup
+    s = practice.session(learner, "core-seed", topic="crime", now=NOW)
+    answer_correctly(practice, learner, s.entries[0].item.id, NOW)
+    later = practice.session(learner, "core-seed", topic="travel", now=NOW + timedelta(days=60))
+    assert later.due == 1 and not later.entries[0].is_new
+
+
+def test_levels_and_topics_are_counted_per_topic(setup: Setup) -> None:
+    practice, learner, _ = setup
+    whole = practice.levels(learner, "core-seed", now=NOW)
+    assert [t.slug for t in whole.topics] == [t.slug for t in WL.topics]
+    assert sum(t.words for t in whole.topics) == len(WL.words)  # every word has one topic
+    health = practice.levels(learner, "core-seed", topic="health", now=NOW)
+    assert sum(c.words for c in health.levels) == sum(1 for w in WL.words if w.topic == "health")
+    s = practice.session(learner, "core-seed", topic="health", now=NOW)
+    answer_correctly(practice, learner, s.entries[0].item.id, NOW)
+    after = {t.slug: t for t in practice.levels(learner, "core-seed", now=NOW).topics}
+    assert after["health"].started == 1 and after["travel"].started == 0
+
+
+def test_topic_routes(setup: Setup) -> None:
+    practice, learner, _ = setup
+    app = FastAPI()
+    app.include_router(vocab_routes.create_router(practice))
+    with TestClient(app) as client:
+        body = client.get("/vocab/levels", params={"learner_id": learner, "topic": "media"}).json()
+        assert {t["slug"] for t in body["topics"]} >= {"media", "travel"}
+        s = client.get("/vocab/session", params={"learner_id": learner, "topic": "media"}).json()
+        assert s["new_available"] == sum(1 for w in WL.words if w.topic == "media")
+        bad = client.get("/vocab/session", params={"learner_id": learner, "topic": "Bad Topic"})
+        assert bad.status_code == 422
+        missing = client.get("/vocab/levels", params={"learner_id": learner, "topic": "nope"})
+        assert missing.status_code == 404

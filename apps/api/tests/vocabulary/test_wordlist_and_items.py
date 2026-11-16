@@ -190,3 +190,13 @@ def test_every_seed_word_has_a_british_pronunciation_on_its_card() -> None:
         assert card(w).ipa == w.ipa
     ipa = WL.get("important:adjective").ipa  # type: ignore[union-attr]
     assert ipa == "/ɪmˈpɔːtənt/"  # noqa: RUF001 (IPA)
+
+
+def test_every_word_has_a_listed_topic_and_unknown_topics_are_refused() -> None:
+    slugs = {t.slug for t in WL.topics}
+    assert all(w.topic in slugs for w in WL.words)
+    assert len(WL.words) >= 120 and len(slugs) >= 10
+    raw = WL.model_dump()
+    raw["words"][0]["topic"] = "astrology"
+    with pytest.raises(ValidationError, match="not in the list's topics"):
+        WordList.model_validate(raw)

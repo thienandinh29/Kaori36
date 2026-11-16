@@ -6,7 +6,7 @@ prerequisite graph for words.
 """
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -58,9 +58,18 @@ class LevelCount:
 
 
 @dataclass(frozen=True)
+class TopicCount:
+    slug: str
+    name_vi: str
+    words: int
+    started: int
+
+
+@dataclass(frozen=True)
 class Levels:
-    levels: list[LevelCount]  # every level that has words, easiest first
+    levels: list[LevelCount]  # every level that has words (in the chosen topic), easiest first
     suggested: str  # one above the last level test's vocabulary level (else C1)
+    topics: list[TopicCount] = field(default_factory=list)  # every topic of the list
 
 
 @dataclass(frozen=True)
@@ -136,6 +145,7 @@ class VocabPractice:
         new_limit: int = DEFAULT_NEW_PER_DAY,
         max_level: str | None = None,
         level: str | None = None,
+        topic: str | None = None,
         now: datetime | None = None,
     ) -> Session:
         """Due cards first (any level), then new words: of exactly `level` when the learner chose
@@ -177,19 +187,29 @@ class VocabPractice:
                 )
             )
         new_left = max(new_limit - new_today[0], 0)
+        if topic is not None and topic not in {t.slug for t in wl.topics}:
+            raise HTTPException(404, "Không tìm thấy chủ đề này.")
+        pool = [w for w in wl.words if w.key not in cards and (topic is None or w.topic == topic)]
         if level is not None:
             chosen = LEVELS.index(level)
-            fresh = [w for w in wl.words if w.key not in cards and wl.level_index(w) == chosen]
+            fresh = [w for w in pool if wl.level_index(w) == chosen]
         else:
-            fresh = [w for w in wl.words if w.key not in cards and wl.level_index(w) <= top]
+            fresh = [w for w in pool if wl.level_index(w) <= top]
         for word in fresh[: min(new_left, max(limit - len(entries), 0))]:
             kind, n = vitems.pick(word, 0)
             item = vitems.build_item(wl, word, kind, n)
             entries.append(SessionEntry(vitems.learner_view(item), True, vitems.card(word), None))
         return Session(entries, len(due), new_today[0], new_left, len(fresh))
 
-    def levels(self, learner_id: str, list_slug: str, *, now: datetime | None = None) -> Levels:
-        """How many words each level has, how many the learner started, how many are due now."""
+    def levels(
+        self,
+        learner_id: str,
+        list_slug: str,
+        *,
+        topic: str | None = None,
+        now: datetime | None = None,
+    ) -> Levels:
+        """Per level (within `topic` if given): words, started, due now; every topic's counts."""
         wl = self.wordlist(list_slug)
         now = now or datetime.now(UTC)
         with self.pool().connection() as conn:
@@ -202,9 +222,12 @@ class VocabPractice:
                     (learner, list_slug),
                 )
             }
+        if topic is not None and topic not in {t.slug for t in wl.topics}:
+            raise HTTPException(404, "Không tìm thấy chủ đề này.")
+        scope = [w for w in wl.words if topic is None or w.topic == topic]
         counts = []
         for i, name in enumerate(LEVELS):
-            words = [w for w in wl.words if wl.level_index(w) == i]
+            words = [w for w in scope if wl.level_index(w) == i]
             if not words:
                 continue
             started = [w for w in words if w.key in cards]
@@ -216,7 +239,16 @@ class VocabPractice:
                     due=sum(1 for w in started if cards[w.key] <= now),
                 )
             )
-        return Levels(counts, suggested)
+        topics = [
+            TopicCount(
+                t.slug,
+                t.name_vi,
+                sum(1 for w in wl.words if w.topic == t.slug),
+                sum(1 for w in wl.words if w.topic == t.slug and w.key in cards),
+            )
+            for t in wl.topics
+        ]
+        return Levels(counts, suggested, topics)
 
     # --- an answer -----------------------------------------------------------------------------
 

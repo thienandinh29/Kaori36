@@ -1,4 +1,5 @@
-# Core seed word list (specs/vocabulary): authored by the project, not copied from any source.
+# IELTS word list by topic (specs/vocabulary): authored by the project, not copied from any source.
+# The slug stays core-seed so learners keep their progress. `topic` is one of `topics`.
 # status: draft until the owner has reviewed every entry (definition, examples, collocations, Vietnamese gloss).
 # Levels are approximate. Practice items are built from this file; a typed answer is graded exactly, so list real
 # spelling variants (colour/color) under `accepted`.
@@ -7,13 +8,37 @@
 # Per word: `examples` (a sentence; `answer` is the part the learner types), `collocations` (a phrase and the
 # `blank` word), `forms` (the learner sees `base` and types the form that fits the sentence).
 slug: core-seed
-title_vi: Từ vựng cốt lõi (bản mẫu tự soạn)
-title_en: Core vocabulary (authored seed)
+title_vi: Từ vựng IELTS theo chủ đề (bản nháp tự soạn)
+title_en: IELTS vocabulary by topic (authored draft)
 status: draft
+topics:
+- slug: general
+  name_vi: Từ học thuật chung
+- slug: education
+  name_vi: Giáo dục
+- slug: environment
+  name_vi: Môi trường
+- slug: technology
+  name_vi: Công nghệ
+- slug: health
+  name_vi: Sức khỏe
+- slug: work
+  name_vi: Công việc
+- slug: society
+  name_vi: Xã hội
+- slug: travel
+  name_vi: Du lịch
+- slug: media
+  name_vi: Truyền thông
+- slug: crime
+  name_vi: Tội phạm và pháp luật
+- slug: economy
+  name_vi: Kinh tế
 words:
 - lemma: important
   pos: adjective
   ipa: /ɪmˈpɔːtənt/
+  topic: general
   level: A2
   definition: having great value or a strong effect on something
   vi: quan trọng
@@ -27,6 +52,7 @@ words:
 - lemma: choose
   pos: verb
   ipa: /tʃuːz/
+  topic: general
   level: A2
   definition: to decide which one you want from a number of things
   vi: chọn
@@ -40,6 +66,7 @@ words:
 - lemma: education
   pos: noun
   ipa: /ˌedʒuˈkeɪʃən/
+  topic: education
   level: A2
   definition: the process of teaching and learning, usually at school or university
   vi: giáo dục
@@ -53,6 +80,7 @@ words:
 - lemma: advantage
   pos: noun
   ipa: /ədˈvɑːntɪdʒ/
+  topic: general
   level: B1
   definition: something that helps you to be better or more successful than other people
   vi: lợi thế
@@ -65,6 +93,7 @@ words:
 - lemma: decision
   pos: noun
   ipa: /dɪˈsɪʒən/
+  topic: general
   level: B1
   definition: a choice that you make after thinking about the possibilities
   vi: quyết định
@@ -81,6 +110,7 @@ words:
 - lemma: environment
   pos: noun
   ipa: /ɪnˈvaɪrənmənt/
+  topic: environment
   level: B1
   definition: the natural world, including land, water, air, plants and animals
   vi: môi trường
@@ -97,6 +127,7 @@ words:
 - lemma: pollution
   pos: noun
   ipa: /pəˈluːʃən/
+  topic: environment
   level: B1
   definition: damage caused to air, water or land by harmful substances
   vi: ô nhiễm
@@ -110,6 +141,7 @@ words:
 - lemma: increase
   pos: verb
   ipa: /ɪnˈkriːs/
+  topic: general
   level: B1
   definition: to become greater in amount, number or value
   vi: tăng
@@ -119,6 +151,7 @@ words:
 - lemma: reduce
   pos: verb
   ipa: /rɪˈdjuːs/
+  topic: general
   level: B1
   definition: to make something smaller or less in amount, size or price
   vi: giảm
@@ -128,6 +161,7 @@ words:
 - lemma: risk
   pos: noun
   ipa: /rɪsk/
+  topic: general
   level: B1
   definition: the possibility that something bad or dangerous may happen
   vi: rủi ro
@@ -140,6 +174,7 @@ words:
 - lemma: benefit
   pos: noun
   ipa: /ˈbenɪfɪt/
+  topic: general
   level: B1
   definition: a good or helpful result that something gives you
   vi: lợi ích
@@ -149,6 +184,7 @@ words:
 - lemma: effect
   pos: noun
   ipa: /ɪˈfekt/
+  topic: general
   level: B1
   definition: a change that is caused by something
   vi: tác động
@@ -161,6 +197,7 @@ words:
 - lemma: affect
   pos: verb
   ipa: /əˈfekt/
+  topic: general
   level: B1
   definition: to have an influence on someone or something
   vi: ảnh hưởng
@@ -170,6 +207,7 @@ words:
 - lemma: opportunity
   pos: noun
   ipa: /ˌɒpəˈtjuːnəti/
+  topic: work
   level: B1
   definition: a chance to do something good or useful
   vi: cơ hội
@@ -182,6 +220,7 @@ words:
 - lemma: compare
   pos: verb
   ipa: /kəmˈpeə/
+  topic: general
   level: B1
   definition: to look at two or more things to see how they are similar or different
   vi: so sánh
@@ -191,6 +230,7 @@ words:
 - lemma: society
   pos: noun
   ipa: /səˈsaɪəti/
+  topic: society
   level: B1
   definition: all the people who live in a country or area, and their way of life
   vi: xã hội
@@ -200,6 +240,7 @@ words:
 - lemma: ability
   pos: noun
   ipa: /əˈbɪləti/
+  topic: general
   level: B1
   definition: the power or skill to do something
   vi: khả năng
@@ -213,6 +254,7 @@ words:
 - lemma: significant
   pos: adjective
   ipa: /sɪɡˈnɪfɪkənt/
+  topic: general
   level: B2
   definition: large or important enough to have a noticeable effect
   vi: đáng kể
@@ -226,6 +268,7 @@ words:
 - lemma: contribute
   pos: verb
   ipa: /kənˈtrɪbjuːt/
+  topic: general
   level: B2
   definition: to give something, such as money, time or ideas, to help achieve something
   vi: đóng góp
@@ -239,6 +282,7 @@ words:
 - lemma: reliable
   pos: adjective
   ipa: /rɪˈlaɪəbəl/
+  topic: general
   level: B2
   definition: that you can trust to work well or to tell the truth
   vi: đáng tin cậy
@@ -248,6 +292,7 @@ words:
 - lemma: consequence
   pos: noun
   ipa: /ˈkɒnsɪkwəns/
+  topic: general
   level: B2
   definition: a result of something that has happened
   vi: hậu quả
@@ -260,6 +305,7 @@ words:
 - lemma: challenge
   pos: noun
   ipa: /ˈtʃælɪndʒ/
+  topic: general
   level: B2
   definition: something difficult that tests your ability or determination
   vi: thách thức
@@ -272,6 +318,7 @@ words:
 - lemma: awareness
   pos: noun
   ipa: /əˈweənəs/
+  topic: society
   level: B2
   definition: knowledge or understanding of a situation or subject
   vi: nhận thức
@@ -284,6 +331,7 @@ words:
 - lemma: tackle
   pos: verb
   ipa: /ˈtækəl/
+  topic: general
   level: B2
   definition: to try to deal with a difficult problem
   vi: giải quyết
@@ -293,6 +341,7 @@ words:
 - lemma: inevitable
   pos: adjective
   ipa: /ɪˈnevɪtəbəl/
+  topic: general
   level: C1
   definition: certain to happen and impossible to avoid
   vi: không thể tránh khỏi
@@ -306,6 +355,7 @@ words:
 - lemma: mitigate
   pos: verb
   ipa: /ˈmɪtɪɡeɪt/
+  topic: environment
   level: C1
   definition: to make something less harmful, serious or severe
   vi: giảm nhẹ
@@ -315,6 +365,7 @@ words:
 - lemma: fluctuate
   pos: verb
   ipa: /ˈflʌktʃueɪt/
+  topic: economy
   level: C1
   definition: to change often, rising and falling, especially in amount or level
   vi: dao động
@@ -328,6 +379,7 @@ words:
 - lemma: implication
   pos: noun
   ipa: /ˌɪmplɪˈkeɪʃən/
+  topic: general
   level: C1
   definition: a possible effect or result of an action or decision
   vi: hệ quả
@@ -337,6 +389,7 @@ words:
 - lemma: advocate
   pos: verb
   ipa: /ˈædvəkeɪt/
+  topic: general
   level: C1
   definition: to publicly support a plan or way of doing something
   vi: ủng hộ
@@ -346,6 +399,7 @@ words:
 - lemma: sustainable
   pos: adjective
   ipa: /səˈsteɪnəbəl/
+  topic: environment
   level: C1
   definition: able to continue for a long time without harming the environment
   vi: bền vững
@@ -356,3 +410,1294 @@ words:
   - base: sustainable
     sentence: The conference focused on environmental ___.
     answer: sustainability
+- lemma: curriculum
+  pos: noun
+  ipa: /kəˈrɪkjələm/
+  topic: education
+  level: B2
+  definition: the subjects that are taught in a school or course
+  vi: chương trình học
+  examples:
+  - text: Art and music should be part of the school curriculum.
+    answer: curriculum
+  collocations:
+  - phrase: a broad curriculum
+    blank: broad
+- lemma: tuition
+  pos: noun
+  ipa: /tjuˈɪʃən/
+  topic: education
+  level: B2
+  definition: "money paid for being taught, especially at a university"
+  vi: học phí
+  examples:
+  - text: Many students work part-time to pay their tuition fees.
+    answer: tuition
+  collocations:
+  - phrase: tuition fees
+    blank: fees
+- lemma: qualification
+  pos: noun
+  ipa: /ˌkwɒlɪfɪˈkeɪʃən/
+  topic: education
+  level: B1
+  definition: an official record that you have passed an exam or finished a course
+  vi: bằng cấp
+  examples:
+  - text: A teaching qualification takes at least one year to complete.
+    answer: qualification
+  forms:
+  - base: qualify
+    sentence: She hopes to ___ as a nurse next year.
+    answer: qualify
+- lemma: assignment
+  pos: noun
+  ipa: /əˈsaɪnmənt/
+  topic: education
+  level: B1
+  definition: a piece of work given to a student as part of their studies
+  vi: bài tập
+  examples:
+  - text: I have to hand in my history assignment by Friday.
+    answer: assignment
+  collocations:
+  - phrase: hand in an assignment
+    blank: hand
+- lemma: literacy
+  pos: noun
+  ipa: /ˈlɪtərəsi/
+  topic: education
+  level: C1
+  definition: the ability to read and write
+  vi: khả năng đọc viết
+  examples:
+  - text: Adult literacy classes help people find better jobs.
+    answer: literacy
+  forms:
+  - base: literate
+    sentence: Almost everyone in the country is ___.
+    answer: literate
+- lemma: discipline
+  pos: noun
+  ipa: /ˈdɪsəplɪn/
+  topic: education
+  level: B2
+  definition: the practice of making people obey rules and control their behaviour
+  vi: kỷ luật
+  examples:
+  - text: Some parents believe schools need stricter discipline.
+    answer: discipline
+  collocations:
+  - phrase: strict discipline
+    blank: strict
+- lemma: graduate
+  pos: verb
+  ipa: /ˈɡrædʒueɪt/
+  topic: education
+  level: B1
+  definition: to complete a university degree or a course of study
+  vi: tốt nghiệp
+  examples:
+  - text: She will graduate from university next summer.
+    answer: graduate
+  forms:
+  - base: graduate
+    sentence: He found a job soon after his ___.
+    answer: graduation
+- lemma: academic
+  pos: adjective
+  ipa: /ˌækəˈdemɪk/
+  topic: education
+  level: B2
+  definition: "relating to schools, colleges and studying"
+  vi: thuộc về học thuật
+  examples:
+  - text: Her academic results improved after she joined a study group.
+    answer: academic
+  collocations:
+  - phrase: academic performance
+    blank: performance
+- lemma: vocational
+  pos: adjective
+  ipa: /vəʊˈkeɪʃənəl/
+  topic: education
+  level: C1
+  definition: teaching the skills needed for a particular job
+  vi: thuộc về dạy nghề
+  examples:
+  - text: Vocational training can lead directly to a skilled job.
+    answer: Vocational
+  collocations:
+  - phrase: vocational training
+    blank: training
+- lemma: plagiarism
+  pos: noun
+  ipa: /ˈpleɪdʒərɪzəm/
+  topic: education
+  level: C1
+  definition: "copying someone else's work and pretending it is your own"
+  vi: "đạo văn"
+  examples:
+  - text: Universities use software to detect plagiarism in essays.
+    answer: plagiarism
+- lemma: emission
+  pos: noun
+  ipa: /ɪˈmɪʃən/
+  topic: environment
+  level: B2
+  definition: gas or other substances sent out into the air
+  vi: khí thải
+  examples:
+  - text: Cars are a major source of carbon emissions in cities.
+    answer: emissions
+  collocations:
+  - phrase: carbon emissions
+    blank: carbon
+- lemma: renewable
+  pos: adjective
+  ipa: /rɪˈnjuːəbəl/
+  topic: environment
+  level: B2
+  definition: "able to be replaced naturally, such as energy from the sun or wind"
+  vi: có thể tái tạo
+  examples:
+  - text: The government plans to invest in renewable energy.
+    answer: renewable
+  collocations:
+  - phrase: renewable energy
+    blank: energy
+- lemma: conservation
+  pos: noun
+  ipa: /ˌkɒnsəˈveɪʃən/
+  topic: environment
+  level: B2
+  definition: "the protection of plants, animals and natural areas"
+  vi: sự bảo tồn
+  examples:
+  - text: Wildlife conservation projects need long-term funding.
+    answer: conservation
+  forms:
+  - base: conserve
+    sentence: We should all try to ___ water during the dry season.
+    answer: conserve
+- lemma: deforestation
+  pos: noun
+  ipa: /diːˌfɒrɪˈsteɪʃən/
+  topic: environment
+  level: C1
+  definition: the cutting down of trees over a large area
+  vi: nạn phá rừng
+  examples:
+  - text: Deforestation destroys the homes of many animals.
+    answer: Deforestation
+- lemma: endangered
+  pos: adjective
+  ipa: /ɪnˈdeɪndʒəd/
+  topic: environment
+  level: B2
+  definition: at risk of no longer existing
+  vi: có nguy cơ tuyệt chủng
+  examples:
+  - text: The tiger is an endangered species in many countries.
+    answer: endangered
+  collocations:
+  - phrase: endangered species
+    blank: species
+- lemma: recycle
+  pos: verb
+  ipa: /riːˈsaɪkəl/
+  topic: environment
+  level: A2
+  definition: to treat used objects so that they can be used again
+  vi: tái chế
+  examples:
+  - text: We recycle all our glass bottles and paper.
+    answer: recycle
+  forms:
+  - base: recycle
+    sentence: Most plastic packaging is not suitable for ___.
+    answer: recycling
+- lemma: habitat
+  pos: noun
+  ipa: /ˈhæbɪtæt/
+  topic: environment
+  level: B2
+  definition: the natural home of an animal or plant
+  vi: môi trường sống
+  examples:
+  - text: Building roads can destroy the habitat of rare birds.
+    answer: habitat
+  collocations:
+  - phrase: natural habitat
+    blank: natural
+- lemma: drought
+  pos: noun
+  ipa: /draʊt/
+  topic: environment
+  level: B2
+  definition: a long period with little or no rain
+  vi: hạn hán
+  examples:
+  - text: The drought has ruined crops across the region.
+    answer: drought
+  collocations:
+  - phrase: a severe drought
+    blank: severe
+- lemma: biodiversity
+  pos: noun
+  ipa: /ˌbaɪəʊdaɪˈvɜːsəti/
+  topic: environment
+  level: C1
+  definition: the variety of plants and animals in an area
+  vi: "đa dạng sinh học"
+  examples:
+  - text: Coral reefs have very high biodiversity.
+    answer: biodiversity
+- lemma: contaminate
+  pos: verb
+  ipa: /kənˈtæmɪneɪt/
+  topic: environment
+  level: C1
+  definition: to make something dirty or harmful by adding a dangerous substance
+  vi: làm ô nhiễm
+  examples:
+  - text: Chemicals from the factory contaminate the river.
+    answer: contaminate
+  forms:
+  - base: contaminate
+    sentence: Water ___ is a serious problem in some villages.
+    answer: contamination
+- lemma: device
+  pos: noun
+  ipa: /dɪˈvaɪs/
+  topic: technology
+  level: B1
+  definition: a machine or tool made for a particular purpose
+  vi: thiết bị
+  examples:
+  - text: Children spend hours a day on electronic devices.
+    answer: devices
+  collocations:
+  - phrase: electronic devices
+    blank: electronic
+- lemma: innovation
+  pos: noun
+  ipa: /ˌɪnəˈveɪʃən/
+  topic: technology
+  level: B2
+  definition: "a new idea, method or product"
+  vi: sự đổi mới
+  examples:
+  - text: Innovation helps small companies compete with large ones.
+    answer: Innovation
+  forms:
+  - base: innovate
+    sentence: Companies must ___ to stay competitive.
+    answer: innovate
+- lemma: automate
+  pos: verb
+  ipa: /ˈɔːtəmeɪt/
+  topic: technology
+  level: C1
+  definition: to make a process work by machine instead of by people
+  vi: tự động hóa
+  examples:
+  - text: Many factories automate simple tasks to save money.
+    answer: automate
+  forms:
+  - base: automate
+    sentence: "___ may cause some workers to lose their jobs."
+    answer: Automation
+- lemma: digital
+  pos: adjective
+  ipa: /ˈdɪdʒɪtəl/
+  topic: technology
+  level: B1
+  definition: using computers and electronic information
+  vi: kỹ thuật số
+  examples:
+  - text: Libraries now offer digital copies of many books.
+    answer: digital
+  collocations:
+  - phrase: digital skills
+    blank: skills
+- lemma: privacy
+  pos: noun
+  ipa: /ˈprɪvəsi/
+  topic: technology
+  level: B2
+  definition: the right to keep your personal life and information to yourself
+  vi: quyền riêng tư
+  examples:
+  - text: Social media companies are often criticised over privacy.
+    answer: privacy
+  collocations:
+  - phrase: invasion of privacy
+    blank: invasion
+  forms:
+  - base: private
+    sentence: Please keep your password ___.
+    answer: private
+- lemma: breakthrough
+  pos: noun
+  ipa: /ˈbreɪkθruː/
+  topic: technology
+  level: C1
+  definition: an important new discovery or development
+  vi: bước đột phá
+  examples:
+  - text: Scientists made a breakthrough in battery technology.
+    answer: breakthrough
+  collocations:
+  - phrase: make a breakthrough
+    blank: make
+- lemma: obsolete
+  pos: adjective
+  ipa: /ˈɒbsəliːt/
+  topic: technology
+  level: C1
+  definition: no longer used because something newer has replaced it
+  vi: lỗi thời
+  examples:
+  - text: Old mobile phones quickly become obsolete.
+    answer: obsolete
+- lemma: software
+  pos: noun
+  ipa: /ˈsɒftweə/
+  topic: technology
+  level: A2
+  definition: the programs that a computer uses
+  vi: phần mềm
+  examples:
+  - text: You need to update the software on your laptop.
+    answer: software
+- lemma: access
+  pos: noun
+  ipa: /ˈækses/
+  topic: technology
+  level: B1
+  definition: the right or chance to use or get something
+  vi: "sự truy cập, quyền tiếp cận"
+  examples:
+  - text: Not every village has access to fast internet.
+    answer: access
+  collocations:
+  - phrase: have access to
+    blank: have
+  forms:
+  - base: access
+    sentence: The website is not ___ on older phones.
+    answer: accessible
+- lemma: rely
+  pos: verb
+  ipa: /rɪˈlaɪ/
+  topic: technology
+  level: B1
+  definition: to need or trust something or someone for support
+  vi: dựa vào
+  examples:
+  - text: Young people rely on their phones for directions.
+    answer: rely
+  collocations:
+  - phrase: rely on
+    blank: "on"
+  forms:
+  - base: rely
+    sentence: Many people are too ___ on technology.
+    answer: reliant
+- lemma: diet
+  pos: noun
+  ipa: /ˈdaɪət/
+  topic: health
+  level: A2
+  definition: the food that a person usually eats
+  vi: chế độ ăn
+  examples:
+  - text: A balanced diet includes fruit and vegetables.
+    answer: diet
+  collocations:
+  - phrase: a balanced diet
+    blank: balanced
+- lemma: obesity
+  pos: noun
+  ipa: /əʊˈbiːsəti/
+  topic: health
+  level: B2
+  definition: the condition of being so heavy that it is unhealthy
+  vi: béo phì
+  examples:
+  - text: Childhood obesity is rising in many cities.
+    answer: obesity
+  forms:
+  - base: obese
+    sentence: Doctors say that one in five adults is ___.
+    answer: obese
+- lemma: symptom
+  pos: noun
+  ipa: /ˈsɪmptəm/
+  topic: health
+  level: B2
+  definition: a sign that someone has an illness
+  vi: triệu chứng
+  examples:
+  - text: A high temperature is a common symptom of flu.
+    answer: symptom
+- lemma: prevention
+  pos: noun
+  ipa: /prɪˈvenʃən/
+  topic: health
+  level: B2
+  definition: stopping something bad from happening
+  vi: sự phòng ngừa
+  examples:
+  - text: Prevention is cheaper than treating an illness later.
+    answer: Prevention
+  forms:
+  - base: prevent
+    sentence: Regular exercise can ___ heart disease.
+    answer: prevent
+- lemma: sedentary
+  pos: adjective
+  ipa: /ˈsedəntəri/
+  topic: health
+  level: C1
+  definition: involving a lot of sitting and little exercise
+  vi: "ít vận động"
+  examples:
+  - text: Office workers often have a sedentary lifestyle.
+    answer: sedentary
+  collocations:
+  - phrase: a sedentary lifestyle
+    blank: lifestyle
+- lemma: nutrition
+  pos: noun
+  ipa: /njuˈtrɪʃən/
+  topic: health
+  level: B2
+  definition: the process of eating the right food to stay healthy
+  vi: dinh dưỡng
+  examples:
+  - text: Good nutrition is important for growing children.
+    answer: nutrition
+  forms:
+  - base: nutrition
+    sentence: Fresh vegetables are cheap and ___.
+    answer: nutritious
+- lemma: mental
+  pos: adjective
+  ipa: /ˈmentəl/
+  topic: health
+  level: B1
+  definition: relating to the mind
+  vi: thuộc về tinh thần
+  examples:
+  - text: Students need support for their mental health.
+    answer: mental
+  collocations:
+  - phrase: mental health
+    blank: health
+- lemma: treatment
+  pos: noun
+  ipa: /ˈtriːtmənt/
+  topic: health
+  level: B1
+  definition: medical care given to someone who is ill or injured
+  vi: sự điều trị
+  examples:
+  - text: The new treatment helped her recover quickly.
+    answer: treatment
+  forms:
+  - base: treat
+    sentence: Doctors ___ thousands of patients every year.
+    answer: treat
+- lemma: epidemic
+  pos: noun
+  ipa: /ˌepɪˈdemɪk/
+  topic: health
+  level: C1
+  definition: a disease that spreads quickly to many people
+  vi: dịch bệnh
+  examples:
+  - text: The flu epidemic closed many schools.
+    answer: epidemic
+- lemma: lifestyle
+  pos: noun
+  ipa: /ˈlaɪfstaɪl/
+  topic: health
+  level: B1
+  definition: the way a person usually lives
+  vi: lối sống
+  examples:
+  - text: Changing your lifestyle can lower your stress.
+    answer: lifestyle
+  collocations:
+  - phrase: a healthy lifestyle
+    blank: healthy
+- lemma: salary
+  pos: noun
+  ipa: /ˈsæləri/
+  topic: work
+  level: B1
+  definition: "the fixed amount of money a person is paid for their job, usually every month"
+  vi: lương
+  examples:
+  - text: Teachers in some countries earn a low salary.
+    answer: salary
+  collocations:
+  - phrase: earn a salary
+    blank: earn
+- lemma: employee
+  pos: noun
+  ipa: /ɪmˈplɔɪiː/
+  topic: work
+  level: B1
+  definition: a person who is paid to work for a company or another person
+  vi: nhân viên
+  examples:
+  - text: The company has more than two hundred employees.
+    answer: employees
+  forms:
+  - base: employ
+    sentence: The factory will ___ fifty new workers.
+    answer: employ
+- lemma: career
+  pos: noun
+  ipa: /kəˈrɪə/
+  topic: work
+  level: B1
+  definition: the series of jobs a person has in their working life
+  vi: sự nghiệp
+  examples:
+  - text: She wants a career in medicine.
+    answer: career
+  collocations:
+  - phrase: pursue a career
+    blank: pursue
+- lemma: colleague
+  pos: noun
+  ipa: /ˈkɒliːɡ/
+  topic: work
+  level: B1
+  definition: a person you work with
+  vi: "đồng nghiệp"
+  examples:
+  - text: I often have lunch with my colleagues.
+    answer: colleagues
+- lemma: unemployment
+  pos: noun
+  ipa: /ˌʌnɪmˈplɔɪmənt/
+  topic: work
+  level: B2
+  definition: the state of not having a job
+  vi: thất nghiệp
+  examples:
+  - text: Youth unemployment is a problem in many regions.
+    answer: unemployment
+  collocations:
+  - phrase: high unemployment
+    blank: high
+  forms:
+  - base: employ
+    sentence: Many young people are ___ after leaving school.
+    answer: unemployed
+- lemma: promotion
+  pos: noun
+  ipa: /prəˈməʊʃən/
+  topic: work
+  level: B2
+  definition: a move to a more important job in the same company
+  vi: sự thăng chức
+  examples:
+  - text: He got a promotion after three years.
+    answer: promotion
+  collocations:
+  - phrase: get a promotion
+    blank: get
+  forms:
+  - base: promote
+    sentence: She was ___ to manager last month.
+    answer: promoted
+- lemma: deadline
+  pos: noun
+  ipa: /ˈdedlaɪn/
+  topic: work
+  level: B1
+  definition: a time or day by which something must be done
+  vi: hạn chót
+  examples:
+  - text: We worked late to meet the deadline.
+    answer: deadline
+  collocations:
+  - phrase: meet a deadline
+    blank: meet
+- lemma: flexible
+  pos: adjective
+  ipa: /ˈfleksəbəl/
+  topic: work
+  level: B2
+  definition: able to change easily to suit new situations
+  vi: linh hoạt
+  examples:
+  - text: Flexible working hours help parents with young children.
+    answer: Flexible
+  collocations:
+  - phrase: flexible working hours
+    blank: hours
+  forms:
+  - base: flexible
+    sentence: Working from home gives people more ___.
+    answer: flexibility
+- lemma: skilled
+  pos: adjective
+  ipa: /skɪld/
+  topic: work
+  level: B2
+  definition: having the training and ability to do a job well
+  vi: có tay nghề
+  examples:
+  - text: There is a shortage of skilled workers in building.
+    answer: skilled
+  collocations:
+  - phrase: skilled workers
+    blank: workers
+- lemma: recruit
+  pos: verb
+  ipa: /rɪˈkruːt/
+  topic: work
+  level: C1
+  definition: to find new people to join a company or organisation
+  vi: tuyển dụng
+  examples:
+  - text: Tech companies recruit graduates every spring.
+    answer: recruit
+  forms:
+  - base: recruit
+    sentence: Online ___ has made hiring faster.
+    answer: recruitment
+- lemma: community
+  pos: noun
+  ipa: /kəˈmjuːnəti/
+  topic: society
+  level: B1
+  definition: the people living in one area or sharing the same interests
+  vi: cộng đồng
+  examples:
+  - text: The library is the heart of our local community.
+    answer: community
+  collocations:
+  - phrase: the local community
+    blank: local
+- lemma: poverty
+  pos: noun
+  ipa: /ˈpɒvəti/
+  topic: society
+  level: B2
+  definition: the state of being very poor
+  vi: sự nghèo đói
+  examples:
+  - text: Millions of people still live in poverty.
+    answer: poverty
+  collocations:
+  - phrase: live in poverty
+    blank: live
+- lemma: inequality
+  pos: noun
+  ipa: /ˌɪnɪˈkwɒləti/
+  topic: society
+  level: C1
+  definition: an unfair situation in which some people have more chances or money than others
+  vi: sự bất bình đẳng
+  examples:
+  - text: Income inequality has grown in many countries.
+    answer: inequality
+  forms:
+  - base: equal
+    sentence: Men and women should receive ___ pay.
+    answer: equal
+- lemma: generation
+  pos: noun
+  ipa: /ˌdʒenəˈreɪʃən/
+  topic: society
+  level: B1
+  definition: all the people of about the same age in a society or family
+  vi: thế hệ
+  examples:
+  - text: The younger generation uses social media for news.
+    answer: generation
+  collocations:
+  - phrase: the younger generation
+    blank: younger
+- lemma: tradition
+  pos: noun
+  ipa: /trəˈdɪʃən/
+  topic: society
+  level: B1
+  definition: a custom or belief passed from older people to younger ones
+  vi: truyền thống
+  examples:
+  - text: It is a tradition to visit relatives during Tet.
+    answer: tradition
+  forms:
+  - base: tradition
+    sentence: Many families still wear ___ clothes at weddings.
+    answer: traditional
+- lemma: volunteer
+  pos: verb
+  ipa: /ˌvɒlənˈtɪə/
+  topic: society
+  level: B2
+  definition: to offer to do something without being paid
+  vi: tình nguyện
+  examples:
+  - text: Students volunteer at the hospital at weekends.
+    answer: volunteer
+- lemma: elderly
+  pos: adjective
+  ipa: /ˈeldəli/
+  topic: society
+  level: B1
+  definition: "old, used as a polite word for people"
+  vi: cao tuổi
+  examples:
+  - text: Many elderly people live alone in big cities.
+    answer: elderly
+- lemma: diversity
+  pos: noun
+  ipa: /daɪˈvɜːsəti/
+  topic: society
+  level: C1
+  definition: the fact of including many different types of people or things
+  vi: sự đa dạng
+  examples:
+  - text: Cultural diversity makes cities more interesting.
+    answer: diversity
+  collocations:
+  - phrase: cultural diversity
+    blank: cultural
+  forms:
+  - base: diverse
+    sentence: London has a very ___ population.
+    answer: diverse
+- lemma: urban
+  pos: adjective
+  ipa: /ˈɜːbən/
+  topic: society
+  level: B2
+  definition: relating to towns and cities
+  vi: thuộc về đô thị
+  examples:
+  - text: Urban areas suffer from traffic and noise.
+    answer: Urban
+- lemma: discrimination
+  pos: noun
+  ipa: /dɪˌskrɪmɪˈneɪʃən/
+  topic: society
+  level: C1
+  definition: treating a person or group unfairly because of who they are
+  vi: sự phân biệt đối xử
+  examples:
+  - text: Laws protect workers from discrimination.
+    answer: discrimination
+- lemma: destination
+  pos: noun
+  ipa: /ˌdestɪˈneɪʃən/
+  topic: travel
+  level: B1
+  definition: the place someone is going to
+  vi: "điểm đến"
+  examples:
+  - text: Da Nang is a popular holiday destination.
+    answer: destination
+  collocations:
+  - phrase: a popular destination
+    blank: popular
+- lemma: tourism
+  pos: noun
+  ipa: /ˈtʊərɪzəm/
+  topic: travel
+  level: B1
+  definition: the business of providing services for people on holiday
+  vi: "du lịch, ngành du lịch"
+  examples:
+  - text: Tourism brings money and jobs to small towns.
+    answer: Tourism
+  collocations:
+  - phrase: mass tourism
+    blank: mass
+  forms:
+  - base: tourism
+    sentence: The old town is full of ___ in summer.
+    answer: tourists
+- lemma: accommodation
+  pos: noun
+  ipa: /əˌkɒməˈdeɪʃən/
+  topic: travel
+  level: B1
+  definition: a place to live or stay
+  vi: chỗ ở
+  examples:
+  - text: Accommodation is expensive near the city centre.
+    answer: Accommodation
+- lemma: itinerary
+  pos: noun
+  ipa: /aɪˈtɪnərəri/
+  topic: travel
+  level: C1
+  definition: "a plan of a journey, with the places you will visit"
+  vi: lịch trình
+  examples:
+  - text: Our itinerary includes three days in Hue.
+    answer: itinerary
+- lemma: souvenir
+  pos: noun
+  ipa: /ˌsuːvəˈnɪə/
+  topic: travel
+  level: B1
+  definition: something you buy to remember a place you visited
+  vi: quà lưu niệm
+  examples:
+  - text: She bought a small souvenir at the market.
+    answer: souvenir
+- lemma: abroad
+  pos: adverb
+  ipa: /əˈbrɔːd/
+  topic: travel
+  level: A2
+  definition: in or to a foreign country
+  vi: "ở nước ngoài"
+  examples:
+  - text: More students want to study abroad.
+    answer: abroad
+  collocations:
+  - phrase: study abroad
+    blank: study
+- lemma: landmark
+  pos: noun
+  ipa: /ˈlændmɑːk/
+  topic: travel
+  level: B2
+  definition: a famous building or place that is easy to recognise
+  vi: "địa danh"
+  examples:
+  - text: The bridge is the most famous landmark in the city.
+    answer: landmark
+- lemma: journey
+  pos: noun
+  ipa: /ˈdʒɜːni/
+  topic: travel
+  level: A2
+  definition: an act of travelling from one place to another
+  vi: chuyến đi
+  examples:
+  - text: The train journey takes six hours.
+    answer: journey
+- lemma: cuisine
+  pos: noun
+  ipa: /kwɪˈziːn/
+  topic: travel
+  level: B2
+  definition: a style of cooking from a particular country or region
+  vi: "ẩm thực"
+  examples:
+  - text: Visitors love the local cuisine.
+    answer: cuisine
+  collocations:
+  - phrase: local cuisine
+    blank: local
+- lemma: heritage
+  pos: noun
+  ipa: /ˈherɪtɪdʒ/
+  topic: travel
+  level: C1
+  definition: "the buildings, traditions and art that a society values from its past"
+  vi: di sản
+  examples:
+  - text: Ha Long Bay is a World Heritage site.
+    answer: Heritage
+  collocations:
+  - phrase: cultural heritage
+    blank: cultural
+- lemma: advertisement
+  pos: noun
+  ipa: /ədˈvɜːtɪsmənt/
+  topic: media
+  level: B1
+  definition: "a picture, film or short text that tries to make people buy something"
+  vi: quảng cáo
+  examples:
+  - text: The advertisement shows a family eating breakfast.
+    answer: advertisement
+  forms:
+  - base: advertise
+    sentence: Companies ___ their products on social media.
+    answer: advertise
+- lemma: audience
+  pos: noun
+  ipa: /ˈɔːdiəns/
+  topic: media
+  level: B1
+  definition: "the people who watch, read or listen to something"
+  vi: khán giả
+  examples:
+  - text: The programme has a large young audience.
+    answer: audience
+  collocations:
+  - phrase: a large audience
+    blank: large
+- lemma: broadcast
+  pos: verb
+  ipa: /ˈbrɔːdkɑːst/
+  topic: media
+  level: B2
+  definition: to send out a programme on television or radio
+  vi: phát sóng
+  examples:
+  - text: The match will be broadcast live on television.
+    answer: broadcast
+  collocations:
+  - phrase: broadcast live
+    blank: live
+- lemma: influence
+  pos: noun
+  ipa: /ˈɪnfluəns/
+  topic: media
+  level: B2
+  definition: the power to change how someone thinks or behaves
+  vi: sự ảnh hưởng
+  examples:
+  - text: Celebrities have a strong influence on teenagers.
+    answer: influence
+  collocations:
+  - phrase: have an influence on
+    blank: have
+  forms:
+  - base: influence
+    sentence: Social media is very ___ among young people.
+    answer: influential
+- lemma: journalist
+  pos: noun
+  ipa: /ˈdʒɜːnəlɪst/
+  topic: media
+  level: B1
+  definition: "a person who writes news for newspapers, magazines or websites"
+  vi: nhà báo
+  examples:
+  - text: The journalist interviewed the minister.
+    answer: journalist
+- lemma: headline
+  pos: noun
+  ipa: /ˈhedlaɪn/
+  topic: media
+  level: B2
+  definition: "the title of a news story, printed in large letters"
+  vi: tiêu đề (báo)
+  examples:
+  - text: The story made headlines around the world.
+    answer: headlines
+  collocations:
+  - phrase: make headlines
+    blank: make
+- lemma: consumer
+  pos: noun
+  ipa: /kənˈsjuːmə/
+  topic: media
+  level: B2
+  definition: a person who buys goods or services
+  vi: người tiêu dùng
+  examples:
+  - text: Consumers are spending more online.
+    answer: Consumers
+  forms:
+  - base: consume
+    sentence: "Rich countries ___ most of the world's energy."
+    answer: consume
+- lemma: censorship
+  pos: noun
+  ipa: /ˈsensəʃɪp/
+  topic: media
+  level: C1
+  definition: the control of what can be published or broadcast
+  vi: sự kiểm duyệt
+  examples:
+  - text: Some countries use censorship to control the news.
+    answer: censorship
+- lemma: persuade
+  pos: verb
+  ipa: /pəˈsweɪd/
+  topic: media
+  level: B2
+  definition: to make someone agree to do or believe something
+  vi: thuyết phục
+  examples:
+  - text: Advertisements try to persuade us to spend money.
+    answer: persuade
+  forms:
+  - base: persuade
+    sentence: The speaker gave a very ___ argument.
+    answer: persuasive
+- lemma: mislead
+  pos: verb
+  ipa: /mɪsˈliːd/
+  topic: media
+  level: C1
+  definition: to make someone believe something that is not true
+  vi: "đánh lừa"
+  examples:
+  - text: Some headlines mislead readers on purpose.
+    answer: mislead
+  forms:
+  - base: mislead
+    sentence: The advert was ___ because the price was wrong.
+    answer: misleading
+- lemma: punishment
+  pos: noun
+  ipa: /ˈpʌnɪʃmənt/
+  topic: crime
+  level: B2
+  definition: something done to a person because they broke a rule or law
+  vi: hình phạt
+  examples:
+  - text: Some people believe harsher punishment reduces crime.
+    answer: punishment
+  collocations:
+  - phrase: harsh punishment
+    blank: harsh
+  forms:
+  - base: punish
+    sentence: Criminals should be ___ fairly.
+    answer: punished
+- lemma: offender
+  pos: noun
+  ipa: /əˈfendə/
+  topic: crime
+  level: C1
+  definition: a person who has broken the law
+  vi: người phạm tội
+  examples:
+  - text: "Young offenders need education, not only prison."
+    answer: offenders
+  collocations:
+  - phrase: young offenders
+    blank: young
+- lemma: prison
+  pos: noun
+  ipa: /ˈprɪzən/
+  topic: crime
+  level: A2
+  definition: a building where criminals are kept as a punishment
+  vi: nhà tù
+  examples:
+  - text: He spent five years in prison.
+    answer: prison
+- lemma: deter
+  pos: verb
+  ipa: /dɪˈtɜː/
+  topic: crime
+  level: C1
+  definition: to make someone decide not to do something by making them afraid of the result
+  vi: răn đe
+  examples:
+  - text: Cameras can deter thieves from breaking in.
+    answer: deter
+  forms:
+  - base: deter
+    sentence: Long sentences act as a ___ to criminals.
+    answer: deterrent
+- lemma: rehabilitation
+  pos: noun
+  ipa: /ˌriːəˌbɪlɪˈteɪʃən/
+  topic: crime
+  level: C1
+  definition: helping someone return to a normal life after prison or illness
+  vi: "sự cải tạo, phục hồi"
+  examples:
+  - text: Prisons should focus on rehabilitation.
+    answer: rehabilitation
+- lemma: violent
+  pos: adjective
+  ipa: /ˈvaɪələnt/
+  topic: crime
+  level: B1
+  definition: using force that hurts or kills people
+  vi: bạo lực
+  examples:
+  - text: Violent crime has fallen in the city.
+    answer: Violent
+  collocations:
+  - phrase: violent crime
+    blank: crime
+  forms:
+  - base: violent
+    sentence: Some films show too much ___.
+    answer: violence
+- lemma: victim
+  pos: noun
+  ipa: /ˈvɪktɪm/
+  topic: crime
+  level: B1
+  definition: "a person who is hurt or killed, or who suffers because of a crime"
+  vi: nạn nhân
+  examples:
+  - text: The victim reported the theft to the police.
+    answer: victim
+- lemma: evidence
+  pos: noun
+  ipa: /ˈevɪdəns/
+  topic: crime
+  level: B2
+  definition: facts or objects that show that something is true
+  vi: bằng chứng
+  examples:
+  - text: There is no evidence that he stole the money.
+    answer: evidence
+- lemma: justice
+  pos: noun
+  ipa: /ˈdʒʌstɪs/
+  topic: crime
+  level: B2
+  definition: fair treatment of people by the law
+  vi: công lý
+  examples:
+  - text: The families of the victims want justice.
+    answer: justice
+- lemma: commit
+  pos: verb
+  ipa: /kəˈmɪt/
+  topic: crime
+  level: B2
+  definition: to do something illegal or wrong
+  vi: phạm (tội)
+  examples:
+  - text: Most people who commit crimes are young men.
+    answer: commit
+  collocations:
+  - phrase: commit a crime
+    blank: crime
+- lemma: income
+  pos: noun
+  ipa: /ˈɪnkʌm/
+  topic: economy
+  level: B1
+  definition: "money that a person or company receives, especially from work"
+  vi: thu nhập
+  examples:
+  - text: Families on a low income need more support.
+    answer: income
+  collocations:
+  - phrase: a low income
+    blank: low
+- lemma: budget
+  pos: noun
+  ipa: /ˈbʌdʒɪt/
+  topic: economy
+  level: B1
+  definition: a plan of how much money can be spent
+  vi: ngân sách
+  examples:
+  - text: The school has a small budget for books.
+    answer: budget
+- lemma: export
+  pos: verb
+  ipa: /ɪkˈspɔːt/
+  topic: economy
+  level: B1
+  definition: to sell goods to another country
+  vi: xuất khẩu
+  examples:
+  - text: Vietnam exports coffee and rice.
+    answer: exports
+- lemma: invest
+  pos: verb
+  ipa: /ɪnˈvest/
+  topic: economy
+  level: B2
+  definition: to put money into something to make more money later
+  vi: "đầu tư"
+  examples:
+  - text: The city will invest in public transport.
+    answer: invest
+  collocations:
+  - phrase: invest in
+    blank: in
+  forms:
+  - base: invest
+    sentence: Foreign ___ has helped the economy grow.
+    answer: investment
+- lemma: inflation
+  pos: noun
+  ipa: /ɪnˈfleɪʃən/
+  topic: economy
+  level: C1
+  definition: a general rise in prices over time
+  vi: lạm phát
+  examples:
+  - text: High inflation makes food more expensive.
+    answer: inflation
+- lemma: profit
+  pos: noun
+  ipa: /ˈprɒfɪt/
+  topic: economy
+  level: B1
+  definition: money that a business makes after paying its costs
+  vi: lợi nhuận
+  examples:
+  - text: The shop made a small profit last year.
+    answer: profit
+  collocations:
+  - phrase: make a profit
+    blank: make
+  forms:
+  - base: profit
+    sentence: Selling online can be very ___.
+    answer: profitable
+- lemma: afford
+  pos: verb
+  ipa: /əˈfɔːd/
+  topic: economy
+  level: B1
+  definition: to have enough money to pay for something
+  vi: có đủ khả năng chi trả
+  examples:
+  - text: Many young people cannot afford a house.
+    answer: afford
+  forms:
+  - base: afford
+    sentence: The city needs more ___ housing.
+    answer: affordable
+- lemma: wealth
+  pos: noun
+  ipa: /welθ/
+  topic: economy
+  level: B2
+  definition: a large amount of money or property
+  vi: sự giàu có
+  examples:
+  - text: Wealth is not shared equally in society.
+    answer: Wealth
+  forms:
+  - base: wealth
+    sentence: Only ___ families can pay for private schools.
+    answer: wealthy
+- lemma: tax
+  pos: noun
+  ipa: /tæks/
+  topic: economy
+  level: B1
+  definition: "money paid to the government, based on income or on things you buy"
+  vi: thuế
+  examples:
+  - text: The government raised the tax on cigarettes.
+    answer: tax
+  collocations:
+  - phrase: raise taxes
+    blank: raise
+- lemma: purchase
+  pos: verb
+  ipa: /ˈpɜːtʃəs/
+  topic: economy
+  level: B2
+  definition: to buy something
+  vi: mua
+  examples:
+  - text: Customers can purchase tickets online.
+    answer: purchase

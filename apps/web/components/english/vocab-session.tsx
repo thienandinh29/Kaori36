@@ -15,11 +15,30 @@ import { Problem } from "./problem";
 import { QuestionCard } from "./question-card";
 import { TraceNote } from "./trace-note";
 import { useLearner } from "./use-learner";
-import { VocabLevelPicker } from "./vocab-levels";
+import { VocabLevelPicker, VocabTopicPicker } from "./vocab-levels";
 import { WordCard } from "./word-card";
 
 const t = vi.english;
 const LEVEL_KEY = "nodetrail_vocab_level";
+const TOPIC_KEY = "nodetrail_vocab_topic";
+
+function storedTopic(): string {
+  try {
+    return window.localStorage.getItem(TOPIC_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/** Keep the chosen level when this topic has it, else the stored one, the suggestion, the first. */
+function levelFor(l: VocabLevels, current: Level | null): Level | null {
+  const has = (x: Level | null) => !!x && l.levels.some((v) => v.level === x);
+  if (has(current)) return current;
+  const stored = storedLevel(l);
+  if (stored) return stored;
+  if (has(l.suggested)) return l.suggested;
+  return l.levels[0]?.level ?? null;
+}
 
 /** The level this browser chose before, if it is still one the list has. */
 function storedLevel(levels: VocabLevels): Level | null {
@@ -46,28 +65,36 @@ export function VocabSession() {
   const [version, setVersion] = useState(0);
   const [levels, setLevels] = useState<VocabLevels | null>(null);
   const [chosen, setChosen] = useState<Level | null>(null);
+  // Read once in the browser (null on the server); the pickers only render after a client fetch.
+  const [topic, setTopic] = useState<string | null>(() =>
+    typeof window === "undefined" ? null : storedTopic(),
+  );
 
   useEffect(() => {
-    if (!learner) return;
+    if (!learner || topic === null) return;
     let live = true;
     englishClient()
-      .vocabLevels(learner)
+      .vocabLevels(learner, topic || undefined)
       .then((l) => {
         if (!live) return;
+        if (topic && !l.topics.some((x) => x.slug === topic)) {
+          setTopic(""); // a topic that no longer exists: every topic
+          return;
+        }
         setLevels(l);
-        setChosen((c) => c ?? storedLevel(l) ?? l.suggested);
+        setChosen((c) => levelFor(l, c));
       })
       .catch((e: unknown) => live && setError(e));
     return () => {
       live = false;
     };
-  }, [learner, version]);
+  }, [learner, topic, version]);
 
   useEffect(() => {
-    if (!learner || !chosen) return;
+    if (!learner || !chosen || topic === null) return;
     let live = true;
     englishClient()
-      .vocabSession(learner, chosen)
+      .vocabSession(learner, chosen, topic || undefined)
       .then((s) => {
         if (!live) return;
         setSession(s);
@@ -80,7 +107,16 @@ export function VocabSession() {
     return () => {
       live = false;
     };
-  }, [learner, chosen, version]);
+  }, [learner, chosen, topic, version]);
+
+  function chooseTopic(next: string) {
+    try {
+      window.localStorage.setItem(TOPIC_KEY, next);
+    } catch {
+      // remembered for this page only
+    }
+    setTopic(next);
+  }
 
   function choose(level: Level) {
     try {
@@ -109,6 +145,13 @@ export function VocabSession() {
           {t.vocab.newLeft}
         </span>
       </p>
+      {levels && topic !== null && (
+        <VocabTopicPicker
+          levels={levels}
+          topic={topic}
+          onChoose={chooseTopic}
+        />
+      )}
       {levels && chosen && (
         <VocabLevelPicker levels={levels} chosen={chosen} onChoose={choose} />
       )}

@@ -24,6 +24,7 @@ const forwardedParams = [
   "new_limit",
   "max_level",
   "level",
+  "topic",
 ];
 const learnerCookie = "nodetrail_learner";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;

@@ -40,9 +40,17 @@ class VocabLevel(BaseModel):
     due: int
 
 
+class VocabTopic(BaseModel):
+    slug: str
+    name_vi: str
+    words: int
+    started: int
+
+
 class VocabLevels(BaseModel):
     levels: list[VocabLevel]
     suggested: Literal["A1", "A2", "B1", "B2", "C1"]
+    topics: list[VocabTopic]
 
 
 class VocabAnswerInput(BaseModel):
@@ -73,6 +81,7 @@ def create_router(practice: VocabPractice) -> APIRouter:
         new_limit: int = Query(default=DEFAULT_NEW_PER_DAY, ge=0, le=50),
         max_level: Literal["A1", "A2", "B1", "B2", "C1"] | None = None,
         level: Literal["A1", "A2", "B1", "B2", "C1"] | None = None,
+        topic: str | None = Query(default=None, max_length=40, pattern=SLUG_PATTERN),
     ) -> VocabSession:
         result = practice.session(
             learner_id,
@@ -81,6 +90,7 @@ def create_router(practice: VocabPractice) -> APIRouter:
             new_limit=new_limit,
             max_level=max_level,
             level=level,
+            topic=topic,
         )
         return VocabSession(
             entries=[
@@ -99,14 +109,19 @@ def create_router(practice: VocabPractice) -> APIRouter:
         list_slug: str = Query(
             default="core-seed", alias="list", min_length=1, max_length=40, pattern=SLUG_PATTERN
         ),
+        topic: str | None = Query(default=None, max_length=40, pattern=SLUG_PATTERN),
     ) -> VocabLevels:
-        result = practice.levels(learner_id, list_slug)
+        result = practice.levels(learner_id, list_slug, topic=topic)
         return VocabLevels(
             levels=[
                 VocabLevel(level=c.level, words=c.words, started=c.started, due=c.due)
                 for c in result.levels
             ],
             suggested=result.suggested,
+            topics=[
+                VocabTopic(slug=t.slug, name_vi=t.name_vi, words=t.words, started=t.started)
+                for t in result.topics
+            ],
         )
 
     @router.post("/answers")

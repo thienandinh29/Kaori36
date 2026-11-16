@@ -232,6 +232,15 @@ export function parseVocabLevels(value: unknown): VocabLevels {
       };
     }),
     suggested: level(d.suggested),
+    topics: array(d.topics).map((v) => {
+      const t = record(v);
+      return {
+        slug: string(t.slug),
+        name_vi: string(t.name_vi),
+        words: int(t.words),
+        started: int(t.started),
+      };
+    }),
   };
 }
 

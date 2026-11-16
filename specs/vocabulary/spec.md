@@ -59,3 +59,17 @@ marks, authored for the seed list and **draft** like every other field until the
 no spaces at the ends, no digits). The word card shows it after the word, before the listen buttons, in a font with IPA
 symbols (the app's own fonts are cut to Latin and Vietnamese). An imported list (NGSL) will need an open IPA source too
 (Wiktionary is listed in `data/sources/english-candidates.yaml`, licence still to check).
+
+## Topics and a larger list (16 Nov 2026)
+The owner's request: more words, grouped by topic. The list (`core-seed`, slug kept so progress is kept) now has 130 words in
+11 IELTS topics (`topics:` in the file; every word has one): general academic, education, environment, technology,
+health, work, society, travel, media, crime and law, economy. The 100 new entries are **authored by the agent** (definitions,
+Vietnamese meanings, examples, collocations, word forms, British IPA, approximate levels), not copied from any source, and
+**draft** until the owner reviews them.
+- `GET /vocab/session?topic=…` gives new words of that topic (with `level=`, of both); due reviews come first whatever the
+  topic; one daily new-word limit for all topics. `GET /vocab/levels?topic=…` counts per level in that topic and returns
+  every topic with its words and how many the learner started. An unknown topic answers 404.
+- Web: topic chips ("Tất cả" plus each topic) above the level chips; the choice is remembered in this browser; the level
+  falls back to the suggestion when the chosen topic has no words at the chosen level.
+- Larger open sources (NGSL/NAWL, Wiktionary via Kaikki, WordNet) remain the way to thousands of words, after the owner's
+  licence checks; they would map into these topics.
