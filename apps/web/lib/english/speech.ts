@@ -56,3 +56,48 @@ export function canSpeak(scope: unknown): boolean {
     "SpeechSynthesisUtterance" in scope
   );
 }
+
+/** Whether the self-hosted voice (specs/speech, S2) answers, from GET /speech/status. Strict. */
+export function parseSpeechStatus(value: unknown): boolean {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    typeof (value as { available?: unknown }).available !== "boolean"
+  )
+    return false;
+  return (value as { available: boolean }).available;
+}
+
+type Fetch = typeof fetch;
+
+/** The server voice's availability; any failure means "use the browser's voice". */
+export async function serverVoiceAvailable(
+  fetcher: Fetch = (...a) => fetch(...a),
+): Promise<boolean> {
+  try {
+    const r = await fetcher("/api/backend/speech/status", {
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
+    });
+    return r.ok && parseSpeechStatus(await r.json());
+  } catch {
+    return false;
+  }
+}
+
+/** WAV audio of `text` from the server voice; throws when it cannot be had. */
+export async function serverAudio(
+  text: string,
+  pace: Pace,
+  fetcher: Fetch = (...a) => fetch(...a),
+): Promise<Blob> {
+  const r = await fetcher("/api/backend/speech", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, pace }),
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!r.ok || r.headers.get("content-type") !== "audio/wav")
+    throw new Error(`speech ${r.status}`);
+  return r.blob();
+}

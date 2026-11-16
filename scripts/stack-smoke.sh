@@ -93,6 +93,16 @@ code=$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE -H "Origin: $WEB" "$WEB
 code=$(curl -sS -o /dev/null -w '%{http_code}' "$WEB/api/backend/level-tests/not-an-id/answers")
 [ "$code" = 404 ]; check "the web proxy refuses paths outside its allowlist ($code)" $?
 
+# Hearing English (specs/speech): with a server voice the proxy returns WAV; without one, the status says so.
+available=$(curl -sS "$WEB/api/backend/speech/status" | json 'd["available"]')
+if [ "$available" = "True" ]; then
+  kind=$(curl -sS -o /dev/null -w '%{content_type}' -X POST -H "Origin: $WEB" -H 'content-type: application/json' \
+    -d '{"text":"important"}' "$WEB/api/backend/speech")
+  [ "$kind" = "audio/wav" ]; check "the server voice speaks through the web proxy ($kind)" $?
+else
+  [ "$available" = "False" ]; check "without a server voice the web is told to use the browser's ($available)" $?
+fi
+
 topic=$(api -d '{"goal_vi":"Kiểm tra hệ thống","mode":"quick","tier":"free"}' "$API/topics" | json 'd["topic_id"]')
 status=queued
 for _ in $(seq 1 30); do

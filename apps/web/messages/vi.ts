@@ -547,6 +547,8 @@ export const vi = {
       listenSlow: "Nghe chậm",
       machineVoice:
         "Giọng đọc máy của trình duyệt, không phải mẫu phát âm chuẩn",
+      serverVoice:
+        "Giọng đọc máy (Piper, giọng Anh), không phải mẫu phát âm chuẩn",
     },
     tabs: {
       label: "Điều hướng nhanh",

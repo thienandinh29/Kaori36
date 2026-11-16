@@ -44,6 +44,8 @@ class Settings(BaseSettings):
     languagetool_url: str = ""
     # The band model service (specs/writing/step-2.3.md); empty: no band.
     scorer_url: str = ""
+    # The self-hosted voice (specs/speech, S2); empty: the web uses the browser's own voice.
+    tts_url: str = ""
     # Model prices for the daily cost cap (US$ per million tokens; specs/writing/step-2.4.md).
     # Deliberately high defaults so the cap is never overshot; set the provider's real prices.
     llm_price_input_per_mtok: float = 1.0

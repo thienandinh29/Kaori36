@@ -1,0 +1,39 @@
+[project]
+name = "nodetrail-tts"
+version = "0.1.0"
+description = "Speaks English text with one pinned Piper voice (specs/speech, step S2)"
+# GPL: this service imports piper-tts (GPL-3.0-or-later), so it is licensed to match. It runs in
+# its own container; the rest of NodeTrail only talks to it over HTTP (see tts/README.md, NOTICE).
+license = "GPL-3.0-or-later"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.156.8",
+    "uvicorn>=0.54.0",
+    "piper-tts==1.8.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=9.1.1", "ruff>=0.17.1", "mypy>=2.4.0", "httpx>=0.28.1"]
+
+# The service runs only in its Linux container (also on Windows and macOS hosts, through Docker).
+[tool.uv]
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = ["piper", "piper.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -52,8 +52,10 @@ reason.)
    engine itself is GPL-3.0 now, in its own container.
 Either way: cache audio by (text, voice), label it "giọng đọc máy", and keep the browser voice (S1) as the fallback.
 
-## The owner's decisions
-- [ ] Kokoro (`bf_emma`) or Piper (`cori`), after reading the model card and licence pages yourself
-- [ ] GPL-3.0 phonemizer inside a separate container: acceptable or not
-- [ ] For Kokoro: the synthetic-training-data question
-- [ ] Laptop memory: the TTS container joins an already tight Docker VM (about 4 GB); which services run together
+## Decided (16 Nov 2026)
+The owner asked the agent to choose: **Piper with `en_GB-cori-high`**, built as `tts/` (`specs/speech/spec.md`, S2).
+- Why: public-domain training data; a light runtime (onnxruntime, no PyTorch) that fits the laptop (about 200 MB in the
+  container); one clear British voice.
+- GPL-3.0: accepted inside its own container (`tts/` is licensed GPL-3.0-or-later; see `NOTICE`).
+- Open for the owner: read the voice's model card and LibriVox's public-domain statement yourself; switch to another voice
+  later by changing the pin in `docker-compose.yml`.

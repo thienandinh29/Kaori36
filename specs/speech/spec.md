@@ -15,13 +15,24 @@ a self-hosted model later. The button stays the same; only where the audio comes
 - Labelled "Giọng đọc máy" in the button's title: a machine voice, not a model of pronunciation.
 - No route, no API change, no dependency, no migration.
 
-## S2: a self-hosted voice (decision first, `docs/v2/tts-candidates.md`)
-A small text-to-speech model in its own container (like LanguageTool), `POST /speak {text, voice}` → audio, cached by
-(text, voice), CPU only. Needed for Listening (phase 4) and for one voice for everyone. **Before building:** the owner reads the
-licence of the code, of each voice's weights and of their training data, and any GPL component (e.g. espeak-ng) is weighed.
-Candidates and what their cards say are in `docs/v2/tts-candidates.md`.
+## S2: a self-hosted voice (built 16 Nov 2026; choice in `docs/v2/tts-candidates.md`)
+- **Choice (the owner asked the agent to choose):** Piper with `en_GB-cori-high`. Public-domain training audio
+  (LibriVox, about 24 h), a light CPU runtime (onnxruntime; Kokoro would need PyTorch, Transformers and spaCy), fits the
+  laptop. Measured: "important" in 0.18 s, a 10-word sentence in 0.46 s, about 200 MB in the container.
+- **Service `tts/`** (compose profile `speech`, GPL-3.0-or-later because `piper-tts` is): `POST /speak {text, pace}` →
+  `audio/wav`; the voice is pinned to one commit of `rhasspy/piper-voices` and both files by SHA-256 (refuses to start on a
+  mismatch); the last 512 results are cached in memory.
+- **API:** `GET /speech/status` (`{available, voice}`) and `POST /speech {text, pace}` forward to `TTS_URL`; without it the
+  status is unavailable and speaking answers 503. The same text rules as the service (1–300 characters, some letters, NFC).
+- **Web:** the button asks the status once per page; with a server voice it plays the server's audio (and keeps the last 100
+  as object URLs), falling back to the browser's voice if a request fails; without one, S1 as before. The learner's own
+  text may use the server voice: it never leaves NodeTrail.
+- **Labelled** "Giọng đọc máy (Piper, giọng Anh)".
 
-## Acceptance (S1)
+## Acceptance
 Vitest: voice ranking (British, American, other English, on-device first, network refused for private text, none), text
 preparation (NFC, whitespace, quotes, empty, too long). The button renders nothing without `speechSynthesis` (unit-tested
 helper), and the existing browser tests still pass.
+S2: the service's tests (validation, pin, download and checksum, cache, and the real voice when `TTS_TEST_MODEL` is set);
+the API route with a fake service (status, audio, 422, 503, 502, a non-audio answer); the web's status and audio helpers;
+the stack smoke check (WAV through the web proxy, or the browser-voice status without the service).
