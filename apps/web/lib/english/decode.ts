@@ -37,6 +37,7 @@ import {
   type VocabAnswer,
   type VocabEntry,
   type VocabItem,
+  type VocabLevels,
   type VocabKind,
   type VocabSession,
   type WordCard,
@@ -205,6 +206,23 @@ export function parseVocabSession(value: unknown): VocabSession {
     due: int(d.due),
     new_today: int(d.new_today),
     new_left_today: int(d.new_left_today),
+    new_available: int(d.new_available),
+  };
+}
+
+export function parseVocabLevels(value: unknown): VocabLevels {
+  const d = record(value);
+  return {
+    levels: array(d.levels).map((v) => {
+      const l = record(v);
+      return {
+        level: level(l.level),
+        words: int(l.words),
+        started: int(l.started),
+        due: int(l.due),
+      };
+    }),
+    suggested: level(d.suggested),
   };
 }
 

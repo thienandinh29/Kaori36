@@ -223,3 +223,69 @@ def test_new_words_go_one_level_above_the_level_test_s_vocabulary_level(setup: S
         )
     s = practice.session(learner, "core-seed", now=NOW)  # a beginner still gets the A2 words
     assert s.entries and {e.card.level for e in s.entries if e.card} == {"A2"}
+
+
+def test_a_chosen_level_gives_new_words_of_that_level_only(setup: Setup) -> None:
+    practice, learner, _ = setup
+    b1 = practice.session(learner, "core-seed", level="B1", new_limit=50, limit=50, now=NOW)
+    levels = {e.card.level for e in b1.entries if e.card}
+    assert levels == {"B1"}
+    expected = sum(1 for w in WL.words if w.level == "B1")
+    assert len(b1.entries) == expected and b1.new_available == expected
+
+
+def test_new_available_counts_what_is_left_at_the_level_not_the_daily_allowance(
+    setup: Setup,
+) -> None:
+    practice, learner, _ = setup
+    a2_words = [w for w in WL.words if w.level == "A2"]
+    s = practice.session(learner, "core-seed", level="A2", now=NOW)
+    for e in s.entries:
+        answer_correctly(practice, learner, e.item.id, NOW)
+    after = practice.session(learner, "core-seed", level="A2", now=NOW)
+    assert after.new_available == 0 and after.new_left_today == 10 - len(a2_words)
+    assert after.entries == []
+
+
+def test_due_words_come_first_whatever_level_is_chosen(setup: Setup) -> None:
+    practice, learner, _ = setup
+    s = practice.session(learner, "core-seed", level="A2", now=NOW)
+    answer_correctly(practice, learner, s.entries[0].item.id, NOW)
+    later = NOW + timedelta(days=60)
+    c1 = practice.session(learner, "core-seed", level="C1", now=later)
+    assert c1.due == 1 and not c1.entries[0].is_new
+
+
+def test_levels_count_words_started_and_due_per_level(setup: Setup) -> None:
+    practice, learner, _ = setup
+    fresh = practice.levels(learner, "core-seed", now=NOW)
+    assert fresh.suggested == "C1"  # no level test yet
+    by = {c.level: c for c in fresh.levels}
+    for name in ("A2", "B1", "B2", "C1"):
+        assert by[name].words == sum(1 for w in WL.words if w.level == name)
+        assert by[name].started == 0 and by[name].due == 0
+    assert [c.level for c in fresh.levels] == sorted(by, key=["A1", "A2", "B1", "B2", "C1"].index)
+    s = practice.session(learner, "core-seed", level="B1", now=NOW)
+    answer_correctly(practice, learner, s.entries[0].item.id, NOW)
+    after = {c.level: c for c in practice.levels(learner, "core-seed", now=NOW).levels}
+    assert after["B1"].started == 1 and after["B1"].due == 0
+    much_later = {
+        c.level: c
+        for c in practice.levels(learner, "core-seed", now=NOW + timedelta(days=60)).levels
+    }
+    assert much_later["B1"].due == 1
+
+
+def test_level_routes(setup: Setup) -> None:
+    practice, learner, _ = setup
+    app = FastAPI()
+    app.include_router(vocab_routes.create_router(practice))
+    with TestClient(app) as client:
+        r = client.get("/vocab/levels", params={"learner_id": learner})
+        assert r.status_code == 200
+        body = r.json()
+        assert body["suggested"] == "C1" and {lv["level"] for lv in body["levels"]} >= {"B1"}
+        s = client.get("/vocab/session", params={"learner_id": learner, "level": "B2"}).json()
+        assert s["new_available"] == sum(1 for w in WL.words if w.level == "B2")
+        bad = client.get("/vocab/session", params={"learner_id": learner, "level": "Z9"})
+        assert bad.status_code == 422

@@ -80,6 +80,20 @@ export interface VocabSession {
   due: number;
   new_today: number;
   new_left_today: number;
+  /** New words not started yet at the chosen level(s), before the daily limit. */
+  new_available: number;
+}
+
+export interface VocabLevel {
+  level: Level;
+  words: number;
+  started: number;
+  due: number;
+}
+
+export interface VocabLevels {
+  levels: VocabLevel[];
+  suggested: Level;
 }
 
 export interface VocabAnswer {

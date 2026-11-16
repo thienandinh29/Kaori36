@@ -2,20 +2,36 @@
 import { useEffect, useState } from "react";
 import { englishClient } from "@/lib/english/client";
 import type {
+  Level,
   Question,
   VocabAnswer,
+  VocabLevels,
   VocabSession as Session,
 } from "@/lib/english/types";
-import { emptyVocabReason } from "@/lib/english/view";
+import { emptyVocabReason, newWordsToday } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
 import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
 import { QuestionCard } from "./question-card";
 import { TraceNote } from "./trace-note";
 import { useLearner } from "./use-learner";
+import { VocabLevelPicker } from "./vocab-levels";
 import { WordCard } from "./word-card";
 
 const t = vi.english;
+const LEVEL_KEY = "nodetrail_vocab_level";
+
+/** The level this browser chose before, if it is still one the list has. */
+function storedLevel(levels: VocabLevels): Level | null {
+  try {
+    const saved = window.localStorage.getItem(LEVEL_KEY);
+    return levels.levels.some((l) => l.level === saved)
+      ? (saved as Level)
+      : null;
+  } catch {
+    return null; // private mode: the suggestion is used
+  }
+}
 
 /** Today's vocabulary: due words first, new words taught before they are asked (specs/web-english, 5). */
 export function VocabSession() {
@@ -28,12 +44,30 @@ export function VocabSession() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [version, setVersion] = useState(0);
+  const [levels, setLevels] = useState<VocabLevels | null>(null);
+  const [chosen, setChosen] = useState<Level | null>(null);
 
   useEffect(() => {
     if (!learner) return;
     let live = true;
     englishClient()
-      .vocabSession(learner)
+      .vocabLevels(learner)
+      .then((l) => {
+        if (!live) return;
+        setLevels(l);
+        setChosen((c) => c ?? storedLevel(l) ?? l.suggested);
+      })
+      .catch((e: unknown) => live && setError(e));
+    return () => {
+      live = false;
+    };
+  }, [learner, version]);
+
+  useEffect(() => {
+    if (!learner || !chosen) return;
+    let live = true;
+    englishClient()
+      .vocabSession(learner, chosen)
       .then((s) => {
         if (!live) return;
         setSession(s);
@@ -46,7 +80,16 @@ export function VocabSession() {
     return () => {
       live = false;
     };
-  }, [learner, version]);
+  }, [learner, chosen, version]);
+
+  function choose(level: Level) {
+    try {
+      window.localStorage.setItem(LEVEL_KEY, level);
+    } catch {
+      // remembered for this page only
+    }
+    setChosen(level);
+  }
 
   if (learnerError) return <Problem error={learnerError} onRetry={retry} />;
   if (error && !session)
@@ -62,9 +105,13 @@ export function VocabSession() {
           {session.due} {t.vocab.due}
         </span>
         <span>
-          {session.new_left_today} {t.vocab.newLeft}
+          {newWordsToday(session.new_left_today, session.new_available)}{" "}
+          {t.vocab.newLeft}
         </span>
       </p>
+      {levels && chosen && (
+        <VocabLevelPicker levels={levels} chosen={chosen} onChoose={choose} />
+      )}
       {session.entries.length > 0 && (
         <ol className="nt-dots" aria-label={t.vocab.progress}>
           {session.entries.map((e, i) => (
@@ -84,9 +131,12 @@ export function VocabSession() {
         <p className="en-card">
           {session.entries.length
             ? t.vocab.done
-            : emptyVocabReason(session.new_left_today) === "done"
+            : emptyVocabReason(
+                  session.new_left_today,
+                  session.new_available,
+                ) === "done"
               ? t.vocab.empty
-              : t.vocab.noMoreWords}
+              : t.vocab.noMoreAtLevel.replace("{level}", chosen ?? "")}
         </p>
       </>
     );

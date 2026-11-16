@@ -10,6 +10,7 @@ import {
   parseRoadmap,
   parseStep,
   parseVocabAnswer,
+  parseVocabLevels,
   parseVocabSession,
   parseWritingPrompts,
 } from "./decode";
@@ -24,6 +25,7 @@ import type {
   Roadmap,
   Step,
   VocabAnswer,
+  VocabLevels,
   VocabSession,
   WritingPrompt,
 } from "./types";
@@ -135,12 +137,23 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         }),
       );
     },
-    async vocabSession(learnerId: string): Promise<VocabSession> {
+    async vocabSession(
+      learnerId: string,
+      chosen?: Level,
+    ): Promise<VocabSession> {
       const q = new URLSearchParams({
         learner_id: learnerId,
         list: VOCAB_LIST,
       });
+      if (chosen) q.set("level", chosen);
       return parseVocabSession(await request(`vocab/session?${q}`));
+    },
+    async vocabLevels(learnerId: string): Promise<VocabLevels> {
+      const q = new URLSearchParams({
+        learner_id: learnerId,
+        list: VOCAB_LIST,
+      });
+      return parseVocabLevels(await request(`vocab/levels?${q}`));
     },
     async vocabAnswer(
       learnerId: string,

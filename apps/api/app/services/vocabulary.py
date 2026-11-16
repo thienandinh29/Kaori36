@@ -44,6 +44,23 @@ class Session:
     due: int  # cards due now (before the limit)
     new_today: int
     new_left_today: int
+    new_available: int = (
+        0  # new words not started yet at the chosen level(s), before the daily limit
+    )
+
+
+@dataclass(frozen=True)
+class LevelCount:
+    level: str
+    words: int  # words of this level in the list
+    started: int  # of them, words the learner has a card for
+    due: int  # of them, cards due now
+
+
+@dataclass(frozen=True)
+class Levels:
+    levels: list[LevelCount]  # every level that has words, easiest first
+    suggested: str  # one above the last level test's vocabulary level (else C1)
 
 
 @dataclass(frozen=True)
@@ -118,8 +135,11 @@ class VocabPractice:
         limit: int = DEFAULT_LIMIT,
         new_limit: int = DEFAULT_NEW_PER_DAY,
         max_level: str | None = None,
+        level: str | None = None,
         now: datetime | None = None,
     ) -> Session:
+        """Due cards first (any level), then new words: of exactly `level` when the learner chose
+        one, else up to `max_level` (default: one above the level test's vocabulary level)."""
         wl = self.wordlist(list_slug)
         now = now or datetime.now(UTC)
         with self.pool().connection() as conn:
@@ -157,12 +177,46 @@ class VocabPractice:
                 )
             )
         new_left = max(new_limit - new_today[0], 0)
-        fresh = [w for w in wl.words if w.key not in cards and wl.level_index(w) <= top]
+        if level is not None:
+            chosen = LEVELS.index(level)
+            fresh = [w for w in wl.words if w.key not in cards and wl.level_index(w) == chosen]
+        else:
+            fresh = [w for w in wl.words if w.key not in cards and wl.level_index(w) <= top]
         for word in fresh[: min(new_left, max(limit - len(entries), 0))]:
             kind, n = vitems.pick(word, 0)
             item = vitems.build_item(wl, word, kind, n)
             entries.append(SessionEntry(vitems.learner_view(item), True, vitems.card(word), None))
-        return Session(entries, len(due), new_today[0], new_left)
+        return Session(entries, len(due), new_today[0], new_left, len(fresh))
+
+    def levels(self, learner_id: str, list_slug: str, *, now: datetime | None = None) -> Levels:
+        """How many words each level has, how many the learner started, how many are due now."""
+        wl = self.wordlist(list_slug)
+        now = now or datetime.now(UTC)
+        with self.pool().connection() as conn:
+            learner = self._learner(conn, learner_id)
+            suggested = learning_level(conn, learner)
+            cards = {
+                row[0]: row[1]
+                for row in conn.execute(
+                    "select word_key, due_at from vocab_cards where learner_id=%s and list_slug=%s",
+                    (learner, list_slug),
+                )
+            }
+        counts = []
+        for i, name in enumerate(LEVELS):
+            words = [w for w in wl.words if wl.level_index(w) == i]
+            if not words:
+                continue
+            started = [w for w in words if w.key in cards]
+            counts.append(
+                LevelCount(
+                    level=name,
+                    words=len(words),
+                    started=len(started),
+                    due=sum(1 for w in started if cards[w.key] <= now),
+                )
+            )
+        return Levels(counts, suggested)
 
     # --- an answer -----------------------------------------------------------------------------
 

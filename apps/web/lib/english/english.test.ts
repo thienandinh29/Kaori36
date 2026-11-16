@@ -11,6 +11,7 @@ import {
 import {
   byLevel,
   emptyVocabReason,
+  newWordsToday,
   optionForKey,
   percent,
   progressText,
@@ -247,7 +248,14 @@ describe("view helpers", () => {
     expect(percent(1.7)).toBe(100);
   });
   it("say why a vocabulary session is empty", () => {
-    expect(emptyVocabReason(0)).toBe("done");
-    expect(emptyVocabReason(4)).toBe("noMoreWords");
+    expect(emptyVocabReason(0, 5)).toBe("done");
+    expect(emptyVocabReason(0, 0)).toBe("done");
+    expect(emptyVocabReason(4, 0)).toBe("noMoreWords");
+    expect(emptyVocabReason(4, 3)).toBe("done");
+  });
+  it("count only new words that exist", () => {
+    expect(newWordsToday(10, 3)).toBe(3);
+    expect(newWordsToday(2, 14)).toBe(2);
+    expect(newWordsToday(10, 0)).toBe(0);
   });
 });
