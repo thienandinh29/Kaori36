@@ -28,6 +28,7 @@ from app.engine.graph import UNSEEN_P_KNOWN
 from app.engine.trace import fmt_p
 from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
+from app.services.plans import NAMES_VI, Plans
 from app.services.vocabulary import start_of_day
 from app.writing import feedback, llm_corrections, task1
 from app.writing.analysis import analyse, load_linking_words, words
@@ -103,10 +104,12 @@ class WritingService:
         daily_essays: int = 3,
         languagetool: LanguageToolClient | None = None,
         courses_dir: Path | None = None,
+        plans: "Plans | None" = None,
     ) -> None:
         self.pool = pool
         self.writing_dir = writing_dir
-        self.daily_essays = daily_essays
+        self.daily_essays = daily_essays  # used when there are no plans (tests, older setups)
+        self.plans = plans
         self.languagetool = languagetool
         self.courses_dir = courses_dir
         self._course: tuple[ErrorMap, CourseSpec, UUID, dict[str, UUID]] | None = None
@@ -283,9 +286,14 @@ class WritingService:
                 (learner, start_of_day(now)),
             ).fetchone()
             assert today is not None
-            if today[0] >= self.daily_essays:
+            if self.plans is not None:
+                plan, limits = self.plans.limits_of(conn, learner)
+                allowed, named = limits.essays_per_day, f" (gói {NAMES_VI[plan]})"
+            else:
+                allowed, named = self.daily_essays, ""
+            if today[0] >= allowed:
                 raise HTTPException(
-                    429, f"Hôm nay bạn đã gửi {self.daily_essays} bài. Hẹn bạn ngày mai nhé."
+                    429, f"Hôm nay bạn đã gửi {allowed} bài{named}. Hẹn bạn ngày mai nhé."
                 )
             row = conn.execute(
                 "insert into essays(learner_id,prompt_id,text,consent,submitted_at) "

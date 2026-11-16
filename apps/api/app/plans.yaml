@@ -1,0 +1,11 @@
+# Daily limits per plan (specs/plans). WRITING_DAILY_ESSAYS and LLM_DAILY_CALLS_PER_LEARNER in .env, when set,
+# override the free plan. The service-wide LLM_DAILY_COST_CAP_USD applies on top of every plan.
+free:
+  essays_per_day: 3
+  model_calls_per_day: 6
+pro:
+  essays_per_day: 15
+  model_calls_per_day: 40
+owner:
+  essays_per_day: 100
+  model_calls_per_day: 300
