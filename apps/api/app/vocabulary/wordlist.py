@@ -17,6 +17,8 @@ from app.curriculum.course import LEVELS, Level
 Pos = Literal["noun", "verb", "adjective", "adverb", "preposition", "conjunction"]
 Lemma = Annotated[str, Field(pattern=r"^[a-z][a-z' -]*$", max_length=40)]
 Slug = Annotated[str, Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$", max_length=40)]
+# A phonemic transcription between slashes, as in the word list (no spaces at the ends, no digits).
+Ipa = Annotated[str, Field(pattern=r"^/[^/\s0-9][^/0-9]*[^/\s0-9]/$|^/[^/\s0-9]/$", max_length=60)]
 BLANK = "___"
 
 
@@ -81,6 +83,7 @@ class Word(_Model):
     lemma: Lemma
     pos: Pos
     level: Level
+    ipa: Ipa | None = None  # British pronunciation, shown next to the word
     definition: str = Field(min_length=5)
     vi: str | None = Field(default=None, min_length=1)
     examples: tuple[Example, ...] = Field(min_length=1)

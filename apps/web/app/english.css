@@ -1717,3 +1717,10 @@ svg.nt-trail {
   border-radius: 12px;
   background: var(--nt-gap-soft, rgba(0, 0, 0, 0.05));
 }
+
+/* The pronunciation next to a word (specs/vocabulary). */
+.nt-ipa {
+  font-family: "Segoe UI", "Noto Sans", "DejaVu Sans", system-ui, sans-serif;
+  font-size: 1.05rem;
+  color: var(--nt-ink-2, inherit);
+}

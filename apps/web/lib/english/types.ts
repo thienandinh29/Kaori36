@@ -63,6 +63,8 @@ export interface WordCard {
   lemma: string;
   pos: string;
   level: string;
+  /** British pronunciation between slashes, e.g. /tʃuːz/, or null when the list has none. */
+  ipa: string | null;
   definition: string;
   vi: string | null;
   example: string;
