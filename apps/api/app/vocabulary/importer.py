@@ -345,10 +345,17 @@ def run(
     for d in dropped:
         report.dropped[d.reason] = report.dropped.get(d.reason, 0) + 1
         report.dropped_words.setdefault(d.reason, []).append(d.lemma)
-    report.usage = model.usage
+    previous = load_report(out)
+    before = Usage(**previous["usage"]) if previous else Usage()  # an earlier, stopped run
+    report.usage = Usage(
+        before.calls + model.usage.calls,
+        before.failed_attempts + model.usage.failed_attempts,
+        before.input_tokens + model.usage.input_tokens,
+        before.output_tokens + model.usage.output_tokens,
+        round(before.cost_usd + model.usage.cost_usd, 6),
+    )
     if len(kept) >= 4:  # the list needs four words for a meaning question
         write_list(out, kept, authored)
-    previous = load_report(out)
     report.review = previous.get("review") if previous else None
     (out / "import-report.json").write_text(
         json.dumps(asdict(report), indent=2, ensure_ascii=False) + "\n", encoding="utf-8"

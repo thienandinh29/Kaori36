@@ -66,10 +66,14 @@ export interface WordCard {
   level: string;
   /** British pronunciation between slashes, e.g. /tʃuːz/, or null when the list has none. */
   ipa: string | null;
+  /** authored for this project, or imported from NGSL/NAWL (estimated level, automatic IPA). */
+  origin: WordOrigin;
   definition: string;
   vi: string | null;
   example: string;
 }
+
+export type WordOrigin = "authored" | "ngsl" | "nawl";
 
 export interface VocabEntry {
   item: VocabItem;

@@ -51,7 +51,7 @@ from app.engine.trace import DecisionTrace
 from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
 from app.vocabulary import items as vitems
-from app.vocabulary.wordlist import WordList, load_wordlist
+from app.vocabulary.wordlist import WordList, shared_wordlist
 
 PRACTICE_SIZE = 3
 CHECKS_PER_NODE = 2
@@ -118,7 +118,6 @@ class GrammarService:
         self.courses_dir, self.items_dir, self.vocab_dir = courses_dir, items_dir, vocab_dir
         self.vocab_list = vocab_list
         self.vocab_imported_dir = vocab_imported_dir
-        self._wordlist: WordList | None = None
         self.draft_learners = {
             learner_uuid(x.strip()) for x in draft_learners.split(",") if x.strip()
         }
@@ -148,11 +147,8 @@ class GrammarService:
         return bundle
 
     def wordlist(self) -> WordList:
-        if self._wordlist is None:  # thousands of words with the import: load once
-            self._wordlist = load_wordlist(
-                self.vocab_dir / f"{self.vocab_list}.yaml", self.vocab_imported_dir
-            )
-        return self._wordlist
+        # thousands of words with the import: loaded once, shared with the vocabulary service
+        return shared_wordlist(self.vocab_dir / f"{self.vocab_list}.yaml", self.vocab_imported_dir)
 
     def _synced_ids(
         self, conn: psycopg.Connection[Any], course: CourseSpec

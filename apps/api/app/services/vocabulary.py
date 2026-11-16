@@ -22,7 +22,7 @@ from app.engine import srs
 from app.engine.trace import DecisionTrace
 from app.services.backend import learner_uuid, save_trace
 from app.vocabulary import items as vitems
-from app.vocabulary.wordlist import WordList, load_wordlist
+from app.vocabulary.wordlist import WordList, shared_wordlist
 
 DEFAULT_LIMIT = 20
 DEFAULT_NEW_PER_DAY = 10
@@ -119,7 +119,7 @@ class VocabPractice:
         path = self.lists_dir / f"{slug}.yaml"
         if not slug.replace("-", "").isalnum() or not path.is_file():
             raise HTTPException(404, "Không tìm thấy danh sách từ vựng.")
-        self._lists[slug] = load_wordlist(path, self.imported_dir)
+        self._lists[slug] = shared_wordlist(path, self.imported_dir)
         return self._lists[slug]
 
     def _learner(self, conn: psycopg.Connection[Any], learner_id: str) -> UUID:

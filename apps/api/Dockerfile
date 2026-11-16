@@ -16,6 +16,7 @@ COPY --from=build /srv/apps/api/.venv ./.venv
 COPY apps/api/app ./app
 COPY supabase/migrations /srv/supabase/migrations
 COPY data /srv/data
+COPY data-sa /srv/data-sa
 ENV PATH=/srv/apps/api/.venv/bin:$PATH PYTHONUNBUFFERED=1
 USER app
 EXPOSE 8000

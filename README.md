@@ -70,8 +70,9 @@ Giáo trình trong danh mục là sách mở của OpenStax (CC BY-NC-SA 4.0): d
 
 ## Giấy phép
 
-- **Mã nguồn** (mọi thứ ngoài `data/`): [Apache-2.0](LICENSE). Xem thêm [NOTICE](NOTICE).
+- **Mã nguồn** (mọi thứ ngoài `data/` và `data-sa/`): [Apache-2.0](LICENSE). Xem thêm [NOTICE](NOTICE).
 - **Dữ liệu** (`data/`): [CC BY-NC-SA 4.0](data/LICENSE.md), vì một phần dữ liệu phát sinh từ giáo trình có cùng giấy phép.
+- **Từ vựng nhập từ NGSL/NAWL** (`data-sa/`): [CC BY-SA 4.0](data-sa/LICENSE.md), ghi công Browne, Culligan & Phillips.
   Dữ liệu này không dùng cho mục đích thương mại; mã thì dùng được.
 
 Cả đội Sena Empire đã đồng ý lựa chọn này (theo lời chủ repo, 2026-11-10; chưa có văn bản xác nhận trong repo).

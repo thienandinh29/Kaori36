@@ -322,3 +322,28 @@ def test_the_owners_sample_and_its_score(files: Path, tmp_path: Path) -> None:
         "high95"
     ]
     assert json.loads((out / "import-report.json").read_text())["review"]["correct"] == 3
+
+
+def test_a_resumed_run_adds_its_usage_to_the_first_runs(files: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    first = FakeModel(tmp_path / "c")
+    first.usage = imp.Usage(2, 0, 100, 200, 0.5)
+    imp.run(files, out, first, lambda ws: {}, AUTHORED)
+    second = FakeModel(tmp_path / "c")
+    second.usage = imp.Usage(1, 1, 10, 20, 0.25)
+    report = imp.run(files, out, second, lambda ws: {}, AUTHORED)
+    assert report.usage == imp.Usage(3, 1, 110, 220, 0.75)
+
+
+def test_the_committed_import_loads_merges_and_matches_its_report() -> None:
+    folder = ROOT / "data-sa" / "vocabulary"
+    imported = load_wordlist(folder / "core-seed.yaml")
+    report = json.loads((folder / "import-report.json").read_text(encoding="utf-8"))
+    assert len(imported.words) == report["kept"] and imported.status == "draft"
+    assert all(w.origin in ("ngsl", "nawl") for w in imported.words)
+    assert sum(w.ipa is not None for w in imported.words) == report["ipa_agreed"]
+    assert "CC BY-SA 4.0" in (folder / "core-seed.yaml").read_text(encoding="utf-8")[:600]
+    assert set(json.loads((folder / "sources.json").read_text())) == set(hw.FILES.values())
+    merged = load_wordlist(ROOT / "data" / "vocabulary" / "core-seed.yaml", folder)
+    assert len(merged.words) == len(AUTHORED.words) + len(imported.words)  # no lemma twice
+    assert merged.words[: len(AUTHORED.words)] == AUTHORED.words

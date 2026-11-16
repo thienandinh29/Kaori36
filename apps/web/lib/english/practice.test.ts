@@ -35,6 +35,7 @@ const card = {
   pos: "noun",
   level: "B1",
   ipa: "/dɪˈsɪʒən/",
+  origin: "authored",
   definition: "a choice that you make after thinking about the possibilities",
   vi: "quyết định",
   example: "It was a difficult decision to move abroad.",
@@ -170,6 +171,13 @@ describe("vocabulary", () => {
       DataError,
     );
     expect(() => parseWordCard({ ...card, ipa: 3 })).toThrow(DataError);
+    expect(parseWordCard({ ...card, origin: "ngsl" }).origin).toBe("ngsl");
+    expect(() => parseWordCard({ ...card, origin: "oxford" })).toThrow(
+      DataError,
+    );
+    expect(() => parseWordCard({ ...card, origin: undefined })).toThrow(
+      DataError,
+    );
   });
   it("reads a recall item and a retry check strictly", () => {
     const recall = {

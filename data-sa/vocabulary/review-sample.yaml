@@ -1,0 +1,504 @@
+# The owner's check (specs/vocabulary-import, the gate): set `correct` to true when the
+# Vietnamese, the example, the topic and the IPA (when shown) are all right; else false
+# and say why in `note`. Then: python -m app.vocabulary.importer score
+- lemma: cry
+  pos: verb
+  level: B1
+  definition: to produce tears and sounds because of pain
+  vi: khóc
+  example: The little boy began to cry when he fell off his bicycle.
+  topic: general
+  ipa: /kraɪ/
+  correct: null
+  note: ''
+- lemma: danger
+  pos: noun
+  level: B1
+  definition: possibility of getting hurt, damaged, or killed
+  vi: sự nguy hiểm
+  example: Drivers must be aware of the danger of icy roads in winter.
+  topic: travel
+  ipa: /ˈdeɪndʒə/
+  correct: null
+  note: ''
+- lemma: hope
+  pos: noun
+  level: A1
+  definition: when you wish something would happen; what you wish
+  vi: hy vọng
+  example: There is still hope that they will find a cure.
+  topic: general
+  ipa: /həʊp/
+  correct: null
+  note: ''
+- lemma: calm
+  pos: adjective
+  level: B1
+  definition: relaxed and not worried or angry
+  vi: bình tĩnh, điềm tĩnh
+  example: She remained calm despite the pressure of the exam.
+  topic: health
+  ipa: /kɑːm/
+  correct: null
+  note: ''
+- lemma: mid
+  pos: adjective
+  level: B2
+  definition: at (or near) the middle point
+  vi: giữa
+  example: The mid section of the book is the most exciting.
+  topic: general
+  ipa: /mɪd/
+  correct: null
+  note: ''
+- lemma: salt
+  pos: noun
+  level: B2
+  definition: natural white substance used to flavor or preserve food
+  vi: muối
+  example: Too much salt in your diet can be unhealthy.
+  topic: health
+  ipa: null
+  correct: null
+  note: ''
+- lemma: consume
+  pos: verb
+  level: B2
+  definition: to eat, drink, buy or use up something
+  vi: tiêu thụ
+  example: Modern households consume a large amount of electricity every day.
+  topic: environment
+  ipa: /kənˈsjuːm/
+  correct: null
+  note: ''
+- lemma: partial
+  pos: adjective
+  level: B2
+  definition: not complete; being only part of something
+  vi: một phần
+  example: The study provided only a partial solution to the problem.
+  topic: general
+  ipa: null
+  correct: null
+  note: ''
+- lemma: power
+  pos: noun
+  level: A1
+  definition: legal or official right to perform certain actions
+  vi: quyền lực
+  example: The president has the power to veto laws.
+  topic: society
+  ipa: null
+  correct: null
+  note: ''
+- lemma: restore
+  pos: verb
+  level: B2
+  definition: to put or bring back into existence or use, mend
+  vi: khôi phục
+  example: The government aims to restore public confidence in the police.
+  topic: society
+  ipa: null
+  correct: null
+  note: ''
+- lemma: campaign
+  pos: verb
+  level: A2
+  definition: to work in an organized and active way toward a goal
+  vi: vận động, tham gia chiến dịch
+  example: They campaigned for better public transport in the city.
+  topic: society
+  ipa: /kæmˈpeɪn/
+  correct: null
+  note: ''
+- lemma: praise
+  pos: verb
+  level: B2
+  definition: to express approval of something or someone
+  vi: khen ngợi
+  example: The manager praised the team for their excellent performance.
+  topic: work
+  ipa: /preɪz/
+  correct: null
+  note: ''
+- lemma: pleasant
+  pos: adjective
+  level: B2
+  definition: causing a good feeling
+  vi: dễ chịu, thú vị
+  example: We had a pleasant afternoon walking around the lake.
+  topic: travel
+  ipa: null
+  correct: null
+  note: ''
+- lemma: bacterial
+  pos: adjective
+  level: C1
+  definition: concerning or caused by bacteria
+  vi: do vi khuẩn
+  example: The doctor treated the bacterial infection with a course of drugs.
+  topic: health
+  ipa: null
+  correct: null
+  note: ''
+- lemma: attitude
+  pos: noun
+  level: A2
+  definition: way you act, think, and feel about something
+  vi: thái độ
+  example: A positive attitude can help you succeed in your studies.
+  topic: education
+  ipa: /ˈætɪtjuːd/
+  correct: null
+  note: ''
+- lemma: electron
+  pos: noun
+  level: B2
+  definition: a negatively charged particle
+  vi: điện tử
+  example: Each electron carries a negative charge around the atom's nucleus.
+  topic: technology
+  ipa: /ɪˈlektrɒn/
+  correct: null
+  note: ''
+- lemma: lend
+  pos: verb
+  level: B2
+  definition: to give to someone for a while before it is returned
+  vi: cho mượn
+  example: Could you lend me your notes from yesterday's lecture?
+  topic: education
+  ipa: /lend/
+  correct: null
+  note: ''
+- lemma: responsible
+  pos: adjective
+  level: A2
+  definition: having the duty of dealing with something; being the cause or creator of something; behaving
+    in a mature and reasonable manner
+  vi: có trách nhiệm
+  example: Parents are responsible for their children's safety at home.
+  topic: society
+  ipa: null
+  correct: null
+  note: ''
+- lemma: horrible
+  pos: adjective
+  level: B2
+  definition: very unpleasant
+  vi: kinh khủng, khó chịu
+  example: The smell from the factory was absolutely horrible.
+  topic: environment
+  ipa: null
+  correct: null
+  note: ''
+- lemma: surprise
+  pos: verb
+  level: A2
+  definition: to do something that another person didn't expect
+  vi: làm ngạc nhiên
+  example: The sudden change in policy surprised many experts.
+  topic: general
+  ipa: /səˈpraɪz/
+  correct: null
+  note: ''
+- lemma: civilian
+  pos: noun
+  level: B2
+  definition: ordinary person who is not in the army
+  vi: thường dân
+  example: The war caused many civilian deaths and injuries.
+  topic: society
+  ipa: null
+  correct: null
+  note: ''
+- lemma: rest
+  pos: noun
+  level: A2
+  definition: time when one relaxes, sleeps, or is inactive
+  vi: sự nghỉ ngơi
+  example: Doctors advise patients to get enough rest after surgery.
+  topic: health
+  ipa: /rest/
+  correct: null
+  note: ''
+- lemma: earn
+  pos: verb
+  level: A2
+  definition: to get money for work
+  vi: kiếm tiền
+  example: Many people work hard to earn enough money for their families.
+  topic: work
+  ipa: /ɜːn/
+  correct: null
+  note: ''
+- lemma: stress
+  pos: verb
+  level: A2
+  definition: to be in a state of mental tension due to problems
+  vi: căng thẳng
+  example: Don't stress about the exam; just do your best.
+  topic: health
+  ipa: /stres/
+  correct: null
+  note: ''
+- lemma: secure
+  pos: verb
+  level: B1
+  definition: to protect something from danger or harm, keep things safe
+  vi: bảo vệ, giữ an toàn
+  example: They secured the building against potential intruders.
+  topic: crime
+  ipa: null
+  correct: null
+  note: ''
+- lemma: visual
+  pos: noun
+  level: B2
+  definition: something to look at with the eyes
+  vi: hình ảnh để nhìn
+  example: The presentation used clear visuals to explain the data.
+  topic: media
+  ipa: /ˈvɪʒuəl/
+  correct: null
+  note: ''
+- lemma: straight
+  pos: adjective
+  level: A2
+  definition: not having curves, bends, or angles
+  vi: thẳng
+  example: Draw a straight line from the top to the bottom.
+  topic: general
+  ipa: /streɪt/
+  correct: null
+  note: ''
+- lemma: frequently
+  pos: adverb
+  level: B1
+  definition: often; regularly
+  vi: thường xuyên
+  example: He frequently travels abroad for work.
+  topic: general
+  ipa: /ˈfriːkwəntli/
+  correct: null
+  note: ''
+- lemma: station
+  pos: noun
+  level: A2
+  definition: place where you can catch a train or a bus
+  vi: ga, trạm
+  example: We waited at the station for the train to arrive.
+  topic: travel
+  ipa: null
+  correct: null
+  note: ''
+- lemma: enjoy
+  pos: verb
+  level: A2
+  definition: to take pleasure in something
+  vi: thích thú, tận hưởng
+  example: I really enjoy reading before bedtime.
+  topic: null
+  ipa: /ɪnˈdʒɔɪ/
+  correct: null
+  note: ''
+- lemma: finite
+  pos: adjective
+  level: C1
+  definition: having limits; lasting for a limited time
+  vi: hữu hạn
+  example: Fossil fuels are a finite resource that will eventually run out.
+  topic: environment
+  ipa: /ˈfaɪnaɪt/
+  correct: null
+  note: ''
+- lemma: exploit
+  pos: verb
+  level: B2
+  definition: to use something or someone selfishly or unethically
+  vi: bóc lột, lợi dụng
+  example: Some companies exploit workers by paying low wages.
+  topic: work
+  ipa: null
+  correct: null
+  note: ''
+- lemma: attribute
+  pos: noun
+  level: B2
+  definition: a quality or characteristic that someone or something has (e.g., size or color)
+  vi: thuộc tính
+  example: Size is an important attribute to consider when buying a car.
+  topic: general
+  ipa: /ˈætrɪbjuːt/
+  correct: null
+  note: ''
+- lemma: while
+  pos: conjunction
+  level: A1
+  definition: during the time that; at the same time
+  vi: trong khi
+  example: Some people enjoy city life while others prefer the countryside.
+  topic: society
+  ipa: /waɪl/
+  correct: null
+  note: ''
+- lemma: exclude
+  pos: verb
+  level: B2
+  definition: to prevent someone from access to a group
+  vi: loại trừ
+  example: The club was criticized for excluding members of minority groups.
+  topic: society
+  ipa: /ɪkˈskluːd/
+  correct: null
+  note: ''
+- lemma: pause
+  pos: verb
+  level: A2
+  definition: to stop doing for a while before continuing
+  vi: tạm dừng
+  example: She paused for a moment before answering the question.
+  topic: general
+  ipa: /pɔːz/
+  correct: null
+  note: ''
+- lemma: fundamental
+  pos: adjective
+  level: B1
+  definition: relating to the most important parts of something
+  vi: cơ bản, nền tảng
+  example: Education is a fundamental right for every child.
+  topic: education
+  ipa: null
+  correct: null
+  note: ''
+- lemma: measurement
+  pos: noun
+  level: B2
+  definition: the finding of the size or amount of something or someone
+  vi: sự đo lường
+  example: Accurate measurement of the room is necessary before buying furniture.
+  topic: general
+  ipa: /ˈmeʒəmənt/
+  correct: null
+  note: ''
+- lemma: goodness
+  pos: noun
+  level: B2
+  definition: nourishment; good food value
+  vi: giá trị dinh dưỡng
+  example: The goodness of fresh vegetables is well known.
+  topic: health
+  ipa: /ˈɡʊdnəs/
+  correct: null
+  note: ''
+- lemma: appeal
+  pos: verb
+  level: A2
+  definition: to request a judge or others change a decision
+  vi: kháng cáo
+  example: The lawyer decided to appeal the court's decision.
+  topic: crime
+  ipa: /əˈpiːl/
+  correct: null
+  note: ''
+- lemma: parameter
+  pos: noun
+  level: B2
+  definition: a characteristic or constant factor, a limit.
+  vi: tham số, giới hạn
+  example: Researchers set clear parameters for the experiment before starting.
+  topic: education
+  ipa: /pəˈræmɪtə/
+  correct: null
+  note: ''
+- lemma: production
+  pos: noun
+  level: A2
+  definition: process of making something on a large scale
+  vi: sản xuất
+  example: The company has increased its production of electric vehicles.
+  topic: economy
+  ipa: null
+  correct: null
+  note: ''
+- lemma: couple
+  pos: noun
+  level: A2
+  definition: two of something; two people; a pair
+  vi: cặp đôi
+  example: A couple of students were absent today.
+  topic: general
+  ipa: null
+  correct: null
+  note: ''
+- lemma: comfortable
+  pos: adjective
+  level: B1
+  definition: not being worried about something; at ease
+  vi: thoải mái
+  example: She felt comfortable speaking in front of the small group.
+  topic: general
+  ipa: null
+  correct: null
+  note: ''
+- lemma: die
+  pos: verb
+  level: A1
+  definition: to stop living
+  vi: chết
+  example: Many plants die if they do not receive enough water.
+  topic: environment
+  ipa: /daɪ/
+  correct: null
+  note: ''
+- lemma: offspring
+  pos: noun
+  level: C1
+  definition: the child of a person or the young of a plant or animal
+  vi: con cái, thế hệ sau
+  example: Many animals protect their offspring until they can survive alone.
+  topic: environment
+  ipa: /ˈɒfsprɪŋ/
+  correct: null
+  note: ''
+- lemma: damn
+  pos: verb
+  level: B2
+  definition: to say someone should be punished for their bad behavior
+  vi: nguyền rủa
+  example: The judge damned the criminal's actions as cruel and unnecessary.
+  topic: crime
+  ipa: /dæm/
+  correct: null
+  note: ''
+- lemma: back
+  pos: adjective
+  level: A1
+  definition: behind; to the rear; previous
+  vi: phía sau, trước đây
+  example: The back door of the house leads to a small garden.
+  topic: general
+  ipa: /bæk/
+  correct: null
+  note: ''
+- lemma: illustrate
+  pos: verb
+  level: B1
+  definition: to explain with examples, to make it easier to understand
+  vi: minh họa
+  example: The teacher used diagrams to illustrate the complex concept.
+  topic: education
+  ipa: /ˈɪləstreɪt/
+  correct: null
+  note: ''
+- lemma: daily
+  pos: adjective
+  level: A2
+  definition: happening every day
+  vi: hàng ngày
+  example: Regular daily exercise can greatly improve your overall health.
+  topic: health
+  ipa: /ˈdeɪli/
+  correct: null
+  note: ''
