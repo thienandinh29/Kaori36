@@ -106,3 +106,11 @@ the range is computed in plain Vietnamese.
 ## Not in this step
 Task 1 bands (2.5), the LLM's criterion feedback and the disagreement rule (2.4), per-criterion bands shown to learners
 (only measured here), any band for speaking.
+
+## The owner's preview while uncalibrated (16 Nov 2026)
+The owner asked to see something before calibration. Because the raw "Overall" output is **not on the IELTS scale**
+(above), the preview never shows a band: for DRAFT_ITEM_LEARNERS only, on Task 2 essays long enough for a band, while
+`calibration` is null and the scorer runs, the result carries `score_preview` = the raw output and how it compares with the
+learner's earlier essays (higher, lower, the same within 0.25, since formatting alone moved it by 0.19). The page labels it
+"Điểm thô của mô hình (chưa hiệu chỉnh, không phải band IELTS)" and says only the owner sees it. Once a calibration exists,
+the real range replaces it. Start the scorer with `--profile scoring` and `SCORER_URL=http://scorer:8020` (about 0.8 GB).

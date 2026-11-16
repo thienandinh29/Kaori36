@@ -653,6 +653,14 @@ export const vi = {
       bandNote:
         "Ước lượng từ một mô hình nhỏ, không phải điểm thi. Khoảng này rộng vì mô hình còn sai số.",
       bandDraft: "Chưa kiểm chứng với điểm giám khảo.",
+      previewTitle:
+        "Điểm thô của mô hình (chưa hiệu chỉnh, không phải band IELTS)",
+      previewCompared:
+        "So với {n} bài trước của bạn: cao hơn {higher}, thấp hơn {lower}, tương đương {same}.",
+      previewFirst:
+        "Đây là bài đầu tiên có điểm thô; các bài sau sẽ được so với bài này.",
+      previewNote:
+        "Chỉ bạn thấy phần này. Chênh lệch dưới 0,25 được coi là tương đương, vì chỉ đổi cách trình bày cũng làm điểm thay đổi khoảng 0,2.",
       bandTruncated: "Bài dài: mô hình chỉ đọc khoảng 380 từ đầu.",
       task1Criterion: "Task Achievement (nêu đúng và đủ số liệu chính)",
       task1Title: "Kiểm tra bài tả biểu đồ",

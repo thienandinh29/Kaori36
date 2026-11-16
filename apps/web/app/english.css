@@ -1717,3 +1717,11 @@ svg.nt-trail {
   border-radius: 12px;
   background: var(--nt-gap-soft, rgba(0, 0, 0, 0.05));
 }
+
+/* The owner's raw-score preview (specs/writing/step-2.3.md, preview). */
+.nt-preview {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px dashed var(--nt-line, currentColor);
+  border-radius: 12px;
+}

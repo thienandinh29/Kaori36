@@ -401,6 +401,22 @@ def test_a_model_far_from_the_scorer_makes_the_band_uncertain(setup: Setup) -> N
     assert r["score"]["uncertain"] and "khác nhau hơn 1 band" in r["score"]["uncertain_reason"]
 
 
+def test_the_owners_preview_compares_with_their_earlier_essays(setup: Setup) -> None:
+    from tests.writing.test_band import CONFIG, FakeScorer
+
+    svc, learner, db = setup
+    long_text = (FIXTURES["clean"]["text"] + " ") * 12  # over 150 words
+    first = replace(step_for(learner), model=None, scorer=FakeScorer(3.4), scorer_config=CONFIG,
+                    client=None)  # fmt: skip
+    r = own_essay(svc, learner, db, first, long_text)["result"]
+    assert r["score"] is None and "chưa được hiệu chỉnh" in r["score_unavailable_vi"]
+    assert r["score_preview"]["raw"] == 3.4 and r["score_preview"]["compared"] == 0
+    second = replace(first, scorer=FakeScorer(4.5))
+    r = own_essay(svc, learner, db, second, long_text)["result"]
+    preview = r["score_preview"]
+    assert (preview["raw"], preview["compared"], preview["higher"]) == (4.5, 1, 1)
+
+
 # --- step 2.4a: hint first, then the answer (no model call) ---------------------------------
 
 

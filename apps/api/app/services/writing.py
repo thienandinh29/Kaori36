@@ -8,7 +8,7 @@ SKIP LOCKED, analyses them (`writing.analysis`) and stores the result.
 import logging
 import re
 import unicodedata
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -46,7 +46,13 @@ from app.writing.llm_corrections import CorrectionsOut, Sentence, unflagged
 from app.writing.model_calls import BudgetExceeded, WritingModel
 from app.writing.prompts import Prompt, PromptBank, load_prompts
 from app.writing.scorer_client import ScorerClient
-from app.writing.scoring import ScorerConfig, band_range, load_scorer_config, no_band_reason
+from app.writing.scoring import (
+    ScorerConfig,
+    band_range,
+    compare_raw,
+    load_scorer_config,
+    no_band_reason,
+)
 
 logger = logging.getLogger(__name__)
 CONSENT = (
@@ -518,6 +524,57 @@ def band_for(
     }, None
 
 
+def score_preview(
+    text: str, task: int, words: int, learner: UUID, step: GrammarStep, earlier: Sequence[float]
+) -> dict[str, Any] | None:
+    """The owner's preview while the scorer is uncalibrated (16 Nov 2026), or None.
+
+    Only for DRAFT_ITEM_LEARNERS, only Task 2 essays long enough for a band, only while there is
+    no calibration: the model's raw "Overall" output and how it compares with the learner's
+    earlier ones. Raw output is not on the IELTS scale (step 2.3), so no band is derived from it.
+    """
+    config = step.scorer_config
+    if (
+        task != 2
+        or config is None
+        or step.scorer is None
+        or config.calibration is not None
+        or learner not in step.draft_learners
+        or no_band_reason(task, words, None) != "not_calibrated"
+    ):
+        return None
+    try:
+        raw = step.scorer.score(text)
+    except httpx.HTTPError:
+        logger.exception("the scorer did not answer")
+        return None
+    if (raw.model, raw.revision) != (config.model, config.revision) or config.output >= len(
+        raw.raw
+    ):
+        return None
+    value = float(raw.raw[config.output])
+    c = compare_raw(value, earlier)
+    return {
+        "raw": round(value, 2),
+        "compared": len(earlier),
+        "higher": c.higher,
+        "lower": c.lower,
+        "same": c.same,
+        "model": config.model,
+        "revision": config.revision,
+        "truncated": raw.truncated,
+    }
+
+
+def _earlier_raw(conn: psycopg.Connection[Any], learner: UUID, essay_id: Any) -> list[float]:
+    rows = conn.execute(
+        "select (result->'score_preview'->>'raw')::float from essays where learner_id=%s "
+        "and id<>%s and status='done' and result->'score_preview' ? 'raw'",
+        (learner, essay_id),
+    ).fetchall()
+    return [float(r[0]) for r in rows]
+
+
 def _analyse(
     text: str, task: int, writing_dir: Path, step: GrammarStep | None
 ) -> tuple[dict[str, Any], GrammarResult | None]:
@@ -646,6 +703,11 @@ def process_next_essay(
                 result["score"], result["score_unavailable_vi"] = band_for(
                     text, task, result["words"], learner, step
                 )
+                if result["score"] is None:
+                    result["score_preview"] = score_preview(
+                        text, task, result["words"], learner, step,
+                        _earlier_raw(conn, learner, essay_id),
+                    )  # fmt: skip
                 ai_issues = model_features(text, prompt, result, grammar, learner, step)
             with conn.transaction():
                 if grammar is not None and step is not None:

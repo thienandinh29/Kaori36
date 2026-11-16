@@ -36,6 +36,7 @@ import {
   type Step,
   type VocabAnswer,
   type VocabEntry,
+  type ScorePreview,
   type VocabItem,
   type VocabLevels,
   type VocabKind,
@@ -617,6 +618,23 @@ function parseBand(value: unknown): BandRange {
   return band;
 }
 
+export function parseScorePreview(value: unknown): ScorePreview {
+  const d = record(value);
+  if (typeof d.raw !== "number" || !Number.isFinite(d.raw))
+    throw new DataError("contract");
+  const p: ScorePreview = {
+    raw: d.raw,
+    compared: int(d.compared),
+    higher: int(d.higher),
+    lower: int(d.lower),
+    same: int(d.same),
+    truncated: bool(d.truncated),
+  };
+  if (p.higher + p.lower + p.same !== p.compared)
+    throw new DataError("contract");
+  return p;
+}
+
 export function parseEssayResult(value: unknown): EssayResult {
   const d = record(value);
   const v2 = d.version === 2;
@@ -645,6 +663,10 @@ export function parseEssayResult(value: unknown): EssayResult {
       ...(d.score !== undefined && {
         score: d.score === null ? null : parseBand(d.score),
         scoreUnavailableVi: optionalString(d.score_unavailable_vi),
+      }),
+      ...(d.score_preview !== undefined && {
+        scorePreview:
+          d.score_preview === null ? null : parseScorePreview(d.score_preview),
       }),
       ...(d.feedback !== undefined && {
         feedback: d.feedback === null ? null : parseEssayFeedback(d.feedback),

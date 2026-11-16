@@ -102,3 +102,45 @@ def test_the_committed_config_pins_the_model_and_has_no_calibration_yet() -> Non
     with pytest.raises(ValueError, match="non-decreasing"):
         CalibrationIn(xs=(1, 2), ys=(6, 5), residual_low=0, residual_high=0, essays=10,
                       fitted_on="x")  # fmt: skip
+
+
+# --- the owner's uncalibrated preview (16 Nov 2026) -------------------------------------------
+
+
+def test_compare_raw_treats_small_differences_as_the_same() -> None:
+    from app.writing.scoring import PREVIEW_NOISE, compare_raw
+
+    c = compare_raw(4.0, [3.5, 3.9, 4.1, 4.5, 4.0 - PREVIEW_NOISE])
+    assert (c.higher, c.lower, c.same) == (1, 1, 3)  # 3.5 lower; 4.5 higher; the rest within noise
+    assert compare_raw(4.0, []) == compare_raw(4.0, [])
+    assert (compare_raw(4.0, []).higher, compare_raw(4.0, []).same) == (0, 0)
+
+
+def test_the_owner_sees_the_raw_score_and_how_it_compares_but_no_band() -> None:
+    from app.services.writing import score_preview
+
+    p = score_preview("essay", 2, 260, OWNER, step(FakeScorer(4.46), CONFIG), [3.41, 4.4, 5.0])
+    assert p is not None
+    assert p["raw"] == 4.46 and (p["compared"], p["higher"], p["lower"], p["same"]) == (3, 1, 1, 1)
+    assert "band" not in " ".join(p)  # no band field of any kind
+    assert p["model"] == CONFIG.model and p["revision"] == CONFIG.revision
+
+
+@pytest.mark.parametrize(
+    ("task", "words", "learner", "scorer", "config"),
+    [
+        (2, 260, OTHER, FakeScorer(4.0), CONFIG),  # only the owner
+        (1, 260, OWNER, FakeScorer(4.0), CONFIG),  # never for Task 1
+        (2, 149, OWNER, FakeScorer(4.0), CONFIG),  # too short for any band
+        (2, 260, OWNER, FakeScorer(4.0), CALIBRATED),  # once calibrated, the real range is used
+        (2, 260, OWNER, None, CONFIG),  # no scorer running
+        (2, 260, OWNER, FakeScorer(down=True), CONFIG),  # the scorer did not answer
+        (2, 260, OWNER, FakeScorer(revision="f" * 40), CONFIG),  # another model revision
+    ],
+)
+def test_no_preview_outside_its_narrow_case(
+    task: int, words: int, learner: UUID, scorer: ScorerClient | None, config: object
+) -> None:
+    from app.services.writing import score_preview
+
+    assert score_preview("essay", task, words, learner, step(scorer, config), []) is None

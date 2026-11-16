@@ -10,6 +10,7 @@ import {
   type BandRange,
   type EssayResult,
   type GrammarIssue,
+  type ScorePreview,
 } from "@/lib/english/types";
 import { stillWorking } from "@/lib/english/writing";
 import { vi } from "@/messages/vi";
@@ -108,12 +109,39 @@ export function bandText(score: BandRange): string {
     : `${fmt(score.band_low)}–${fmt(score.band_high)}`;
 }
 
+/** The owner's raw-score preview: never presented as a band (scorer uncalibrated). */
+function Preview({ preview: p }: { preview: ScorePreview }) {
+  const fill = (s: string) =>
+    s
+      .replace("{higher}", String(p.higher))
+      .replace("{lower}", String(p.lower))
+      .replace("{same}", String(p.same))
+      .replace("{n}", String(p.compared));
+  return (
+    <div className="nt-preview" data-testid="score-preview">
+      <p>
+        {w.previewTitle}: <strong>{p.raw.toFixed(2)}</strong>
+      </p>
+      <p className="en-muted">
+        {p.compared === 0 ? w.previewFirst : fill(w.previewCompared)}{" "}
+        {w.previewNote}
+        {p.truncated && ` ${w.bandTruncated}`}
+      </p>
+    </div>
+  );
+}
+
 function Band({ result }: { result: EssayResult }) {
   if (result.score === undefined) return null; // analysed before step 2.3
   if (result.score === null)
-    return result.scoreUnavailableVi ? (
-      <p className="en-muted">{result.scoreUnavailableVi}</p>
-    ) : null;
+    return (
+      <>
+        {result.scoreUnavailableVi && (
+          <p className="en-muted">{result.scoreUnavailableVi}</p>
+        )}
+        {result.scorePreview && <Preview preview={result.scorePreview} />}
+      </>
+    );
   const score = result.score;
   return (
     <div className="en-band" data-testid="essay-band">
