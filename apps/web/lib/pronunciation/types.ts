@@ -33,11 +33,22 @@ export interface Prompt {
   targets: string[];
   text: string;
 }
+/** One pronunciation node (a sound group) and the learner's mastery (step 3.4b). */
+export interface PronunciationNode {
+  node: string;
+  name_vi: string;
+  /** null until the node has evidence, which needs the group's thresholds applied. */
+  p_known: number | null;
+  known: boolean;
+  /** The group passed the gate and its thresholds are applied. */
+  measured: boolean;
+}
 export interface PronunciationPrompts {
   can_record: boolean;
   consent: string;
   sounds: Sound[];
   prompts: Prompt[];
+  progress: PronunciationNode[];
 }
 export interface RecordingResult {
   ok: boolean;
@@ -115,6 +126,17 @@ export function parsePrompts(value: unknown): PronunciationPrompts {
         level: string(r.level),
         targets: list(r.targets).map(string),
         text: string(r.text),
+      };
+    }),
+    progress: (d.progress === undefined ? [] : list(d.progress)).map((n) => {
+      const r = record(n);
+      return {
+        node: string(r.node),
+        name_vi: string(r.name_vi),
+        p_known:
+          r.p_known === null || r.p_known === undefined ? null : num(r.p_known),
+        known: flag(r.known),
+        measured: flag(r.measured),
       };
     }),
   };

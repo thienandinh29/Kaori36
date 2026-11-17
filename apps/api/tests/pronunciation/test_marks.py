@@ -59,3 +59,17 @@ def test_only_pass_groups_are_applied_and_the_file_round_trips(tmp_path: Path) -
     path = tmp_path / "thresholds.json"
     path.write_text(json.dumps(out))
     assert load_applied(path) == {"th": Applied(-1.2, 0.05, 0.5, 78)}
+
+
+def test_one_observation_per_applied_group_from_its_first_target() -> None:
+    applied = {
+        "th": Applied(-1.0, 0.05, 0.5, 80),
+        "final-consonants": Applied(-1.0, None, None, 40),  # applied, but marks say nothing
+    }
+    targets = [target("final-t", -3.0), target("th-voiced", 2.0), target("th-voiced", -3.0)]
+    marked = marks(targets, GROUPS, applied)
+    assert marked == [0, 2]
+    from app.pronunciation.marks import observations
+
+    assert observations(targets, marked, GROUPS, applied) == [("th", 1, True)]
+    assert observations(targets, marked, GROUPS, {}) == []  # the gate: nothing moves

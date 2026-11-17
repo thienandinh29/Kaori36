@@ -10,15 +10,92 @@ import base64
 import json
 import urllib.request
 from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
 import psycopg
 from psycopg.types.json import Jsonb
 
+from app.curriculum.course import CourseSpec
+from app.curriculum.store import sync_course
+from app.engine import bkt
+from app.engine.graph import UNSEEN_P_KNOWN
+from app.engine.trace import fmt_p
 from app.pronunciation.canonical import Word, flat, targets
+from app.pronunciation.marks import Applied, marks, observations
 
 Score = Callable[[bytes, list[str]], dict[str, Any]]
+# Reading a sentence aloud is a little practice; small until fitted from data (engine/bkt_fit.py).
+P_TRANSIT = 0.05
+
+
+@dataclass(frozen=True)
+class Evidence:
+    """What moves the pronunciation nodes (step 3.4b): the course and the applied groups."""
+
+    course: CourseSpec
+    group_of: Mapping[str, str]  # sound id -> group = hidden node slug
+    applied: Mapping[str, Applied]
+
+
+def apply_evidence(
+    conn: psycopg.Connection[Any],
+    learner: Any,
+    recording: Any,
+    result: Mapping[str, Any],
+    evidence: Evidence,
+    now: datetime,
+) -> list[dict[str, Any]]:
+    """BKT updates for one recording; what moved, for the analysis record."""
+    from app.services.backend import save_trace
+    from app.services.learning import save_mastery
+
+    ts = result["targets"]
+    marked = marks(ts, evidence.group_of, evidence.applied)
+    obs = observations(ts, marked, evidence.group_of, evidence.applied)
+    if not obs:
+        return []
+    ids = sync_course(conn, evidence.course)
+    subject = conn.execute(
+        "select id from subjects where slug=%s", (evidence.course.slug,)
+    ).fetchone()
+    assert subject is not None
+    rows = conn.execute(
+        "select concept_id, p_known from mastery where learner_id=%s and concept_id = any(%s)",
+        (learner, [ids[g] for g, _, _ in obs]),
+    ).fetchall()
+    known = {r[0]: float(r[1]) for r in rows}
+    moved = []
+    for group, index, correct in obs:
+        a = evidence.applied[group]
+        assert a.slip is not None and a.guess is not None
+        params = bkt.BKTParams(p_init=0.2, p_transit=P_TRANSIT, p_slip=a.slip, p_guess=a.guess)
+        t = ts[index]
+        p = known.get(ids[group], UNSEEN_P_KNOWN)
+        p_new, trace = bkt.update_traced(
+            p, correct, params, concept_slug=group, now=now,
+            item_id=f"recording:{recording}:{index}",
+            misconception=None if correct else f"pronunciation:{t['sound']}",
+        )  # fmt: skip
+        verdict = "không bị đánh dấu" if correct else "bị đánh dấu là có thể chưa đúng"
+        trace = trace.model_copy(
+            update={
+                "rule": "pronunciation.mark",
+                "rule_vi": (
+                    f"Âm /{t['phone']}/ trong «{t['word']}» {verdict} → khả năng đã nắm vững "
+                    f"{'tăng' if p_new >= p else 'giảm'} từ {fmt_p(p)} "
+                    f"{'lên' if p_new >= p else 'xuống'} {fmt_p(p_new)} (máy đánh dấu nhầm "
+                    f"khoảng {fmt_p(a.slip)} số âm đúng và bỏ sót {fmt_p(a.guess)} số âm sai, "
+                    "đo trên bản ghi đã gán nhãn)."
+                ),
+            }
+        )
+        save_mastery(conn, learner, ids[group], p_new)
+        save_trace(conn, learner, subject[0], trace)
+        moved.append({"node": group, "target": index, "correct": correct,
+                      "p_before": round(p, 4), "p_after": round(p_new, 4)})  # fmt: skip
+    return moved
 
 
 def service_score(url: str) -> Score:
@@ -66,15 +143,16 @@ def process_next(
     canonical: Mapping[str, Sequence[Word]],
     prompt_sounds: Mapping[str, Sequence[str]],
     now: datetime | None = None,
+    evidence: Evidence | None = None,
 ) -> bool:
     """Analyse one stored recording; False when none waits."""
     row = conn.execute(
-        "select id,prompt_id,audio,keep from speech_recordings where status='stored' "
+        "select id,prompt_id,audio,keep,learner_id from speech_recordings where status='stored' "
         "order by created_at limit 1 for update skip locked"
     ).fetchone()
     if row is None:
         return False
-    rid, prompt_id, audio, keep = row
+    rid, prompt_id, audio, keep, learner = row
     now = now or datetime.now(UTC)
     try:
         words = canonical[prompt_id]
@@ -93,4 +171,10 @@ def process_next(
         + " where id=%s",
         (Jsonb(result), now, rid),
     )
+    if evidence is not None:  # same transaction: a retried job never counts a recording twice
+        result["evidence"] = apply_evidence(conn, learner, rid, result, evidence, now)
+        if result["evidence"]:
+            conn.execute(
+                "update speech_recordings set analysis=%s where id=%s", (Jsonb(result), rid)
+            )
     return True

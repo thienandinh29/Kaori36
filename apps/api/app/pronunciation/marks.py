@@ -60,6 +60,30 @@ def load_applied(path: Path) -> dict[str, Applied]:
     return {name: Applied(**g) for name, g in raw["groups"].items()}
 
 
+def observations(
+    targets: Sequence[Mapping[str, Any]],
+    marked: Sequence[int],
+    group_of: Mapping[str, str],
+    applied: Mapping[str, Applied],
+) -> list[tuple[str, int, bool]]:
+    """One BKT observation per applied group with parameters: (group, target index, correct).
+
+    The group's first target in the sentence is the observation (unmarked = correct). One per
+    recording, so a long sentence does not count many times; the first, not the worst, so the
+    measured slip and guess (per sound) still describe it.
+    """
+    out: list[tuple[str, int, bool]] = []
+    seen: set[str] = set()
+    for i, t in enumerate(targets):
+        group = group_of.get(t["sound"], "")
+        a = applied.get(group)
+        if a is None or a.slip is None or a.guess is None or group in seen:
+            continue
+        seen.add(group)
+        out.append((group, i, i not in marked))
+    return out
+
+
 def marks(
     targets: Sequence[Mapping[str, Any]],
     group_of: Mapping[str, str],

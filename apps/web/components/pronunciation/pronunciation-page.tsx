@@ -464,6 +464,28 @@ export function PronunciationPage() {
           </>
         )}
       </section>
+      {data.can_record && data.progress.length > 0 && (
+        <section className="en-card" data-testid="pronunciation-progress">
+          <h2>{t.progressTitle}</h2>
+          <p className="en-muted">{t.progressNote}</p>
+          <ul className="nt-pron-rows">
+            {data.progress.map((n) => (
+              <li key={n.node}>
+                <span>{n.name_vi}</span>
+                <span className="en-muted">
+                  {!n.measured
+                    ? t.progressNotMeasured
+                    : n.p_known === null
+                      ? t.progressNoData
+                      : n.known
+                        ? t.progressKnown
+                        : t.progressLearning}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {data.can_record && (
         <section className="en-card">
           <h2>{t.list}</h2>

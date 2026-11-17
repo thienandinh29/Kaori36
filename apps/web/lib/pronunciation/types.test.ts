@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseRecording, parseRecordings } from "./types";
+import { parsePrompts, parseRecording, parseRecordings } from "./types";
 
 const row = {
   id: "r1",
@@ -99,5 +99,34 @@ describe("pronunciation decoders (step 3.3a)", () => {
     expect(() =>
       parseRecording({ ...row, failed: false, analysis: null, marks: ["0"] }),
     ).toThrow();
+  });
+
+  it("reads pronunciation progress, with no data as null", () => {
+    const d = parsePrompts({
+      can_record: true,
+      consent: "voice-v1",
+      sounds: [],
+      prompts: [],
+      progress: [
+        {
+          node: "th",
+          name_vi: "Âm th",
+          p_known: null,
+          known: false,
+          measured: false,
+        },
+        {
+          node: "final-consonants",
+          name_vi: "Phụ âm cuối",
+          p_known: 0.41,
+          known: false,
+          measured: true,
+        },
+      ],
+    });
+    expect(d.progress.map((n) => [n.node, n.p_known, n.measured])).toEqual([
+      ["th", null, false],
+      ["final-consonants", 0.41, true],
+    ]);
   });
 });

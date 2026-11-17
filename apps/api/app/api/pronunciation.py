@@ -19,6 +19,7 @@ def create_router(recordings: Recordings) -> APIRouter:
             "consent": "voice-v1",
             "sounds": [s.model_dump() for s in recordings.sounds.values()],
             "prompts": [p.model_dump() for p in recordings.prompts],
+            "progress": recordings.progress(learner_id),
         }
 
     @router.post("/recordings")

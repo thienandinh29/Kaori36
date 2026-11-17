@@ -251,3 +251,85 @@ def test_marks_appear_only_after_thresholds_are_applied(stack, tmp_path: Path) -
     targets = out["analysis"]["targets"]
     finals = [i for i, t in enumerate(targets) if t["sound"].startswith("final-")]
     assert finals and out["marks"] == finals  # p01 targets only final consonants
+
+
+COURSES = FOLDER.parents[1] / "data" / "courses"
+
+
+def test_the_course_nodes_are_the_sound_groups() -> None:
+    from app.services.recordings import load_evidence
+
+    ev = load_evidence(FOLDER, COURSES)
+    assert set(ev.group_of.values()) == {c.slug for c in ev.course.concepts if c.part_of}
+    assert ev.applied == {}  # nothing applied yet: no node moves for anyone
+
+
+def test_marks_move_the_group_node_once_per_recording_after_the_gate(stack, tmp_path: Path) -> None:  # type: ignore[no-untyped-def]
+    import shutil
+
+    from app.pronunciation.analysis import Evidence
+    from app.pronunciation.marks import Applied
+    from app.services.recordings import load_evidence
+
+    client, owner, pool = stack
+    _, prompts = load_prompts(FOLDER)
+    canonical = load_checked_canonical(FOLDER, prompts)
+    sounds = {p.id: p.targets for p in prompts}
+    closed = load_evidence(FOLDER, COURSES)
+    gate = Evidence(
+        closed.course,
+        closed.group_of,
+        {"final-consonants": Applied(-1.0, 0.05, 0.4, 80)},
+    )
+
+    def low(a: bytes, p: list[str]) -> dict[str, Any]:
+        out = fake_phones(p)
+        for x in out["phones"]:
+            x["gop"], x["competitor"] = -5.0, "d"
+        return out
+
+    first = post(client, owner, speech_like())["id"]
+    with pool.connection() as conn:  # before the gate nothing moves
+        process_next(conn, low, canonical, sounds, evidence=closed)
+        assert conn.execute(
+            "select count(*) from mastery where learner_id=%s", (owner,)
+        ).fetchone() == (0,)
+    second = post(client, owner, speech_like())["id"]
+    with pool.connection() as conn:
+        process_next(conn, low, canonical, sounds, evidence=gate)
+        rows = conn.execute(
+            "select c.slug, m.p_known from mastery m join concepts c on c.id=m.concept_id "
+            "where m.learner_id=%s",
+            (owner,),
+        ).fetchall()
+        traces = conn.execute(
+            "select rule, rule_vi from decision_traces where learner_id=%s",
+            (owner,),
+        ).fetchall()
+    assert [r[0] for r in rows] == ["final-consonants"] and rows[0][
+        1
+    ] < 0.2  # one wrong observation
+    assert len(traces) == 1 and traces[0][0] == "pronunciation.mark" and "giảm" in traces[0][1]
+    q = {"learner_id": owner}
+    moved = client.get(f"/recordings/{second}", params=q).json()["analysis"]["evidence"]
+    assert len(moved) == 1 and moved[0]["node"] == "final-consonants" and not moved[0]["correct"]
+    assert "evidence" not in client.get(f"/recordings/{first}", params=q).json()["analysis"]
+
+    folder = tmp_path / "pronunciation"
+    shutil.copytree(FOLDER, folder)
+    app = FastAPI()
+    app.include_router(
+        routes.create_router(
+            Recordings(lambda: pool, folder, owner, lambda: NOW, courses_dir=COURSES)
+        )
+    )
+    progress = TestClient(app).get("/pronunciation/prompts", params=q).json()["progress"]
+    assert {p["node"]: p["p_known"] is not None for p in progress} == {
+        "final-consonants": True,
+        "th": False,
+        "s-sh-ch-j-r-l": False,
+        "clusters-vowels": False,
+    }
+    with pool.connection() as conn:
+        conn.execute("delete from mastery where learner_id=%s", (owner,))
+        conn.execute("delete from decision_traces where learner_id=%s", (owner,))
