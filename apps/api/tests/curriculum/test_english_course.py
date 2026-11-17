@@ -75,11 +75,12 @@ def test_the_candidates_file_is_valid_and_only_owner_checked_sources_are_usable(
     usable = {c.slug: c for c in candidates.usable()}
     assert set(usable) == {
         "ngsl", "nawl", "wikibooks-grammar", "esl-grammar-bissonnette",
-        "al-haider-high-intermediate-grammar", "explorations-1",
+        "al-haider-high-intermediate-grammar", "explorations-1", "college-esl-writers-hall-wallace",
     }  # fmt: skip
     assert usable["ngsl"].licence == "CC BY-SA 4.0" and not usable["ngsl"].non_commercial
     assert usable["esl-grammar-bissonnette"].non_commercial  # flagged: tag every chunk
     assert usable["explorations-1"].non_commercial
+    assert usable["college-esl-writers-hall-wallace"].non_commercial
     assert not usable["al-haider-high-intermediate-grammar"].non_commercial
     assert any("Cambridge" in e.name for e in candidates.excluded)
 
