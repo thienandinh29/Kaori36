@@ -37,7 +37,7 @@ test("the owner records a sentence; the recording's quality is checked, stored a
   await expect(verdict).toBeVisible();
   // Chromium's fake microphone beeps: either verdict is fine; what matters is a verdict, never a sound judgement.
   if (await verdict.getByText("Bản ghi rõ ràng", { exact: false }).count()) {
-    const rows = page.locator(".nt-pron-rows li");
+    const rows = page.getByTestId("recordings").locator("li");
     await expect(rows.first()).toBeVisible();
     const before = await rows.count();
     await rows.first().getByRole("button", { name: "Xóa" }).click();

@@ -468,7 +468,7 @@ export function PronunciationPage() {
         <section className="en-card" data-testid="pronunciation-progress">
           <h2>{t.progressTitle}</h2>
           <p className="en-muted">{t.progressNote}</p>
-          <ul className="nt-pron-rows">
+          <ul className="nt-pron-rows nt-pron-progress">
             {data.progress.map((n) => (
               <li key={n.node}>
                 <span>{n.name_vi}</span>
@@ -487,7 +487,7 @@ export function PronunciationPage() {
         </section>
       )}
       {data.can_record && (
-        <section className="en-card">
+        <section className="en-card" data-testid="recordings">
           <h2>{t.list}</h2>
           {rows.length === 0 ? (
             <p className="en-muted">{t.none}</p>
