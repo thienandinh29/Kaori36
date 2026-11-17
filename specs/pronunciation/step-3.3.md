@@ -36,6 +36,12 @@ stay, the voice does not. Purging after 24 hours still removes the row.
 
 **Route.** `GET /recordings/{id}?learner_id=` returns one of the learner's own recordings with `analysis`, or 404.
 
+**Checked for real (17 Nov).** Piper (`en_GB-cori-high`, the model voice) read all 12 prompts. The audio went through
+the real service and `summarise`, which is the worker's path. 85 of 86 target positions scored above 0 (median +4.05).
+The exception is /l/ in *really* (p12): it scored −2.06 and was heard as /d/. The owner should listen to it. This only
+shows that the canonical phones, alignment and target rules fit a clean model voice. It says nothing about thresholds or
+learners' speech.
+
 ## 3.3b: thresholds (next)
 1. The owner records 50–100 prompts.
 2. The owner labels every target position right or wrong on a labelling page that plays the aligned segment.
