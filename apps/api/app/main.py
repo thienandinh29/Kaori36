@@ -122,6 +122,25 @@ def create_app(
         vocab_imported_dir=settings.vocab_imported_dir,
     )
     app.include_router(grammar_routes.create_router(grammar))
+    from app.api import lessons as lesson_routes
+    from app.lessons.store import LessonStore, Paths
+    from app.services.grammar import load_misconceptions
+
+    lesson_paths = Paths(
+        lessons=settings.lessons_dir,
+        courses=settings.courses_dir,
+        items=settings.items_dir,
+        forms=settings.vocab_imported_dir / "forms.yaml",
+        vocabulary=settings.vocab_dir / "core-seed.yaml",
+        candidates=settings.sources_candidates,
+    )
+    app.include_router(
+        lesson_routes.create_router(
+            {"english-ielts": LessonStore(lesson_paths, "english-ielts")},
+            settings.draft_item_learners,
+            load_misconceptions(settings.items_dir / "misconceptions.vi.yaml"),
+        )
+    )
     from app.api import writing as writing_routes
     from app.services.plans import plans_from_settings
     from app.services.writing import WritingService

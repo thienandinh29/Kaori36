@@ -1,0 +1,74 @@
+# SAMPLE lesson (specs/grammar-lessons, phase B1): written by the agent to exercise the lesson player, with no source
+# behind it. It is served only to the learners in DRAFT_ITEM_LEARNERS, labelled "Bài mẫu", and is replaced by a lesson
+# generated from the verified sources (phase B3). Checked on load by app/lessons/checks.py.
+course: english-ielts
+node: present-perfect-vs-past
+level: B1
+status: sample
+title_en: "Present perfect or past simple?"
+title_vi: "Hiện tại hoàn thành hay quá khứ đơn?"
+terms: ["present perfect", "past simple", "timeline", "tense", "verb"]
+names: [Mai, Nam]
+scenes:
+  - id: engage
+    kind: engage
+    actions:
+      - {do: say, en: "In IELTS Speaking, you often hear this question: How long have you lived in your city?", vi: "Trong IELTS Speaking, bạn hay gặp câu hỏi này: Bạn đã sống ở thành phố của mình bao lâu rồi?"}
+      - {do: say, en: "To answer well, you need to choose between two tenses.", vi: "Để trả lời đúng, bạn cần chọn giữa hai thì."}
+  - id: notice
+    kind: notice
+    actions:
+      - {do: show_example, id: hue, en: "Mai lived in Hue for two years.", vi: "Mai đã sống ở Huế hai năm (giờ không còn ở đó).", target: "lived"}
+      - {do: show_example, id: hanoi, en: "Mai has lived in Hanoi for two years.", vi: "Mai sống ở Hà Nội được hai năm rồi (và vẫn đang ở đó).", target: "has lived"}
+      - {do: say, en: "Look at the two sentences. Does Mai still live in Hue? Does she still live in Hanoi?", vi: "Nhìn hai câu. Mai còn sống ở Huế không? Còn ở Hà Nội không?"}
+      - {do: pause}
+      - {do: spotlight, example: hue}
+      - {do: say, en: "Hue is finished. That time is over, so we use the past simple.", vi: "Chuyện ở Huế đã xong. Khoảng thời gian đó đã kết thúc nên dùng quá khứ đơn."}
+      - {do: spotlight, example: hanoi}
+      - {do: say, en: "Hanoi is not finished. It started in the past and it is still true now.", vi: "Chuyện ở Hà Nội chưa xong. Nó bắt đầu trong quá khứ và bây giờ vẫn đúng."}
+      - {do: board_timeline, spans: [{label: "Hue", start: -4, end: -2}, {label: "Hanoi", start: -2, end: 0, open: true}]}
+      - {do: say, en: "So we use the present perfect.", vi: "Vì vậy dùng hiện tại hoàn thành."}
+  - id: form
+    kind: form
+    actions:
+      - {do: board_clear}
+      - {do: board_table, rows: [["present perfect", "have / has + V3"], ["past simple", "V2 (lived, went, saw)"]]}
+      - {do: say, en: "The present perfect is have or has, then the third form of the verb.", vi: "Hiện tại hoàn thành là have hoặc has, rồi đến dạng thứ ba của động từ (V3)."}
+      - {do: board_table, rows: [["for", "a length of time: for two years, for a week"], ["since", "a start point: since 2020, since Monday"], ["ago", "a finished time: two years ago (past simple)"]]}
+      - {do: say, en: "Use for with a length of time, and since with a start point.", vi: "Dùng for với một khoảng thời gian, since với một mốc bắt đầu."}
+      - {do: say, en: "Ago means a finished time, so it goes with the past simple.", vi: "Ago chỉ thời điểm đã qua nên đi với quá khứ đơn."}
+  - id: contrast
+    kind: contrast
+    misconceptions: [past-simple-with-since, present-perfect-with-ago, present-perfect-with-finished-time]
+    actions:
+      - {do: say, en: "In Vietnamese, we say \"đã\" for both ideas, so it is easy to mix them up.", vi: "Tiếng Việt dùng \"đã\" cho cả hai ý, nên rất dễ nhầm."}
+      - {do: say, en: "English asks one question: is that time finished, or does it continue until now?", vi: "Tiếng Anh hỏi một câu: khoảng thời gian đó đã kết thúc, hay kéo dài đến bây giờ?"}
+      - {do: show_example, id: yesterday, en: "I finished my homework yesterday.", vi: "Hôm qua tôi đã làm xong bài tập.", target: "finished"}
+      - {do: spotlight, example: yesterday}
+      - {do: say, en: "Yesterday is finished, so we never use the present perfect with it.", vi: "Hôm qua đã qua rồi, nên không bao giờ dùng hiện tại hoàn thành với nó."}
+  - id: activate
+    kind: activate
+    actions:
+      - {do: ask, checkpoint: still-true}
+      - {do: ask, checkpoint: time-word}
+  - id: wrap
+    kind: wrap
+    actions:
+      - {do: say, en: "Finished time: past simple. Time that continues until now: present perfect.", vi: "Thời gian đã kết thúc: quá khứ đơn. Thời gian kéo dài đến nay: hiện tại hoàn thành."}
+      - {do: say, en: "Now try the practice questions.", vi: "Giờ hãy làm phần luyện tập."}
+checkpoints:
+  - id: still-true
+    en: "Nam has worked at the bank since 2021. Does he work there now?"
+    vi: "Nam đã làm ở ngân hàng từ năm 2021. Bây giờ anh ấy còn làm ở đó không?"
+    options:
+      - {text: "Yes", correct: true}
+      - {text: "No", misconception: past-simple-with-since}
+    explain_vi: "Có. Hiện tại hoàn thành với since nghĩa là việc bắt đầu năm 2021 và đến nay vẫn đúng."
+  - id: time-word
+    en: "Which time phrase goes with the present perfect?"
+    vi: "Cụm từ chỉ thời gian nào đi với hiện tại hoàn thành?"
+    options:
+      - {text: "since January", correct: true}
+      - {text: "last January", misconception: present-perfect-with-finished-time}
+      - {text: "two months ago", misconception: present-perfect-with-ago}
+    explain_vi: "Since January là mốc bắt đầu, kéo dài đến nay. Last January và two months ago là thời gian đã kết thúc, đi với quá khứ đơn."

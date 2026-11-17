@@ -27,6 +27,7 @@ FILES: dict[str, str] = {
     "nawl_definitions": "NAWL_12_with_en_definitions.csv",  # with the part of speech
     "nawl_forms": "NAWL_12_lemmatized_for_teaching.csv",
     "sfi_31k": "NGSLwithSFI-31K.xlsx",  # the SFI of ~31k words: orders the NAWL by frequency
+    "ngsl_supplement": "SUP_lemmatized.csv",  # days, months, numbers (no rank): the narration check
 }
 BASE_URL = "https://www.newgeneralservicelist.com/s/"
 # NGSL frequency rank -> level (the owner's decision, 16 Nov 2026); the rest of the NGSL is B2.
@@ -160,3 +161,38 @@ def read(folder: Path) -> tuple[list[Headword], list[Dropped]]:
         words.append(Headword(lemma, "nawl", levels[lemma], definition,
                               nawl_forms.get(lemma, (lemma,)), pos=pos))  # fmt: skip
     return words, dropped
+
+
+SUPPLEMENT = FILES["ngsl_supplement"]
+
+
+@dataclass(frozen=True)
+class FormEntry:
+    headword: str
+    level: Level
+    forms: tuple[str, ...]  # the headword first
+
+
+def form_index(folder: Path) -> dict[str, FormEntry]:
+    """Every NGSL and NAWL headword with its estimated level and inflected forms.
+
+    Unlike `read`, nothing is left out: function words and the supplementary list are kept, because
+    the lesson narration check needs them (specs/grammar-lessons). Levels use the same bands.
+    """
+    out: dict[str, FormEntry] = {}
+    ranks = {r[0].strip().lower(): int(r[1]) for r in _csv(folder / FILES["ngsl_stats"])[1:]}
+    for head, words in forms(folder / FILES["ngsl_forms"]).items():
+        if head in ranks:
+            out[head] = FormEntry(head, ngsl_level(ranks[head]), words)
+    if (folder / SUPPLEMENT).is_file():
+        for head, words in forms(folder / SUPPLEMENT).items():
+            out.setdefault(head, FormEntry(head, "A1", words))
+    sfi = {
+        clean(r["A"]).lower(): float(r["D"])
+        for r in list(xlsx_rows(folder / FILES["sfi_31k"]))[1:]
+        if r.get("A") and r.get("D")
+    }
+    nawl = {h: w for h, w in forms(folder / FILES["nawl_forms"]).items() if h not in out}
+    for head, level in nawl_levels(list(nawl), sfi).items():
+        out[head] = FormEntry(head, level, nawl[head])
+    return out
