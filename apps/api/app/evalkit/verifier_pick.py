@@ -72,6 +72,7 @@ def prices() -> dict[str, tuple[float, float]]:
     }
 
 
+# The maker of each candidate: the checker must never be the generator's family (DeepSeek).
 FAMILIES = {
     "qwen/": "qwen",
     "z-ai/": "glm",
@@ -80,14 +81,49 @@ FAMILIES = {
     "meta-llama/": "llama",
     "mistralai/": "mistral",
     "google/": "gemini",
+    "nvidia/": "nvidia",
+    "inclusionai/": "inclusionai",
+    "baidu/": "baidu",
+    "dots-studio/": "dots",
 }
+FREE_GAP_SECONDS = 3.2  # free models allow 20 requests a minute
 
 
-def family(model: str) -> Literal["qwen", "glm", "openai", "claude", "llama", "mistral", "gemini"]:
+def family(model: str) -> str:
     for prefix, name in FAMILIES.items():
         if model.startswith(prefix):
-            return name  # type: ignore[return-value]
+            return name
     raise SystemExit(f"unknown maker for {model}")
+
+
+def screen(planted: dict[str, Any], n: int) -> dict[str, Any]:
+    """A balanced first round: n items, half planted mistakes, half claims and half checkpoints."""
+
+    def pick(items: list[dict[str, Any]], k: int) -> list[dict[str, Any]]:
+        wrong = [i for i in items if i["truth"] == "wrong"][: (k + 1) // 2]
+        right = [i for i in items if i["truth"] == "right"][: k // 2]
+        return wrong + right
+
+    return {
+        "claims": pick(planted["claims"], n // 2),
+        "checkpoints": pick(planted["checkpoints"], n - n // 2),
+    }
+
+
+class Pace:
+    """Spaces requests to free models so the per-minute limit is never hit."""
+
+    def __init__(self, free: bool) -> None:
+        self.gap = FREE_GAP_SECONDS if free else 0.0
+        self.last = 0.0
+        self.lock = asyncio.Lock()
+
+    async def wait(self) -> None:
+        async with self.lock:
+            delay = self.last + self.gap - time.monotonic()
+            if delay > 0:
+                await asyncio.sleep(delay)
+            self.last = time.monotonic()
 
 
 async def ask(
@@ -97,8 +133,11 @@ async def ask(
     schema: type[BaseModel],
     score: Score,
     price: tuple[float, float],
+    pace: Pace,
 ) -> BaseModel | None:
-    route = Route(provider="openrouter", model=model, family=family(model))
+    # The gateway's Route only names families allowed in the app; this test may try others.
+    route = Route.model_construct(provider="openrouter", model=model, family=family(model))  # type: ignore[arg-type]
+    await pace.wait()
     token = _limits.set(GenerationLimits(1024, 0))
     try:
         reply = await adapter.generate(
@@ -126,7 +165,8 @@ async def run_model(model: str, planted: dict[str, Any], price: tuple[float, flo
     adapter = OpenRouterAdapter()
     score = Score(model)
     started = time.monotonic()
-    sem = asyncio.Semaphore(4)
+    sem = asyncio.Semaphore(1 if model.endswith(":free") else 4)
+    pace = Pace(model.endswith(":free"))
 
     async def claim(c: dict[str, Any]) -> None:
         async with sem:
@@ -135,7 +175,7 @@ async def run_model(model: str, planted: dict[str, Any], price: tuple[float, flo
                 + c["text"]
                 + '\n\nReturn {"verdict": "correct"} or {"verdict": "incorrect"}.'
             )
-            v = await ask(adapter, model, prompt, ClaimVerdict, score, price)
+            v = await ask(adapter, model, prompt, ClaimVerdict, score, price, pace)
         flagged = v is not None and isinstance(v, ClaimVerdict) and v.verdict == "incorrect"
         record(score, c["id"], c["truth"], flagged, v is None)
 
@@ -146,7 +186,7 @@ async def run_model(model: str, planted: dict[str, Any], price: tuple[float, flo
                 f"Fill the gap with the one correct option.\n\n{q['question']}\n\nOptions:\n"
                 f'{options}\n\nReturn {{"answer": "<the option, exactly as written>"}}.'
             )
-            a = await ask(adapter, model, prompt, Answer, score, price)
+            a = await ask(adapter, model, prompt, Answer, score, price, pace)
         flagged = a is not None and isinstance(a, Answer) and a.answer.strip() != q["key"]
         record(score, q["id"], q["truth"], flagged, a is None)
 
@@ -186,10 +226,18 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m app.evalkit.verifier_pick")
     parser.add_argument("models", nargs="+")
     parser.add_argument("--out", type=Path, default=REPORT)
+    parser.add_argument(
+        "--screen",
+        type=int,
+        default=0,
+        help="first round: only this many items, balanced (e.g. 12)",
+    )
     args = parser.parse_args(argv)
     if any(m.startswith("deepseek") for m in args.models):
         raise SystemExit("the checker must not be DeepSeek, the generator's family")
     planted = yaml.safe_load(PLANTED.read_text(encoding="utf-8"))
+    if args.screen:
+        planted = screen(planted, args.screen)
     table = prices()
     missing = [m for m in args.models if m not in table]
     if missing:
@@ -197,6 +245,7 @@ def main(argv: list[str] | None = None) -> int:
     results = [summary(asyncio.run(run_model(m, planted, table[m]))) for m in args.models]
     report = {
         "set": str(PLANTED.relative_to(REPO_ROOT)),
+        "items": len(planted["claims"]) + len(planted["checkpoints"]),
         "date": time.strftime("%Y-%m-%d"),
         "results": results,
     }
