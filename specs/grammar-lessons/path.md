@@ -76,8 +76,8 @@ so there is no cited lesson yet.
 - negatives;
 - subject–verb agreement.
 
-*A Digital Workbook for Beginning ESOL* (CC BY 4.0, unchecked: Open Oregon refuses this session) has an articles
-chapter, and would be the one CC BY source for beginners once the owner reads its licence.
+*A Digital Workbook for Beginning ESOL* (**CC BY 4.0, read by the owner 17 Nov**) has an articles chapter: the one
+CC BY source for beginners.
 
 Still no verified source for:
 - there is/are;
