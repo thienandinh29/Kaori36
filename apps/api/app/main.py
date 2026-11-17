@@ -122,6 +122,16 @@ def create_app(
         vocab_imported_dir=settings.vocab_imported_dir,
     )
     app.include_router(grammar_routes.create_router(grammar))
+    from app.api import pronunciation as pronunciation_routes
+    from app.services.recordings import Recordings
+
+    app.include_router(
+        pronunciation_routes.create_router(
+            Recordings(
+                lambda: app.state.pool, settings.pronunciation_dir, settings.draft_item_learners
+            )
+        )
+    )
     from app.api import lessons as lesson_routes
     from app.lessons.store import LessonStore, Paths
     from app.services.grammar import load_misconceptions

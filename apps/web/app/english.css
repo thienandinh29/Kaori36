@@ -1924,3 +1924,38 @@ svg.nt-trail {
 .nt-lesson-sources {
   font-size: 0.85rem;
 }
+
+/* --- Pronunciation (specs/pronunciation/step-3.1.md) ---------------------------------------- */
+.nt-pron {
+  display: grid;
+  gap: 12px;
+}
+.nt-pron-prompt {
+  border: 1px solid var(--nt-line, #e4dccd);
+  border-radius: 12px;
+  padding: 12px;
+}
+.nt-pron-text {
+  font-size: 1.25rem;
+  margin: 0.3em 0;
+}
+.nt-pron-live {
+  color: var(--green);
+  font-weight: 700;
+}
+.nt-pron-rows {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.nt-pron-rows li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.nt-pron audio {
+  vertical-align: middle;
+  max-width: 100%;
+}
