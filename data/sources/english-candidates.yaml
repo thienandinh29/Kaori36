@@ -1,6 +1,6 @@
 # Open sources considered for the English course (specs/english-course). Candidates only: nothing here is fetched.
-# Licences below are what we BELIEVE; the owner reads each on the source's own page (this repo's agent cannot reach
-# these sites) and sets status:
+# Licences below are what we BELIEVE until someone reads each on the source's own page and sets status. `checked_by`
+# says who read it: the owner, or the agent at the owner's request (17 Nov 2026, the grammar sources):
 #   to_check  -> not read yet
 #   verified  -> licence read on its own page: add checked_on (YYYY-MM-DD) and licence_page (URL)
 #   rejected  -> add reason (e.g. NoDerivatives, no clear licence)
@@ -53,7 +53,93 @@ candidates:
     url: https://en.wikibooks.org/wiki/English_Grammar
     use: grammar explanations to cite
     believed_licence: CC BY-SA 4.0
+    status: verified
+    licence: CC BY-SA 4.0
+    checked_on: 2026-11-17
+    licence_page: https://en.wikibooks.org/wiki/English_Grammar
+    checked_by: agent
+    note: >-
+      A school grammar for native speakers (parts of speech, sentences, phrases and clauses), modelled on Warriner's
+      layout and marked "partly developed". It has no lessons on tenses, articles or conditionals, so it does not fill
+      the A1-B1 gap; usable only for terms (noun, clause, gerund).
+  - slug: esl-grammar-bissonnette
+    name: ESL Grammar The Way You Like It (Don Bissonnette, South Seattle College; LibreTexts)
+    url: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/ESL_Grammar_The_Way_You_Like_It_(Bissonnette)
+    use: grammar lessons across the whole path, read through RAG
+    believed_licence: CC BY-NC 4.0
+    status: verified
+    licence: CC BY-NC 4.0
+    checked_on: 2026-11-17
+    licence_page: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/ESL_Grammar_The_Way_You_Like_It_(Bissonnette)
+    checked_by: agent
+    note: >-
+      Five books, A1 to C1. Book 1: be, present simple and continuous, adverbs of frequency, past simple and
+      continuous, irregular verbs. Book 2: modals, comparatives, prepositions, questions, spelling of -s and -ed.
+      Book 3: perfect tenses, simple vs perfect, gerunds and infinitives. Book 4: passive, relative clauses,
+      conditionals, linking words. Book 5: hypothetical conditionals, noun clauses, reported speech, causatives,
+      subjunctive. NonCommercial: tag every chunk.
+  - slug: al-haider-high-intermediate-grammar
+    name: High-Intermediate Academic Grammar for ESL Students (Rebecca Al Haider, Reedley College; LibreTexts)
+    url: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/High-Intermediate_Academic_Grammar_for_ESL_Students_(Al_Haider)
+    use: grammar lessons for B1-B2 nodes, read through RAG
+    believed_licence: CC BY 4.0
+    status: verified
+    licence: CC BY 4.0
+    checked_on: 2026-11-17
+    licence_page: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/High-Intermediate_Academic_Grammar_for_ESL_Students_(Al_Haider)
+    checked_by: agent
+    note: >-
+      Taught through topics (psychology, American history, lifespan); one grammar presentation per chapter: present
+      simple, past simple and present perfect; gerunds and infinitives; phrasal verbs; adjective clauses; modals;
+      passive; reported speech; embedded questions; simple future. Only the author's text is used: the linked
+      listening videos are other people's.
+  - slug: al-haider-academic-grammar
+    name: Advanced Academic Grammar for ESL Students (Rebecca Al Haider, Reedley College)
+    url: https://open.umn.edu/opentextbooks/textbooks/1074
+    use: grammar for B2-C1 nodes
+    believed_licence: CC BY 4.0
     status: to_check
+    note: >-
+      The Open Textbook Library record says CC BY 4.0, but the book itself is in a Google Drive folder that this
+      session cannot open, so the book's own licence page has not been read. Taught through topics (ocean currents,
+      street art, GMOs).
+  - slug: explorations-1
+    name: "Explorations 1: Grammar for the Experienced Beginner (Open Oregon; LibreTexts copy)"
+    url: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/Explorations_1%3A_Grammar_for_the_Experienced_Beginner
+    use: grammar lessons for the first A1 nodes, read through RAG
+    believed_licence: CC BY-NC-SA 4.0
+    status: verified
+    licence: CC BY-NC-SA 4.0
+    checked_on: 2026-11-17
+    licence_page: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/Explorations_1%3A_Grammar_for_the_Experienced_Beginner
+    checked_by: agent
+    note: >-
+      Read on the LibreTexts copy (the Open Oregon site refused this session). Four chapters only: be in the present,
+      present continuous, present simple, the two compared. NonCommercial and ShareAlike: tag every chunk.
+  - slug: haisley-concise-grammar
+    name: A Concise Guide to English Grammar (Phillip Haisley, 2026)
+    url: https://phil-a-sophist.github.io/concise-guide-english-grammar/front-colophon.html
+    use: reference for grammar terms only
+    believed_licence: CC BY 4.0
+    status: rejected
+    reason: >-
+      Licence confirmed CC BY 4.0 on its colophon (17 Nov 2026), but it is a university linguistics textbook
+      (linguistics, prescriptive vs descriptive grammar, morphology, word classes, sentence diagrams), not an ESL
+      grammar; not a lesson source. Kept as a backup for terms.
+  - slug: grammar-slides-ferguson
+    name: Grammar Slides for English Learners (Sara Ferguson; LibreTexts)
+    url: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/Grammar_Slides_for_English_Learners_(Ferguson)
+    use: grammar presentations
+    believed_licence: none stated
+    status: rejected
+    reason: The LibreTexts page says "shared under a not declared license".
+  - slug: beginning-esol-dodson
+    name: Beginning ESOL (Dodson, Jordan, Krause; Pressbooks)
+    url: https://pressbooks.pub/esl31
+    use: A1-B1 grammar and reading activities
+    believed_licence: unknown
+    status: to_check
+    note: Found in a search; licence and contents not read (the host is not allowed in this session).
   - slug: wordnet
     name: Princeton WordNet
     url: https://wordnet.princeton.edu/
@@ -81,5 +167,7 @@ excluded:
     reason: restricted use
   - name: British Council LearnEnglish and similar free sites
     reason: free to read but all rights reserved
+  - name: British Council/EAQUALS Core Inventory for General English
+    reason: copyright British Council/EAQUALS, no open licence found; used only as a reference for grammar level order
   - name: Academic Word List (Coxhead)
     reason: reuse terms unclear; NAWL covers the same need with an open licence (to confirm)

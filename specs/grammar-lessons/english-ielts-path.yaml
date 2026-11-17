@@ -1,0 +1,827 @@
+# PROPOSED grammar path (specs/grammar-lessons/path.md). Not live: the app serves data/courses/english-ielts.yaml.
+# Existing milestones and nodes keep their slugs; additions follow the study (docs/research/grammar-teaching-study.md).
+# A node goes live only when it has questions and a lesson. Check: uv run python -m app.curriculum.check <this file>
+slug: english-ielts-path
+title_vi: 'Tiếng Anh: lộ trình ngữ pháp đề xuất (A1–C1)'
+title_en: 'English: proposed grammar path (A1–C1)'
+language: en
+source: authored
+modalities:
+- mcq
+concepts:
+- slug: present-tenses
+  level: A2
+  name_en: Present tenses
+  name_vi: Các thì hiện tại
+- slug: be-present
+  level: A1
+  name_en: The verb to be (am, is, are)
+  name_vi: Động từ to be ở hiện tại (am, is, are)
+  part_of: present-tenses
+- slug: present-simple
+  level: A1
+  name_en: Present simple
+  name_vi: Thì hiện tại đơn
+  part_of: present-tenses
+  prerequisites:
+  - be-present
+- slug: present-continuous
+  level: A2
+  name_en: Present continuous
+  name_vi: Thì hiện tại tiếp diễn
+  part_of: present-tenses
+  prerequisites:
+  - present-simple
+- slug: nouns-articles
+  level: A2
+  name_en: Nouns and articles
+  name_vi: Danh từ và mạo từ
+- slug: plural-nouns
+  level: A1
+  name_en: Plural nouns
+  name_vi: Danh từ số nhiều
+  part_of: nouns-articles
+- slug: articles-basic
+  level: A1
+  name_en: Articles a, an, the (basic use)
+  name_vi: Mạo từ a, an, the (cách dùng cơ bản)
+  part_of: nouns-articles
+  prerequisites:
+  - plural-nouns
+- slug: there-is-are
+  level: A1
+  name_en: There is / there are
+  name_vi: Cấu trúc there is / there are
+  part_of: nouns-articles
+  prerequisites:
+  - be-present
+  - plural-nouns
+- slug: past-and-future
+  level: A2
+  name_en: Past simple and the future
+  name_vi: Quá khứ đơn và tương lai
+  prerequisites:
+  - present-tenses
+- slug: past-simple
+  level: A2
+  name_en: Past simple
+  name_vi: Thì quá khứ đơn
+  part_of: past-and-future
+- slug: future-will-going-to
+  level: A2
+  name_en: Future with will and going to
+  name_vi: Tương lai với will và going to
+  part_of: past-and-future
+- slug: comparison
+  level: A2
+  name_en: Comparing things
+  name_vi: So sánh
+  prerequisites:
+  - present-tenses
+- slug: comparatives
+  level: A2
+  name_en: Comparative adjectives
+  name_vi: So sánh hơn
+  part_of: comparison
+- slug: superlatives
+  level: A2
+  name_en: Superlative adjectives
+  name_vi: So sánh nhất
+  part_of: comparison
+  prerequisites:
+  - comparatives
+- slug: perfect-tenses
+  level: B1
+  name_en: Present perfect
+  name_vi: Thì hiện tại hoàn thành
+  prerequisites:
+  - past-and-future
+- slug: present-perfect-form
+  level: B1
+  name_en: 'Present perfect: form, ever and never'
+  name_vi: 'Hiện tại hoàn thành: cấu trúc, ever và never'
+  part_of: perfect-tenses
+- slug: present-perfect-vs-past
+  level: B1
+  name_en: Present perfect or past simple (for, since, ago)
+  name_vi: Hiện tại hoàn thành hay quá khứ đơn (for, since, ago)
+  part_of: perfect-tenses
+  prerequisites:
+  - present-perfect-form
+- slug: conditionals-1-2
+  level: B1
+  name_en: 'Conditionals: types 1 and 2'
+  name_vi: Câu điều kiện loại 1 và 2
+  prerequisites:
+  - past-and-future
+- slug: first-conditional
+  level: B1
+  name_en: First conditional
+  name_vi: Câu điều kiện loại 1
+  part_of: conditionals-1-2
+  prerequisites:
+  - zero-conditional
+- slug: second-conditional
+  level: B1
+  name_en: Second conditional
+  name_vi: Câu điều kiện loại 2
+  part_of: conditionals-1-2
+  prerequisites:
+  - first-conditional
+- slug: passive
+  level: B1
+  name_en: Passive voice
+  name_vi: Câu bị động
+  prerequisites:
+  - past-and-future
+- slug: passive-present-past
+  level: B1
+  name_en: 'Passive: present and past simple'
+  name_vi: Bị động ở hiện tại đơn và quá khứ đơn
+  part_of: passive
+- slug: narrative-tenses
+  level: B2
+  name_en: Narrative tenses
+  name_vi: Các thì kể chuyện
+  prerequisites:
+  - perfect-tenses
+- slug: past-continuous
+  level: B1
+  name_en: Past continuous
+  name_vi: Thì quá khứ tiếp diễn
+  part_of: narrative-tenses
+- slug: past-perfect
+  level: B2
+  name_en: Past perfect
+  name_vi: Thì quá khứ hoàn thành
+  part_of: narrative-tenses
+- slug: conditional-3
+  level: B2
+  name_en: 'Conditionals: type 3'
+  name_vi: Câu điều kiện loại 3
+  prerequisites:
+  - conditionals-1-2
+  - narrative-tenses
+- slug: third-conditional
+  level: B2
+  name_en: Third conditional
+  name_vi: Câu điều kiện loại 3
+  part_of: conditional-3
+  prerequisites:
+  - second-conditional
+  - past-perfect
+- slug: conditionals-mixed
+  level: C1
+  name_en: Mixed conditionals
+  name_vi: Câu điều kiện hỗn hợp
+  prerequisites:
+  - conditional-3
+- slug: mixed-conditionals
+  level: C1
+  name_en: Mixed conditionals (past cause, present result and the reverse)
+  name_vi: Điều kiện hỗn hợp (nguyên nhân quá khứ, kết quả hiện tại và ngược lại)
+  part_of: conditionals-mixed
+  prerequisites:
+  - third-conditional
+- slug: countable-uncountable
+  level: A2
+  name_en: Countable and uncountable nouns
+  name_vi: Danh từ đếm được và không đếm được
+  part_of: nouns-articles
+  prerequisites:
+  - plural-nouns
+- slug: quantifiers-basic
+  level: A2
+  name_en: some, any, much, many, a lot of
+  name_vi: 'Từ chỉ lượng: some, any, much, many, a lot of'
+  part_of: nouns-articles
+  prerequisites:
+  - countable-uncountable
+- slug: pronouns-possessives
+  level: A1
+  name_en: Pronouns and possessives
+  name_vi: Đại từ và sở hữu
+- slug: subject-object-pronouns
+  level: A1
+  name_en: Subject and object pronouns
+  name_vi: Đại từ chủ ngữ và tân ngữ
+  part_of: pronouns-possessives
+- slug: possessives
+  level: A1
+  name_en: Possessive adjectives and 's
+  name_vi: Tính từ sở hữu và 's
+  part_of: pronouns-possessives
+  prerequisites:
+  - subject-object-pronouns
+- slug: questions-negatives
+  level: A2
+  name_en: Questions and negatives
+  name_vi: Câu hỏi và câu phủ định
+  prerequisites:
+  - present-tenses
+- slug: yes-no-questions
+  level: A1
+  name_en: Yes/no questions with be and do
+  name_vi: Câu hỏi có/không với be và do
+  part_of: questions-negatives
+  prerequisites:
+  - present-simple
+- slug: wh-questions
+  level: A2
+  name_en: Wh- questions
+  name_vi: Câu hỏi với từ để hỏi (what, where, why…)
+  part_of: questions-negatives
+  prerequisites:
+  - yes-no-questions
+- slug: modals-basic
+  level: A2
+  name_en: 'Modals: can, must, have to'
+  name_vi: 'Động từ khuyết thiếu: can, must, have to'
+  prerequisites:
+  - present-tenses
+- slug: can-ability
+  level: A1
+  name_en: can and can't for ability
+  name_vi: can / can't chỉ khả năng
+  part_of: modals-basic
+- slug: must-have-to
+  level: A2
+  name_en: must and have to
+  name_vi: must và have to
+  part_of: modals-basic
+  prerequisites:
+  - can-ability
+- slug: prepositions-time-place
+  level: A2
+  name_en: Prepositions of time and place
+  name_vi: Giới từ chỉ thời gian và nơi chốn
+- slug: prepositions-time
+  level: A1
+  name_en: in, on, at for time
+  name_vi: in, on, at chỉ thời gian
+  part_of: prepositions-time-place
+- slug: prepositions-place
+  level: A1
+  name_en: in, on, at and other prepositions of place
+  name_vi: Giới từ chỉ nơi chốn
+  part_of: prepositions-time-place
+- slug: zero-conditional
+  level: A2
+  name_en: Zero conditional
+  name_vi: Câu điều kiện loại 0
+  part_of: conditionals-1-2
+  prerequisites:
+  - present-simple
+- slug: verb-patterns
+  level: B1
+  name_en: 'Verb patterns: -ing or to + verb, used to'
+  name_vi: 'Mẫu động từ: V-ing hay to + V, used to'
+  prerequisites:
+  - past-and-future
+- slug: gerund-infinitive
+  level: B1
+  name_en: Gerund or infinitive after verbs
+  name_vi: Danh động từ hay động từ nguyên mẫu sau động từ
+  part_of: verb-patterns
+- slug: used-to
+  level: B1
+  name_en: used to for past habits
+  name_vi: used to chỉ thói quen trong quá khứ
+  part_of: verb-patterns
+  prerequisites:
+  - past-simple
+- slug: relative-clauses
+  level: B1
+  name_en: Relative clauses
+  name_vi: Mệnh đề quan hệ
+  prerequisites:
+  - nouns-articles
+- slug: defining-relative
+  level: B1
+  name_en: Defining relative clauses (who, which, that)
+  name_vi: Mệnh đề quan hệ xác định (who, which, that)
+  part_of: relative-clauses
+  prerequisites:
+  - articles-basic
+- slug: modals-advice-possibility
+  level: B1
+  name_en: 'Modals: should, might, may'
+  name_vi: 'Động từ khuyết thiếu: should, might, may'
+  prerequisites:
+  - modals-basic
+- slug: should-advice
+  level: B1
+  name_en: should for advice and opinion
+  name_vi: should để khuyên và nêu ý kiến
+  part_of: modals-advice-possibility
+  prerequisites:
+  - must-have-to
+- slug: might-may
+  level: B1
+  name_en: might and may for possibility
+  name_vi: might và may chỉ khả năng xảy ra
+  part_of: modals-advice-possibility
+- slug: linking-ideas
+  level: B1
+  name_en: Linking ideas
+  name_vi: Liên kết ý
+  prerequisites:
+  - present-tenses
+- slug: linking-contrast
+  level: B1
+  name_en: 'Contrast: although, however, while'
+  name_vi: 'Tương phản: although, however, while'
+  part_of: linking-ideas
+- slug: linking-cause-result
+  level: B1
+  name_en: 'Cause and result: because, so, therefore'
+  name_vi: 'Nguyên nhân và kết quả: because, so, therefore'
+  part_of: linking-ideas
+- slug: passive-advanced
+  level: B2
+  name_en: Passive in more tenses and 'it is said that'
+  name_vi: Bị động ở nhiều thì và cấu trúc 'it is said that'
+  prerequisites:
+  - passive
+  - perfect-tenses
+- slug: passive-all-tenses
+  level: B2
+  name_en: Passive with perfect, continuous and modal verbs
+  name_vi: Bị động với thì hoàn thành, tiếp diễn và động từ khuyết thiếu
+  part_of: passive-advanced
+  prerequisites:
+  - passive-present-past
+  - present-perfect-form
+- slug: impersonal-passive
+  level: B2
+  name_en: It is said that / is believed to
+  name_vi: It is said that / is believed to
+  part_of: passive-advanced
+  prerequisites:
+  - passive-all-tenses
+- slug: reported-speech
+  level: B2
+  name_en: Reported speech
+  name_vi: Câu tường thuật
+  prerequisites:
+  - narrative-tenses
+  - questions-negatives
+- slug: reported-statements
+  level: B2
+  name_en: Reported statements and tense changes
+  name_vi: Tường thuật câu kể và lùi thì
+  part_of: reported-speech
+  prerequisites:
+  - past-perfect
+- slug: reported-questions
+  level: B2
+  name_en: Reported questions
+  name_vi: Tường thuật câu hỏi
+  part_of: reported-speech
+  prerequisites:
+  - reported-statements
+  - wh-questions
+- slug: relative-clauses-advanced
+  level: B2
+  name_en: Non-defining relative clauses
+  name_vi: Mệnh đề quan hệ không xác định
+  prerequisites:
+  - relative-clauses
+- slug: non-defining-relative
+  level: B2
+  name_en: Non-defining relative clauses with commas
+  name_vi: Mệnh đề quan hệ không xác định (có dấu phẩy)
+  part_of: relative-clauses-advanced
+  prerequisites:
+  - defining-relative
+- slug: modals-deduction
+  level: B2
+  name_en: Modals of deduction
+  name_vi: Động từ khuyết thiếu chỉ suy luận
+  prerequisites:
+  - modals-advice-possibility
+  - perfect-tenses
+- slug: deduction-present
+  level: B2
+  name_en: must be, might be, can't be
+  name_vi: must be, might be, can't be
+  part_of: modals-deduction
+  prerequisites:
+  - might-may
+- slug: deduction-past
+  level: B2
+  name_en: must have, might have, can't have + V3
+  name_vi: must have, might have, can't have + V3
+  part_of: modals-deduction
+  prerequisites:
+  - deduction-present
+  - present-perfect-form
+- slug: articles-advanced
+  level: B2
+  name_en: 'Articles: general and abstract nouns'
+  name_vi: 'Mạo từ: danh từ chung chung và trừu tượng'
+  prerequisites:
+  - nouns-articles
+- slug: generic-zero-article
+  level: B2
+  name_en: No article for general and abstract meaning
+  name_vi: Không dùng mạo từ khi nói chung hoặc danh từ trừu tượng
+  part_of: articles-advanced
+  prerequisites:
+  - articles-basic
+  - countable-uncountable
+- slug: agreement
+  level: B2
+  name_en: Subject-verb agreement with long subjects
+  name_vi: Hòa hợp chủ ngữ–động từ với chủ ngữ dài
+  prerequisites:
+  - present-tenses
+  - relative-clauses
+- slug: agreement-long-subjects
+  level: B2
+  name_en: Agreement when the subject is long
+  name_vi: Chia động từ đúng khi chủ ngữ dài
+  part_of: agreement
+  prerequisites:
+  - present-simple
+  - defining-relative
+- slug: noun-phrases
+  level: B2
+  name_en: Noun phrases and nominalisation
+  name_vi: Cụm danh từ và danh từ hóa
+  prerequisites:
+  - articles-advanced
+- slug: nominalisation
+  level: B2
+  name_en: Turning verbs into nouns for academic style
+  name_vi: Danh từ hóa cho văn phong học thuật
+  part_of: noun-phrases
+  prerequisites:
+  - generic-zero-article
+- slug: participle-clauses
+  level: C1
+  name_en: Participle clauses
+  name_vi: Mệnh đề phân từ
+  prerequisites:
+  - relative-clauses-advanced
+  - passive-advanced
+- slug: participle-clauses-node
+  level: C1
+  name_en: Clauses with -ing and V3 (Having finished…, Built in 1990…)
+  name_vi: Mệnh đề với V-ing và V3
+  part_of: participle-clauses
+  prerequisites:
+  - non-defining-relative
+  - passive-all-tenses
+- slug: emphasis
+  level: C1
+  name_en: 'Emphasis: inversion and cleft sentences'
+  name_vi: 'Nhấn mạnh: đảo ngữ và câu chẻ'
+  prerequisites:
+  - conditionals-mixed
+- slug: negative-inversion
+  level: C1
+  name_en: Not only…, Rarely…, Never before…
+  name_vi: 'Đảo ngữ: Not only…, Rarely…, Never before…'
+  part_of: emphasis
+  prerequisites:
+  - yes-no-questions
+- slug: cleft-sentences
+  level: C1
+  name_en: It is… that / What… is
+  name_vi: 'Câu chẻ: It is… that / What… is'
+  part_of: emphasis
+  prerequisites:
+  - defining-relative
+- slug: hedging
+  level: C1
+  name_en: Hedging in academic writing
+  name_vi: Nói giảm, rào đón trong văn học thuật
+  prerequisites:
+  - modals-deduction
+  - passive-advanced
+- slug: hedging-language
+  level: C1
+  name_en: It appears that, tend to, may, likely
+  name_vi: It appears that, tend to, may, likely
+  part_of: hedging
+  prerequisites:
+  - might-may
+  - impersonal-passive
+objectives:
+- id: present-tenses-mcq
+  concept: present-tenses
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: các thì hiện tại.'
+- id: be-present-mcq
+  concept: be-present
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: động từ to be ở hiện tại (am, is, are).'
+- id: present-simple-mcq
+  concept: present-simple
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: thì hiện tại đơn.'
+- id: present-continuous-mcq
+  concept: present-continuous
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: thì hiện tại tiếp diễn.'
+- id: nouns-articles-mcq
+  concept: nouns-articles
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: danh từ và mạo từ.'
+- id: plural-nouns-mcq
+  concept: plural-nouns
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: danh từ số nhiều.'
+- id: articles-basic-mcq
+  concept: articles-basic
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: mạo từ a, an, the (cách dùng cơ bản).'
+- id: there-is-are-mcq
+  concept: there-is-are
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: cấu trúc there is / there are.'
+- id: past-and-future-mcq
+  concept: past-and-future
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: quá khứ đơn và tương lai.'
+- id: past-simple-mcq
+  concept: past-simple
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: thì quá khứ đơn.'
+- id: future-will-going-to-mcq
+  concept: future-will-going-to
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: tương lai với will và going to.'
+- id: comparison-mcq
+  concept: comparison
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: so sánh.'
+- id: comparatives-mcq
+  concept: comparatives
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: so sánh hơn.'
+- id: superlatives-mcq
+  concept: superlatives
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: so sánh nhất.'
+- id: perfect-tenses-mcq
+  concept: perfect-tenses
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: thì hiện tại hoàn thành.'
+- id: present-perfect-form-mcq
+  concept: present-perfect-form
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: hiện tại hoàn thành: cấu trúc, ever và never.'
+- id: present-perfect-vs-past-mcq
+  concept: present-perfect-vs-past
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: hiện tại hoàn thành hay quá khứ đơn (for, since, ago).'
+- id: conditionals-1-2-mcq
+  concept: conditionals-1-2
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: câu điều kiện loại 1 và 2.'
+- id: first-conditional-mcq
+  concept: first-conditional
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: câu điều kiện loại 1.'
+- id: second-conditional-mcq
+  concept: second-conditional
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: câu điều kiện loại 2.'
+- id: passive-mcq
+  concept: passive
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: câu bị động.'
+- id: passive-present-past-mcq
+  concept: passive-present-past
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: bị động ở hiện tại đơn và quá khứ đơn.'
+- id: narrative-tenses-mcq
+  concept: narrative-tenses
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: các thì kể chuyện.'
+- id: past-continuous-mcq
+  concept: past-continuous
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: thì quá khứ tiếp diễn.'
+- id: past-perfect-mcq
+  concept: past-perfect
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: thì quá khứ hoàn thành.'
+- id: conditional-3-mcq
+  concept: conditional-3
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: câu điều kiện loại 3.'
+- id: third-conditional-mcq
+  concept: third-conditional
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: câu điều kiện loại 3.'
+- id: conditionals-mixed-mcq
+  concept: conditionals-mixed
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: câu điều kiện hỗn hợp.'
+- id: mixed-conditionals-mcq
+  concept: mixed-conditionals
+  modality: mcq
+  text_vi: 'Chọn câu hoặc dạng đúng: điều kiện hỗn hợp (nguyên nhân quá khứ, kết quả hiện tại và ngược lại).'
+- id: countable-uncountable-mcq
+  concept: countable-uncountable
+  modality: mcq
+  text_vi: Danh từ đếm được và không đếm được.
+- id: quantifiers-basic-mcq
+  concept: quantifiers-basic
+  modality: mcq
+  text_vi: 'Từ chỉ lượng: some, any, much, many, a lot of.'
+- id: pronouns-possessives-mcq
+  concept: pronouns-possessives
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: đại từ và sở hữu.'
+- id: subject-object-pronouns-mcq
+  concept: subject-object-pronouns
+  modality: mcq
+  text_vi: Đại từ chủ ngữ và tân ngữ.
+- id: possessives-mcq
+  concept: possessives
+  modality: mcq
+  text_vi: Tính từ sở hữu và 's.
+- id: questions-negatives-mcq
+  concept: questions-negatives
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: câu hỏi và câu phủ định.'
+- id: yes-no-questions-mcq
+  concept: yes-no-questions
+  modality: mcq
+  text_vi: Câu hỏi có/không với be và do.
+- id: wh-questions-mcq
+  concept: wh-questions
+  modality: mcq
+  text_vi: Câu hỏi với từ để hỏi (what, where, why…).
+- id: modals-basic-mcq
+  concept: modals-basic
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: động từ khuyết thiếu: can, must, have to.'
+- id: can-ability-mcq
+  concept: can-ability
+  modality: mcq
+  text_vi: can / can't chỉ khả năng.
+- id: must-have-to-mcq
+  concept: must-have-to
+  modality: mcq
+  text_vi: must và have to.
+- id: prepositions-time-place-mcq
+  concept: prepositions-time-place
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: giới từ chỉ thời gian và nơi chốn.'
+- id: prepositions-time-mcq
+  concept: prepositions-time
+  modality: mcq
+  text_vi: in, on, at chỉ thời gian.
+- id: prepositions-place-mcq
+  concept: prepositions-place
+  modality: mcq
+  text_vi: Giới từ chỉ nơi chốn.
+- id: zero-conditional-mcq
+  concept: zero-conditional
+  modality: mcq
+  text_vi: Câu điều kiện loại 0.
+- id: verb-patterns-mcq
+  concept: verb-patterns
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: mẫu động từ: V-ing hay to + V, used to.'
+- id: gerund-infinitive-mcq
+  concept: gerund-infinitive
+  modality: mcq
+  text_vi: Danh động từ hay động từ nguyên mẫu sau động từ.
+- id: used-to-mcq
+  concept: used-to
+  modality: mcq
+  text_vi: used to chỉ thói quen trong quá khứ.
+- id: relative-clauses-mcq
+  concept: relative-clauses
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: mệnh đề quan hệ.'
+- id: defining-relative-mcq
+  concept: defining-relative
+  modality: mcq
+  text_vi: Mệnh đề quan hệ xác định (who, which, that).
+- id: modals-advice-possibility-mcq
+  concept: modals-advice-possibility
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: động từ khuyết thiếu: should, might, may.'
+- id: should-advice-mcq
+  concept: should-advice
+  modality: mcq
+  text_vi: should để khuyên và nêu ý kiến.
+- id: might-may-mcq
+  concept: might-may
+  modality: mcq
+  text_vi: might và may chỉ khả năng xảy ra.
+- id: linking-ideas-mcq
+  concept: linking-ideas
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: liên kết ý.'
+- id: linking-contrast-mcq
+  concept: linking-contrast
+  modality: mcq
+  text_vi: 'Tương phản: although, however, while.'
+- id: linking-cause-result-mcq
+  concept: linking-cause-result
+  modality: mcq
+  text_vi: 'Nguyên nhân và kết quả: because, so, therefore.'
+- id: passive-advanced-mcq
+  concept: passive-advanced
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: bị động ở nhiều thì và cấu trúc ''it is said that''.'
+- id: passive-all-tenses-mcq
+  concept: passive-all-tenses
+  modality: mcq
+  text_vi: Bị động với thì hoàn thành, tiếp diễn và động từ khuyết thiếu.
+- id: impersonal-passive-mcq
+  concept: impersonal-passive
+  modality: mcq
+  text_vi: It is said that / is believed to.
+- id: reported-speech-mcq
+  concept: reported-speech
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: câu tường thuật.'
+- id: reported-statements-mcq
+  concept: reported-statements
+  modality: mcq
+  text_vi: Tường thuật câu kể và lùi thì.
+- id: reported-questions-mcq
+  concept: reported-questions
+  modality: mcq
+  text_vi: Tường thuật câu hỏi.
+- id: relative-clauses-advanced-mcq
+  concept: relative-clauses-advanced
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: mệnh đề quan hệ không xác định.'
+- id: non-defining-relative-mcq
+  concept: non-defining-relative
+  modality: mcq
+  text_vi: Mệnh đề quan hệ không xác định (có dấu phẩy).
+- id: modals-deduction-mcq
+  concept: modals-deduction
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: động từ khuyết thiếu chỉ suy luận.'
+- id: deduction-present-mcq
+  concept: deduction-present
+  modality: mcq
+  text_vi: must be, might be, can't be.
+- id: deduction-past-mcq
+  concept: deduction-past
+  modality: mcq
+  text_vi: must have, might have, can't have + V3.
+- id: articles-advanced-mcq
+  concept: articles-advanced
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: mạo từ: danh từ chung chung và trừu tượng.'
+- id: generic-zero-article-mcq
+  concept: generic-zero-article
+  modality: mcq
+  text_vi: Không dùng mạo từ khi nói chung hoặc danh từ trừu tượng.
+- id: agreement-mcq
+  concept: agreement
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: hòa hợp chủ ngữ–động từ với chủ ngữ dài.'
+- id: agreement-long-subjects-mcq
+  concept: agreement-long-subjects
+  modality: mcq
+  text_vi: Chia động từ đúng khi chủ ngữ dài.
+- id: noun-phrases-mcq
+  concept: noun-phrases
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: cụm danh từ và danh từ hóa.'
+- id: nominalisation-mcq
+  concept: nominalisation
+  modality: mcq
+  text_vi: Danh từ hóa cho văn phong học thuật.
+- id: participle-clauses-mcq
+  concept: participle-clauses
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: mệnh đề phân từ.'
+- id: participle-clauses-node-mcq
+  concept: participle-clauses-node
+  modality: mcq
+  text_vi: Mệnh đề với V-ing và V3.
+- id: emphasis-mcq
+  concept: emphasis
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: nhấn mạnh: đảo ngữ và câu chẻ.'
+- id: negative-inversion-mcq
+  concept: negative-inversion
+  modality: mcq
+  text_vi: 'Đảo ngữ: Not only…, Rarely…, Never before….'
+- id: cleft-sentences-mcq
+  concept: cleft-sentences
+  modality: mcq
+  text_vi: 'Câu chẻ: It is… that / What… is.'
+- id: hedging-mcq
+  concept: hedging
+  modality: mcq
+  text_vi: 'Bài kiểm tra cột mốc: nói giảm, rào đón trong văn học thuật.'
+- id: hedging-language-mcq
+  concept: hedging-language
+  modality: mcq
+  text_vi: It appears that, tend to, may, likely.

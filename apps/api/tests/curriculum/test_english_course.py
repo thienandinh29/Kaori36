@@ -70,10 +70,17 @@ def test_the_checker_reports_every_problem_at_once(tmp_path: Path) -> None:
 def test_the_candidates_file_is_valid_and_only_owner_checked_sources_are_usable() -> None:
     candidates = load_candidates(DATA / "sources" / "english-candidates.yaml")
     assert {"ngsl", "nawl", "tatoeba", "wiktionary"} <= {c.slug for c in candidates.candidates}
-    # Only what the owner read on the source's own page (16 Nov 2026: NGSL and NAWL).
+    # Read on the source's own page: NGSL and NAWL by the owner (16 Nov 2026), the grammar
+    # sources by the agent at the owner's request (17 Nov 2026).
     usable = {c.slug: c for c in candidates.usable()}
-    assert set(usable) == {"ngsl", "nawl"}
-    assert all(c.licence == "CC BY-SA 4.0" and not c.non_commercial for c in usable.values())
+    assert set(usable) == {
+        "ngsl", "nawl", "wikibooks-grammar", "esl-grammar-bissonnette",
+        "al-haider-high-intermediate-grammar", "explorations-1",
+    }  # fmt: skip
+    assert usable["ngsl"].licence == "CC BY-SA 4.0" and not usable["ngsl"].non_commercial
+    assert usable["esl-grammar-bissonnette"].non_commercial  # flagged: tag every chunk
+    assert usable["explorations-1"].non_commercial
+    assert not usable["al-haider-high-intermediate-grammar"].non_commercial
     assert any("Cambridge" in e.name for e in candidates.excluded)
 
 
