@@ -14,11 +14,14 @@ export function MilestonePanel({
   names,
   isNext,
   onClose,
+  lessons = [],
 }: {
   milestone: Milestone;
   names: Record<string, string>;
   isNext: boolean;
   onClose: () => void;
+  /** Parts with a lesson for this learner: "Học bài" comes before "Luyện" (specs/grammar-lessons). */
+  lessons?: readonly string[];
 }) {
   const [known, missing] = knownMissing(milestoneShare(m));
   const mastered = m.status === "mastered";
@@ -76,6 +79,9 @@ export function MilestonePanel({
               </div>
               <div className="nt-part-foot">
                 <span className={`nt-badge is-${b}`}>{t.roadmap.bands[b]}</span>
+                {lessons.includes(h.slug) && (
+                  <Link href={`/hoc/${h.slug}`}>{t.lesson.learn}</Link>
+                )}
                 {!m.locked && (
                   <Link href={`/on-tap/phan/${h.slug}`}>{t.run.practise}</Link>
                 )}

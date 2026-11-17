@@ -8,6 +8,6 @@
 - [x] T4 Store and routes, draft-learner rule, keys never sent; tests with the database
 - [x] T5 The sample lesson; CI loads and checks every lesson file
 ## B1, PR 2 (web)
-- [ ] T6 Playback reducer and its Vitest tests
-- [ ] T7 Board, example cards, subtitles, voice, controls, checkpoints; the page and the panel link
-- [ ] T8 Playwright test at phone size; screenshots
+- [x] T6 Playback reducer and its Vitest tests
+- [x] T7 Board, example cards, subtitles, voice, controls, checkpoints; the page and the panel link
+- [x] T8 Playwright test at phone size; screenshots

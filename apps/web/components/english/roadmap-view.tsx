@@ -47,6 +47,19 @@ export function useRoadmap(): {
 /** The whole course as one graph (specs/ui-v2): trail map, skyline, and the chosen milestone's panel. */
 export function RoadmapView() {
   const { roadmap, error, reload } = useRoadmap();
+  const { learner } = useLearner();
+  const [lessons, setLessons] = useState<string[]>([]);
+  useEffect(() => {
+    if (!learner) return;
+    let live = true;
+    englishClient()
+      .lessons(learner)
+      .then((ls) => live && setLessons(ls.map((l) => l.node)))
+      .catch(() => undefined); // no lessons: the map works as before
+    return () => {
+      live = false;
+    };
+  }, [learner]);
   const [selected, setSelected] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   useEffect(() => {
@@ -132,6 +145,7 @@ export function RoadmapView() {
             names={names}
             isNext={chosen.slug === roadmap.next_milestone}
             onClose={() => setSheetOpen(false)}
+            lessons={lessons}
           />
         ) : (
           <p className="en-muted">{t.roadmap.pick}</p>
