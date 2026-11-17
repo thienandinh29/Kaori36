@@ -1,0 +1,45 @@
+{
+  "sentences": 2500,
+  "skipped": 0,
+  "sentence_pcc": 0.593,
+  "sentence_pcc_95": [
+    0.567,
+    0.617
+  ],
+  "phones_wrong": 1978,
+  "phones_right": 45391,
+  "phone_auc": 0.855,
+  "thresholds": [
+    {
+      "threshold": -4.0,
+      "flagged": 5194,
+      "precision": 0.209,
+      "recall": 0.548,
+      "false_alarm_share": 0.791
+    },
+    {
+      "threshold": -2.0,
+      "flagged": 10556,
+      "precision": 0.144,
+      "recall": 0.768,
+      "false_alarm_share": 0.856
+    },
+    {
+      "threshold": -1.0,
+      "flagged": 13250,
+      "precision": 0.124,
+      "recall": 0.833,
+      "false_alarm_share": 0.876
+    },
+    {
+      "threshold": 0.0,
+      "flagged": 15848,
+      "precision": 0.109,
+      "recall": 0.876,
+      "false_alarm_share": 0.891
+    }
+  ],
+  "corpus": "speechocean762 test (OpenSLR SLR101, CC BY 4.0)",
+  "model": "2c733782da5604684829819a5eb744c193fe9398",
+  "seconds": 1730
+}

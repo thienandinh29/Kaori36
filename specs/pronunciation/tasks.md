@@ -18,8 +18,8 @@
 
 **Build (agent), in order:**
 - [x] 3.1 recording, quality gate, consent, deletion (`step-3.1.md`; owner only until a privacy review)
-- [ ] 3.2 recognition service, alignment, GOP, evaluation on speechocean762 (3.2a built: the service, `step-3.2.md`;
-      3.2b next: the evaluation)
+- [x] 3.2 recognition service, alignment, GOP, evaluation on speechocean762 (built: the service, `step-3.2.md`;
+      3.2b: the evaluation, sentence r 0.593, phone AUC 0.855)
 - [ ] 3.3 target sounds, prompts, thresholds, false-alarm measurement (`step-3.3.md`; 3.3a built: canonical phones,
       target rules, worker analysis, raw scores on `/phat-am`; 3.3b built: labelling by ear on kept recordings, migration
       `0023`, thresholds per group with a held-out false-alarm check, `app.pronunciation.thresholds` CLI; waiting on
