@@ -234,3 +234,73 @@ test("a Task 1 report is checked against its chart, with no band", async ({
   await page.getByRole("button", { name: "Xóa bài viết" }).click();
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
 });
+
+test("a lesson plays before practice: board, subtitles, a checkpoint, then practice", async ({
+  page,
+}) => {
+  await asLearner(page, LEARNER); // the sample lesson is served to draft learners only
+  await page.goto("/hoc/present-perfect-vs-past");
+  const lesson = page.getByTestId("lesson");
+  await expect(
+    lesson.getByText("Bài mẫu để thử trình phát", { exact: false }),
+  ).toBeVisible();
+  await expect(
+    lesson.getByRole("link", { name: "Tôi đã biết, làm luôn bài luyện" }),
+  ).toHaveAttribute("href", "/on-tap/phan/present-perfect-vs-past");
+  await lesson.getByRole("button", { name: "Bắt đầu bài học" }).click();
+  // B1: both subtitles by default; the English one highlights the target form.
+  await expect(lesson.locator(".nt-sub-en")).toBeVisible();
+  await expect(lesson.locator(".nt-sub-vi")).toBeVisible();
+  const next = lesson.getByRole("button", { name: "Tiếp", exact: true });
+  // Step through with "Tiếp" (the voice may be absent in CI) until the timeline is on the board.
+  for (
+    let i = 0;
+    i < 12 && !(await lesson.locator(".nt-board-timeline").count());
+    i++
+  )
+    await next.click();
+  await expect(lesson.locator(".nt-board-timeline")).toBeVisible();
+  await expect(lesson.locator(".nt-example.is-spotlit")).toHaveCount(1);
+  // On to the first checkpoint: "Tiếp" waits for an answer, which is graded and explained.
+  for (
+    let i = 0;
+    i < 20 && !(await lesson.locator(".nt-checkpoint").count());
+    i++
+  )
+    await next.click();
+  await expect(next).toBeDisabled();
+  await lesson.getByRole("button", { name: "No", exact: true }).click();
+  await expect(lesson.getByText("Chưa đúng.")).toBeVisible();
+  await expect(
+    lesson.getByText("không tính vào mức độ nắm vững", { exact: false }),
+  ).toBeVisible();
+  await expect(next).toBeEnabled();
+  // Subtitles can be turned off.
+  await lesson.getByRole("checkbox", { name: "Tiếng Việt" }).uncheck();
+  for (
+    let i = 0;
+    i < 20 &&
+    !(await lesson.getByText("Xong bài học", { exact: false }).count());
+    i++
+  ) {
+    if (await lesson.locator(".nt-options button:not([disabled])").count())
+      await lesson.getByRole("button", { name: "since January" }).click();
+    await next.click();
+  }
+  await expect(lesson.getByRole("link", { name: "Luyện tập" })).toHaveAttribute(
+    "href",
+    "/on-tap/phan/present-perfect-vs-past",
+  );
+});
+
+test("a learner who is not a draft learner gets no sample lesson", async ({
+  page,
+}) => {
+  await asLearner(page, null);
+  await page.goto("/hoc/present-perfect-vs-past");
+  await expect(
+    page
+      .getByText("Phần này chưa có bài học.", { exact: false })
+      .or(page.getByRole("alert")),
+  ).toBeVisible();
+});

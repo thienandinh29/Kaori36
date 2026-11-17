@@ -150,3 +150,33 @@ def test_the_real_espeak_gives_british_ipa() -> None:
     say = espeak()
     assert say("decision") == "dɪsˈɪʒən"  # noqa: RUF001
     assert say("water") == "wˈɔːtɐ"  # noqa: RUF001 (non-rhotic: no r)
+
+
+def test_synthesis_runs_at_most_parallel_at_once() -> None:
+    import threading
+    import time
+
+    from nodetrail_tts.server import PARALLEL
+
+    running, peak, lock = 0, 0, threading.Lock()
+
+    def slow(text: str, pace: str) -> bytes:
+        nonlocal running, peak
+        with lock:
+            running += 1
+            peak = max(peak, running)
+        time.sleep(0.05)
+        with lock:
+            running -= 1
+        return b"RIFF"
+
+    client = TestClient(create_app(PIN, slow))
+    threads = [
+        threading.Thread(target=lambda: client.post("/speak", json={"text": "word"}))
+        for _ in range(8)
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert 1 <= peak <= PARALLEL

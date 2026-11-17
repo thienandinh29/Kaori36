@@ -8,6 +8,7 @@ inside the compose network; the API forwards learners' requests (specs/speech, S
 """
 
 import os
+import threading
 import unicodedata
 from collections.abc import Callable
 from pathlib import Path
@@ -21,6 +22,9 @@ from nodetrail_tts.phonemes import VOICE, Phonemize, espeak
 from nodetrail_tts.voice import Pace, Pin, Speaker, fetch
 
 MAX_CHARS = 300  # a word, a phrase or a sentence; the web hides the button above this
+# At most this many sentences are synthesised at once; others wait. A lesson skipped quickly sends a
+# burst of requests, and unbounded parallel synthesis exceeded the container's memory (17 Nov 2026).
+PARALLEL = int(os.environ.get("TTS_PARALLEL", "2"))
 Word = Annotated[str, Field(pattern=r"^[A-Za-z][A-Za-z' -]{0,39}$")]
 
 
@@ -47,6 +51,7 @@ def create_app(
     pin: Pin, speak: Callable[[str, Pace], bytes], phonemize: Phonemize | None = None
 ) -> FastAPI:
     app = FastAPI(title="NodeTrail tts", docs_url=None, redoc_url=None)
+    slots = threading.BoundedSemaphore(max(1, PARALLEL))
 
     @app.get("/health")
     def health() -> dict[str, str]:
@@ -54,8 +59,10 @@ def create_app(
 
     @app.post("/speak")
     def speak_text(body: SpeakIn) -> Response:
+        with slots:
+            audio = speak(body.text, body.pace)
         return Response(
-            content=speak(body.text, body.pace),
+            content=audio,
             media_type="audio/wav",
             headers={"X-Voice": pin.voice},
         )

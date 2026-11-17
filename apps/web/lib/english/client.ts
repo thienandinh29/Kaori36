@@ -32,6 +32,16 @@ import type {
   WritingPrompt,
 } from "./types";
 import { CONSENT } from "./writing";
+import {
+  parseCheckpointResult,
+  parseLesson,
+  parseLessonSummaries,
+} from "@/lib/lesson/decode";
+import type {
+  CheckpointResult,
+  LessonSummary,
+  LessonView,
+} from "@/lib/lesson/types";
 
 export const VOCAB_LIST = "core-seed";
 
@@ -114,6 +124,30 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         await post(`milestones/${milestone}/tests`, {
           learner_id: learnerId,
           course: COURSE,
+        }),
+      );
+    },
+    // Lessons before practice (specs/grammar-lessons).
+    async lessons(learnerId: string): Promise<LessonSummary[]> {
+      const q = new URLSearchParams({ learner_id: learnerId, course: COURSE });
+      return parseLessonSummaries(await request(`lessons?${q}`));
+    },
+    async lesson(learnerId: string, node: string): Promise<LessonView> {
+      const q = new URLSearchParams({ learner_id: learnerId, course: COURSE });
+      return parseLesson(await request(`lessons/${node}?${q}`));
+    },
+    async lessonCheckpoint(
+      learnerId: string,
+      node: string,
+      checkpoint: string,
+      answer: string,
+    ): Promise<CheckpointResult> {
+      return parseCheckpointResult(
+        await post(`lessons/${node}/checkpoints`, {
+          learner_id: learnerId,
+          course: COURSE,
+          checkpoint,
+          answer,
         }),
       );
     },

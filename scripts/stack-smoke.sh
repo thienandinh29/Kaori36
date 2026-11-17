@@ -85,6 +85,9 @@ for page in / /kiem-tra /lo-trinh /tu-vung /gioi-thieu /on-tap/cot-moc/passive /
 [ "$pages" = " 200 200 200 200 200 200 200 200 200 200" ]; check "English pack pages and the topic explorer load ($pages)" $?
 proxied=$(curl -sS "$WEB/api/backend/roadmap?learner_id=$learner&course=english-ielts" | json 'len(d["milestones"])')
 [ "$proxied" = 10 ]; check "the web proxy serves the roadmap" $?
+lessons=$(curl -sS "$WEB/api/backend/lessons?learner_id=$learner&course=english-ielts" | json 'isinstance(d, list)')
+page=$(curl -sS -o /dev/null -w '%{http_code}' "$WEB/hoc/present-perfect-vs-past")
+[ "$lessons" = True ] && [ "$page" = 200 ]; check "lessons pass through the web proxy and the lesson page loads ($page)" $?
 code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST -H "Origin: $WEB" -H 'content-type: application/json' \
   -d "{\"learner_id\":\"$learner\"}" "$WEB/api/backend/level-tests")
 [ "$code" = 409 ]; check "the web proxy passes the level test through, drafts still guarded ($code)" $?
