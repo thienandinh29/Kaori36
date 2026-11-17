@@ -54,6 +54,30 @@ candidates:
     use: grammar explanations to cite
     believed_licence: CC BY-SA 4.0
     status: to_check
+  - slug: al-haider-academic-grammar
+    name: Advanced Academic Grammar for ESL Students (Rebecca Al Haider, Reedley College)
+    url: https://open.umn.edu/opentextbooks/textbooks/1074
+    use: grammar lessons for B2-C1 nodes (academic grammar close to IELTS Writing), read through RAG
+    believed_licence: CC BY 4.0
+    status: to_check
+  - slug: explorations-1
+    name: "Explorations 1: Grammar for the Experienced Beginner (Open Oregon)"
+    url: https://openoregon.pressbooks.pub/explorations1/
+    use: grammar lessons for A1-A2 nodes, read through RAG
+    believed_licence: CC BY-NC-SA 4.0
+    status: to_check
+  - slug: haisley-concise-grammar
+    name: A Concise Guide to English Grammar (Phillip Haisley, 2026)
+    url: https://phil-a-sophist.github.io/concise-guide-english-grammar/front-colophon.html
+    use: grammar reference for lessons (level and depth to read first)
+    believed_licence: CC BY 4.0
+    status: to_check
+  - slug: esl-grammar-bissonnette
+    name: ESL Grammar The Way You Like It (Bissonnette, LibreTexts)
+    url: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/ESL_Grammar_The_Way_You_Like_It_(Bissonnette)
+    use: ESL grammar explanations, read through RAG
+    believed_licence: CC BY-NC 4.0
+    status: to_check
   - slug: wordnet
     name: Princeton WordNet
     url: https://wordnet.princeton.edu/
@@ -81,5 +105,7 @@ excluded:
     reason: restricted use
   - name: British Council LearnEnglish and similar free sites
     reason: free to read but all rights reserved
+  - name: British Council/EAQUALS Core Inventory for General English
+    reason: copyright British Council/EAQUALS, no open licence found; used only as a reference for grammar level order
   - name: Academic Word List (Coxhead)
     reason: reuse terms unclear; NAWL covers the same need with an open licence (to confirm)
