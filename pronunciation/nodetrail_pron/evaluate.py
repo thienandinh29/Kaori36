@@ -130,9 +130,14 @@ class Utterance:
 
 def load_test(folder: Path) -> list[Utterance]:
     """The test half: `test/wav.scp` lists the audio, `resource/scores.json` the experts' scores."""
+    return load_half(folder, "test")
+
+
+def load_half(folder: Path, half: str) -> list[Utterance]:
+    """One half of the corpus (`train` or `test`), with the experts' scores."""
     scores = json.loads((folder / "resource" / "scores.json").read_text(encoding="utf-8"))
     out = []
-    for line in (folder / "test" / "wav.scp").read_text(encoding="utf-8").splitlines():
+    for line in (folder / half / "wav.scp").read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
         utt, rel = line.split(maxsplit=1)
