@@ -660,6 +660,10 @@ export const vi = {
       labels: { right: "Đúng", wrong: "Sai", unsure: "Không chắc" },
       showScores: "Hiện điểm",
       labelled: "đã gán nhãn",
+      marksTitle: "Âm có thể chưa đúng (chưa kiểm chứng)",
+      noMarks:
+        "Không có âm nào được đánh dấu. Máy chỉ đánh dấu khi chắc chắn và khi ngưỡng của nhóm âm đã được kiểm chứng trên bản ghi của chủ dự án; không đánh dấu không có nghĩa là đã đúng.",
+      heard: "máy nghe giống",
       delete: "Xóa",
       seconds: "giây",
     },

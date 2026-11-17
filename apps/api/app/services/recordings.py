@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.pronunciation.canonical import Word, load_canonical, phone_set
 from app.pronunciation.canonical import check as check_canonical
+from app.pronunciation.marks import load_applied, marks
 from app.pronunciation.quality import Quality, check
 from app.services.backend import learner_uuid
 
@@ -54,6 +55,7 @@ class Sound(BaseModel):
     group: str
     ipa: str
     name_vi: str
+    tip_vi: str | None = None  # the owner's tip for this sound (step 3.4); none yet
 
 
 class Prompt(BaseModel):
@@ -119,6 +121,9 @@ class Recordings:
         self.pool = pool
         self.sounds, self.prompts = load_prompts(folder)
         self.canonical = load_checked_canonical(folder, self.prompts)
+        # Applied thresholds (step 3.4): none until the owner applies a passing 3.3b report.
+        self.applied = load_applied(folder / "thresholds.json")
+        self.group_of = {s.id: s.group for s in self.sounds.values()}
         self.owners = {learner_uuid(x.strip()) for x in draft_learners.split(",") if x.strip()}
         self.clock = clock
 
@@ -223,6 +228,7 @@ class Recordings:
             "analysis": row[6],
             "failed": row[7] is not None,
             "labels": [{"target": t, "label": label} for t, label in labels],
+            "marks": marks(row[6]["targets"], self.group_of, self.applied) if row[6] else [],
         }
 
     def audio(self, learner_id: str, recording_id: str) -> bytes:

@@ -8,6 +8,7 @@ import type {
   RecordingDetail,
   RecordingResult,
   RecordingRow,
+  Sound,
 } from "@/lib/pronunciation/types";
 import { vi } from "@/messages/vi";
 import { Problem } from "@/components/english/problem";
@@ -37,6 +38,36 @@ async function decode(blob: Blob): Promise<Take> {
   }
 }
 
+/** The marked sounds of a recording (step 3.4a): owner only, labelled unverified, never a score. */
+function Marks({
+  detail,
+  sounds,
+}: {
+  detail: RecordingDetail;
+  sounds: Map<string, Sound>;
+}) {
+  if (detail.marks.length === 0) return <p className="en-muted">{t.noMarks}</p>;
+  return (
+    <div className="nt-pron-marks" data-testid="recording-marks">
+      <p className="en-badge draft">{t.marksTitle}</p>
+      <ul>
+        {detail.marks.map((i) => {
+          const s = detail.targets[i];
+          if (!s) return null;
+          const sound = sounds.get(s.sound);
+          return (
+            <li key={i}>
+              <u lang="en">{s.word}</u>: {sound?.name_vi ?? s.sound}
+              {s.competitor ? ` (${t.heard} /${s.competitor}/)` : ""}
+              {sound?.tip_vi && <p className="en-muted">{sound.tip_vi}</p>}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 const LABEL_ORDER: Label[] = ["right", "wrong", "unsure"];
 const PAD_SECONDS = 0.15; // heard either side of the aligned segment
 
@@ -47,12 +78,12 @@ const PAD_SECONDS = 0.15; // heard either side of the aligned segment
 function Scores({
   learner,
   detail,
-  names,
+  sounds,
   onChange,
 }: {
   learner: string;
   detail: RecordingDetail;
-  names: Map<string, string>;
+  sounds: Map<string, Sound>;
   onChange: (detail: RecordingDetail) => void;
 }) {
   const audio = useRef<HTMLAudioElement | null>(null);
@@ -127,6 +158,7 @@ function Scores({
       ) : (
         <p className="en-muted">{t.labelKeepOnly}</p>
       )}
+      {reveal && <Marks detail={detail} sounds={sounds} />}
       {reveal && <p className="en-muted">{t.scoresNote}</p>}
       <table className="nt-pron-scores">
         <thead>
@@ -143,7 +175,7 @@ function Scores({
           {detail.targets.map((s, i) => (
             <tr key={i}>
               <td>
-                {names.get(s.sound) ?? s.sound} /{s.phone}/
+                {sounds.get(s.sound)?.name_vi ?? s.sound} /{s.phone}/
               </td>
               <td lang="en">{s.word}</td>
               {detail.keep && (
@@ -239,8 +271,8 @@ export function PronunciationPage() {
   if (!data || !learner)
     return <p className="en-muted">{vi.english.loading}</p>;
   const prompt = data.prompts[index % data.prompts.length]!;
-  const names = new Map(data.sounds.map((s) => [s.id, s.name_vi]));
-  const sounds = prompt.targets.map((id) => names.get(id) ?? id);
+  const soundsById = new Map(data.sounds.map((s) => [s.id, s]));
+  const sounds = prompt.targets.map((id) => soundsById.get(id)?.name_vi ?? id);
 
   async function start() {
     setResult(null);
@@ -469,7 +501,7 @@ export function PronunciationPage() {
                       key={open.id}
                       learner={learner}
                       detail={open}
-                      names={names}
+                      sounds={soundsById}
                       onChange={setOpen}
                     />
                   )}

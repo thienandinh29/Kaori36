@@ -129,6 +129,11 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - needs the 
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--apply",
+        type=Path,
+        help="also write the pass groups to the file the product reads (step 3.4)",
+    )
     args = parser.parse_args(argv)
     settings = get_settings()
     sounds, _ = load_prompts(settings.pronunciation_dir)
@@ -141,6 +146,14 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - needs the 
     result["recordings"] = len({r[0] for r in rows})
     args.out.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(result["groups"], indent=2))
+    if args.apply:
+        from datetime import date
+
+        from app.pronunciation.marks import applicable
+
+        applied = applicable(result, date.today().isoformat())
+        args.apply.write_text(json.dumps(applied, indent=2) + "\n", encoding="utf-8")
+        print(f"applied: {sorted(applied['groups']) or 'no group passed; nothing is marked'}")
     return 0
 
 

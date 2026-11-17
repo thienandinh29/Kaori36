@@ -214,3 +214,40 @@ def test_the_owner_labels_kept_recordings_and_hears_only_kept_audio(stack) -> No
     assert client.delete(f"/recordings/{kept}", params=q).status_code == 204
     with pool.connection() as conn:  # the labels go with the recording
         assert conn.execute("select count(*) from speech_labels").fetchone() == (0,)
+
+
+def test_marks_appear_only_after_thresholds_are_applied(stack, tmp_path: Path) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool = stack
+    _, prompts = load_prompts(FOLDER)
+    canonical = load_checked_canonical(FOLDER, prompts)
+    rid = post(client, owner, speech_like())["id"]
+    with pool.connection() as conn:  # every target scored low, heard as something else
+        process_next(
+            conn,
+            lambda a, p: {
+                "recognised": p,
+                "phones": [
+                    {"phone": x, "start_ms": 0, "end_ms": 1, "gop": -5.0, "competitor": "d"}
+                    for x in p
+                ],
+            },
+            canonical,
+            {p.id: p.targets for p in prompts},
+        )
+    q = {"learner_id": owner}
+    assert client.get(f"/recordings/{rid}", params=q).json()["marks"] == []  # the gate
+
+    import shutil
+
+    folder = tmp_path / "pronunciation"
+    shutil.copytree(FOLDER, folder)
+    (folder / "thresholds.json").write_text(
+        '{"applied": "2026-12-01", "groups": {"final-consonants": '
+        '{"threshold": -1.0, "slip": 0.05, "guess": 0.5, "labelled": 80}}}'
+    )
+    app = FastAPI()
+    app.include_router(routes.create_router(Recordings(lambda: pool, folder, owner, lambda: NOW)))
+    out = TestClient(app).get(f"/recordings/{rid}", params=q).json()
+    targets = out["analysis"]["targets"]
+    finals = [i for i, t in enumerate(targets) if t["sound"].startswith("final-")]
+    assert finals and out["marks"] == finals  # p01 targets only final consonants

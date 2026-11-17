@@ -24,7 +24,9 @@
       `0023`, thresholds per group with a held-out false-alarm check, `app.pronunciation.thresholds` CLI; waiting on
       the owner's recordings and labels)
 - [ ] Owner: review `data/pronunciation/canonical.yaml` against the model voice (Piper) before 3.3b
-- [ ] 3.4 roadmap nodes, observation parameters, marks in the UI
+- [ ] 3.4 roadmap nodes, observation parameters, marks in the UI (`step-3.4.md`; 3.4a built: mark rule, slip/guess
+      from the measured rates, `--apply` writes `data/pronunciation/thresholds.json`, owner-only marks; 3.4b waits
+      for the owner's pronunciation nodes)
 - [ ] 3.5 optional fine-tuning
 - [ ] Gate report in `docs/v2/pronunciation-eval.md`
 

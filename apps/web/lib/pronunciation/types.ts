@@ -24,6 +24,8 @@ export interface Sound {
   group: string;
   ipa: string;
   name_vi: string;
+  /** The owner's tip for the sound (step 3.4); null until written. */
+  tip_vi: string | null;
 }
 export interface Prompt {
   id: string;
@@ -75,6 +77,8 @@ export interface RecordingDetail {
   targets: TargetScore[];
   /** The owner's label per target index (step 3.3b). */
   labels: Record<number, Label>;
+  /** Target indexes marked as probably mispronounced (step 3.4); empty until thresholds pass the gate. */
+  marks: number[];
 }
 
 function list(value: unknown): unknown[] {
@@ -101,6 +105,7 @@ export function parsePrompts(value: unknown): PronunciationPrompts {
         group: string(r.group),
         ipa: string(r.ipa),
         name_vi: string(r.name_vi),
+        tip_vi: optional(r.tip_vi),
       };
     }),
     prompts: list(d.prompts).map((p) => {
@@ -180,6 +185,7 @@ export function parseRecording(value: unknown): RecordingDetail {
         })
       : [],
     labels: labels(d.labels),
+    marks: d.marks === undefined ? [] : list(d.marks).map(num),
   };
 }
 

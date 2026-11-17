@@ -44,6 +44,7 @@ describe("pronunciation decoders (step 3.3a)", () => {
       },
     ]);
     expect(d.labels).toEqual({});
+    expect(d.marks).toEqual([]);
   });
 
   it("reads the owner's labels by target index and refuses unknown labels", () => {
@@ -87,6 +88,16 @@ describe("pronunciation decoders (step 3.3a)", () => {
           ],
         },
       }),
+    ).toThrow();
+  });
+
+  it("reads marks as target indexes", () => {
+    expect(
+      parseRecording({ ...row, failed: false, analysis: null, marks: [0, 3] })
+        .marks,
+    ).toEqual([0, 3]);
+    expect(() =>
+      parseRecording({ ...row, failed: false, analysis: null, marks: ["0"] }),
     ).toThrow();
   });
 });
