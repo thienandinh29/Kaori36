@@ -95,8 +95,11 @@ def fit(x: list[list[float]], y: list[int], l2: float = 1e-3, steps: int = 400) 
             return [float(v) for v in torch.sigmoid(z @ w + b)]  # P(wrong)
 
     score.coefficients = {  # type: ignore[attr-defined]
-        "mean": mean.tolist(), "std": std.tolist(), "w": w.detach().tolist(), "b": float(b.detach()),
-    }  # fmt: skip
+        "mean": mean.tolist(),
+        "std": std.tolist(),
+        "w": w.detach().tolist(),
+        "b": float(b.detach()),
+    }
     return score
 
 
