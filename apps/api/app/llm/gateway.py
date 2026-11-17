@@ -25,7 +25,8 @@ class Route(BaseModel):
     model_config = ConfigDict(extra="forbid")
     provider: Literal["vertex", "bedrock", "openrouter", "deepseek", "gemini"]
     model: str = Field(min_length=1)
-    family: Literal["gemini", "claude", "deepseek"]
+    # The model's maker, checked against the model id: the verifier is never the generator's family.
+    family: Literal["gemini", "claude", "deepseek", "qwen", "glm", "openai", "llama", "mistral"]
 
 
 class Routing(BaseModel):
