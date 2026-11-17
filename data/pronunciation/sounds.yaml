@@ -1,0 +1,17 @@
+# Target sounds for pronunciation (specs/pronunciation). The owner chose all groups (17 Nov 2026). The list comes from general
+# knowledge of where Vietnamese speakers slip, not from a checked source. Tips for each sound come in step 3.3 (owner's work).
+sounds:
+  - {id: final-t, group: final-consonants, ipa: "t", name_vi: "Âm /t/ cuối từ (cat, start)"}
+  - {id: final-k, group: final-consonants, ipa: "k", name_vi: "Âm /k/ cuối từ (book, like)"}
+  - {id: final-p, group: final-consonants, ipa: "p", name_vi: "Âm /p/ cuối từ (stop, help)"}
+  - {id: final-s, group: final-consonants, ipa: "s", name_vi: "Âm /s/ cuối từ (bus, cups)"}
+  - {id: final-z, group: final-consonants, ipa: "z", name_vi: "Âm /z/ cuối từ (dogs, plays)"}
+  - {id: th-voiceless, group: th, ipa: "θ", name_vi: "Âm /θ/ (think, three)"}
+  - {id: th-voiced, group: th, ipa: "ð", name_vi: "Âm /ð/ (this, mother)"}
+  - {id: sh-s, group: s-sh-ch-j-r-l, ipa: "ʃ", name_vi: "Âm /ʃ/ khác /s/ (ship, sip)"}
+  - {id: ch-j, group: s-sh-ch-j-r-l, ipa: "tʃ", name_vi: "Âm /tʃ/ khác /dʒ/ (chain, Jane)"}
+  - {id: r-l, group: s-sh-ch-j-r-l, ipa: "r", name_vi: "Âm /r/ khác /l/ (right, light)"}
+  - {id: clusters, group: clusters-vowels, ipa: "str", name_vi: "Cụm phụ âm (street, texts, months)"}
+  - {id: long-ee, group: clusters-vowels, ipa: "iː", name_vi: "Nguyên âm dài /iː/ khác /ɪ/ (sheep, ship)"}
+  - {id: long-oo, group: clusters-vowels, ipa: "uː", name_vi: "Nguyên âm dài /uː/ khác /ʊ/ (pool, pull)"}
+  - {id: ae-e, group: clusters-vowels, ipa: "æ", name_vi: "Nguyên âm /æ/ khác /e/ (bad, bed)"}

@@ -37,6 +37,14 @@ import {
   parseLesson,
   parseLessonSummaries,
 } from "@/lib/lesson/decode";
+import {
+  parsePrompts,
+  parseRecordingResult,
+  parseRecordings,
+  type PronunciationPrompts,
+  type RecordingResult,
+  type RecordingRow,
+} from "@/lib/pronunciation/types";
 import type {
   CheckpointResult,
   LessonSummary,
@@ -300,6 +308,44 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
           answer,
         }),
       );
+    },
+    // Pronunciation (specs/pronunciation/step-3.1.md).
+    async pronunciationPrompts(
+      learnerId: string,
+    ): Promise<PronunciationPrompts> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePrompts(await request(`pronunciation/prompts?${q}`));
+    },
+    async sendRecording(
+      learnerId: string,
+      promptId: string,
+      consent: string,
+      keep: boolean,
+      wav: ArrayBuffer,
+    ): Promise<RecordingResult> {
+      const q = new URLSearchParams({
+        learner_id: learnerId,
+        prompt_id: promptId,
+        consent,
+        keep: String(keep),
+      });
+      return parseRecordingResult(
+        await request(`recordings?${q}`, {
+          method: "POST",
+          headers: { "Content-Type": "audio/wav" },
+          body: wav,
+        }),
+      );
+    },
+    async recordings(learnerId: string): Promise<RecordingRow[]> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseRecordings(await request(`recordings?${q}`));
+    },
+    async deleteRecording(learnerId: string, id: string): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await request(`recordings/${encodeURIComponent(id)}?${q}`, {
+        method: "DELETE",
+      });
     },
     async deleteEssay(learnerId: string, essayId: string): Promise<void> {
       const q = new URLSearchParams({ learner_id: learnerId });

@@ -163,6 +163,14 @@ def writing_model(settings: Any) -> Any:
     )
 
 
+def purge_recordings(database_url: str) -> int:
+    """Delete voice recordings past their deletion time (specs/pronunciation/step-3.1.md)."""
+    from app.services.recordings import purge_expired
+
+    with psycopg.connect(database_url) as conn:
+        return purge_expired(conn)
+
+
 def loop(
     database_url: str,
     *,
@@ -184,8 +192,12 @@ def loop(
         settings.scorer_url,
         writing_model(settings),
     )
+    purged_at = 0.0
     while True:
         try:
+            if time.monotonic() - purged_at > 60:  # voice recordings past their time (step 3.1)
+                purge_recordings(database_url)
+                purged_at = time.monotonic()
             if process_next_essay(database_url, writing_dir, grammar):
                 continue  # essays are short: drain them before the next topic job
             if process_next_rewrite(database_url, grammar):

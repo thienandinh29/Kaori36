@@ -88,6 +88,9 @@ proxied=$(curl -sS "$WEB/api/backend/roadmap?learner_id=$learner&course=english-
 lessons=$(curl -sS "$WEB/api/backend/lessons?learner_id=$learner&course=english-ielts" | json 'isinstance(d, list)')
 page=$(curl -sS -o /dev/null -w '%{http_code}' "$WEB/hoc/present-perfect-vs-past")
 [ "$lessons" = True ] && [ "$page" = 200 ]; check "lessons pass through the web proxy and the lesson page loads ($page)" $?
+prompts=$(curl -sS "$WEB/api/backend/pronunciation/prompts?learner_id=$learner" | json 'len(d["prompts"])')
+page=$(curl -sS -o /dev/null -w '%{http_code}' "$WEB/phat-am")
+[ "$prompts" -ge 10 ] && [ "$page" = 200 ]; check "pronunciation prompts pass through the web proxy and /phat-am loads ($prompts)" $?
 code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST -H "Origin: $WEB" -H 'content-type: application/json' \
   -d "{\"learner_id\":\"$learner\"}" "$WEB/api/backend/level-tests")
 [ "$code" = 409 ]; check "the web proxy passes the level test through, drafts still guarded ($code)" $?
