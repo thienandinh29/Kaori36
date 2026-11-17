@@ -171,6 +171,25 @@ services:
       - tts-models:/models
     mem_limit: ${TTS_MEMORY_LIMIT:-600m}
 
+  # Phone recognition and goodness of pronunciation (pronunciation/README.md, specs/pronunciation step 3.2).
+  # Opt-in: --profile pronunciation; about 1.3 GB of weights downloaded once, every file pinned by SHA-256.
+  # Heavy: run it without the writing and scoring profiles on a 4 GB Docker VM (owner's decision, 17 Nov 2026).
+  pronunciation:
+    image: nodetrail-pronunciation:local
+    build: pronunciation
+    profiles: [pronunciation]
+    restart: unless-stopped
+    environment:
+      PRON_MODEL: facebook/wav2vec2-xlsr-53-espeak-cv-ft
+      PRON_REVISION: 2c733782da5604684829819a5eb744c193fe9398
+      PRON_SHA256_CONFIG: 4609fb49b7e1d28aecb2840da1926c40bd915bc6f1120a940afacf7159bbfb13
+      PRON_SHA256_PREPROCESSOR_CONFIG: a2254a5b58f72cd4de3632f8eee64f3f098b7c1402128d2f419e7d00ae13e335
+      PRON_SHA256_VOCAB: d732ab2456c0c017930001dc9af0b41b3b93d25b2eb9740bf9d925508d7d87d0
+      PRON_SHA256_PYTORCH_MODEL: 04366b6c8d24099ef313cf02f0e58d26f5dddfda16edbfc8eb2c713d94a9f551
+    volumes:
+      - pronunciation-models:/models
+    mem_limit: ${PRON_MEMORY_LIMIT:-3g}
+
   # bge-m3 embeddings for indexing and retrieval (docker/TEI.md). Opt-in: about 2.3 GB of weights.
   tei:
     image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.9
@@ -202,5 +221,6 @@ services:
 volumes:
   scorer-models:
   tts-models:
+  pronunciation-models:
   tei-data:
   nodetrail-db:

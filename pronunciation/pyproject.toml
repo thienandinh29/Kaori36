@@ -1,0 +1,47 @@
+[project]
+name = "nodetrail-pronunciation"
+version = "0.1.0"
+description = "Phone recognition, CTC alignment and goodness of pronunciation (specs/pronunciation/step-3.2.md)"
+license = "Apache-2.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.156.8",
+    "uvicorn>=0.54.0",
+    "torch==2.15.0",
+    "transformers==5.22.1",
+]
+
+[dependency-groups]
+dev = ["pytest>=9.1.1", "ruff>=0.17.1", "mypy>=2.4.0", "httpx>=0.28.1"]
+
+# The service runs only in its Linux container (also on Windows and macOS hosts, through Docker).
+[tool.uv]
+environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
+
+# PyTorch's CPU build: PyPI's default Linux wheel pulls in several GB of CUDA libraries.
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = ["transformers", "transformers.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
