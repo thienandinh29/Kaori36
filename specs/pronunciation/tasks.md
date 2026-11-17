@@ -29,7 +29,7 @@
       from the measured rates, `--apply` writes `data/pronunciation/thresholds.json`, owner-only marks; 3.4b built:
       own course `english-pronunciation` with one node per sound group, one BKT observation per group per recording)
 - [ ] 3.5 optional fine-tuning (`step-3.5.md`; 3.5a built: a learned detector on the frozen model, train half then
-      test half, run pending; 3.5b fine-tuning on a GPU notebook only if 3.5a shows the model is the limit)
+      test half, AUC 0.893 vs 0.855 for GOP; 3.5b fine-tuning on a GPU notebook only if 3.5a shows the model is the limit)
 - [ ] Gate report in `docs/v2/pronunciation-eval.md`
 
 **The owner's idea (16 Nov 2026): repeat each new word.** After a new word is taught in vocabulary, the learner says it
