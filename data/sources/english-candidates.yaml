@@ -133,13 +133,31 @@ candidates:
     believed_licence: none stated
     status: rejected
     reason: The LibreTexts page says "shared under a not declared license".
+  - slug: college-esl-writers-hall-wallace
+    name: "College ESL Writers: Applied Grammar and Composing Strategies for Success (Hall and Wallace; LibreTexts)"
+    url: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/College_ESL_Writers_-_Applied_Grammar_and_Composing_Strategies_for_Success_(Hall_and_Wallace)
+    use: grammar lessons for articles, count and noncount nouns, pronouns, negatives, agreement, read through RAG
+    believed_licence: CC BY-NC-SA
+    status: verified
+    licence: CC BY-NC-SA
+    checked_on: 2026-11-17
+    licence_page: https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/College_ESL_Writers_-_Applied_Grammar_and_Composing_Strategies_for_Success_(Hall_and_Wallace)/07%3A_Overview_of_English_Grammar/7.04%3A_Count_and_Noncount_Nouns_and_Articles
+    checked_by: agent
+    note: >-
+      The LibreTexts pages say "CC BY-NC-SA" without a version (GALILEO Open Learning Materials). Chapter 7 covers
+      7.03 negative statements, 7.04 count and noncount nouns and articles, 7.05 pronouns, 7.06 pronoun agreement,
+      7.08 verb tenses, 7.09 modals, 7.10 subject-verb agreement, 7.11 prepositions; chapter 2 covers coordination
+      and subordination. Written for college ESL writers (B1-B2). NonCommercial and ShareAlike: tag every chunk.
   - slug: beginning-esol-dodson
-    name: Beginning ESOL (Dodson, Jordan, Krause; Pressbooks)
-    url: https://pressbooks.pub/esl31
-    use: A1-B1 grammar and reading activities
-    believed_licence: unknown
+    name: A Digital Workbook for Beginning ESOL (Dodson, Jordan, Krause; Portland Community College, Open Oregon)
+    url: https://openoregon.pressbooks.pub/esol23/
+    use: A1-B1 grammar, including articles (indefinite and definite), the one CC BY candidate for beginners
+    believed_licence: CC BY 4.0
     status: to_check
-    note: Found in a search; licence and contents not read (the host is not allowed in this session).
+    note: >-
+      Search results quote "Creative Commons Attribution 4.0 International License, except where otherwise noted";
+      the embedded videos are other people's and not covered. Open Oregon refuses this session (CloudFront 403), so
+      the owner reads the licence in a browser. Chapter seen in search: "Articles: indefinite and definite".
   - slug: wordnet
     name: Princeton WordNet
     url: https://wordnet.princeton.edu/
