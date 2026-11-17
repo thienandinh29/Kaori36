@@ -32,6 +32,8 @@ x-api-env: &api-env
     SCORER_URL: ${SCORER_URL:-}
     # Set by --profile speech (the tts service); empty: the web uses the browser's own voice.
     TTS_URL: ${TTS_URL:-}
+    # Set by --profile pronunciation (http://pronunciation:8040); empty: recordings are kept unanalysed.
+    PRONUNCIATION_URL: ${PRONUNCIATION_URL:-}
 
 services:
   db:

@@ -1,0 +1,52 @@
+# English pack: pronunciation (specs/pronunciation/step-3.4.md). The owner chose one hidden node per sound group under
+# one milestone, in its own course so the grammar level test, levels and roadmap are untouched (17 Nov 2026).
+# The groups match `data/pronunciation/sounds.yaml`; a node moves only from marks of a group the owner applied
+# (`data/pronunciation/thresholds.json`), so until the gate no node moves for anyone.
+slug: english-pronunciation
+title_vi: Phát âm tiếng Anh
+title_en: English pronunciation
+language: en
+source: authored
+modalities: [speech]
+concepts:
+  - slug: pronunciation
+    level: A2
+    name_en: "Pronunciation: sounds Vietnamese speakers often miss"
+    name_vi: "Phát âm: những âm người Việt hay nhầm"
+  - slug: final-consonants
+    level: A1
+    name_en: "Final consonants (/t/ /k/ /p/ /s/ /z/)"
+    name_vi: "Phụ âm cuối (/t/ /k/ /p/ /s/ /z/)"
+    part_of: pronunciation
+  - slug: th
+    level: A2
+    name_en: "The th sounds (/θ/ /ð/)"
+    name_vi: "Âm th (/θ/ /ð/)"
+    part_of: pronunciation
+  - slug: s-sh-ch-j-r-l
+    level: A2
+    name_en: "/ʃ/ and /s/, /tʃ/ and /dʒ/, /r/ and /l/"
+    name_vi: "/ʃ/ và /s/, /tʃ/ và /dʒ/, /r/ và /l/"
+    part_of: pronunciation
+  - slug: clusters-vowels
+    level: A2
+    name_en: "Consonant clusters and vowel contrasts (/iː/ /uː/ /æ/)"
+    name_vi: "Cụm phụ âm và nguyên âm dễ nhầm (/iː/ /uː/ /æ/)"
+    part_of: pronunciation
+objectives:
+  - id: final-consonants-speech
+    concept: final-consonants
+    modality: speech
+    text_vi: "Đọc to câu mẫu; máy kiểm tra phụ âm cuối."
+  - id: th-speech
+    concept: th
+    modality: speech
+    text_vi: "Đọc to câu mẫu; máy kiểm tra âm /θ/ và /ð/."
+  - id: s-sh-ch-j-r-l-speech
+    concept: s-sh-ch-j-r-l
+    modality: speech
+    text_vi: "Đọc to câu mẫu; máy kiểm tra /ʃ/, /tʃ/, /dʒ/, /r/ và /l/."
+  - id: clusters-vowels-speech
+    concept: clusters-vowels
+    modality: speech
+    text_vi: "Đọc to câu mẫu; máy kiểm tra cụm phụ âm và nguyên âm dài."

@@ -3,9 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { englishClient } from "@/lib/english/client";
 import { MAX_SECONDS, toServerWav } from "@/lib/pronunciation/wav";
 import type {
+  Label,
   PronunciationPrompts,
+  RecordingDetail,
   RecordingResult,
   RecordingRow,
+  Sound,
 } from "@/lib/pronunciation/types";
 import { vi } from "@/messages/vi";
 import { Problem } from "@/components/english/problem";
@@ -35,7 +38,185 @@ async function decode(blob: Blob): Promise<Take> {
   }
 }
 
-/** Step 3.1 (specs/pronunciation/step-3.1.md): read a sentence aloud; only the recording's quality is checked. */
+/** The marked sounds of a recording (step 3.4a): owner only, labelled unverified, never a score. */
+function Marks({
+  detail,
+  sounds,
+}: {
+  detail: RecordingDetail;
+  sounds: Map<string, Sound>;
+}) {
+  if (detail.marks.length === 0) return <p className="en-muted">{t.noMarks}</p>;
+  return (
+    <div className="nt-pron-marks" data-testid="recording-marks">
+      <p className="en-badge draft">{t.marksTitle}</p>
+      <ul>
+        {detail.marks.map((i) => {
+          const s = detail.targets[i];
+          if (!s) return null;
+          const sound = sounds.get(s.sound);
+          return (
+            <li key={i}>
+              <u lang="en">{s.word}</u>: {sound?.name_vi ?? s.sound}
+              {s.competitor ? ` (${t.heard} /${s.competitor}/)` : ""}
+              {sound?.tip_vi && <p className="en-muted">{sound.tip_vi}</p>}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+const LABEL_ORDER: Label[] = ["right", "wrong", "unsure"];
+const PAD_SECONDS = 0.15; // heard either side of the aligned segment
+
+/**
+ * One recording's target sounds (step 3.3a/b). A kept recording can be labelled by ear, with its
+ * scores hidden until asked for; any other one shows raw scores, never "right" or "wrong".
+ */
+function Scores({
+  learner,
+  detail,
+  sounds,
+  onChange,
+}: {
+  learner: string;
+  detail: RecordingDetail;
+  sounds: Map<string, Sound>;
+  onChange: (detail: RecordingDetail) => void;
+}) {
+  const audio = useRef<HTMLAudioElement | null>(null);
+  const stopAt = useRef<number | null>(null);
+  const [reveal, setReveal] = useState(!detail.keep);
+  const [saving, setSaving] = useState(false);
+  useEffect(
+    () => () => void (stopAt.current && window.clearTimeout(stopAt.current)),
+    [],
+  );
+  if (detail.failed) return <p className="en-muted">{t.failed}</p>;
+  const client = englishClient();
+
+  function play(startMs?: number, endMs?: number) {
+    const el = audio.current;
+    if (!el) return;
+    if (stopAt.current) window.clearTimeout(stopAt.current);
+    const from =
+      startMs === undefined ? 0 : Math.max(0, startMs / 1000 - PAD_SECONDS);
+    el.currentTime = from;
+    void el.play();
+    if (endMs !== undefined)
+      stopAt.current = window.setTimeout(
+        () => el.pause(),
+        (endMs / 1000 + PAD_SECONDS - from) * 1000,
+      );
+  }
+
+  async function label(target: number, value: Label) {
+    setSaving(true);
+    try {
+      await client.saveLabels(learner, detail.id, [{ target, label: value }]);
+      onChange({ ...detail, labels: { ...detail.labels, [target]: value } });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const done = Object.keys(detail.labels).length;
+  return (
+    <div data-testid="recording-scores">
+      {detail.keep ? (
+        <>
+          <p className="en-muted">{t.labelIntro}</p>
+          <audio
+            ref={audio}
+            preload="auto"
+            src={client.recordingAudioUrl(learner, detail.id)}
+          />
+          <p>
+            <button
+              type="button"
+              className="en-button ghost small"
+              onClick={() => play()}
+            >
+              {t.playSentence}
+            </button>{" "}
+            <span className="en-muted">
+              {done}/{detail.targets.length} {t.labelled}
+            </span>{" "}
+            {!reveal && (
+              <button
+                type="button"
+                className="en-button ghost small"
+                onClick={() => setReveal(true)}
+              >
+                {t.showScores}
+              </button>
+            )}
+          </p>
+        </>
+      ) : (
+        <p className="en-muted">{t.labelKeepOnly}</p>
+      )}
+      {reveal && <Marks detail={detail} sounds={sounds} />}
+      {reveal && <p className="en-muted">{t.scoresNote}</p>}
+      <table className="nt-pron-scores">
+        <thead>
+          <tr>
+            <th>{t.sound}</th>
+            <th>{t.word}</th>
+            {detail.keep && <th>{t.play}</th>}
+            {detail.keep && <th>{t.labelled}</th>}
+            {reveal && <th>{t.score}</th>}
+            {reveal && <th>{t.heardAs}</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {detail.targets.map((s, i) => (
+            <tr key={i}>
+              <td>
+                {sounds.get(s.sound)?.name_vi ?? s.sound} /{s.phone}/
+              </td>
+              <td lang="en">{s.word}</td>
+              {detail.keep && (
+                <td>
+                  <button
+                    type="button"
+                    className="en-button ghost small"
+                    aria-label={`${t.play} ${s.word}`}
+                    onClick={() => play(s.start_ms, s.end_ms)}
+                  >
+                    ▶
+                  </button>
+                </td>
+              )}
+              {detail.keep && (
+                <td className="nt-pron-labels">
+                  {LABEL_ORDER.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className="en-button ghost small"
+                      aria-pressed={detail.labels[i] === value}
+                      disabled={saving}
+                      onClick={() => void label(i, value)}
+                    >
+                      {t.labels[value]}
+                    </button>
+                  ))}
+                </td>
+              )}
+              {reveal && <td>{s.gop.toFixed(2)}</td>}
+              {reveal && <td>{s.competitor ? `/${s.competitor}/` : "—"}</td>}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** Steps 3.1 and 3.3a (specs/pronunciation): read a sentence aloud; quality check, then raw scores per sound. */
 export function PronunciationPage() {
   const { learner, error: learnerError, retry } = useLearner();
   const [data, setData] = useState<PronunciationPrompts | null>(null);
@@ -58,6 +239,7 @@ export function PronunciationPage() {
   const [rows, setRows] = useState<RecordingRow[]>([]);
   const [busy, setBusy] = useState(false);
   const [noMic, setNoMic] = useState(false);
+  const [open, setOpen] = useState<RecordingDetail | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
   const timer = useRef<number | null>(null);
 
@@ -89,9 +271,8 @@ export function PronunciationPage() {
   if (!data || !learner)
     return <p className="en-muted">{vi.english.loading}</p>;
   const prompt = data.prompts[index % data.prompts.length]!;
-  const sounds = prompt.targets.map(
-    (id) => data.sounds.find((s) => s.id === id)?.name_vi ?? id,
-  );
+  const soundsById = new Map(data.sounds.map((s) => [s.id, s]));
+  const sounds = prompt.targets.map((id) => soundsById.get(id)?.name_vi ?? id);
 
   async function start() {
     setResult(null);
@@ -153,6 +334,15 @@ export function PronunciationPage() {
       setError(e);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function show(id: string) {
+    if (open?.id === id) return setOpen(null);
+    try {
+      setOpen(await englishClient().recording(learner!, id));
+    } catch (e) {
+      setError(e);
     }
   }
 
@@ -274,8 +464,30 @@ export function PronunciationPage() {
           </>
         )}
       </section>
+      {data.can_record && data.progress.length > 0 && (
+        <section className="en-card" data-testid="pronunciation-progress">
+          <h2>{t.progressTitle}</h2>
+          <p className="en-muted">{t.progressNote}</p>
+          <ul className="nt-pron-rows nt-pron-progress">
+            {data.progress.map((n) => (
+              <li key={n.node}>
+                <span>{n.name_vi}</span>
+                <span className="en-muted">
+                  {!n.measured
+                    ? t.progressNotMeasured
+                    : n.p_known === null
+                      ? t.progressNoData
+                      : n.known
+                        ? t.progressKnown
+                        : t.progressLearning}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {data.can_record && (
-        <section className="en-card">
+        <section className="en-card" data-testid="recordings">
           <h2>{t.list}</h2>
           {rows.length === 0 ? (
             <p className="en-muted">{t.none}</p>
@@ -288,7 +500,17 @@ export function PronunciationPage() {
                     {r.delete_after
                       ? ` · ${t.okUntil} ${new Date(r.delete_after).toLocaleString("vi-VN")}`
                       : ` · ${t.kept}`}
+                    {r.status === "stored" && ` · ${t.waiting}`}
                   </span>
+                  {r.status !== "stored" && (
+                    <button
+                      type="button"
+                      className="en-button ghost small"
+                      onClick={() => void show(r.id)}
+                    >
+                      {open?.id === r.id ? t.hide : t.show}
+                    </button>
+                  )}
                   <button
                     type="button"
                     className="en-button ghost small"
@@ -296,6 +518,15 @@ export function PronunciationPage() {
                   >
                     {t.delete}
                   </button>
+                  {open?.id === r.id && (
+                    <Scores
+                      key={open.id}
+                      learner={learner}
+                      detail={open}
+                      sounds={soundsById}
+                      onChange={setOpen}
+                    />
+                  )}
                 </li>
               ))}
             </ul>

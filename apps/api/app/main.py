@@ -128,7 +128,10 @@ def create_app(
     app.include_router(
         pronunciation_routes.create_router(
             Recordings(
-                lambda: app.state.pool, settings.pronunciation_dir, settings.draft_item_learners
+                lambda: app.state.pool,
+                settings.pronunciation_dir,
+                settings.draft_item_learners,
+                courses_dir=settings.courses_dir,
             )
         )
     )
