@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { englishClient } from "@/lib/english/client";
 import { MAX_SECONDS, toServerWav } from "@/lib/pronunciation/wav";
 import type {
+  Label,
   PronunciationPrompts,
   RecordingDetail,
   RecordingResult,
@@ -36,25 +37,106 @@ async function decode(blob: Blob): Promise<Take> {
   }
 }
 
-/** Raw per-sound scores of one recording (step 3.3a): numbers only, never "right" or "wrong" yet. */
+const LABEL_ORDER: Label[] = ["right", "wrong", "unsure"];
+const PAD_SECONDS = 0.15; // heard either side of the aligned segment
+
+/**
+ * One recording's target sounds (step 3.3a/b). A kept recording can be labelled by ear, with its
+ * scores hidden until asked for; any other one shows raw scores, never "right" or "wrong".
+ */
 function Scores({
+  learner,
   detail,
   names,
+  onChange,
 }: {
+  learner: string;
   detail: RecordingDetail;
   names: Map<string, string>;
+  onChange: (detail: RecordingDetail) => void;
 }) {
+  const audio = useRef<HTMLAudioElement | null>(null);
+  const stopAt = useRef<number | null>(null);
+  const [reveal, setReveal] = useState(!detail.keep);
+  const [saving, setSaving] = useState(false);
+  useEffect(
+    () => () => void (stopAt.current && window.clearTimeout(stopAt.current)),
+    [],
+  );
   if (detail.failed) return <p className="en-muted">{t.failed}</p>;
+  const client = englishClient();
+
+  function play(startMs?: number, endMs?: number) {
+    const el = audio.current;
+    if (!el) return;
+    if (stopAt.current) window.clearTimeout(stopAt.current);
+    const from =
+      startMs === undefined ? 0 : Math.max(0, startMs / 1000 - PAD_SECONDS);
+    el.currentTime = from;
+    void el.play();
+    if (endMs !== undefined)
+      stopAt.current = window.setTimeout(
+        () => el.pause(),
+        (endMs / 1000 + PAD_SECONDS - from) * 1000,
+      );
+  }
+
+  async function label(target: number, value: Label) {
+    setSaving(true);
+    try {
+      await client.saveLabels(learner, detail.id, [{ target, label: value }]);
+      onChange({ ...detail, labels: { ...detail.labels, [target]: value } });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const done = Object.keys(detail.labels).length;
   return (
     <div data-testid="recording-scores">
-      <p className="en-muted">{t.scoresNote}</p>
+      {detail.keep ? (
+        <>
+          <p className="en-muted">{t.labelIntro}</p>
+          <audio
+            ref={audio}
+            preload="auto"
+            src={client.recordingAudioUrl(learner, detail.id)}
+          />
+          <p>
+            <button
+              type="button"
+              className="en-button ghost small"
+              onClick={() => play()}
+            >
+              {t.playSentence}
+            </button>{" "}
+            <span className="en-muted">
+              {done}/{detail.targets.length} {t.labelled}
+            </span>{" "}
+            {!reveal && (
+              <button
+                type="button"
+                className="en-button ghost small"
+                onClick={() => setReveal(true)}
+              >
+                {t.showScores}
+              </button>
+            )}
+          </p>
+        </>
+      ) : (
+        <p className="en-muted">{t.labelKeepOnly}</p>
+      )}
+      {reveal && <p className="en-muted">{t.scoresNote}</p>}
       <table className="nt-pron-scores">
         <thead>
           <tr>
             <th>{t.sound}</th>
             <th>{t.word}</th>
-            <th>{t.score}</th>
-            <th>{t.heardAs}</th>
+            {detail.keep && <th>{t.play}</th>}
+            {detail.keep && <th>{t.labelled}</th>}
+            {reveal && <th>{t.score}</th>}
+            {reveal && <th>{t.heardAs}</th>}
           </tr>
         </thead>
         <tbody>
@@ -64,8 +146,36 @@ function Scores({
                 {names.get(s.sound) ?? s.sound} /{s.phone}/
               </td>
               <td lang="en">{s.word}</td>
-              <td>{s.gop.toFixed(2)}</td>
-              <td>{s.competitor ? `/${s.competitor}/` : "—"}</td>
+              {detail.keep && (
+                <td>
+                  <button
+                    type="button"
+                    className="en-button ghost small"
+                    aria-label={`${t.play} ${s.word}`}
+                    onClick={() => play(s.start_ms, s.end_ms)}
+                  >
+                    ▶
+                  </button>
+                </td>
+              )}
+              {detail.keep && (
+                <td className="nt-pron-labels">
+                  {LABEL_ORDER.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className="en-button ghost small"
+                      aria-pressed={detail.labels[i] === value}
+                      disabled={saving}
+                      onClick={() => void label(i, value)}
+                    >
+                      {t.labels[value]}
+                    </button>
+                  ))}
+                </td>
+              )}
+              {reveal && <td>{s.gop.toFixed(2)}</td>}
+              {reveal && <td>{s.competitor ? `/${s.competitor}/` : "—"}</td>}
             </tr>
           ))}
         </tbody>
@@ -354,7 +464,15 @@ export function PronunciationPage() {
                   >
                     {t.delete}
                   </button>
-                  {open?.id === r.id && <Scores detail={open} names={names} />}
+                  {open?.id === r.id && (
+                    <Scores
+                      key={open.id}
+                      learner={learner}
+                      detail={open}
+                      names={names}
+                      onChange={setOpen}
+                    />
+                  )}
                 </li>
               ))}
             </ul>

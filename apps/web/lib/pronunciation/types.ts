@@ -62,12 +62,19 @@ export interface TargetScore {
   phone: string;
   gop: number;
   competitor: string | null;
+  start_ms: number;
+  end_ms: number;
 }
+export type Label = "right" | "wrong" | "unsure";
+const LABELS: readonly Label[] = ["right", "wrong", "unsure"];
 export interface RecordingDetail {
   id: string;
   status: RecordingStatus;
+  keep: boolean;
   failed: boolean;
   targets: TargetScore[];
+  /** The owner's label per target index (step 3.3b). */
+  labels: Record<number, Label>;
 }
 
 function list(value: unknown): unknown[] {
@@ -137,6 +144,18 @@ function num(value: unknown): number {
   return value;
 }
 
+function labels(value: unknown): Record<number, Label> {
+  const out: Record<number, Label> = {};
+  for (const item of value === undefined ? [] : list(value)) {
+    const r = record(item);
+    const label = string(r.label);
+    if (!(LABELS as readonly string[]).includes(label))
+      throw new DataError("contract");
+    out[num(r.target)] = label as Label;
+  }
+  return out;
+}
+
 export function parseRecording(value: unknown): RecordingDetail {
   const d = record(value);
   const analysis =
@@ -144,6 +163,7 @@ export function parseRecording(value: unknown): RecordingDetail {
   return {
     id: string(d.id),
     status: status(d.status),
+    keep: flag(d.keep),
     failed: flag(d.failed),
     targets: analysis
       ? list(analysis.targets).map((t) => {
@@ -153,10 +173,13 @@ export function parseRecording(value: unknown): RecordingDetail {
             word: string(r.word),
             phone: string(r.phone),
             gop: num(r.gop),
+            start_ms: num(r.start_ms),
+            end_ms: num(r.end_ms),
             competitor: optional(r.competitor),
           };
         })
       : [],
+    labels: labels(d.labels),
   };
 }
 

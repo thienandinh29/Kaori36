@@ -1974,3 +1974,13 @@ svg.nt-trail {
   vertical-align: middle;
   max-width: 100%;
 }
+
+.nt-pron-labels {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.nt-pron-labels [aria-pressed="true"] {
+  background: var(--forest);
+  color: var(--white);
+}

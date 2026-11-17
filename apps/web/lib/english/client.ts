@@ -42,6 +42,7 @@ import {
   parseRecording,
   parseRecordingResult,
   parseRecordings,
+  type Label,
   type RecordingDetail,
   type PronunciationPrompts,
   type RecordingResult,
@@ -348,6 +349,21 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       return parseRecording(
         await request(`recordings/${encodeURIComponent(id)}?${q}`),
       );
+    },
+    /** The proxied WAV of a kept recording, for the owner's labelling (step 3.3b). */
+    recordingAudioUrl(learnerId: string, id: string): string {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return `/api/backend/recordings/${encodeURIComponent(id)}/audio?${q}`;
+    },
+    async saveLabels(
+      learnerId: string,
+      id: string,
+      labels: { target: number; label: Label }[],
+    ): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await post(`recordings/${encodeURIComponent(id)}/labels?${q}`, {
+        labels,
+      });
     },
     async deleteRecording(learnerId: string, id: string): Promise<void> {
       const q = new URLSearchParams({ learner_id: learnerId });

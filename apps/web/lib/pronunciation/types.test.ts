@@ -39,8 +39,27 @@ describe("pronunciation decoders (step 3.3a)", () => {
         phone: "t",
         gop: -1.25,
         competitor: null,
+        start_ms: 300,
+        end_ms: 360,
       },
     ]);
+    expect(d.labels).toEqual({});
+  });
+
+  it("reads the owner's labels by target index and refuses unknown labels", () => {
+    const base = { ...row, failed: false, analysis: null };
+    expect(
+      parseRecording({
+        ...base,
+        labels: [
+          { target: 0, label: "wrong" },
+          { target: 2, label: "unsure" },
+        ],
+      }).labels,
+    ).toEqual({ 0: "wrong", 2: "unsure" });
+    expect(() =>
+      parseRecording({ ...base, labels: [{ target: 0, label: "maybe" }] }),
+    ).toThrow();
   });
 
   it("gives no scores before analysis", () => {

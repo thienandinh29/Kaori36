@@ -13,7 +13,7 @@ const allowedEnglish = new RegExp(
     `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
-    `pronunciation/prompts|recordings|recordings/${UUID})$`,
+    `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels)$`,
 );
 // The only path a learner may DELETE: their own essay (specs/writing/step-2.1.md).
 const deletable = new RegExp(`^(essays|phrases|recordings)/${UUID}$`);

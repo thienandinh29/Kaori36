@@ -177,3 +177,40 @@ def test_a_service_failure_is_recorded_not_retried(stack) -> None:  # type: igno
         assert not process_next(conn, broken, canonical, {p.id: p.targets for p in prompts})
     out = client.get(f"/recordings/{rid}", params={"learner_id": owner}).json()
     assert out["status"] == "failed" and out["failed"] and out["analysis"] is None
+
+
+def test_the_owner_labels_kept_recordings_and_hears_only_kept_audio(stack) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool = stack
+    _, prompts = load_prompts(FOLDER)
+    canonical = load_checked_canonical(FOLDER, prompts)
+    sounds = {p.id: p.targets for p in prompts}
+    kept = post(client, owner, speech_like(), keep="true")["id"]
+    temp = post(client, owner, speech_like())["id"]
+    q = {"learner_id": owner}
+    # before analysis there is nothing to label
+    early = client.post(
+        f"/recordings/{kept}/labels", params=q, json={"labels": [{"target": 0, "label": "right"}]}
+    )
+    assert early.status_code == 404
+    with pool.connection() as conn:
+        while process_next(conn, lambda a, p: fake_phones(p), canonical, sounds):
+            pass
+    audio = client.get(f"/recordings/{kept}/audio", params=q)
+    assert audio.status_code == 200 and audio.content[:4] == b"RIFF"
+    assert audio.headers["cache-control"] == "no-store"
+    assert client.get(f"/recordings/{temp}/audio", params=q).status_code == 404  # cleared
+
+    labels = {"labels": [{"target": 0, "label": "wrong"}, {"target": 1, "label": "unsure"}]}
+    assert client.post(f"/recordings/{kept}/labels", params=q, json=labels).status_code == 204
+    fix = {"labels": [{"target": 0, "label": "right"}]}  # a label can be changed
+    assert client.post(f"/recordings/{kept}/labels", params=q, json=fix).status_code == 204
+    out = client.get(f"/recordings/{kept}", params=q).json()
+    assert out["labels"] == [{"target": 0, "label": "right"}, {"target": 1, "label": "unsure"}]
+
+    too_far = {"labels": [{"target": 99, "label": "right"}]}
+    assert client.post(f"/recordings/{kept}/labels", params=q, json=too_far).status_code == 422
+    bad = {"labels": [{"target": 0, "label": "maybe"}]}
+    assert client.post(f"/recordings/{kept}/labels", params=q, json=bad).status_code == 422
+    assert client.delete(f"/recordings/{kept}", params=q).status_code == 204
+    with pool.connection() as conn:  # the labels go with the recording
+        assert conn.execute("select count(*) from speech_labels").fetchone() == (0,)

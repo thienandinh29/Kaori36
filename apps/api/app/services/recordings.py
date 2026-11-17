@@ -5,11 +5,11 @@ third party, is deleted after analysis (step 3.2) or after a day until then, unl
 chose to keep it. Only the learners in DRAFT_ITEM_LEARNERS may record until a privacy review.
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 import psycopg
@@ -23,6 +23,25 @@ from app.pronunciation.canonical import Word, load_canonical, phone_set
 from app.pronunciation.canonical import check as check_canonical
 from app.pronunciation.quality import Quality, check
 from app.services.backend import learner_uuid
+
+
+class TargetLabel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    target: int = Field(ge=0, le=200)
+    label: Literal["right", "wrong", "unsure"]
+
+
+class LabelsIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    labels: list[TargetLabel] = Field(min_length=1, max_length=200)
+
+
+def recording_uuid(recording_id: str) -> UUID:
+    try:
+        return UUID(recording_id)
+    except ValueError:
+        raise HTTPException(404, "Không tìm thấy bản ghi.") from None
+
 
 CONSENT = "voice-v1"  # the notice the learner accepts (messages/vi.ts, pronunciation.consent)
 RETENTION = timedelta(hours=24)  # until step 3.2 analyses and deletes recordings
@@ -180,17 +199,17 @@ class Recordings:
 
     def get(self, learner_id: str, recording_id: str) -> dict[str, Any]:
         """One of the learner's recordings with its analysis (scores, never a verdict yet)."""
-        learner = learner_uuid(learner_id)
-        try:
-            rid = UUID(recording_id)
-        except ValueError:
-            raise HTTPException(404, "Không tìm thấy bản ghi.") from None
+        learner, rid = learner_uuid(learner_id), recording_uuid(recording_id)
         with self.pool().connection() as conn:
             row = conn.execute(
                 "select prompt_id,keep,seconds,status,created_at,delete_after,analysis,failure "
                 "from speech_recordings where id=%s and learner_id=%s",
                 (rid, learner),
             ).fetchone()
+            labels = conn.execute(
+                "select target,label from speech_labels where recording_id=%s order by target",
+                (rid,),
+            ).fetchall()
         if row is None:
             raise HTTPException(404, "Không tìm thấy bản ghi.")
         return {
@@ -203,14 +222,48 @@ class Recordings:
             "delete_after": row[5].isoformat() if row[5] else None,
             "analysis": row[6],
             "failed": row[7] is not None,
+            "labels": [{"target": t, "label": label} for t, label in labels],
         }
 
+    def audio(self, learner_id: str, recording_id: str) -> bytes:
+        """The WAV of a kept recording, for the owner's labelling (3.3b); 404 when not kept."""
+        learner, rid = learner_uuid(learner_id), recording_uuid(recording_id)
+        with self.pool().connection() as conn:
+            row = conn.execute(
+                "select audio from speech_recordings where id=%s and learner_id=%s and keep "
+                "and octet_length(audio) > 0",
+                (rid, learner),
+            ).fetchone()
+        if row is None:
+            raise HTTPException(404, "Bản ghi này không được giữ lại nên không nghe lại được.")
+        return bytes(row[0])
+
+    def label(self, learner_id: str, recording_id: str, labels: Sequence[TargetLabel]) -> None:
+        """Save the owner's labels on an analysed recording's target sounds (3.3b)."""
+        learner, rid = learner_uuid(learner_id), recording_uuid(recording_id)
+        if not self.can_record(learner_id):
+            raise HTTPException(403, "Chỉ chủ dự án gán nhãn bản ghi.")
+        with self.pool().connection() as conn:
+            row = conn.execute(
+                "select analysis from speech_recordings where id=%s and learner_id=%s "
+                "and status='analysed'",
+                (rid, learner),
+            ).fetchone()
+            if row is None:
+                raise HTTPException(404, "Không tìm thấy bản ghi đã phân tích.")
+            count = len(row[0]["targets"])
+            if any(x.target >= count for x in labels):
+                raise HTTPException(422, "Vị trí âm không có trong kết quả phân tích.")
+            for x in labels:
+                conn.execute(
+                    "insert into speech_labels(recording_id,target,label,labelled_at) "
+                    "values (%s,%s,%s,%s) on conflict (recording_id,target) "
+                    "do update set label=excluded.label, labelled_at=excluded.labelled_at",
+                    (rid, x.target, x.label, self.clock()),
+                )
+
     def delete(self, learner_id: str, recording_id: str) -> None:
-        learner = learner_uuid(learner_id)
-        try:
-            rid = UUID(recording_id)
-        except ValueError:
-            raise HTTPException(404, "Không tìm thấy bản ghi.") from None
+        learner, rid = learner_uuid(learner_id), recording_uuid(recording_id)
         with self.pool().connection() as conn:
             cur = conn.execute(
                 "delete from speech_recordings where id=%s and learner_id=%s", (rid, learner)

@@ -651,6 +651,15 @@ export const vi = {
       word: "Từ",
       score: "Điểm",
       heardAs: "Nghe giống",
+      labelIntro:
+        "Gán nhãn: nghe từng âm và chọn theo tai của bạn. Điểm được ẩn để không ảnh hưởng đến lựa chọn.",
+      labelKeepOnly:
+        "Chỉ gán nhãn được bản ghi đã giữ lại (cần nghe lại âm thanh). Hãy chọn “Giữ bản ghi” trước khi ghi.",
+      play: "Nghe âm",
+      playSentence: "Nghe cả câu",
+      labels: { right: "Đúng", wrong: "Sai", unsure: "Không chắc" },
+      showScores: "Hiện điểm",
+      labelled: "đã gán nhãn",
       delete: "Xóa",
       seconds: "giây",
     },
