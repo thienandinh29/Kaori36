@@ -394,6 +394,32 @@ def load_report(out: Path) -> dict[str, Any] | None:
     return report
 
 
+# --- word forms for the lesson narration check (specs/grammar-lessons) --------------------------
+
+
+def write_forms(work: Path, out: Path) -> Path:
+    """`forms.yaml`: headword -> [level, form, form, ...] for every NGSL/NAWL headword."""
+    index = hw.form_index(work)
+    data = {h: [e.level, *e.forms[1:]] for h, e in sorted(index.items())}
+    path = out / "forms.yaml"
+    path.write_text(
+        "# Headwords of NGSL 1.2 (with its supplementary list) and NAWL 1.2 with their inflected\n"
+        "# forms and the level estimated from frequency (specs/vocabulary-import). Used to check\n"
+        "# that a lesson's narration is graded English (specs/grammar-lessons). CC BY-SA 4.0,\n"
+        "# Browne, Culligan and Phillips; made by `python -m app.vocabulary.importer forms`.\n"
+        + yaml.dump(
+            data,
+            Dumper=yaml.SafeDumper,
+            allow_unicode=True,
+            sort_keys=False,
+            default_flow_style=None,
+            width=120,
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 # --- the owner's check --------------------------------------------------------------------------
 
 
@@ -454,7 +480,7 @@ def score(out: Path) -> dict[str, Any]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m app.vocabulary.importer")
-    parser.add_argument("command", choices=["download", "run", "sample", "score"])
+    parser.add_argument("command", choices=["download", "run", "sample", "score", "forms"])
     parser.add_argument("--work", type=Path, default=WORK)
     parser.add_argument("--out", type=Path, default=OUT)
     parser.add_argument("--tts-url", default=os.environ.get("TTS_URL") or "http://localhost:8030")
@@ -464,6 +490,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "download":
         download(args.work, args.out / "sources.json")
         print(f"downloaded to {args.work}")
+        return 0
+    if args.command == "forms":
+        download(args.work, args.out / "sources.json")
+        print(write_forms(args.work, args.out))
         return 0
     if args.command == "sample":
         print(sample(args.out, load_wordlist(AUTHORED).slug))

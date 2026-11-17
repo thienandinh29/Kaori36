@@ -39,6 +39,9 @@ class Settings(BaseSettings):
     vocab_dir: Path = REPO_ROOT / "data" / "vocabulary"
     # Imported words (CC BY-SA 4.0, specs/vocabulary-import), merged into the list of the same name.
     vocab_imported_dir: Path = REPO_ROOT / "data-sa" / "vocabulary"
+    # Lessons before practice (specs/grammar-lessons): one folder per course.
+    lessons_dir: Path = REPO_ROOT / "data" / "lessons"
+    sources_candidates: Path = REPO_ROOT / "data" / "sources" / "english-candidates.yaml"
     items_dir: Path = REPO_ROOT / "data" / "items"
     writing_dir: Path = REPO_ROOT / "data" / "writing"
     writing_daily_essays: int = 3  # essays per learner per day
