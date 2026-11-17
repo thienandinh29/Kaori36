@@ -17,7 +17,8 @@
 
 **Build (agent), in order:**
 - [ ] 3.1 recording, quality gate, consent, deletion
-- [ ] 3.2 recognition service, alignment, GOP, evaluation on speechocean762
+- [ ] 3.2 recognition service, alignment, GOP, evaluation on speechocean762 (3.2a built: the service, `step-3.2.md`;
+      3.2b next: the evaluation)
 - [ ] 3.3 target sounds, prompts, thresholds, false-alarm measurement
 - [ ] 3.4 roadmap nodes, observation parameters, marks in the UI
 - [ ] 3.5 optional fine-tuning
