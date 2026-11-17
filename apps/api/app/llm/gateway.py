@@ -26,7 +26,9 @@ class Route(BaseModel):
     provider: Literal["vertex", "bedrock", "openrouter", "deepseek", "gemini"]
     model: str = Field(min_length=1)
     # The model's maker, checked against the model id: the verifier is never the generator's family.
-    family: Literal["gemini", "claude", "deepseek", "qwen", "glm", "openai", "llama", "mistral"]
+    family: Literal[
+        "gemini", "claude", "deepseek", "qwen", "glm", "openai", "llama", "mistral", "ernie", "dots"
+    ]
 
 
 class Routing(BaseModel):
@@ -106,8 +108,14 @@ def generation_limits() -> GenerationLimits:
 
 
 _excluded_family: ContextVar[str | None] = ContextVar("generator_family", default=None)
+# Tasks that check another model's output: never the generator's family (verification_scope).
+VERIFY_TASKS = frozenset({"verify", "lesson_check"})
+# Free (`:free`) models may log or train on prompts, so they are refused everywhere except checking
+# lessons offline: public grammar text, never a learner's data (owner's decision, 17 Nov 2026).
+FREE_MODEL_TASKS = frozenset({"lesson_check"})
 KNOWN_GENERATOR_FAMILIES = frozenset(
     {"gemini", "claude", "deepseek", "gpt", "llama", "mistral", "qwen"}
+    | {"glm", "openai", "ernie", "dots"}
 )
 
 
@@ -175,7 +183,7 @@ class Gateway:
         if not routes:
             raise GatewayError(f"No route for tier/task: {tier}/{task}")
         excluded = _excluded_family.get()
-        if task == "verify" and excluded is None:
+        if task in VERIFY_TASKS and excluded is None:
             raise GatewayError("Verification requires verification_scope(actual_generator_family)")
         parsed = [m if isinstance(m, Message) else Message.model_validate(m) for m in messages]
         if not parsed or parsed[0].role != "user":
@@ -185,10 +193,11 @@ class Gateway:
         try:
             async with asyncio.timeout(self.total_timeout):
                 for configured in routes:
-                    if task == "verify" and configured.family.casefold() == excluded:
+                    if task in VERIFY_TASKS and configured.family.casefold() == excluded:
                         continue
                     model = os.path.expandvars(configured.model)
-                    if "$" in model or not model.strip() or model.endswith(":free"):
+                    free = model.endswith(":free") and task not in FREE_MODEL_TASKS
+                    if "$" in model or not model.strip() or free:
                         failures.append(f"{configured.provider}:model_not_configured")
                         continue
                     if configured.family not in model.casefold():
