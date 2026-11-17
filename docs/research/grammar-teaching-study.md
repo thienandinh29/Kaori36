@@ -12,9 +12,8 @@ product or the RAG library.
 ## 1. Teach rules explicitly, with examples first
 
 - **Explicit instruction beats implicit.** Norris & Ortega (2000), a meta-analysis of 49 samples, found focused L2
-  instruction gives large gains and explicit types beat implicit ones. A secondary source reports d ≈ 1.13 explicit vs
-  0.54 implicit; these figures are unverified because a second excerpt gives other numbers. Spada & Tomita (2010) found
-  the same for both simple and complex English features.
+  instruction gives large gains and explicit types beat implicit ones. Spada & Tomita (2010) found the same for both
+  simple and complex English features. Effect sizes are left out because none was read in the papers themselves.
   ([Norris & Ortega record](https://www.deepdyve.com/lp/wiley/does-type-of-instruction-make-a-difference-substantive-findings-from-a-9dzVAhpcHv/),
   [Spada & Tomita record](https://www.bohrium.com/paper-details/interactions-between-type-of-instruction-and-type-of-language-feature-a-meta-analysis/811806560392052736-6763))
 - **Caveat.** Critics note that these studies often measured with tests that favour explicit knowledge, and that only
@@ -150,7 +149,18 @@ language (see `openmaic-study.md`, idea 1) and adds what fits a mastery-tracking
 6. **Measured.** The report gives first-try accuracy with versus without the lesson, the scene where learners stop,
    and the owner's ratings.
 
-## 9. Open sources found (licences as reported; the owner verifies each on its own page)
+## 9. Open sources found
+
+**Update 17 Nov 2026.** Each licence was read on the source's own page and each level skimmed; the results are in
+`data/sources/english-candidates.yaml`:
+- Bissonnette: CC BY-NC 4.0, A1–C1, the backbone.
+- Al Haider High-Intermediate: CC BY 4.0, B1–B2.
+- Explorations 1: CC BY-NC-SA 4.0, four A1 chapters only.
+- Wikibooks: CC BY-SA 4.0, but a school grammar for native speakers, so it does not fill the A1–B1 gap.
+- Haisley: CC BY 4.0, but a linguistics textbook. Rejected as a lesson source and kept as a backup for terms.
+- Ferguson's grammar slides: no licence declared, so rejected.
+
+No CC BY grammar text for A1–B1 was found. The table below is the first list, from before the check.
 
 | Source | Licence reported | Level, use | Note |
 |---|---|---|---|

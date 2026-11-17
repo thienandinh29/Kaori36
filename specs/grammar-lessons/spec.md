@@ -34,11 +34,17 @@ Research: `docs/research/grammar-teaching-study.md` (teaching method, grammar or
 ## Hearing and reading
 - **Sena speaks English**, read by our voice (Piper `en_GB-cori-high`, `/speech`). Every sentence also has a slow
   version.
-- **Two subtitles under the board**: English (the target form highlighted) and Vietnamese. Each can be switched off;
-  both are on by default.
-- **The narration is graded English, checked by code.** Every word is in the word list (`core-seed` with the
-  NGSL/NAWL import) at or below the lesson's level, apart from the grammar terms the lesson introduces. Sentences are
-  short (at most 15 words for A1–A2 lessons, 20 for B1+).
+- **Subtitles under the board**: English (the target form highlighted) and Vietnamese. Each can be switched on or off.
+  **Default by level** (review, 17 Nov): at **A1 the Vietnamese subtitle only**, so a beginner is not overloaded (the
+  study's section 7: captions do not help learners without spare capacity); **from A2, both**. The target form stays
+  highlighted on the example card at every level, so a beginner still sees it.
+- **The narration is graded English, checked by code.** Each word is reduced to its headword through the NGSL/NAWL
+  **form lists** we already downloaded (`go, goes, went, going, gone`; `child, children`), so no lemmatizer (and no new
+  dependency) is needed. A word passes when its headword is in the **full** NGSL/NAWL headword list at or below the
+  lesson's level (function words included: the learner list leaves them out, the narration needs them), or in the
+  authored list, or in an allowlist (names such as Sena, Hanoi, IELTS; numbers; the grammar terms the lesson
+  introduces). Sentences are short: at most 15 words for A1–A2 lessons, 20 for B1 and above. If the form lists miss
+  too much, spaCy is the fallback; it would be proposed as a dependency first.
 - With sound off, the subtitles carry the whole lesson.
 
 ## The action language (from OpenMAIC, closed list)
@@ -96,21 +102,38 @@ scenes:
   its answer.
 
 ## Where the content comes from: RAG over licence-checked sources
-1. **Sources.**
-   - Candidates are listed in `data/sources/english-candidates.yaml` (study, section 9).
-   - The owner reads each licence on its own page and marks it `verified`.
-   - NoDerivatives sources are never used. NonCommercial sources are flagged. CC BY-SA material goes in `data-sa/`.
-   - The first candidates are Al Haider (CC BY, B2–C1 academic), Explorations 1 (CC BY-NC-SA, A1–A2) and Wikibooks
-     English Grammar.
-2. **Library.**
+1. **Sources.** Read on their own pages on 17 Nov 2026, by the agent at the owner's request (`checked_by: agent` in
+   `data/sources/english-candidates.yaml`):
+   - Bissonnette: CC BY-NC 4.0, A1–C1, the backbone.
+   - Al Haider High-Intermediate: CC BY 4.0, B1–B2.
+   - Explorations 1: CC BY-NC-SA 4.0, the first A1 nodes.
+   - Wikibooks English Grammar: CC BY-SA 4.0, terms only.
+
+   NoDerivatives sources are never used. NonCommercial sources are flagged. CC BY-SA material goes in `data-sa/`.
+   Which node each source covers, and the gaps (articles above all), are in `path.md`.
+2. **Licence on every chunk and every lesson** (review, 17 Nov).
+   - Each chunk stores its licence as a fixed value with an `is_noncommercial` flag. Today `sources.license` is free
+     text.
+   - A lesson stores the licences of the chunks it cites, and is NonCommercial if any of them is.
+   - If NodeTrail ever charges money or partners with a company, one query lists every NC chunk and every lesson built
+     on one.
+   - Note: `data/` as a whole is CC BY-NC-SA, because it holds Think Python material. Going commercial also means
+     cleaning or relicensing `data/`, not only the chunks.
+3. **Library.**
    - Fetch only from the source's own site, with the licence and URL recorded per chapter (`app/sources/`).
    - Chunk with chapter and section kept, then embed with bge-m3. Embedding runs where it can: the GPU notebook route
      in `specs/cited-items/`, or TEI on a machine that can run it.
    - The library is indexed per source.
-3. **Generation (offline, through the gateway).** For each node, retrieve the chunks that explain it. The generator
+4. **Our own notes as chunks** (review, 17 Nov).
+   - One chunk per Vietnamese learner error type (agreement, plural -s, articles, tense), written in our own words
+     from the studies in the study's section 4.
+   - Each is linked to its misconception tags in `data/items/misconceptions.vi.yaml`, so retrieval finds them for the
+     "So với tiếng Việt" scene.
+   - They are labelled **authored (references: the studies)** and are never shown as "Nguồn: <textbook>".
+5. **Generation (offline, through the gateway).** For each node, retrieve the chunks that explain it. The generator
    (DeepSeek) writes the scenes, and every study scene cites the chunk ids that support its rule. The output is
    JSON-validated and repaired, and retried with a delay ceiling.
-4. **Checks by code:**
+6. **Checks by code:**
    - actions come from the closed list;
    - spotlight targets exist in their examples;
    - examples contain the form taught;
@@ -120,12 +143,16 @@ scenes:
    - every study scene has a citation to a verified source;
    - no overlap with test items;
    - the length estimate is 90–240 s.
-5. **Blind check by a different model family (Gemini).** It answers each scene's concept questions from the cited
+7. **Blind check by a different model family (Gemini).** It answers each scene's concept questions from the cited
    chunks only; a mismatch makes the lesson `needs_review`. This needs the Gemini key, which is still pending.
-6. **Owner review.** Lessons stay labelled "Bản nháp — chưa được giáo viên duyệt" until the owner accepts them.
-7. **On the page:** "Nguồn: <book>, chương <n> (<licence>)" under each study scene.
+8. **Owner review.** Lessons stay labelled "Bản nháp — chưa được giáo viên duyệt" until the owner accepts them.
+9. **On the page:** "Nguồn: <book>, chương <n> (<licence>)" under each study scene.
 
-## The grammar path (proposed, from the study's section 5)
+## The grammar path
+The path is written in `path.md` and machine-checked in `english-ielts-path.yaml` (28 milestones, 51 nodes; not live).
+The list below is the first proposal; `path.md` is the current one.
+
+### First proposal (from the study's section 5)
 The present roadmap has 10 milestones. Proposed additions are marked **+**. None is added without the owner's OK, and
 each new node needs items before it is live.
 - **A1–A2:**
@@ -183,6 +210,8 @@ be too small to prove anything; the report says so.
 - No new dependency is planned for B1.
 
 ## Still open for the owner
-- [ ] The proposed path additions (all, some, or later)
-- [ ] Verify the licence of at least one grammar source; Al Haider (CC BY, B2–C1) is recommended first
+- [ ] The path (`path.md`): which new milestones go live first
+- [ ] The source gaps, articles above all: look for one more source (recommended), write lessons ourselves labelled as
+  such, or leave those nodes without a lesson
+- [x] Licences of the grammar sources read (17 Nov, by the agent at the owner's request)
 - [ ] The Gemini key for the blind check (B3 and later)

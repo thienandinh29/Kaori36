@@ -26,6 +26,9 @@ class Candidate(BaseModel):
     checked_on: date | None = None
     licence_page: HttpUrl | None = None
     reason: str | None = None
+    # who read the licence page: the owner, or the agent at the owner's request (17 Nov 2026)
+    checked_by: Literal["owner", "agent"] | None = None
+    note: str | None = None  # level and coverage, as skimmed
 
     @property
     def non_commercial(self) -> bool:
