@@ -53,3 +53,8 @@ essays over 4 weeks (the writing and speaking loop working); the word error rate
 | 5.5 | Opening to testers: accounts, per-user limits, the daily cost cap, the tester report |
 
 Not in this phase: a native-like or accent score, intonation, an automatic band without ratings.
+
+## The owner's direction (17 Nov 2026)
+First help learners pronounce correctly (phase 3). Then a **simulated IELTS Speaking test** that uses both: pronunciation from
+phase 3 and what the learner says (transcript, grammar, vocabulary, the answer to the question), in the three parts of the test.
+The band rule above still holds: no band until rated recordings exist.

@@ -12,10 +12,11 @@ const allowedEnglish = new RegExp(
     `nodes/${SLUG}/practice|grammar-runs/${UUID}/answers|vocab/session|vocab/levels|vocab/answers|vocab/checks|` +
     `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
-    `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints)$`,
+    `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
+    `pronunciation/prompts|recordings|recordings/${UUID})$`,
 );
 // The only path a learner may DELETE: their own essay (specs/writing/step-2.1.md).
-const deletable = new RegExp(`^(essays|phrases)/${UUID}$`);
+const deletable = new RegExp(`^(essays|phrases|recordings)/${UUID}$`);
 const forwardedParams = [
   "learner_id",
   "subject",
@@ -26,6 +27,9 @@ const forwardedParams = [
   "max_level",
   "level",
   "topic",
+  "prompt_id",
+  "consent",
+  "keep",
 ];
 const learnerCookie = "nodetrail_learner";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;
@@ -103,7 +107,9 @@ async function proxy(
       const limit =
         path === "uploads"
           ? Number(process.env.NODETRAIL_MAX_UPLOAD_BYTES) + 64 * 1024
-          : 64 * 1024;
+          : path === "recordings"
+            ? 600 * 1024 // a 15-second 16 kHz mono WAV is about 480 KB
+            : 64 * 1024;
       if (
         !Number.isSafeInteger(limit) ||
         (limit <= 64 * 1024 && path === "uploads")
