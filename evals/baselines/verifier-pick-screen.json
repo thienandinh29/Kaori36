@@ -1,0 +1,77 @@
+{
+  "set": "evals/verifier/planted-grammar.yaml",
+  "items": 12,
+  "date": "2026-11-17",
+  "results": [
+    {
+      "model": "inclusionai/ling-3.2-flash:free",
+      "wrong": 6,
+      "caught": "4/6 = 67% (95%: 22% to 96%)",
+      "right": 6,
+      "false_alarms": "0/6 = 0% (95%: 0% to 46%)",
+      "unusable": 4,
+      "input_tokens": 1234,
+      "output_tokens": 901,
+      "cost_usd": 0.0,
+      "seconds": 89.4,
+      "misses": [
+        "q04 (unusable)",
+        "q06 (unusable)"
+      ],
+      "alarms": [],
+      "cost_per_1000_checks_usd": 0.0
+    },
+    {
+      "model": "baidu/ernie-5.5-flash-preview:free",
+      "wrong": 6,
+      "caught": "6/6 = 100% (95%: 54% to 100%)",
+      "right": 6,
+      "false_alarms": "0/6 = 0% (95%: 0% to 46%)",
+      "unusable": 0,
+      "input_tokens": 1822,
+      "output_tokens": 893,
+      "cost_usd": 0.0,
+      "seconds": 37.9,
+      "misses": [],
+      "alarms": [],
+      "cost_per_1000_checks_usd": 0.0
+    },
+    {
+      "model": "dots-studio/dots-3-note-preview:free",
+      "wrong": 6,
+      "caught": "6/6 = 100% (95%: 54% to 100%)",
+      "right": 6,
+      "false_alarms": "0/6 = 0% (95%: 0% to 46%)",
+      "unusable": 0,
+      "input_tokens": 1570,
+      "output_tokens": 4841,
+      "cost_usd": 0.0,
+      "seconds": 95.1,
+      "misses": [],
+      "alarms": [],
+      "cost_per_1000_checks_usd": 0.0
+    },
+    {
+      "model": "google/gemma-4-31b-it:free",
+      "wrong": 6,
+      "caught": "0/6 = 0% (95%: 0% to 46%)",
+      "right": 6,
+      "false_alarms": "0/6 = 0% (95%: 0% to 46%)",
+      "unusable": 12,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0.0,
+      "seconds": 35.5,
+      "misses": [
+        "c02 (unusable)",
+        "c04 (unusable)",
+        "c06 (unusable)",
+        "q02 (unusable)",
+        "q04 (unusable)",
+        "q06 (unusable)"
+      ],
+      "alarms": [],
+      "cost_per_1000_checks_usd": 0.0
+    }
+  ]
+}
