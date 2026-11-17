@@ -40,6 +40,12 @@ def create_router(recordings: Recordings) -> APIRouter:
     ) -> list[dict[str, Any]]:
         return recordings.list(learner_id)
 
+    @router.get("/recordings/{recording_id}")
+    def get_recording(
+        recording_id: str, learner_id: str = Query(min_length=1, max_length=200)
+    ) -> dict[str, Any]:
+        return recordings.get(learner_id, recording_id)
+
     @router.delete("/recordings/{recording_id}", status_code=204)
     def delete_recording(
         recording_id: str, learner_id: str = Query(min_length=1, max_length=200)

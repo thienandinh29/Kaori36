@@ -43,13 +43,31 @@ export interface RecordingResult {
   id: string | null;
   delete_after: string | null;
 }
+export type RecordingStatus = "stored" | "analysed" | "failed";
+const STATUSES: readonly RecordingStatus[] = ["stored", "analysed", "failed"];
+
 export interface RecordingRow {
   id: string;
   prompt_id: string;
   keep: boolean;
   seconds: number;
+  status: RecordingStatus;
   created_at: string;
   delete_after: string | null;
+}
+/** One target sound in a recording (step 3.3a): scores only, no right/wrong verdict yet. */
+export interface TargetScore {
+  sound: string;
+  word: string;
+  phone: string;
+  gop: number;
+  competitor: string | null;
+}
+export interface RecordingDetail {
+  id: string;
+  status: RecordingStatus;
+  failed: boolean;
+  targets: TargetScore[];
 }
 
 function list(value: unknown): unknown[] {
@@ -107,15 +125,50 @@ export function parseRecordingResult(value: unknown): RecordingResult {
   };
 }
 
+function status(value: unknown): RecordingStatus {
+  const s = string(value);
+  if (!(STATUSES as readonly string[]).includes(s))
+    throw new DataError("contract");
+  return s as RecordingStatus;
+}
+function num(value: unknown): number {
+  if (typeof value !== "number" || !Number.isFinite(value))
+    throw new DataError("contract");
+  return value;
+}
+
+export function parseRecording(value: unknown): RecordingDetail {
+  const d = record(value);
+  const analysis =
+    d.analysis === null || d.analysis === undefined ? null : record(d.analysis);
+  return {
+    id: string(d.id),
+    status: status(d.status),
+    failed: flag(d.failed),
+    targets: analysis
+      ? list(analysis.targets).map((t) => {
+          const r = record(t);
+          return {
+            sound: string(r.sound),
+            word: string(r.word),
+            phone: string(r.phone),
+            gop: num(r.gop),
+            competitor: optional(r.competitor),
+          };
+        })
+      : [],
+  };
+}
+
 export function parseRecordings(value: unknown): RecordingRow[] {
   return list(value).map((v) => {
     const r = record(v);
-    if (typeof r.seconds !== "number") throw new DataError("contract");
     return {
       id: string(r.id),
       prompt_id: string(r.prompt_id),
       keep: flag(r.keep),
-      seconds: r.seconds,
+      seconds: num(r.seconds),
+      status: status(r.status),
       created_at: string(r.created_at),
       delete_after: optional(r.delete_after),
     };

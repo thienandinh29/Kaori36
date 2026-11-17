@@ -39,8 +39,10 @@ import {
 } from "@/lib/lesson/decode";
 import {
   parsePrompts,
+  parseRecording,
   parseRecordingResult,
   parseRecordings,
+  type RecordingDetail,
   type PronunciationPrompts,
   type RecordingResult,
   type RecordingRow,
@@ -340,6 +342,12 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     async recordings(learnerId: string): Promise<RecordingRow[]> {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseRecordings(await request(`recordings?${q}`));
+    },
+    async recording(learnerId: string, id: string): Promise<RecordingDetail> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseRecording(
+        await request(`recordings/${encodeURIComponent(id)}?${q}`),
+      );
     },
     async deleteRecording(learnerId: string, id: string): Promise<void> {
       const q = new URLSearchParams({ learner_id: learnerId });

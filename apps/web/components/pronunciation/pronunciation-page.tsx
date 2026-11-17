@@ -4,6 +4,7 @@ import { englishClient } from "@/lib/english/client";
 import { MAX_SECONDS, toServerWav } from "@/lib/pronunciation/wav";
 import type {
   PronunciationPrompts,
+  RecordingDetail,
   RecordingResult,
   RecordingRow,
 } from "@/lib/pronunciation/types";
@@ -35,7 +36,45 @@ async function decode(blob: Blob): Promise<Take> {
   }
 }
 
-/** Step 3.1 (specs/pronunciation/step-3.1.md): read a sentence aloud; only the recording's quality is checked. */
+/** Raw per-sound scores of one recording (step 3.3a): numbers only, never "right" or "wrong" yet. */
+function Scores({
+  detail,
+  names,
+}: {
+  detail: RecordingDetail;
+  names: Map<string, string>;
+}) {
+  if (detail.failed) return <p className="en-muted">{t.failed}</p>;
+  return (
+    <div data-testid="recording-scores">
+      <p className="en-muted">{t.scoresNote}</p>
+      <table className="nt-pron-scores">
+        <thead>
+          <tr>
+            <th>{t.sound}</th>
+            <th>{t.word}</th>
+            <th>{t.score}</th>
+            <th>{t.heardAs}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {detail.targets.map((s, i) => (
+            <tr key={i}>
+              <td>
+                {names.get(s.sound) ?? s.sound} /{s.phone}/
+              </td>
+              <td lang="en">{s.word}</td>
+              <td>{s.gop.toFixed(2)}</td>
+              <td>{s.competitor ? `/${s.competitor}/` : "—"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** Steps 3.1 and 3.3a (specs/pronunciation): read a sentence aloud; quality check, then raw scores per sound. */
 export function PronunciationPage() {
   const { learner, error: learnerError, retry } = useLearner();
   const [data, setData] = useState<PronunciationPrompts | null>(null);
@@ -58,6 +97,7 @@ export function PronunciationPage() {
   const [rows, setRows] = useState<RecordingRow[]>([]);
   const [busy, setBusy] = useState(false);
   const [noMic, setNoMic] = useState(false);
+  const [open, setOpen] = useState<RecordingDetail | null>(null);
   const recorder = useRef<MediaRecorder | null>(null);
   const timer = useRef<number | null>(null);
 
@@ -89,9 +129,8 @@ export function PronunciationPage() {
   if (!data || !learner)
     return <p className="en-muted">{vi.english.loading}</p>;
   const prompt = data.prompts[index % data.prompts.length]!;
-  const sounds = prompt.targets.map(
-    (id) => data.sounds.find((s) => s.id === id)?.name_vi ?? id,
-  );
+  const names = new Map(data.sounds.map((s) => [s.id, s.name_vi]));
+  const sounds = prompt.targets.map((id) => names.get(id) ?? id);
 
   async function start() {
     setResult(null);
@@ -153,6 +192,15 @@ export function PronunciationPage() {
       setError(e);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function show(id: string) {
+    if (open?.id === id) return setOpen(null);
+    try {
+      setOpen(await englishClient().recording(learner!, id));
+    } catch (e) {
+      setError(e);
     }
   }
 
@@ -288,7 +336,17 @@ export function PronunciationPage() {
                     {r.delete_after
                       ? ` · ${t.okUntil} ${new Date(r.delete_after).toLocaleString("vi-VN")}`
                       : ` · ${t.kept}`}
+                    {r.status === "stored" && ` · ${t.waiting}`}
                   </span>
+                  {r.status !== "stored" && (
+                    <button
+                      type="button"
+                      className="en-button ghost small"
+                      onClick={() => void show(r.id)}
+                    >
+                      {open?.id === r.id ? t.hide : t.show}
+                    </button>
+                  )}
                   <button
                     type="button"
                     className="en-button ghost small"
@@ -296,6 +354,7 @@ export function PronunciationPage() {
                   >
                     {t.delete}
                   </button>
+                  {open?.id === r.id && <Scores detail={open} names={names} />}
                 </li>
               ))}
             </ul>

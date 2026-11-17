@@ -19,7 +19,9 @@
 - [x] 3.1 recording, quality gate, consent, deletion (`step-3.1.md`; owner only until a privacy review)
 - [ ] 3.2 recognition service, alignment, GOP, evaluation on speechocean762 (3.2a built: the service, `step-3.2.md`;
       3.2b next: the evaluation)
-- [ ] 3.3 target sounds, prompts, thresholds, false-alarm measurement
+- [ ] 3.3 target sounds, prompts, thresholds, false-alarm measurement (`step-3.3.md`; 3.3a built: canonical phones,
+      target rules, worker analysis, raw scores on `/phat-am`; 3.3b next: labels, thresholds, false alarms)
+- [ ] Owner: review `data/pronunciation/canonical.yaml` against the model voice (Piper) before 3.3b
 - [ ] 3.4 roadmap nodes, observation parameters, marks in the UI
 - [ ] 3.5 optional fine-tuning
 - [ ] Gate report in `docs/v2/pronunciation-eval.md`

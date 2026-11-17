@@ -1951,9 +1951,24 @@ svg.nt-trail {
 }
 .nt-pron-rows li {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+}
+.nt-pron-rows li > [data-testid="recording-scores"] {
+  flex-basis: 100%;
+  overflow-x: auto;
+}
+.nt-pron-scores {
+  border-collapse: collapse;
+  width: 100%;
+}
+.nt-pron-scores th,
+.nt-pron-scores td {
+  text-align: left;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--line);
 }
 .nt-pron audio {
   vertical-align: middle;

@@ -19,6 +19,8 @@ from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.pronunciation.canonical import Word, load_canonical, phone_set
+from app.pronunciation.canonical import check as check_canonical
 from app.pronunciation.quality import Quality, check
 from app.services.backend import learner_uuid
 
@@ -65,6 +67,19 @@ def load_prompts(folder: Path) -> tuple[dict[str, Sound], list[Prompt]]:
     return sounds, prompts
 
 
+def load_checked_canonical(folder: Path, prompts: list[Prompt]) -> dict[str, list[Word]]:
+    """The prompts' canonical phones, refused at start-up if any prompt is inconsistent."""
+    canonical = load_canonical(folder / "canonical.yaml")
+    problems = check_canonical(
+        canonical,
+        {p.id: (p.text, p.targets) for p in prompts},
+        phone_set(folder / "model-phones.txt"),
+    )
+    if problems:
+        raise ValueError("; ".join(problems))
+    return canonical
+
+
 def purge_expired(conn: psycopg.Connection[Any], now: datetime | None = None) -> int:
     """Delete recordings past their time; returns how many."""
     cur = conn.execute(
@@ -84,6 +99,7 @@ class Recordings:
     ) -> None:
         self.pool = pool
         self.sounds, self.prompts = load_prompts(folder)
+        self.canonical = load_checked_canonical(folder, self.prompts)
         self.owners = {learner_uuid(x.strip()) for x in draft_learners.split(",") if x.strip()}
         self.clock = clock
 
@@ -161,6 +177,33 @@ class Recordings:
             }
             for r in rows
         ]
+
+    def get(self, learner_id: str, recording_id: str) -> dict[str, Any]:
+        """One of the learner's recordings with its analysis (scores, never a verdict yet)."""
+        learner = learner_uuid(learner_id)
+        try:
+            rid = UUID(recording_id)
+        except ValueError:
+            raise HTTPException(404, "Không tìm thấy bản ghi.") from None
+        with self.pool().connection() as conn:
+            row = conn.execute(
+                "select prompt_id,keep,seconds,status,created_at,delete_after,analysis,failure "
+                "from speech_recordings where id=%s and learner_id=%s",
+                (rid, learner),
+            ).fetchone()
+        if row is None:
+            raise HTTPException(404, "Không tìm thấy bản ghi.")
+        return {
+            "id": recording_id,
+            "prompt_id": row[0],
+            "keep": row[1],
+            "seconds": row[2],
+            "status": row[3],
+            "created_at": row[4].isoformat(),
+            "delete_after": row[5].isoformat() if row[5] else None,
+            "analysis": row[6],
+            "failed": row[7] is not None,
+        }
 
     def delete(self, learner_id: str, recording_id: str) -> None:
         learner = learner_uuid(learner_id)
