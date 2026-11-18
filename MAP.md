@@ -8,6 +8,7 @@ Planned entries are marked _(planned)_ until they exist.
 | Path | Purpose |
 |---|---|
 | `CLAUDE.md` | Rules and working agreement for Claude, one-owner v2 project (auto-loaded; imports `MAP.md` and `SPEC.md`) |
+| `dolater.md` | **The owner's to-do list**: everything that waits on the owner (licence checks, recordings, labels, reviews, measurements, decisions), with time and commands |
 | `SPEC.md` | What NodeTrail must do: features, behaviors, non-goals |
 | `docs/v2/plan-english-pack.md` | **Current plan: the English pack in phases, with gates and status** (where the project is) |
 | `docs/v2/english-pack-proposal.vi.md` | The owner's proposal for the English pack (Vietnamese): why, components, metrics, risks |
