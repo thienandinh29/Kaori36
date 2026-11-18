@@ -126,6 +126,10 @@ def create_app(
     from app.services.rechecks import Rechecks
 
     app.include_router(recheck_routes.create_router(Rechecks(grammar)))
+    from app.api import today as today_routes
+    from app.services.today import TodayService
+
+    app.include_router(today_routes.create_router(TodayService(grammar)))
     from app.api import pronunciation as pronunciation_routes
     from app.services.recordings import Recordings
 

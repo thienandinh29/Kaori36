@@ -8,6 +8,7 @@ import { vi } from "@/messages/vi";
 import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
 import { RecheckCard } from "./recheck-card";
+import { TodayList } from "./today-list";
 import { useRoadmap } from "./roadmap-view";
 import { TraceNote } from "./trace-note";
 import { useLearner } from "./use-learner";
@@ -44,6 +45,7 @@ export function EnglishHome() {
           <p className="en-muted">{t.home.senaRule}</p>
         </div>
       </section>
+      {learner && <TodayList learner={learner} />}
       {error != null && <Problem error={error} onRetry={reload} />}
       {!error && !roadmap && <p className="en-muted">{t.loading}</p>}
       {roadmap && !roadmap.level_test && (

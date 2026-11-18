@@ -256,6 +256,14 @@ describe("graph confirmation session proxy", () => {
     ])
       expect((await post(path)).status).toBe(200);
     expect((await get("rechecks/next", `?learner_id=${id}`)).status).toBe(200);
+    expect(
+      (await get("today", `?learner_id=${id}&minutes=50&x=1`)).status,
+    ).toBe(200);
+    const todayUrl = new URL(
+      String(fetchMock.mock.calls[fetchMock.mock.calls.length - 1]?.[0]),
+    );
+    expect(todayUrl.searchParams.get("minutes")).toBe("50");
+    expect(todayUrl.searchParams.get("x")).toBeNull();
     expect((await post("rechecks/not-a-uuid/answer")).status).toBe(404);
     expect(
       (await get("roadmap", `?learner_id=${id}&course=english-ielts&secret=x`))

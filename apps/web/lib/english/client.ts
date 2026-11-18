@@ -6,6 +6,7 @@ import {
   type ReviewStatus,
 } from "@/lib/reading/review";
 import { DataError } from "@/lib/decode";
+import { parseToday, type Today } from "@/lib/english/today";
 import {
   parseRecheck,
   parseRecheckResult,
@@ -353,6 +354,13 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       );
     },
     /** The owner's Reading review queue (specs/listening-reading/step-4.2c.md). */
+    async today(learnerId: string, minutes = 40): Promise<Today> {
+      const q = new URLSearchParams({
+        learner_id: learnerId,
+        minutes: String(minutes),
+      });
+      return parseToday(await request(`today?${q}`));
+    },
     async recheckNext(learnerId: string): Promise<RecheckQuestion | null> {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseRecheck(await request(`rechecks/next?${q}`));

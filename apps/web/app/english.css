@@ -1997,3 +1997,11 @@ svg.nt-trail {
   width: 100%;
   margin-top: 4px;
 }
+
+/* "Hôm nay": the recommendation engine's list (specs/two-layer-map, M3). */
+.en-today {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}

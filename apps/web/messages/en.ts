@@ -23,6 +23,21 @@ export const en = {
     retry: "Try again",
     about: "About",
     vocabulary: "Vocabulary",
+    today: {
+      title: "Today",
+      target: (band: number, date: string) =>
+        `Target: IELTS ${band.toFixed(1)} · exam expected ${date}`,
+      kinds: {
+        review: "Review",
+        diagnostic: "Short diagnostic",
+        learn_foundation: "Learn a foundation",
+        practise_competency: "Exam-style practice",
+      } as Record<string, string>,
+      via: "for",
+      go: "Start",
+      proposed:
+        "The links between exam skills and foundations are proposed, not yet checked by a teacher.",
+    },
     recheck: {
       title: "A check, a week later",
       intro: "One short question on something you know:",
