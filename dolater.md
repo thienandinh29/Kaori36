@@ -15,7 +15,7 @@ a gate's truth.
 | [ ] **Phase 4, CP1:** read the licence of Simple English Wikipedia and of each OpenStax book (Sociology 3e, Astronomy 2e, World History vol. 1) on its own page; if they match, set `simple-wikipedia` and `openstax-reading` to `verified` (with `checked_on`, `licence_page`) | 15 min | Every Reading question | `data/sources/english-candidates.yaml` |
 | [ ] **Phase 4, CP1:** on your laptop, `uv run python -m app.texts.fetch simple-wiki`, then `... fetch openstax`, then `uv run python -m app.texts.bank ../../data/private/english-texts`; move the texts to `data/english/texts/` and commit | 15 min | CP2b, the planted-error test | `specs/listening-reading/plan.md` (CP1 status) |
 | [ ] **Phase 3:** record 50–100 sentences on `/phat-am` with "keep" ticked, and check that the pipeline works (quality check, analysis, deletion). The sound labels themselves go to a reviewer (section 3) | 2 h | The pronunciation gate | `specs/pronunciation/step-3.3.md` |
-| [ ] **Phase 3, after the reviewer's labels:** `uv run python -m app.pronunciation.thresholds --out ../../evals/baselines/pronunciation-thresholds.json --apply ../../data/pronunciation/thresholds.json`, then `docker compose restart api worker` | 10 min | Marks on sounds, mastery on the pronunciation nodes | `specs/pronunciation/step-3.4.md` |
+| [ ] **Phase 3, after the reviewer's labels:** `uv run python -m app.pronunciation.thresholds --out ../../evals/baselines/pronunciation-thresholds.json --apply ../../data/pronunciation/thresholds.json`, then `docker compose restart api worker`. **`--apply` is refused** unless the report rests on the reviewer's Gold labels from at least 50 recordings (V3); your own labels give a Bronze check of the pipeline only | 10 min | Marks on sounds, mastery on the pronunciation nodes | `specs/pronunciation/step-3.4.md` |
 | [x] **Validation spec (`specs/validation/spec.md`):** approved 18 Nov; V1 built. When a reviewer agrees: `uv run python -m app.validation.cli add-reviewer --name "…" --role expert_teacher --expertise "…" --consented` (only after they agree to how their labels are used) | 5 min | Their labels count as Gold | `specs/validation/step-v1.md` |
 | [ ] **Two maps (`specs/two-layer-map/spec.md`):** approve or change the design; set your target (band per skill, exam date). The links between competencies and foundations stay Bronze ("đề xuất") until a teacher checks a sample | 30 min | M1–M2, ideally before CP4 | same |
 
@@ -36,7 +36,8 @@ a gate's truth.
 **How to give a reviewer access (V2 portal):** once they reply "Đồng ý", run `add-reviewer` (section 1), then
 `uv run python -m app.validation.cli issue-token --reviewer <id> --base-url <your web address>` and send the link
 privately (it is shown once; `revoke-token` ends it). Make their batch with
-`uv run python -m app.validation.cli make-batch --content reading_item --name "Đọc đợt 1"` (or `--content text_level`)
+`uv run python -m app.validation.cli make-batch --content reading_item --name "Đọc đợt 1" --size 100` (or `--content text_level`;
+100 so the checker-verified part can reach the 72 items the 5% process bar needs with no escapes)
 after CP1, when the texts are in the bank.
 
 Find: **one English teacher** (grammar, vocabulary, Reading, text levels), **one person with IELTS rating experience**
@@ -49,7 +50,9 @@ reviewer portal (V2) exists, they can work from the same sheets and pages.
 | [ ] Pronunciation labels on your kept recordings (Đúng / Sai / Không chắc per target sound) and the canonical phones | Phonetics-trained teacher, or an English teacher | 3–4 h | The pronunciation gate (false alarms ≤ 10%) |
 | [ ] CEFR levels of the 30 texts | English teacher | 1 h | CP1 sign-off |
 | [ ] Phase 4, CP2b: confirm the "two defensible answers" planted faults (wrong-key faults are Gold by construction) | English teacher | 1 h | The planted-error test |
-| [ ] Phase 4, CP3: a stratified 50 Reading questions on `/duyet-doc`, then `uv run python -m app.reading.agreement --out ../../evals/baselines/reading-agreement.json` (kappa against the expert, VER-001) | English teacher | 5 h | Gate 2 |
+| [ ] Phase 4, CP3: a stratified batch of Reading questions on the portal `/kiem-duyet` (at least 50 for the gate; about 100 for the process rule), then `uv run python -m app.reading.agreement --out ../../evals/baselines/reading-agreement.json` (kappa, defect escape and false rejection against the expert, VER-001) | English teacher | 5–10 h | Gate 2 |
+| [ ] Text levels: the 30 texts on the portal (`make-batch --content text_level`), then `uv run python -m app.texts.levels score-gold --out ../../evals/baselines/text-levels.json` | English teacher | 1 h | CP1's level report |
+| [ ] Writing sheets: the same sheets you would fill, then score with `--rated-by teacher` (`app.evalkit.writing_map`, `app.evalkit.writing_review`); filled by you they are Bronze and never meet the gate | English teacher | 2 h | Phase 2 gate |
 | [ ] Vocabulary: the 50-entry sample right or wrong, then `score`; the seed list's definitions, examples, collocations and glosses (`data/vocabulary/core-seed.yaml`) | English teacher | 3 h | The imported list leaves draft |
 | [ ] Grammar: a stratified sample of the 76 draft MCQs and their misconception texts (`data/items/`) | English teacher | 2–3 h | Items served beyond you |
 | [ ] Writing: the error-type → node table (`data/writing/error-map.yaml`) and the 100-error mapping check | English teacher | 2 h | Writing evidence on grammar nodes |

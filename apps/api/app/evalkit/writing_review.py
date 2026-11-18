@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Any
 
 from app.evalkit.stats import rate
+from app.validation.gate import RATED_BY, Truth, basis, rated_by
 
 FEEDBACK_MIN_POINTS = 60  # about 20 essays at 3 points a criterion is plenty; fewer is a warning
 CORRECTIONS_MIN = 50
@@ -57,7 +58,9 @@ def _rate(k: int, n: int) -> dict[str, Any]:
     }
 
 
-def score_feedback(rows: Sequence[dict[str, str]]) -> dict[str, Any]:
+def score_feedback(
+    rows: Sequence[dict[str, str]], truth: Truth = "bronze", declared: bool = False
+) -> dict[str, Any]:
     by_c: dict[str, list[bool]] = defaultdict(list)
     by_k: dict[str, list[bool]] = defaultdict(list)
     rated_essays: set[str] = set()
@@ -78,6 +81,7 @@ def score_feedback(rows: Sequence[dict[str, str]]) -> dict[str, Any]:
         else "Enough points rated for a usable interval."
     )
     return {
+        "basis": basis(truth, len(every), FEEDBACK_MIN_POINTS, declared=declared),
         "kind": "feedback_supported_by_quotes",
         "essays_rated": len(rated_essays),
         "unrated_points": unrated,
@@ -88,7 +92,9 @@ def score_feedback(rows: Sequence[dict[str, str]]) -> dict[str, Any]:
     }
 
 
-def score_corrections(rows: Sequence[dict[str, str]]) -> dict[str, Any]:
+def score_corrections(
+    rows: Sequence[dict[str, str]], truth: Truth = "bronze", declared: bool = False
+) -> dict[str, Any]:
     by_type: dict[str, list[bool]] = defaultdict(list)
     unrated = 0
     for r in rows:
@@ -101,8 +107,13 @@ def score_corrections(rows: Sequence[dict[str, str]]) -> dict[str, Any]:
     every = [v for vs in by_type.values() for v in vs]
     overall = _rate(sum(every), len(every))
     low = overall["interval"][0] if overall["interval"] else None
+    b = basis(truth, len(every), CORRECTIONS_MIN, declared=declared)
     if len(every) < CORRECTIONS_MIN:
         note = f"{len(every)} rated; at least {CORRECTIONS_MIN} are needed before this means much."
+    elif b["gate"] != "measured":
+        note = (
+            f"Not a gate result: {b['why_en']}. AI corrections stay hints that never move mastery."
+        )
     elif low is not None and low >= CORRECTIONS_PROPOSED_LOWER_BOUND:
         note = (
             f"Lower bound {low:.2f} is at or above the proposed "
@@ -115,6 +126,7 @@ def score_corrections(rows: Sequence[dict[str, str]]) -> dict[str, Any]:
             "keep AI corrections as hints that never move mastery."
         )
     return {
+        "basis": b,
         "kind": "ai_corrections_precision",
         "unrated": unrated,
         "overall": overall,
@@ -127,7 +139,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("what", choices=["feedback", "corrections"])
     parser.add_argument("sheet", type=Path)
+    parser.add_argument("--rated-by", choices=RATED_BY, default="owner")
     args = parser.parse_args(argv)
+    truth, declared = rated_by(args.rated_by)
     with args.sheet.open(encoding="utf-8", newline="") as f:
         rows = list(csv.DictReader(f))
     column = "supported" if args.what == "feedback" else "correct"
@@ -135,7 +149,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"the sheet has no {column!r} column: is it the {args.what} sheet?")
         return 2
     try:
-        report = score_feedback(rows) if args.what == "feedback" else score_corrections(rows)
+        report = (
+            score_feedback(rows, truth, declared)
+            if args.what == "feedback"
+            else score_corrections(rows, truth, declared)
+        )
     except ValueError as err:
         print(err)
         return 2

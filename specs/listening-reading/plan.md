@@ -10,7 +10,7 @@ voice and DeepSeek as generator is approved with the plan.
 
 **Changed 18 Nov 2026 by `specs/validation/spec.md`:** wherever this plan says the owner labels or confirms (CP1 text
 levels, CP2b faults, CP3 agreement), the truth now comes from an expert (Gold). The owner's labels are kept as learner
-feedback (CP1) or Bronze. The bars stay the same.
+feedback (CP1) or Bronze. The bars stay the same. Since V3 (`specs/validation/step-v3.md`) the commands report this themselves: `app.reading.agreement` reads the expert's labels from the portal, and `app.texts.levels score-gold` the teacher's levels.
 
 ## Where things stand
 - **Built:**

@@ -1,10 +1,13 @@
-"""How well do the measured features track the owner's CEFR labels? (plan.md, CP1)
+"""How well do the measured features track CEFR labels? (plan.md, CP1; specs/validation/step-v3.md)
 
     uv run python -m app.texts.levels sheet [folder] --out sheet.csv   # `level` left empty
     uv run python -m app.texts.levels score sheet.csv [--out report.json]
+    uv run python -m app.texts.levels score-gold [folder] [--out report.json]
 
-The owner fills `level` (A1-C1) by reading each text. `score` reports, per feature, the
-Spearman rank correlation with those labels and how many texts it rests on. It measures
+`score` reads a filled sheet: the owner's levels are learner feedback ("how hard it felt"), never
+the gate. `score-gold` reads an English teacher's levels from the reviewer portal (Gold): the
+gate, once 30 texts are labelled. Both report, per feature, the Spearman rank correlation with
+the labels and how many texts it rests on. It measures
 agreement only: no level is ever assigned from the features. The "unknown share" feature uses
 the NGSL/NAWL form index (`data-sa/vocabulary/forms.yaml`, CC BY-SA 4.0): the share of words not
 among the forms of A1-B1 headwords.
@@ -22,8 +25,10 @@ import yaml  # type: ignore[import-untyped]
 
 from app.texts.bank import REPO, TextEntry
 from app.texts.features import features
+from app.validation.gate import Truth, basis
 
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
+MIN_TEXTS = 30
 FEATURES = ("words", "mean_sentence_words", "long_word_share", "type_token_ratio", "unknown_share")
 FORMS = REPO / "data-sa" / "vocabulary" / "forms.yaml"
 
@@ -74,12 +79,16 @@ def sheet_rows(entries: Sequence[TextEntry], known: Collection[str]) -> list[dic
     return rows
 
 
-def score(rows: Sequence[Mapping[str, str]]) -> dict[str, Any]:
-    labelled = [r for r in rows if r.get("level", "").strip().upper() in LEVELS]
-    y = [float(LEVELS.index(r["level"].strip().upper())) for r in labelled]
-    out: dict[str, Any] = {"labelled": len(labelled), "unlabelled": len(rows) - len(labelled)}
+def score(rows: Sequence[Mapping[str, Any]], truth: Truth = "feedback") -> dict[str, Any]:
+    labelled = [r for r in rows if str(r.get("level", "")).strip().upper() in LEVELS]
+    y = [float(LEVELS.index(str(r["level"]).strip().upper())) for r in labelled]
+    out: dict[str, Any] = {
+        "basis": basis(truth, len(labelled), MIN_TEXTS),
+        "labelled": len(labelled),
+        "unlabelled": len(rows) - len(labelled),
+    }
     out["levels"] = {
-        lv: sum(1 for r in labelled if r["level"].strip().upper() == lv) for lv in LEVELS
+        lv: sum(1 for r in labelled if str(r["level"]).strip().upper() == lv) for lv in LEVELS
     }
     out["spearman"] = {}
     for name in FEATURES:
@@ -92,11 +101,34 @@ def score(rows: Sequence[Mapping[str, str]]) -> dict[str, Any]:
             "rho": spearman([p[0] for p in pairs], [p[1] for p in pairs]),
             "n": len(pairs),
         }
+    who = "an English teacher's labels" if truth == "gold" else "the owner's felt levels"
     out["note"] = (
-        "Agreement of each feature with the owner's labels, nothing more. With n = 30, a rho "
-        "of about 0.36 is the smallest that differs from zero at the 5% level (two-sided); "
-        "the labels are one person's judgement."
+        f"Agreement of each feature with {who}, nothing more. With n = 30, a rho of about 0.36 "
+        "is the smallest that differs from zero at the 5% level (two-sided)."
     )
+    return out
+
+
+def with_levels(rows: Sequence[dict[str, Any]], levels: Mapping[str, str]) -> list[dict[str, Any]]:
+    """Sheet rows with `level` taken from the given labels (missing ones left empty)."""
+    return [r | {"level": levels.get(str(r["slug"]), "")} for r in rows]
+
+
+def gold_levels(conn: Any) -> dict[str, str]:
+    """Text slug -> the experts' CEFR level, where they agree (disputes and "unsure" left out)."""
+    from app.validation.tiers import Label, effective
+
+    groups: dict[str, list[Label]] = {}
+    for slug, role, value, key in conn.execute(
+        "select content_id, role, value, independence from labels where content_type="
+        "'text_level' and aspect='cefr_level' and tier='gold' order by content_id, id"
+    ).fetchall():
+        groups.setdefault(slug, []).append(Label(role, value, key))
+    out = {}
+    for slug, labels in groups.items():
+        e = effective(labels)
+        if e.tier == "gold" and e.value in LEVELS:
+            out[slug] = e.value
     return out
 
 
@@ -118,11 +150,23 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - files
     c = sub.add_parser("score")
     c.add_argument("sheet", type=Path)
     c.add_argument("--out", type=Path)
+    g = sub.add_parser("score-gold")
+    g.add_argument("folder", type=Path, nargs="?", default=REPO / "data" / "english" / "texts")
+    g.add_argument("--out", type=Path)
     args = parser.parse_args(argv)
-    if args.cmd == "sheet":
-        forms = yaml.load(
-            FORMS.read_text(encoding="utf-8"), Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader)
-        )
+    forms = yaml.load(
+        FORMS.read_text(encoding="utf-8"), Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+    )
+    if args.cmd == "score-gold":
+        import psycopg
+
+        from app.config import get_settings
+
+        with psycopg.connect(get_settings().database_url) as conn:
+            levels = gold_levels(conn)
+        rows = with_levels(sheet_rows(load_entries(args.folder), known_up_to(forms)), levels)
+        report = score(rows, "gold")
+    elif args.cmd == "sheet":
         rows = sheet_rows(load_entries(args.folder), known_up_to(forms))
         with args.out.open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]) if rows else ["slug"])
@@ -130,8 +174,9 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - files
             w.writerows(rows)
         print(f"{len(rows)} texts -> {args.out}; fill the `level` column (A1-C1), then run `score`")
         return 0
-    with args.sheet.open(encoding="utf-8") as f:
-        report = score(list(csv.DictReader(f)))
+    else:
+        with args.sheet.open(encoding="utf-8") as f:
+            report = score(list(csv.DictReader(f)))
     text = json.dumps(report, indent=2)
     if args.out:
         args.out.write_text(text + "\n", encoding="utf-8")

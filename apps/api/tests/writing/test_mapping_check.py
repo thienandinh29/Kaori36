@@ -17,18 +17,23 @@ def test_accuracy_counts_only_mapped_errors_and_coverage_counts_all_typed() -> N
         + [row("", "", "R:PREP")] * 50
         + [row("", "articles-basic", "R:OTHER")] * 2
     )
-    s = score(sheet)
+    s = score(sheet, "gold", True)  # a teacher's check
     assert (s.typed, s.mapped, s.correct, s.missed) == (152, 100, 92, 2)
     assert s.accuracy == 0.92 and s.coverage == round(100 / 152, 4)
     assert s.accuracy_interval and s.accuracy_interval[0] < 0.92 < s.accuracy_interval[1]
     assert s.per_type == {"VERB:SVA": {"mapped": 100, "correct": 92}}
     assert s.gate_met and s.note == "Gate met."
+    assert s.basis == {"truth": "gold", "n": 100, "required": 100, "declared": True,
+                       "gate": "measured"}  # fmt: skip
+    # The same sheet filled by the owner is Bronze: never the gate (specs/validation/step-v3.md).
+    owner = score(sheet)
+    assert not owner.gate_met and owner.note.startswith("Not a gate result")
 
 
 def test_the_gate_needs_100_errors_and_90_percent() -> None:
     few = score([row("present-simple", "present-simple")] * 40)
     assert few.accuracy == 1.0 and not few.gate_met and "needs 100" in few.note
-    low = score([row("a", "a")] * 85 + [row("a", "b")] * 15)
+    low = score([row("a", "a")] * 85 + [row("a", "b")] * 15, "gold", True)
     assert not low.gate_met and "below 90%" in low.note
     empty = score([])
     assert empty.accuracy is None and empty.coverage is None and not empty.gate_met
