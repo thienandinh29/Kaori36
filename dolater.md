@@ -15,6 +15,10 @@ labels) stays in git-ignored `data/private/`; only scores and metrics are commit
 | [ ] **Phase 3:** `uv run python -m app.pronunciation.thresholds --out ../../evals/baselines/pronunciation-thresholds.json --apply ../../data/pronunciation/thresholds.json`, then `docker compose restart api worker` | 10 min | Marks on sounds, mastery on the pronunciation nodes | `specs/pronunciation/step-3.4.md` |
 | [ ] **Vocabulary:** mark the 50-entry sample right or wrong, then run `score`; until then the imported list stays a draft | 1 h | The imported word list leaves draft | `specs/vocabulary-import/tasks.md` (T8) |
 
+- [ ] **Two maps (`specs/two-layer-map/spec.md`):** approve or change the design. Set your target (band per skill,
+  exam date), and check the proposed links between IELTS competencies and CEFR foundations. Ideally before CP4, which
+  builds the first Reading nodes. About 30 min.
+
 ## 2. Reviews only you can do (quality)
 - [ ] **Grammar items:** review the 76 draft MCQs (`data/items/english-ielts.yaml`, `draft` → `reviewed`) and the
   misconception texts (`data/items/misconceptions.vi.yaml`). Until then only you see them. About 3 h.
