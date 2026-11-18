@@ -1,6 +1,6 @@
 # Spec: two maps and one recommendation engine
 
-Status: **design only, nothing built** (18 Nov 2026). Proposed by the owner. The owner reviews this page before any
+Status: **approved 18 Nov 2026** (decisions in `tasks.md`: overall 7.0, exam assumed July 2027); M1 built. Proposed by the owner. The owner reviews this page before any
 code. It fits the current plan (`docs/v2/plan-english-pack.md`) and should be settled before phase 4's CP4, because
 CP4's Reading skill nodes are the first nodes of layer 2.
 
@@ -39,7 +39,7 @@ The estimate for each competency is a mastery probability, like every other node
 its uncertainty**, never as an exam band, until it is calibrated against real bands.
 
 ## The links between the layers
-A hand-written, code-checked data file, `data/courses/ielts-competencies.yaml`. Each competency lists the foundations
+A hand-written, code-checked data file, `data/maps/ielts-competencies.yaml`. Each competency lists the foundations
 that **support** it, each with a kind:
 - `requires`: the competency cannot be good without it. Example: Writing Grammatical Range needs complex sentences,
   conditionals, relative clauses and the passive.

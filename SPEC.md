@@ -3,7 +3,7 @@
 Positioning: *An English learning app for Vietnamese learners: knows where you are, and leads you onward.* It covers
 the four IELTS skills, from A1 to C1.
 Target users: Vietnamese self-learners and university students preparing for IELTS. The first learner is the owner
-(IELTS in summer 2027, target 6.5), then friends and family, free. Teachers and centres (a class view) come later.
+(IELTS in summer 2027, target 7.0 overall), then friends and family, free. Teachers and centres (a class view) come later.
 The master roadmap, with a measured gate per phase: `docs/v2/plan-english-pack.md`.
 
 ## Problem

@@ -1,0 +1,149 @@
+# Layer 2 of the two maps (specs/two-layer-map/spec.md): IELTS exam competencies, and the CEFR foundations that
+# support each one. Checked by code (`python -m app.competencies.check`):
+# - a link points at a foundation that exists: a grammar node of `english-ielts` (live), a node of the proposed path
+#   (`specs/grammar-lessons/english-ielts-path.yaml`, accepted as "not live yet" and ignored by the engine until it
+#   is), a pronunciation group of `english-pronunciation`, or a vocabulary band (vocab-a1 ... vocab-c1, vocab-nawl);
+# - links never point at another competency (so there are no cycles);
+# - every competency has at least one `requires` link.
+# The links are Bronze ("đề xuất"): drafted by the agent, looked over by the owner (18 Nov 2026, "seem reasonable"),
+# not yet checked by a teacher. A competency's estimate is never shown as an exam band until it is calibrated.
+status: proposed
+target:
+  overall: 7.0  # the owner, 18 Nov 2026
+  exam_date: 2027-07-01  # ASSUMED from SPEC's "summer 2027": the owner gave no date; change it here
+balance:
+  review_share_max: 0.34  # reviews at most about a third of the day's list (owner, 18 Nov 2026)
+  foundations_in_a_row_max: 2  # owner, 18 Nov 2026
+competencies:
+  # Reading (evidence from CP4)
+  - slug: reading-detail
+    skill: reading
+    name_vi: "Đọc: tìm thông tin chi tiết"
+    name_en: "Reading: specific detail"
+    links:
+      - {node: vocab-b2, kind: requires}
+      - {node: vocab-nawl, kind: helps}
+  - slug: reading-main-idea
+    skill: reading
+    name_vi: "Đọc: ý chính của đoạn"
+    name_en: "Reading: main idea"
+    links:
+      - {node: vocab-b2, kind: requires}
+      - {node: linking-ideas, kind: helps}
+  - slug: reading-inference
+    skill: reading
+    name_vi: "Đọc: suy luận"
+    name_en: "Reading: inference"
+    links:
+      - {node: vocab-b2, kind: requires}
+      - {node: modals-deduction, kind: helps}
+  - slug: reading-writers-view
+    skill: reading
+    name_vi: "Đọc: quan điểm của tác giả"
+    name_en: "Reading: writer's view"
+    links:
+      - {node: vocab-b2, kind: requires}
+      - {node: hedging-language, kind: helps}
+  - slug: reading-skimming
+    skill: reading
+    name_vi: "Đọc lướt"
+    name_en: "Reading: skimming"
+    links:
+      - {node: vocab-b1, kind: requires}
+  # Listening (evidence from CP5)
+  - slug: listening-detail
+    skill: listening
+    name_vi: "Nghe: thông tin chi tiết"
+    name_en: "Listening: specific detail"
+    links:
+      - {node: vocab-b1, kind: requires}
+      - {node: final-consonants, kind: helps}
+  - slug: listening-main-idea
+    skill: listening
+    name_vi: "Nghe: ý chính"
+    name_en: "Listening: main idea"
+    links:
+      - {node: vocab-b2, kind: requires}
+      - {node: linking-ideas, kind: helps}
+  - slug: listening-dictation
+    skill: listening
+    name_vi: "Nghe chép chính tả"
+    name_en: "Listening: dictation"
+    links:
+      - {node: vocab-b1, kind: requires}
+      - {node: plural-nouns, kind: helps}
+      - {node: past-simple, kind: helps}
+  # Writing (evidence from essay checks; band-model criteria only after the phase 2 gate)
+  - slug: writing-task1
+    skill: writing
+    name_vi: "Viết Task 1: hoàn thành yêu cầu"
+    name_en: "Writing Task 1: task achievement"
+    links:
+      - {node: comparison, kind: requires}
+      - {node: past-simple, kind: requires}
+      - {node: passive-present-past, kind: helps}
+  - slug: writing-task2-response
+    skill: writing
+    name_vi: "Viết Task 2: trả lời đúng đề"
+    name_en: "Writing Task 2: task response"
+    links:
+      - {node: vocab-b2, kind: requires}
+      - {node: linking-ideas, kind: helps}
+  - slug: writing-coherence
+    skill: writing
+    name_vi: "Viết: mạch lạc và liên kết"
+    name_en: "Writing: coherence and cohesion"
+    links:
+      - {node: linking-ideas, kind: requires}
+      - {node: linking-contrast, kind: helps}
+      - {node: linking-cause-result, kind: helps}
+  - slug: writing-lexical
+    skill: writing
+    name_vi: "Viết: vốn từ"
+    name_en: "Writing: lexical resource"
+    links:
+      - {node: vocab-b1, kind: requires}
+      - {node: vocab-b2, kind: requires}
+      - {node: vocab-nawl, kind: helps}
+  - slug: writing-grammar
+    skill: writing
+    name_vi: "Viết: độ đa dạng và chính xác ngữ pháp"
+    name_en: "Writing: grammatical range and accuracy"
+    links:
+      - {node: present-perfect-vs-past, kind: requires}
+      - {node: articles-basic, kind: requires}
+      - {node: agreement-long-subjects, kind: requires}
+      - {node: conditionals-1-2, kind: requires}
+      - {node: defining-relative, kind: requires}
+      - {node: passive-present-past, kind: requires}
+  # Speaking (evidence from phase 5)
+  - slug: speaking-fluency
+    skill: speaking
+    name_vi: "Nói: trôi chảy và mạch lạc"
+    name_en: "Speaking: fluency and coherence"
+    links:
+      - {node: vocab-b1, kind: requires}
+      - {node: linking-ideas, kind: helps}
+  - slug: speaking-lexical
+    skill: speaking
+    name_vi: "Nói: vốn từ"
+    name_en: "Speaking: lexical resource"
+    links:
+      - {node: vocab-b2, kind: requires}
+  - slug: speaking-grammar
+    skill: speaking
+    name_vi: "Nói: ngữ pháp"
+    name_en: "Speaking: grammatical range and accuracy"
+    links:
+      - {node: present-perfect-vs-past, kind: requires}
+      - {node: past-simple, kind: requires}
+      - {node: conditionals-1-2, kind: requires}
+  - slug: speaking-pronunciation
+    skill: speaking
+    name_vi: "Nói: phát âm"
+    name_en: "Speaking: pronunciation"
+    links:
+      - {node: final-consonants, kind: requires}
+      - {node: th, kind: requires}
+      - {node: s-sh-ch-j-r-l, kind: requires}
+      - {node: clusters-vowels, kind: requires}
