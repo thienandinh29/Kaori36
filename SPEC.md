@@ -4,7 +4,7 @@ Positioning: *An English learning app for Vietnamese learners: knows where you a
 the four IELTS skills, from A1 to C1.
 Target users: Vietnamese self-learners and university students preparing for IELTS. The first learner is the owner
 (IELTS in summer 2027, target 6.5), then friends and family, free. Teachers and centres (a class view) come later.
-The detailed plan, with a measured gate per phase: `docs/v2/plan-english-pack.md`.
+The master roadmap, with a measured gate per phase: `docs/v2/plan-english-pack.md`.
 
 ## Problem
 Median online-course completion is ~12.6% (Jordan, 2015). Self-learners don't know where to start, forget what they
@@ -27,8 +27,8 @@ grammar, writing, pronunciation, reading, listening and speaking. Every skill fe
    the four criteria with quoted evidence. A band shown as a range. Paragraph rewrites. Task 1 facts checked against
    the chart's data.
 5. **Pronunciation.** Read authored sentences aloud. A recording-quality check, then the target sounds Vietnamese
-   speakers often miss are scored. Nothing is marked wrong until false alarms are measured on the owner's labelled
-   recordings.
+   speakers often miss are scored. Nothing is marked wrong until false alarms are measured on recordings labelled by
+   a trained reviewer (Gold).
 6. **Reading and Listening.** Levelled open texts, IELTS-style questions generated ahead, checked blind and reviewed by
    hand. Audio by the self-hosted voice.
 7. **Speaking (Part 1–3).** Transcript, grammar and vocabulary from the Writing pipeline, pronunciation from phase 3,
@@ -70,6 +70,14 @@ model checks; the gateway refuses a checker of the generator's family), so a mod
 Unanswerable or mismatched → `status = needs_review` and the item is **not served**; only `verified` items reach
 learners. Tutor hints go through the same check against their cited chunks before display. Pass/fail counts feed
 `guardrails/metrics.py`, next to the error rate measured on the human-labelled sample.
+
+### Who decides what is true (validation)
+**The developer is not the ground truth.** Correctness of answer keys, example sentences, pronunciation targets, text
+levels and bands comes from experts or expert-labelled datasets, not from the owner's judgement. Every label records
+its tier: **Gold** (expert), **Silver** (two independent checks agree, or a Gold sample shows the process is
+reliable), **Bronze** (one source). Gates need Gold, learner-facing content needs Silver, Bronze is for development
+only. Progress is measured by independent tests, never by NodeTrail's own mastery estimates. Design:
+`specs/validation/spec.md`; experiments: `research/`.
 
 ## Non-functional
 - Vietnamese-first UI and explanations; the English being learned is shown and heard in English.

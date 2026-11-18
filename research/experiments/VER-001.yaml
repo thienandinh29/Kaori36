@@ -1,0 +1,30 @@
+experiment_id: VER-001
+title: How reliable and how costly is the generated-content pipeline?
+track: ai-engineering
+status: planned
+pipeline: >
+  Sourced passage -> generation (DeepSeek) -> code checks (evidence quoted, answer in passage, no leak) -> blind
+  check by another model family (free Ernie, dots as backup) -> human review of what is uncertain -> stored decision.
+hypothesis: >
+  On a planted benchmark of known-faulty and known-good items, the pipeline lets through at most 5% of faulty items
+  (defect escape) while wrongly rejecting at most 10% of good ones; and against an expert's labels on 50 real items,
+  the blind check agrees with kappa of 0.6 or more.
+counts_against: >
+  Defect escape above 10%, false rejection above 20%, or kappa below 0.4 against the expert.
+benchmarks:
+  existing:
+    - evals/verifier/planted-grammar.yaml (20 planted errors, 20 correct), result in evals/baselines/verifier-pick-*.json
+    - the lesson planted-key check (evals/lessons/)
+  to_build: >
+    A planted Reading set (phase 4 CP2b) with three kinds of fault (wrong key, answer not in the passage, two
+    defensible answers): 50 faulty and 50 good, the faults confirmed by an expert (Gold), not by the owner alone.
+metrics:
+  - defect_escape_rate
+  - false_rejection_rate
+  - acceptance_rate
+  - human_review_rate
+  - evidence_coverage
+  - cost_per_accepted_item (llm_calls; free-tier requests counted)
+  - kappa_against_expert
+label_tier: Gold for the benchmark's faults and the 50 real items; Silver for everything else
+owner_part: find one reviewer (an English teacher) for the expert labels; run the checks

@@ -1,0 +1,28 @@
+experiment_id: KT-001
+title: BKT against simple baselines for predicting the next answer
+track: ml-engineering
+status: planned
+hypothesis: >
+  On held-out later answers, BKT (fitted by EM, app/engine/bkt_fit.py) predicts whether the next answer to a node is
+  correct better than past accuracy, a moving average and an Elo-style rating: lower log loss and Brier score, AUC at
+  least as high, and better calibration.
+counts_against: >
+  BKT does not beat the best baseline on log loss beyond the bootstrap interval; or it is better only on nodes with
+  very few answers, where the prior dominates.
+data:
+  learner: grammar_answers (course, node, item_id, correct, misconception, context, answered_at), owner only
+  public: a public knowledge-tracing dataset for the method comparison (candidate ASSISTments; licence to check
+    before use), because one learner's data is thin per node
+  version: to be frozen as a dated export (hash recorded) when the experiment starts
+split: by time per learner; the last 25% of each learner's answers are the test set, never used for fitting
+models:
+  - past_accuracy: the learner's accuracy on the node so far (with a prior of 0.5 and 2 pseudo-answers)
+  - moving_average: the last 5 answers on the node
+  - elo: one rating per learner and node, one difficulty per item, K tuned on the training part only
+  - bkt_default: the current default parameters (app/engine/bkt.py)
+  - bkt_fitted: EM-fitted per item kind (and per node where there are enough sequences)
+metrics: [log_loss, brier, auc_roc, pr_auc, expected_calibration_error]
+uncertainty: bootstrap over learners (public data) and over nodes (owner's data), 1,000 resamples
+not_planned: deep knowledge tracing (not enough data to support it)
+label_tier: Silver (answer keys of reviewed items); items still in draft are reported separately
+owner_part: use the app; grammar answers accrue from daily practice

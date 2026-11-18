@@ -1,15 +1,94 @@
-# Plan: the English pack (from 14 Nov 2026)
+# Master roadmap: NodeTrail (from 18 Nov 2026)
 
-The current plan. It implements the owner's proposal, `docs/v2/english-pack-proposal.vi.md` (read that for the why),
-and replaces `plan-to-tet-2027.md` and the any-subject `plan-m0-m1.md` (both kept for history). **NodeTrail is an
-English learning app for Vietnamese learners** (owner, 18 Nov 2026). The engine underneath stays general, so other
-subjects can come later, but they are not planned now. The engine decides what to learn next; tools and small models
-measure right and wrong; the LLM explains. What waits on the owner: `dolater.md`.
+**The one plan.** It implements the owner's proposal, `docs/v2/english-pack-proposal.vi.md`, and the strategy agreed on
+18 Nov 2026. It replaces `plan-to-tet-2027.md` and the any-subject `plan-m0-m1.md` (both kept for history). What waits
+on the owner: `dolater.md`. Experiments: `research/`. How truth is established: `specs/validation/spec.md`.
 
-- **Budget:** 30–40 hours a week (owner, 14 Nov); the phases below are sized at 30. About 6 months in total.
+## Vision: one product, three kinds of value
+**NodeTrail: an evidence-based adaptive learning system for English (IELTS).** It is one codebase with three kinds of
+value, and each must feed the others:
+1. **Learning product.** It helps the owner reach IELTS 6.5 in summer 2027, then friends and family, free.
+2. **Research platform.** It is a place to test knowledge tracing, spaced repetition, speech assessment and LLM
+   verification on real use, measured honestly.
+3. **Engineering portfolio.** It shows the whole loop: design, build, evaluate and operate an AI/ML system, for ML
+   engineer, AI engineer and data science roles.
+
+The order of priority is fixed:
+1. The owner improves with NodeTrail.
+2. The improvement is measured independently.
+3. The data improves the algorithms.
+4. The research becomes the portfolio.
+
+## Principles (added 18 Nov 2026)
+- **The developer is not the ground truth.** The owner is learner, tester and developer, but not the judge of
+  correct English. Correctness comes from:
+  - expert labels (a teacher, a trained IELTS rater, an expert-labelled dataset);
+  - checkable tools (answer keys, LanguageTool, dictionaries, sources);
+  - independent models.
+
+  No single person or model is the only source of truth. Tiers and gates: `specs/validation/spec.md`.
+- **Every label records its tier.**
+  - **Gold:** an expert, or an expert-labelled dataset. Used for benchmarks and gates.
+  - **Silver:** several independent checks agree (source, checker, code). Needed for learner-facing content.
+  - **Bronze:** AI or the owner alone. Development only.
+- **NodeTrail never grades its own effect.** Progress is measured by independent tests (official sample papers taken
+  under exam conditions, never copied into the app; or a real mock with a trained rater), never by NodeTrail's own BKT.
+- **Separate data.** `learner_data` (the owner's learning) and `evaluation_data` (benchmarks) never mix without
+  control, and a held-out benchmark is never used for tuning.
+- **No feature unless** it improves learning, raises trust, or produces technical evidence that matters.
+- **Time:** about 65% learning English and using NodeTrail, 25% building and research, 10% documentation and
+  portfolio. This is a guide, not a timetable. If building eats study time, stop at the nearest gate.
+- **One learner is an N-of-1 study.** Reports say so; no general claim rests on the owner's data alone.
+
+## Research tracks (one deep problem per career direction)
+| Track | Problem | Evidence to produce | Experiment |
+|---|---|---|---|
+| ML engineering | Knowledge tracing: predict the next answer from history | BKT against simple baselines (past accuracy, moving average, Elo), time-based split, AUC, log loss, Brier, calibration; also on a public dataset, since one learner's data is thin | `research/experiments/KT-001.yaml` |
+| ML and data science | Forgetting: what is forgotten after a week | FSRS's predicted recall against actual recall about 7 days later (calibration), by level, word type and topic; whether BKT overestimates retained grammar (delayed re-checks of "known" nodes) | `research/experiments/FORGET-001.yaml` |
+| AI engineering | Reliable LLM content | Defect escape rate, false rejection rate, human review rate, cost per accepted item, evidence coverage; planted-error benchmarks (two exist) | `research/experiments/VER-001.yaml` |
+
+Deep knowledge tracing, a home-made LLM or a band model trained from scratch are **not** planned: there is not enough
+data to support them, and choosing the simple model that fits, and showing why, is the stronger evidence.
+
+## Roadmap to summer 2027
+| When | Focus | Done when |
+|---|---|---|
+| 18 Nov – 31 Dec 2026 | **Stabilise and baseline.** The validation system (tiers, reviewer portal); Reading MVP (phase 4 CP1–CP4); the two-map engine M1–M2; a baseline from an independent test on four skills; KT-001 and FORGET-001 data collection starts | NodeTrail is the owner's daily study tool; the baseline is recorded |
+| Jan – Feb 2027 | **Learn and research.** Daily use; the first essays rated by an independent rater; KT-001 report; FORGET-001 first numbers (after 4+ weeks of use) | A first ML case study with real data |
+| Mar – Apr 2027 | **AI reliability and analytics.** VER-001 benchmark of the question pipeline; Listening (phase 4 CP5); human-in-the-loop review in steady use; learning analytics report | Two more case studies with evidence |
+| May – Jun 2027 | **IELTS first.** Feature freeze except fixes; exam practice; independent mock tests | Exam readiness measured, not guessed |
+| Summer 2027 | **Exam and portfolio.** The exam; the result recorded; reports, an English README, architecture docs, a demo | The portfolio is published; negative results stay in it |
+
+Case studies can be published before the exam, as long as measured results and hypotheses are told apart. If the
+exam result falls short of 6.5, the honest record of the gap is still part of the portfolio.
+
+## What success means in summer 2027
+- **Learning:**
+  - IELTS 6.5, or a clear measured gap;
+  - which skills improved and which did not;
+  - independent tests before and after.
+- **Technical:**
+  - the KT benchmark with baselines;
+  - the verification benchmark;
+  - pronunciation measured against expert labels;
+  - reproducible experiments.
+- **Research:** at least three case studies, each with a hypothesis, method, results and limits, negative ones
+  included.
+- **Portfolio:**
+  - an English README;
+  - an architecture diagram;
+  - a working demo;
+  - experiment reports;
+  - every technical decision explainable by the owner.
+
+## Product phases (the build plan, updated as work lands)
+The phases below are the product plan inside the roadmap. Their original dates (14 Nov) are kept for history; the
+roadmap above sets the pace now. A phase ends only when its gate is measured, and from 18 Nov **a gate needs labels of
+the tier it names in `specs/validation/spec.md`**. A missed target is recorded with the number and the reason, never
+hidden.
+
+- **Budget:** 30–40 hours a week (owner, 14 Nov), split as in the principles above.
 - **First learner:** the owner (IELTS in summer 2027, target 6.5), then friends and family, free.
-- **A phase ends only when its gate is measured.** A missed target is recorded with the number and the reason, never
-  hidden; the owner then decides to fix it or move on.
 
 **Where am I?** The *Status* column. Update it in the same PR that finishes the work.
 Status values: `done`, `in progress`, `next`, `planned`, `cut`.

@@ -15,7 +15,8 @@ read it for history only, its lanes, timeline and freeze rules no longer apply.
 
 ## Owner & working agreement
 - One owner (student, aspiring ML engineer) working with an AI coding agent.
-- **Current goal:** `docs/v2/plan-english-pack.md` (the English app in phases with measured gates; update its Status
+- **Current goal:** `docs/v2/plan-english-pack.md`, the master roadmap (principles, research tracks, the roadmap to
+  summer 2027, then the English app in phases with measured gates; update its Status
   column when work lands), from the owner's proposal `docs/v2/english-pack-proposal.vi.md`. What waits on the owner:
   `dolater.md` (keep it current when a step adds owner work). Evaluation data that is copyrighted stays in
   git-ignored `data/private/`; commit only metrics. Background only: the any-subject milestones in
@@ -44,6 +45,13 @@ LLM is **not** the decision maker. It sits inside a harness:
   unverified items are never served. The gate reduces errors, it does not remove them: keep human review and
   measured catch rates on the roadmap.
 - Socratic tutor never hands over the final answer. Sena praises only real mastery, never speed or streaks.
+- **The developer is not the ground truth** (`specs/validation/spec.md`). The owner is learner, developer and tester,
+  not the judge of correct English. Every label and gate records its tier: Gold (an expert or an expert-labelled
+  dataset), Silver (two independent checks agree), Bronze (one source: a model, the owner, extraction). Gates need
+  Gold; learner-facing content needs Silver; nothing is promoted by the owner's approval alone. Never write "the owner
+  labels/confirms" as a gate's truth in a new plan or spec; the owner's judgement is learner feedback or Bronze.
+- Learner data and evaluation data stay apart: NodeTrail never grades its own effect. Experiments live in
+  `research/` (hypothesis first, negative results kept).
 
 ## Sources
 - Prefer structured sources whose licence and chapter order are machine-readable (`apps/api/app/sources/`,

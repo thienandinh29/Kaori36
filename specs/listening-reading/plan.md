@@ -8,6 +8,10 @@ Each checkpoint lists what is built and what is measured, the owner's part, and 
 (A2–B1) and OpenStax (B2–C1). The reuse of the NGSL word list, free Ernie as checker (`reading_check`), the Piper
 voice and DeepSeek as generator is approved with the plan.
 
+**Changed 18 Nov 2026 by `specs/validation/spec.md`:** wherever this plan says the owner labels or confirms (CP1 text
+levels, CP2b faults, CP3 agreement), the truth now comes from an expert (Gold). The owner's labels are kept as learner
+feedback (CP1) or Bronze. The bars stay the same.
+
 ## Where things stand
 - **Built:**
   - 4.1, the text bank (`app/texts/`): texts tied to a verified source, with level features. It ships no texts.

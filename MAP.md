@@ -8,10 +8,12 @@ Planned entries are marked _(planned)_ until they exist.
 | Path | Purpose |
 |---|---|
 | `CLAUDE.md` | Rules and working agreement for Claude, one-owner v2 project (auto-loaded; imports `MAP.md` and `SPEC.md`) |
-| `dolater.md` | **The owner's to-do list**: everything that waits on the owner (licence checks, recordings, labels, reviews, measurements, decisions), with time and commands |
+| `dolater.md` | **The owner's to-do list**, by role: as developer and tester, as learner, "find a reviewer for…" (correctness), measurements, decisions, routine; with time and commands |
 | `README.md` | Public introduction in Vietnamese: NodeTrail as an English (IELTS) learning app, skills and their status, the plan, honest status, how to run |
 | `SPEC.md` | What NodeTrail must do: an English learning app for Vietnamese learners (IELTS); features per skill, engine, verification gate, non-goals; other subjects later |
-| `docs/v2/plan-english-pack.md` | **Current plan: the English app in phases, with gates and status** (where the project is) |
+| `docs/v2/plan-english-pack.md` | **Master roadmap**: one product with three kinds of value, principles (the developer is not the ground truth), research tracks, the roadmap to summer 2027, then the English app in phases with gates and status (where the project is) |
+| `research/` | Research tracks: `README.md` (rules: hypothesis first, label tier, separate data, negative results kept; registry), `experiments/` (KT-001 knowledge tracing baselines, FORGET-001 forgetting after a week, VER-001 pipeline reliability and cost), all planned |
+| `specs/validation/` | Design (not built): the validation system: Gold/Silver/Bronze tiers, a `labels` table, the reviewer portal, which gates change, the owner's roles, steps V1–V5 |
 | `docs/v2/english-pack-proposal.vi.md` | The owner's proposal for the English pack (Vietnamese): why, components, metrics, risks |
 | `docs/v2/plan-to-tet-2027.md` | Superseded weekly plan (weeks 0–2 done); kept for history and the maths outline |
 | `docs/v2/decision-log.md` | Owner's weekly decision log, in their own words |

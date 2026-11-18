@@ -1,0 +1,27 @@
+experiment_id: FORGET-001
+title: What is forgotten after about a week, and does the model know it?
+track: data-science
+status: planned
+questions:
+  - "Vocabulary: is FSRS's predicted recall calibrated against what actually happens at the next review (5 to 10 days later)?"
+  - "Vocabulary: which words fade fastest, by CEFR level, item kind (meaning, gap-fill, collocation, word form) and topic?"
+  - "Vocabulary: does FSRS scheduling keep recall higher than plain fixed intervals would have (a counterfactual from the fitted forgetting curve, stated as such)?"
+  - "Grammar: BKT has no forgetting. Does a node marked \"known\" (0.9 or more) still give correct answers after a week?"
+hypothesis: >
+  FSRS's predicted recall is calibrated within 10 percentage points per decile; grammar nodes marked known keep at
+  least 80% correct on delayed re-checks. Lower grammar retention would show BKT overestimates what is kept, and
+  motivate adding forgetting to the model.
+counts_against: >
+  Predicted recall misses actual recall by more than 10 points in most deciles (FSRS needs its parameters fitted to
+  the learner); or delayed grammar re-checks stay at the immediate level (no decay worth modelling).
+data:
+  vocabulary: vocab_reviews (word_key, item_kind, correct, due_at, answered_at) and vocab_cards; the recall FSRS
+    predicted at each review is rebuilt by replaying each card's history through app/engine/srs.py (deterministic),
+    so no new field is needed. Storing the prediction at review time is a small later change if replay proves fragile
+  grammar: grammar_answers; plus delayed re-checks, new, to build when approved (2 to 3 known nodes a week, fresh
+    approved items, logged with context "recheck")
+minimum: about 4 weeks of daily use, and at least 200 reviews 5 or more days after the previous one
+metrics: [calibration_by_decile, brier, retention_by_category, recheck_accuracy_with_interval]
+limits: one learner (N-of-1); correlation only, with study time and topic recorded as possible confounders
+label_tier: Silver (answer keys)
+owner_part: daily vocabulary review; accept the weekly grammar re-checks once built
