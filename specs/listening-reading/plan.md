@@ -44,10 +44,13 @@ approve. A checkpoint that misses its bar stops the plan there and comes back to
 | Simple English Wikipedia | CC BY-SA 4.0 (and GFDL) | Plain English at A2–B1, any topic. ShareAlike: the bank must be shared alike (fine for a free tool) |
 | Wikinews | CC BY 2.5 | News style, closer to IELTS passages; fewer texts, uneven quality |
 | VOA Learning English | US government work, mostly public domain, but some content is credited to others (wire photos, AP) | Graded news written for learners (levels 1–2), with real audio. Terms must be read and each text checked for third-party credits |
-| OpenStax (textbooks) | CC BY 4.0 | Academic, B2–C1, close to IELTS Academic Reading; harder for early levels |
+| OpenStax (textbooks) | **CC BY-NC-SA 4.0** in each book's own metadata (checked 18 Nov on 17 collections: biology, psychology, sociology, astronomy, US and world history, economics, philosophy, government, anatomy, college success, writing guide). Not CC BY, as first written here | Academic, B2–C1, close to IELTS Academic Reading. NonCommercial and ShareAlike: flagged per text, and blocks a paid tier for these texts |
 
-**My recommendation: Simple English Wikipedia for A2–B1 and OpenStax for B2–C1.** Both licences are machine-readable, both
-are already in our tools (`app/sources/`), and between them they cover the levels. VOA is attractive for its real audio, but
+**My first recommendation was Simple English Wikipedia for A2–B1 and OpenStax for B2–C1.** Two corrections found when CP1
+started (18 Nov):
+- OpenStax's IELTS-like books are NonCommercial and ShareAlike, not CC BY.
+- Simple English Wikipedia answers this cloud sandbox with HTTP 429 (Wikimedia rate-limits its shared address), so its
+  fetch must run on the owner's laptop. VOA is attractive for its real audio, but
 its terms need the most care; it can come in at CP5 if you want real recordings.
 
 ## Risks and how the plan handles them
@@ -60,3 +63,32 @@ its terms need the most care; it can come in at CP5 if you want real recordings.
 - **ShareAlike:** a bank built on Simple English Wikipedia is CC BY-SA. That matters only before a paid tier, and it is
   recorded per text.
 - **Not in this phase:** Speaking, a Reading or Listening band, real exam passages, map and diagram labelling.
+
+## CP1 status (18 Nov 2026): built, waiting on the owner
+- **Built:**
+  - `data/english/text-picks.yaml`: 20 Simple English Wikipedia titles on IELTS themes, plus 3 OpenStax books for 10
+    texts.
+  - `app/texts/fetch.py`: whole prose paragraphs, 150–600 words; figure captions and empty "()" references removed.
+    - Simple Wikipedia: the exact revision is recorded, one request a second, a generic User-Agent.
+    - OpenStax: one section per chapter, pinned to the commit.
+  - `app/texts/levels.py`: a labelling sheet, and the Spearman correlation of each feature with the owner's labels.
+  - The candidate `openstax-reading`, as `to_check`.
+- **Fetched here:** the 10 OpenStax texts, into git-ignored `data/private/english-texts/`. Their features: mean
+  sentence 15–27 words, 12–19% of words outside the A1–B1 forms.
+- **Owner's steps** (all from `apps/api`):
+  1. Read each licence page:
+     - Simple English Wikipedia's licence page;
+     - each OpenStax book's page on openstax.org.
+
+     If they match, set `simple-wikipedia` and `openstax-reading` to `verified` in
+     `data/sources/english-candidates.yaml`, with `checked_on` and `licence_page`.
+  2. On the laptop (Wikimedia refuses the cloud sandbox): `uv run python -m app.texts.fetch simple-wiki`, then
+     `uv run python -m app.texts.fetch openstax`.
+  3. Check that the bank admits them: `uv run python -m app.texts.bank ../../data/private/english-texts`. Then move
+     them to `data/english/texts/` and commit.
+  4. Label them: `uv run python -m app.texts.levels sheet --out ../../data/private/levels.csv`. Fill the `level`
+     column (A1–C1, about 1 h for 30 texts), then
+     `uv run python -m app.texts.levels score ../../data/private/levels.csv --out ../../evals/baselines/text-levels.json`.
+- **CP1 is passed when** 30 texts are in the bank with verified sources and the level report is committed. CP2 starts
+  after that.
+
