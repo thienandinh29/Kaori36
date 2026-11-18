@@ -13,6 +13,8 @@ tiers:
     writing_rewrite: *free
     # The vocabulary import (specs/vocabulary-import): entries checked by code, marked draft.
     vocab_import: *free
+    # Reading questions from open texts (specs/listening-reading/step-4.2b.md), checked by code and blind.
+    reading_items: *free
     verify: &verify
       - {provider: gemini, model: '${GEMINI_VERIFY_MODEL}', family: gemini}
       - {provider: vertex, model: '${VERTEX_VERIFY_MODEL}', family: gemini}
@@ -22,6 +24,8 @@ tiers:
     lesson_check: &lesson_check
       - {provider: openrouter, model: 'baidu/ernie-5.5-flash-preview:free', family: ernie}
       - {provider: openrouter, model: 'dots-studio/dots-3-note-preview:free', family: dots}
+    # Reading questions, checked blind from the passage only (step 4.2b); same free models, same reason.
+    reading_check: *lesson_check
   pro:
     graph: &graph
       - {provider: deepseek, model: '${DEEPSEEK_PRO_MODEL}', family: deepseek}
@@ -29,6 +33,8 @@ tiers:
     items: *graph
     verify: *verify
     lesson_check: *lesson_check
+    reading_check: *lesson_check
+    reading_items: *graph
     tutor: &pro
       - {provider: deepseek, model: '${DEEPSEEK_PRO_MODEL}', family: deepseek}
     ask: *pro
