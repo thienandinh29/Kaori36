@@ -333,3 +333,55 @@ def test_marks_move_the_group_node_once_per_recording_after_the_gate(stack, tmp_
     with pool.connection() as conn:
         conn.execute("delete from mastery where learner_id=%s", (owner,))
         conn.execute("delete from decision_traces where learner_id=%s", (owner,))
+
+
+def test_an_unreachable_service_leaves_the_recording_queued_with_its_audio(stack) -> None:  # type: ignore[no-untyped-def]
+    import urllib.error
+    from email.message import Message
+
+    from app.pronunciation.analysis import ServiceUnavailable
+
+    client, owner, pool = stack
+    _, prompts = load_prompts(FOLDER)
+    canonical = load_checked_canonical(FOLDER, prompts)
+    sounds = {p.id: p.targets for p in prompts}
+    rid = post(client, owner, speech_like())["id"]  # not kept: a failure would clear its audio
+
+    def down(a: bytes, p: list[str]) -> dict[str, Any]:
+        raise urllib.error.URLError(ConnectionRefusedError(111, "refused"))
+
+    def http(code: int) -> urllib.error.HTTPError:
+        return urllib.error.HTTPError("http://pronunciation:8040/score", code, "x", Message(), None)
+
+    def busy(a: bytes, p: list[str]) -> dict[str, Any]:
+        raise http(503)
+
+    def refused(a: bytes, p: list[str]) -> dict[str, Any]:
+        raise http(422)
+
+    for broken in (down, busy):
+        with pool.connection() as conn, pytest.raises(ServiceUnavailable):
+            process_next(conn, broken, canonical, sounds)
+        with pool.connection() as conn:
+            status, size = conn.execute(
+                "select status, length(audio) from speech_recordings where id=%s", (rid,)
+            ).fetchone() or (None, 0)
+        assert status == "stored" and size > 1000
+    with pool.connection() as conn:  # a problem with this recording: recorded, audio cleared
+        assert process_next(conn, refused, canonical, sounds)
+    out = client.get(f"/recordings/{rid}", params={"learner_id": owner}).json()
+    assert out["status"] == "failed"
+
+
+def test_labels_only_on_kept_recordings(stack) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool = stack
+    _, prompts = load_prompts(FOLDER)
+    canonical = load_checked_canonical(FOLDER, prompts)
+    temp = post(client, owner, speech_like())["id"]
+    with pool.connection() as conn:
+        process_next(
+            conn, lambda a, p: fake_phones(p), canonical, {p.id: p.targets for p in prompts}
+        )
+    body = {"labels": [{"target": 0, "label": "right"}]}
+    r = client.post(f"/recordings/{temp}/labels", params={"learner_id": owner}, json=body)
+    assert r.status_code == 404 and "giữ lại" in r.json()["detail"]

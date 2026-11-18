@@ -175,7 +175,7 @@ def recording_analyser(settings: Any) -> Callable[[], bool] | None:
     """Analyses one stored recording per call when the pronunciation service is configured."""
     if not settings.pronunciation_url:
         return None
-    from app.pronunciation.analysis import process_next, service_score
+    from app.pronunciation.analysis import ServiceUnavailable, process_next, service_score
     from app.services.recordings import load_checked_canonical, load_evidence, load_prompts
 
     _, prompts = load_prompts(settings.pronunciation_dir)
@@ -184,9 +184,19 @@ def recording_analyser(settings: Any) -> Callable[[], bool] | None:
     score = service_score(settings.pronunciation_url)
     evidence = load_evidence(settings.pronunciation_dir, settings.courses_dir)
 
+    retry_at = 0.0
+
     def run() -> bool:
-        with psycopg.connect(settings.database_url) as conn:
-            return process_next(conn, score, canonical, sounds, evidence=evidence)
+        nonlocal retry_at
+        if time.monotonic() < retry_at:
+            return False
+        try:
+            with psycopg.connect(settings.database_url) as conn:
+                return process_next(conn, score, canonical, sounds, evidence=evidence)
+        except ServiceUnavailable as exc:  # e.g. still downloading its weights on first start
+            logger.warning("pronunciation service unavailable, retrying in 30 s: %s", exc)
+            retry_at = time.monotonic() + 30
+            return False
 
     return run
 

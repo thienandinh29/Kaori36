@@ -8,6 +8,7 @@ Nothing here marks a sound wrong: thresholds come from the owner's labelled reco
 
 import base64
 import json
+import urllib.error
 import urllib.request
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -26,6 +27,19 @@ from app.pronunciation.canonical import Word, flat, targets
 from app.pronunciation.marks import Applied, marks, observations
 
 Score = Callable[[bytes, list[str]], dict[str, Any]]
+
+
+class ServiceUnavailable(Exception):
+    """The pronunciation service could not be reached (starting, down, overloaded): try later."""
+
+
+def transient(exc: BaseException) -> bool:
+    """A failure of the service, not of this recording: the recording stays queued."""
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code >= 500 or exc.code == 429
+    return isinstance(exc, urllib.error.URLError | TimeoutError | ConnectionError)
+
+
 # Reading a sentence aloud is a little practice; small until fitted from data (engine/bkt_fit.py).
 P_TRANSIT = 0.05
 
@@ -145,7 +159,11 @@ def process_next(
     now: datetime | None = None,
     evidence: Evidence | None = None,
 ) -> bool:
-    """Analyse one stored recording; False when none waits."""
+    """Analyse one stored recording; False when none waits.
+
+    Raises ServiceUnavailable, changing nothing, when the service cannot be reached: a recording is
+    marked failed (and, unless kept, its audio cleared) only for a failure of the recording itself.
+    """
     row = conn.execute(
         "select id,prompt_id,audio,keep,learner_id from speech_recordings where status='stored' "
         "order by created_at limit 1 for update skip locked"
@@ -158,6 +176,9 @@ def process_next(
         words = canonical[prompt_id]
         result = summarise(words, prompt_sounds[prompt_id], score(bytes(audio), flat(words)))
     except Exception as exc:  # recorded, never retried in a loop
+        if transient(exc):
+            conn.rollback()  # releases the row lock; the recording stays 'stored'
+            raise ServiceUnavailable(f"{type(exc).__name__}: {exc}") from exc
         conn.execute(
             "update speech_recordings set status='failed', failure=%s, analysed_at=%s"
             + ("" if keep else ", audio=''::bytea")

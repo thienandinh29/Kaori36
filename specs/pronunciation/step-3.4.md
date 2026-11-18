@@ -14,7 +14,8 @@ Only groups whose verdict is `pass` are applied. For each group the file stores:
 - the number of labelled sounds behind the numbers;
 - the date.
 
-The file does not exist yet, so **no sound is marked for anyone**. That is the gate.
+The file does not exist yet, so **no sound is marked for anyone**. That is the gate. The API and the worker read it at
+start, so restart both after applying: `docker compose restart api worker`.
 
 **The mark rule** (`app/pronunciation/marks.py`, pure). A target sound is marked only when all three hold:
 - its group is applied;

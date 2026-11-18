@@ -82,3 +82,12 @@ def test_report_groups_rows_and_leaves_unsure_out() -> None:
         Labelled("r2", "final-consonants", 1.0, False),
     ]
     assert set(report(items)["groups"]) == {"th", "final-consonants"}
+
+
+def test_thresholds_stay_at_or_below_zero_where_a_competitor_is_always_heard() -> None:
+    # Wrong sounds that still score above 0 cannot be flagged by the product's rule, so the
+    # chosen threshold never rises above 0 to catch them.
+    wrong = [Labelled("a", "g", g, True) for g in (-2.0, 0.4, 0.5)]
+    right = [Labelled("a", "g", g, False) for g in (1.0 + i for i in range(30))]
+    t = choose(wrong + right)
+    assert t is not None and t <= 0
