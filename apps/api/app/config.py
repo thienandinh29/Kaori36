@@ -43,6 +43,8 @@ class Settings(BaseSettings):
     lessons_dir: Path = REPO_ROOT / "data" / "lessons"
     # Pronunciation (specs/pronunciation): target sounds and the sentences to read.
     pronunciation_dir: Path = REPO_ROOT / "data" / "pronunciation"
+    # Reading passages for the review queue (specs/listening-reading/step-4.2c.md).
+    reading_texts_dir: Path = REPO_ROOT / "data" / "english" / "texts"
     # The pronunciation service (compose profile `pronunciation`); empty: no analysis.
     pronunciation_url: str = ""
     sources_candidates: Path = REPO_ROOT / "data" / "sources" / "english-candidates.yaml"

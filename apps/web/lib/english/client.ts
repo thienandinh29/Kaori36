@@ -1,4 +1,10 @@
 // The English pack's calls, through the same-origin proxy (/api/backend): the API key stays on the server.
+import {
+  parseQueue,
+  type RejectReason,
+  type ReviewQueue,
+  type ReviewStatus,
+} from "@/lib/reading/review";
 import { DataError } from "@/lib/decode";
 import {
   parsePhraseAnswer,
@@ -339,6 +345,26 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
           body: wav,
         }),
       );
+    },
+    /** The owner's Reading review queue (specs/listening-reading/step-4.2c.md). */
+    async readingReview(
+      learnerId: string,
+      status: ReviewStatus,
+    ): Promise<ReviewQueue> {
+      const q = new URLSearchParams({ learner_id: learnerId, status });
+      return parseQueue(await request(`reading/review?${q}`));
+    },
+    async decideReading(
+      learnerId: string,
+      itemId: string,
+      body: {
+        decision: "approve" | "reject";
+        reason?: RejectReason;
+        note?: string;
+      },
+    ): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await post(`reading/review/${encodeURIComponent(itemId)}?${q}`, body);
     },
     async recordings(learnerId: string): Promise<RecordingRow[]> {
       const q = new URLSearchParams({ learner_id: learnerId });

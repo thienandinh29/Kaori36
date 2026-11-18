@@ -37,7 +37,8 @@ export function EnglishShell({
   wide = false,
   children,
 }: {
-  active: Href;
+  /** The nav entry to mark; none for pages outside the nav (the owner's tools). */
+  active?: Href;
   /** Full-width pages (the roadmap); others keep a reading column. */
   wide?: boolean;
   children: React.ReactNode;
