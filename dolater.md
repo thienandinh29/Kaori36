@@ -16,7 +16,7 @@ a gate's truth.
 | [ ] **Phase 4, CP1:** on your laptop, `uv run python -m app.texts.fetch simple-wiki`, then `... fetch openstax`, then `uv run python -m app.texts.bank ../../data/private/english-texts`; move the texts to `data/english/texts/` and commit | 15 min | CP2b, the planted-error test | `specs/listening-reading/plan.md` (CP1 status) |
 | [ ] **Phase 3:** record 50–100 sentences on `/phat-am` with "keep" ticked, and check that the pipeline works (quality check, analysis, deletion). The sound labels themselves go to a reviewer (section 3) | 2 h | The pronunciation gate | `specs/pronunciation/step-3.3.md` |
 | [ ] **Phase 3, after the reviewer's labels:** `uv run python -m app.pronunciation.thresholds --out ../../evals/baselines/pronunciation-thresholds.json --apply ../../data/pronunciation/thresholds.json`, then `docker compose restart api worker` | 10 min | Marks on sounds, mastery on the pronunciation nodes | `specs/pronunciation/step-3.4.md` |
-| [ ] **Validation spec (`specs/validation/spec.md`):** approve or change it, so V1 (the `labels` table and tiers) can be built | 20 min | Every gate below that needs Gold labels | same |
+| [x] **Validation spec (`specs/validation/spec.md`):** approved 18 Nov; V1 built. When a reviewer agrees: `uv run python -m app.validation.cli add-reviewer --name "…" --role expert_teacher --expertise "…" --consented` (only after they agree to how their labels are used) | 5 min | Their labels count as Gold | `specs/validation/step-v1.md` |
 | [ ] **Two maps (`specs/two-layer-map/spec.md`):** approve or change the design; set your target (band per skill, exam date). The links between competencies and foundations stay Bronze ("đề xuất") until a teacher checks a sample | 30 min | M1–M2, ideally before CP4 | same |
 
 ## 2. As learner (your own signal, never a correctness label)
@@ -52,8 +52,8 @@ reviewer portal (V2) exists, they can work from the same sheets and pages.
 | [ ] Speaking (phase 5): ratings of 30+ recordings | IELTS rater | 3 h | Any Speaking band |
 | [ ] Testers: try the app and report what breaks or confuses | 3–5 testers | 1 h each | Wider use |
 
-Before asking anyone: V5 of the validation spec is a one-page brief in Vietnamese for reviewers. Ask me to write it
-when you have someone in mind.
+Before asking anyone, send them `specs/validation/reviewer-brief.vi.md` (V5): fill in the [brackets] (your name,
+contact, payment or thanks) and tick the jobs you want from that person. Add them only after they reply "Đồng ý".
 
 ## 4. Measurements (you run them; the truth behind them is Gold or published data)
 - [ ] **Phase 1:** the level-test accuracy curve with intervals; explain one real decision trace in the decision log
