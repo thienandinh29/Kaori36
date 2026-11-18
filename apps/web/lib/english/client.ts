@@ -7,6 +7,12 @@ import {
 } from "@/lib/reading/review";
 import { DataError } from "@/lib/decode";
 import {
+  parseRecheck,
+  parseRecheckResult,
+  type RecheckQuestion,
+  type RecheckResult,
+} from "@/lib/english/recheck";
+import {
   parsePhraseAnswer,
   parsePhraseSession,
   parseCorrection,
@@ -347,6 +353,22 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       );
     },
     /** The owner's Reading review queue (specs/listening-reading/step-4.2c.md). */
+    async recheckNext(learnerId: string): Promise<RecheckQuestion | null> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseRecheck(await request(`rechecks/next?${q}`));
+    },
+    async recheckAnswer(
+      learnerId: string,
+      id: string,
+      answer: string,
+    ): Promise<RecheckResult> {
+      return parseRecheckResult(
+        await post(`rechecks/${encodeURIComponent(id)}/answer`, {
+          learner_id: learnerId,
+          answer,
+        }),
+      );
+    },
     async readingReview(
       learnerId: string,
       status: ReviewStatus,

@@ -1,7 +1,7 @@
 experiment_id: FORGET-001
 title: What is forgotten after about a week, and does the model know it?
 track: data-science
-status: planned
+status: collecting  # since 18 Nov 2026: specs/forget-001/spec.md
 questions:
   - "Vocabulary: is FSRS's predicted recall calibrated against what actually happens at the next review (5 to 10 days later)?"
   - "Vocabulary: which words fade fastest, by CEFR level, item kind (meaning, gap-fill, collocation, word form) and topic?"
@@ -18,8 +18,8 @@ data:
   vocabulary: vocab_reviews (word_key, item_kind, correct, due_at, answered_at) and vocab_cards; the recall FSRS
     predicted at each review is rebuilt by replaying each card's history through app/engine/srs.py (deterministic),
     so no new field is needed. Storing the prediction at review time is a small later change if replay proves fragile
-  grammar: grammar_answers; plus delayed re-checks, new, to build when approved (2 to 3 known nodes a week, fresh
-    approved items, logged with context "recheck")
+  grammar: delayed re-checks in grammar_rechecks (built 18 Nov; up to 3 a week on nodes known at 0.9 or more, at
+    least 5 days after the last evidence; never written to mastery or grammar_answers)
 minimum: about 4 weeks of daily use, and at least 200 reviews 5 or more days after the previous one
 metrics: [calibration_by_decile, brier, retention_by_category, recheck_accuracy_with_interval]
 limits: one learner (N-of-1); correlation only, with study time and topic recorded as possible confounders
