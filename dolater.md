@@ -52,8 +52,8 @@ reviewer portal (V2) exists, they can work from the same sheets and pages.
 | [ ] Speaking (phase 5): ratings of 30+ recordings | IELTS rater | 3 h | Any Speaking band |
 | [ ] Testers: try the app and report what breaks or confuses | 3–5 testers | 1 h each | Wider use |
 
-Before asking anyone: V5 of the validation spec is a one-page brief in Vietnamese for reviewers. Ask me to write it
-when you have someone in mind.
+Before asking anyone, send them `specs/validation/reviewer-brief.vi.md` (V5): fill in the [brackets] (your name,
+contact, payment or thanks) and tick the jobs you want from that person. Add them only after they reply "Đồng ý".
 
 ## 4. Measurements (you run them; the truth behind them is Gold or published data)
 - [ ] **Phase 1:** the level-test accuracy curve with intervals; explain one real decision trace in the decision log
