@@ -109,3 +109,17 @@ Spec: `step-4.2b.md`.
   - CP2b, the planted-error test, needs about 50 generated items, so 10–12 texts and about 2 days of free checks;
   - generation runs on the verified bank after CP1.
 
+## CP3 status (18 Nov 2026): built ahead of CP1 and CP2b, waiting on the owner
+Spec: `step-4.2c.md`.
+- **What was built:**
+  - the owner-only page `/duyet-doc`: a tab per status with counts, the passage with the evidence highlighted, the
+    question, the key, the checker's answer; approve, or reject with a reason and a note;
+  - the routes `GET /reading/review`, `POST /reading/review/{id}`;
+  - migration `0025` (`review_was`, the checker's call kept for agreement);
+  - `app/reading/agreement.py`: agreement with an exact interval, kappa, confusion counts and reject reasons.
+- **What is refused:** approval when the passage is missing or changed, or the item fails the code checks.
+- **Checked on the stack:** the real CP2a items appear (1 to review, 3 verified). Their passage shows as missing,
+  because the private text is not in the bank yet, so approval is correctly refused until CP1.
+- **Owner's part:** after CP1 and CP2b, review at least 50 items on `/duyet-doc`, then run
+  `uv run python -m app.reading.agreement --out ../../evals/baselines/reading-agreement.json`.
+

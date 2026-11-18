@@ -605,6 +605,40 @@ export const vi = {
       grammarTitle: "Ngữ pháp",
       nextTest: "Kiểm tra cột mốc tiếp theo",
     },
+    readingReview: {
+      title: "Duyệt câu hỏi Đọc",
+      intro:
+        "Câu hỏi do máy tạo từ bài đọc mở. Mỗi câu đã được một mô hình khác trả lời mù; chỉ câu bạn duyệt mới đến tay người học.",
+      ownerOnly: "Trang này chỉ dành cho chủ dự án.",
+      statuses: {
+        needs_review: "Máy kiểm tra không đồng ý",
+        verified: "Máy kiểm tra đồng ý",
+        approved: "Đã duyệt",
+        rejected: "Đã loại",
+      } as Record<string, string>,
+      empty: "Không có câu hỏi nào ở trạng thái này.",
+      passage: "Bài đọc",
+      passageMissing:
+        "Bài đọc không còn hoặc đã thay đổi, nên không duyệt được câu này.",
+      question: "Câu hỏi",
+      key: "Đáp án",
+      checker: "Máy kiểm tra trả lời",
+      checkerNone: "không trả lời được",
+      skill: "Kỹ năng",
+      note: "Ghi chú (không bắt buộc)",
+      approve: "Duyệt",
+      reject: "Loại",
+      reasonPrompt: "Lý do loại",
+      reasons: {
+        wrong_key: "Đáp án sai",
+        not_answerable: "Không trả lời được từ bài đọc",
+        two_answers: "Có hai đáp án đều đúng",
+        unclear: "Câu hỏi không rõ",
+        other: "Khác",
+      } as Record<string, string>,
+      next: "Câu tiếp",
+      done: "Đã lưu.",
+    },
     pronunciation: {
       title: "Luyện phát âm",
       intro:
