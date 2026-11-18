@@ -143,8 +143,23 @@ scenes:
    - every study scene has a citation to a verified source;
    - no overlap with test items;
    - the length estimate is 90–240 s.
-7. **Blind check by a different model family (Gemini).** It answers each scene's concept questions from the cited
-   chunks only; a mismatch makes the lesson `needs_review`. This needs the Gemini key, which is still pending.
+7. **Blind check by a different model family.** The checker answers each scene's concept questions from the cited
+   chunks only; a mismatch makes the lesson `needs_review`.
+   - **Who checks.** The owner chose free OpenRouter models (17 Nov): Baidu's Ernie
+     (`baidu/ernie-5.5-flash-preview:free`), with `dots-studio/dots-3-note-preview:free` as backup. They are routed
+     only for the gateway's `lesson_check` task, and never from DeepSeek, the generator's family.
+   - **Why it is allowed.** Free models may use what they are sent, so they only ever see our lesson drafts and source
+     chunks, never learner data. The gateway allows `:free` models for `lesson_check` only.
+   - **How it was chosen.** `app/evalkit/verifier_pick.py` ran on `evals/verifier/planted-grammar.yaml`: 20 planted
+     grammar errors and 20 correct checkpoints.
+     - Round 1 (12 items, 4 models): Ernie and dots both caught 6/6, with no false alarms.
+     - Round 2 (all 40, 18 Nov): Ernie caught **20/20** (95% interval 83–100%), with **0/20** false alarms (0–17%) and
+       0 unusable answers.
+     - The bar was at least 18/20 caught, at most 2/20 false alarms and at most 1 unusable. Reports:
+       `evals/baselines/verifier-pick-screen.json` and `verifier-pick-ernie.json`.
+   - **Limits.** With no credit on the account, OpenRouter allows 50 free requests a day and 20 a minute. A preview
+     model can change or disappear: rerun the 40-item test before each batch of lessons, and switch to dots if Ernie
+     fails the bar. The check reduces errors, it does not remove them, so owner review (step 8) stays.
 8. **Owner review.** Lessons stay labelled "Bản nháp — chưa được giáo viên duyệt" until the owner accepts them.
 9. **On the page:** "Nguồn: <book>, chương <n> (<licence>)" under each study scene.
 
@@ -214,4 +229,5 @@ be too small to prove anything; the report says so.
 - [ ] The source gaps, articles above all: look for one more source (recommended), write lessons ourselves labelled as
   such, or leave those nodes without a lesson
 - [x] Licences of the grammar sources read (17 Nov, by the agent at the owner's request)
-- [ ] The Gemini key for the blind check (B3 and later)
+- [x] The blind checker for B3 and later (owner, 17 Nov: free Ernie with dots as backup instead of a Gemini key;
+      passed the 40-item test on 18 Nov)
