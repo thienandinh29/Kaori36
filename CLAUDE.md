@@ -3,9 +3,11 @@
 
 # NodeTrail v2 (projectQ)
 
-AI tutor for any subject. The learner states a goal ("Tôi muốn học Python") or uploads a document; NodeTrail
-builds a Knowledge Graph from trusted textbooks and runs the loop assess → learn → practice → adjust → review.
-Mascot: **Sena** the monkey. Full brief: `context/product-brief.vi.md`.
+An English learning app for Vietnamese learners, aimed at IELTS (A1–C1, all four skills). A level test places the
+learner on a grammar roadmap of CEFR milestones; vocabulary, grammar, writing, pronunciation, reading, listening and
+speaking all run the loop assess → learn → practice → adjust → review on one mastery model. Mascot: **Sena** the
+monkey. NodeTrail began as a tutor for any subject (`context/product-brief.vi.md`); that engine stays in the code as
+the base for other subjects later, but the product and the plan are English now (`SPEC.md`).
 
 This repository continues the NodeTrail contest build (team repo `thienandinh29/SenaEmpire36`, frozen after the
 2026-11-08 competition) as one owner's project. The contest plan is archived in `docs/archive/contest-2026/`;
@@ -13,11 +15,12 @@ read it for history only, its lanes, timeline and freeze rules no longer apply.
 
 ## Owner & working agreement
 - One owner (student, aspiring ML engineer) working with an AI coding agent.
-- **Current goal:** `docs/v2/plan-english-pack.md` (the English pack in phases with measured gates; update its Status
-  column when work lands), from the owner's proposal `docs/v2/english-pack-proposal.vi.md`. Evaluation data that is
-  copyrighted stays in git-ignored `data/private/`; commit only metrics. Background: the v2 milestones in `docs/v2/plan-m0-m1.md`: M0 structured source catalogue → M1 Deep Research
-  on the catalogue → M2 real learning loop through the UI → M3 measurements → M4 AI teacher (slides, whiteboard)
-  driven by the engine. Each milestone must run for real before the next starts; no sample data presented as real.
+- **Current goal:** `docs/v2/plan-english-pack.md` (the English app in phases with measured gates; update its Status
+  column when work lands), from the owner's proposal `docs/v2/english-pack-proposal.vi.md`. What waits on the owner:
+  `dolater.md` (keep it current when a step adds owner work). Evaluation data that is copyrighted stays in
+  git-ignored `data/private/`; commit only metrics. Background only: the any-subject milestones in
+  `docs/v2/plan-m0-m1.md` (M0 source catalogue → M1 Deep Research), superseded by the English plan. The rule from
+  them holds: each step must run for real before the next starts; no sample data presented as real.
 - **Reply in the owner's language** (Vietnamese in chat is fine); detailed answers with the reasoning behind decisions.
 - **Ask before** pushing, adding dependencies, deleting data, or making architectural changes. Commit small, tested
   steps on a feature branch; `main` changes through pull requests with green CI. Never force push.

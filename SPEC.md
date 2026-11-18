@@ -1,30 +1,48 @@
 # SPEC — NodeTrail
 
-Positioning: *An AI tutor for any subject: knows where you are, and leads you onward.*
-Target users: Vietnamese self-learners and university students; later lecturers/centers (class view).
+Positioning: *An English learning app for Vietnamese learners: knows where you are, and leads you onward.* It covers
+the four IELTS skills, from A1 to C1.
+Target users: Vietnamese self-learners and university students preparing for IELTS. The first learner is the owner
+(IELTS in summer 2027, target 6.5), then friends and family, free. Teachers and centres (a class view) come later.
+The detailed plan, with a measured gate per phase: `docs/v2/plan-english-pack.md`.
 
 ## Problem
-Median online-course completion is ~12.6% (Jordan, 2015). Self-learners don't know where to start,
-forget what they learned, and chatbots answer one question at a time without knowing what to learn next.
+Median online-course completion is ~12.6% (Jordan, 2015). Self-learners don't know where to start, forget what they
+learned, and get feedback that is either a single band score or a chatbot's opinion, with no idea what to practise
+next. Vietnamese learners also share specific weak points (final consonants, articles, plural and third-person -s,
+tense choice) that generic courses do not target.
 
 ## Core loop
-Goal or syllabus upload → find trusted textbooks → build Knowledge Graph → **assess → learn → practice → adjust → review**.
+Level test → grammar roadmap of CEFR milestones → **assess → learn → practice → adjust → review**, across vocabulary,
+grammar, writing, pronunciation, reading, listening and speaking. Every skill feeds the same mastery model.
 
-## Features
-1. **Knowledge Graph** — concepts + prerequisite order extracted from the textbooks. Node brightness = mastery.
-2. **Adaptive placement test** — ~10 minutes to estimate the learner's level per concept.
-3. **Adaptive Quiz** — items from textbook exercises; every wrong option maps to a specific misconception.
-4. **Self-adjusting path** — on errors, trace the root cause back through prerequisites and remediate weak foundations.
-5. **Socratic tutor** — never gives the final answer; step-by-step hints; always cites the textbook.
-6. **Smart notes** — block-based notes that auto-convert into review cards.
-7. **Exam prep** — review schedule planned backwards from the exam date, ~20 minutes/day.
+## Features (status in `docs/v2/plan-english-pack.md`)
+1. **Level test and roadmap.** Milestones by CEFR level, each with hidden nodes. A failed milestone test opens its nodes
+   and remediates the weakest prerequisite. Node brightness = mastery.
+2. **Vocabulary.** NGSL/NAWL plus authored words, FSRS review cards, objective item types (meaning, gap-fill,
+   collocation, word form). No prerequisite edges.
+3. **Grammar practice and lessons.** Items with a misconception on every wrong option. Lessons from licence-checked
+   open textbooks: an English voice, English and Vietnamese subtitles by level, a whiteboard, and checkpoints.
+4. **Writing (Task 2 and Task 1).** Errors from LanguageTool typed by ERRANT and mapped to grammar nodes. Feedback on
+   the four criteria with quoted evidence. A band shown as a range. Paragraph rewrites. Task 1 facts checked against
+   the chart's data.
+5. **Pronunciation.** Read authored sentences aloud. A recording-quality check, then the target sounds Vietnamese
+   speakers often miss are scored. Nothing is marked wrong until false alarms are measured on the owner's labelled
+   recordings.
+6. **Reading and Listening.** Levelled open texts, IELTS-style questions generated ahead, checked blind and reviewed by
+   hand. Audio by the self-hosted voice.
+7. **Speaking (Part 1–3).** Transcript, grammar and vocabulary from the Writing pipeline, pronunciation from phase 3,
+   fluency measures. No band without examiner ratings.
+8. **Socratic help and review.** Hints never hand over the answer. FSRS schedules review; good phrases become cards.
 
 ## Engine (deterministic, testable)
-- Mastery: Bayesian Knowledge Tracing per learner × concept.
-- Item difficulty / learner ability: Elo.
+- Mastery: Bayesian Knowledge Tracing per learner × node (grammar nodes, pronunciation sound groups, later Reading and
+  Listening skills).
+- Item difficulty / learner ability: Elo (parked until there is enough answer data).
 - Spaced repetition: FSRS.
 - Path selection & remediation: rule engine over the graph + mastery state.
-- Grading: subject-specific objective graders (code test cases, answer keys, rubrics).
+- Grading: objective graders: answer keys, typed answers exact after normalisation, LanguageTool and ERRANT for
+  writing errors, a small band model for essays (shown as a range), phone recognition and GOP for pronunciation.
 - LLM + RAG: explanations only, with citations.
 
 ### Decision audit trail (explainability)
@@ -46,61 +64,34 @@ A two-step pipeline for every generated question:
 1. **Generator** writes the item and cites the `chunk_id`s it is based on.
 2. **Verifier** receives **only the text of those chunks** (no other context, no answer key), tries to answer the item
    blind, and its answer is compared with the key.
-The verifier is **always a different model family from the generator** (e.g. Gemini generates, Claude verifies), so a
-model never grades its own output (self-preference bias).
+The verifier is **always a different model family from the generator** (today DeepSeek generates and a free Ernie
+model checks; the gateway refuses a checker of the generator's family), so a model never grades its own output
+(self-preference bias).
 Unanswerable or mismatched → `status = needs_review` and the item is **not served**; only `verified` items reach
 learners. Tutor hints go through the same check against their cited chunks before display. Pass/fail counts feed
 `guardrails/metrics.py`, next to the error rate measured on the human-labelled sample.
 
 ## Non-functional
-- Vietnamese-first UI and tutor language; English secondary.
+- Vietnamese-first UI and explanations; the English being learned is shown and heard in English.
+- **A voice is personal data.** Recordings stay on our own machines, are deleted after analysis unless the learner
+  keeps them, and need consent. Only the owner records until a privacy review.
 - Every explanation traceable to a source chunk.
 - Learner data private by default (Supabase RLS).
-- **Uploads in the demo (P1 decision, 2026-11-07):** a judge's uploaded file is read, chunked and sent to the model APIs
-  (DeepSeek generates, Gemini verifies), so it leaves our servers. Allowed **for the competition demo only**, never for
-  real learners, and only with a notice shown before the upload and accepted by the user (Vietnamese, in the `vi` i18n
-  file): *"Tệp bạn tải lên sẽ được gửi tới dịch vụ AI bên thứ ba (DeepSeek, Gemini) để tạo lộ trình. Chỉ tải tài liệu
-  công khai hoặc không chứa thông tin cá nhân. Dữ liệu demo sẽ được xóa sau buổi trình bày."* Uploaded files and the
-  chunks derived from them are deleted after the demo. Before any real-learner release this needs a privacy review
-  (provider data terms, consent, retention, or a self-hosted model).
+- **Uploads (from the contest demo; for other subjects later):** an uploaded file is read, chunked and sent to the
+  model APIs, so it leaves our servers. This was allowed for the 2026 competition demo only, with a notice accepted
+  first (`vi` i18n file) and deletion after the demo. It is not offered to real learners: that needs a privacy review
+  first (provider data terms, consent, retention, or a self-hosted model).
 
-## Competition demo (24-hour team build — see `TEAM.md`)
-No subject is prepared in advance. A judge names **any** topic, or uploads their own file, and NodeTrail builds a
-cited learning path live.
-
-1. **Opening:** "Thầy/cô muốn học gì?" → Sena starts Deep Research (Nhanh gives a first path immediately if the
-   library covers the topic, or from the uploaded file).
-2. **While it researches (~3–5 min):** the team pitches the problem and solution while the screen shows Sena's
-   research trail ("Đang đọc OpenStax Biology 2e — Chương 8…").
-3. **The judge learns (~3 min):** graph-walk placement (~6 questions) lights up the map and locates the gap →
-   wrong answer → remediation to the weak prerequisite → Socratic hint in Vietnamese with citations →
-   correct answer → mastery rises, Sena praises, a review is scheduled.
-4. **Dashboard:** time, cost and dropped questions for that topic (stability, real operations).
-5. **Fallbacks:** Deep Research over 8 min → Nhanh for the same topic → pre-generated topic (said openly) → backup video.
-
-Two modes and two tiers:
-
-| | **Nhanh** (NotebookLM-style) | **Nghiên cứu sâu** (Deep Research) |
-|---|---|---|
-| Sources | Curated, pre-indexed open-textbook library + learner's upload (PDF, DOCX, link) | Agent searches and reads an allowlist of reputable open-education sites |
-| Time | < 60 s to the graph + first placement questions (rest generated in the background) | target 3–5 min, hard cap 8 min |
-| Tier / models | Free — cheap models (e.g. Gemini Flash on Vertex AI), no web search | Pro — strong models (e.g. Claude on Vertex AI/Bedrock) + web search |
-
-Deep Research quality bar: ≥ 3 sources from ≥ 2 publishers; prerequisites follow the sources' chapter order and
-learning objectives; every concept and item cited; every item passes an answerability check; licence recorded per
-source, no "ND" licences. All generated content is labelled "Bản nháp tự động — chưa được giáo viên duyệt".
-
-**Uploaded documents (agreed by the team 2026-11-07, as implemented by P4 on branch `mtri`; not yet on `ptest2`):** a learner's
-uploaded document that explains the topic well enough for a small lesson is used as the source, and no external search runs, in
-either mode. If it misses topics, an outline names them and they are filled from outside (Quick: the curated library; Deep: web
-research). The three-sources-from-two-publishers bar applies only to external research. Everything generated is still cited to
-chunks (page numbers kept for PDFs), verified, and labelled "Bản nháp tự động — chưa được giáo viên duyệt"; the demo-only upload
-notice and purge above still apply. An uploaded file is recorded as "uploaded by the learner" with no licence claim.
-
-Demo scope cuts: MCQ only (no code grading), one demo learner, no login. Kept: uploads, both modes, Free/Pro switch,
-observability dashboard. Organizer expectations (Spec Kit, architecture, demo, novelty, post-contest path) are
-answered in the team doc "NodeTrail — 5 định hướng theo yêu cầu Ban Tổ chức".
+## Other subjects (later)
+NodeTrail began as a tutor for any subject: Deep Research on open textbooks, courses for Python and statistics,
+uploads. That engine is still in the code (`apps/api/app/research/`, `app/sources/`, `data/courses/`) and is the base
+for other subjects later; it is not developed further now. The 2026 contest demo, with its two modes (Nhanh and Deep
+Research) and its quality bar, is described in `docs/archive/contest-2026/`. The old plan, `docs/v2/plan-m0-m1.md`, is
+superseded.
 
 ## Non-goals (for now)
-- Gamified streaks/speed rewards.
-- Generating curriculum content without a trusted source.
+- Gamified streaks or speed rewards.
+- Generating content without a trusted, licence-checked source.
+- A band score from a model alone: bands are shown as ranges, and only where an evaluation against examiner bands
+  exists.
+- Real exam passages or past papers (copyrighted).

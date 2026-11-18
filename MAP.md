@@ -9,12 +9,13 @@ Planned entries are marked _(planned)_ until they exist.
 |---|---|
 | `CLAUDE.md` | Rules and working agreement for Claude, one-owner v2 project (auto-loaded; imports `MAP.md` and `SPEC.md`) |
 | `dolater.md` | **The owner's to-do list**: everything that waits on the owner (licence checks, recordings, labels, reviews, measurements, decisions), with time and commands |
-| `SPEC.md` | What NodeTrail must do: features, behaviors, non-goals |
-| `docs/v2/plan-english-pack.md` | **Current plan: the English pack in phases, with gates and status** (where the project is) |
+| `README.md` | Public introduction in Vietnamese: NodeTrail as an English (IELTS) learning app, skills and their status, the plan, honest status, how to run |
+| `SPEC.md` | What NodeTrail must do: an English learning app for Vietnamese learners (IELTS); features per skill, engine, verification gate, non-goals; other subjects later |
+| `docs/v2/plan-english-pack.md` | **Current plan: the English app in phases, with gates and status** (where the project is) |
 | `docs/v2/english-pack-proposal.vi.md` | The owner's proposal for the English pack (Vietnamese): why, components, metrics, risks |
 | `docs/v2/plan-to-tet-2027.md` | Superseded weekly plan (weeks 0–2 done); kept for history and the maths outline |
 | `docs/v2/decision-log.md` | Owner's weekly decision log, in their own words |
-| `docs/v2/plan-m0-m1.md` | v2 plan: M0 source catalogue (built), M1 Deep Research on the catalogue, later milestones |
+| `docs/v2/plan-m0-m1.md` | Superseded any-subject plan (M0 source catalogue, built; M1 Deep Research), kept for history and for other subjects later |
 | `docs/archive/contest-2026/` | Contest history: `TEAM.md` (lanes, API contract tables, timeline), `PLAN.md`, `team/`, run sheets and reviews, pitch and mock-demo plan. Code comments that cite `TEAM.md` refer to this copy |
 | `specs/` | GitHub Spec Kit: one folder per feature (spec, plan, tasks); `engine/`, `next-item/`, `retrieval/`, `library/`, `remediation/`, `model-test/`, `guardrails/` (P1; includes the labelling protocol), `contracts/review.md` (open contract decisions), `contracts/mocks/` (generated mock JSON for P5, `tests/engine/mocks.py`) |
 | `.specify/` | Spec Kit project memory: `memory/constitution.md`; templates planned |
