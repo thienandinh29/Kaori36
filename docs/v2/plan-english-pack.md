@@ -1,9 +1,10 @@
 # Plan: the English pack (from 14 Nov 2026)
 
 The current plan. It implements the owner's proposal, `docs/v2/english-pack-proposal.vi.md` (read that for the why),
-and replaces `plan-to-tet-2027.md` (kept for history). NodeTrail is the engine; English is the first subject pack:
-content, small scoring models and prompts. The engine decides what to learn next; tools and small models measure
-right and wrong; the LLM explains.
+and replaces `plan-to-tet-2027.md` and the any-subject `plan-m0-m1.md` (both kept for history). **NodeTrail is an
+English learning app for Vietnamese learners** (owner, 18 Nov 2026). The engine underneath stays general, so other
+subjects can come later, but they are not planned now. The engine decides what to learn next; tools and small models
+measure right and wrong; the LLM explains. What waits on the owner: `dolater.md`.
 
 - **Budget:** 30–40 hours a week (owner, 14 Nov); the phases below are sized at 30. About 6 months in total.
 - **First learner:** the owner (IELTS in summer 2027, target 6.5), then friends and family, free.
@@ -18,8 +19,8 @@ Status values: `done`, `in progress`, `next`, `planned`, `cut`.
 | 0 | 11–14 Nov | Foundations | Code sandbox with escape tests; code practice through the API; one-command start confirmed on the owner's laptop; CI runs the whole stack | done |
 | 1 | 14 Nov–13 Dec | **MVP: roadmap, level test, vocabulary, grammar** | Placement accuracy curve by number of questions (target ≥ 90% with ≤ 20); verifier catch rate on 50 planted-error items; the owner studies with it daily for 2 weeks | in progress |
 | 2 | 14 Dec–24 Jan | **Writing** (Task 2, then Task 1; spec `specs/writing/`, steps 2.1–2.5) | Error → node mapping ≥ 90% on 100 hand-checked errors; QWK ≥ 0.7 against examiner bands on 50–100 private essays; same essay scored 5 times differs by ≤ 0.5 band | in progress (2.1–2.5 built; gates wait on the owner's essays) |
-| 3 | 25 Jan–14 Mar | **Pronunciation** (one week off for Tết; spec `specs/pronunciation/`) | False alarms ≤ 10% on 50–100 own recordings before any red highlighting; correlation (PCC) with human scores on speechocean762 recorded, then improved by fine-tuning | in progress: decisions made 17 Nov; 3.1 (recording, quality check, consent, deletion) built; 3.2a recognition service merged; 3.3a (canonical phones, worker analysis, raw scores) built |
-| 4 | 15 Mar–11 Apr | **Listening and Reading** (spec `specs/listening-reading/`) | Every question verified blind and reviewed before it enters the bank; owner's labels vs the verifier on 50 items (agreement, kappa) | specified (not built; waits on the owner's decisions) |
+| 3 | 25 Jan–14 Mar | **Pronunciation** (one week off for Tết; spec `specs/pronunciation/`) | False alarms ≤ 10% on 50–100 own recordings before any red highlighting; correlation (PCC) with human scores on speechocean762 recorded, then improved by fine-tuning | built (3.1–3.5a, 18 Nov): recording and consent, recognition service, speechocean762 (sentence r 0.59, phone AUC 0.86), canonical phones and worker analysis, labelling and thresholds, marks and the pronunciation course, a learned detector (AUC 0.89); **gate waits on the owner's 50–100 labelled recordings** |
+| 4 | 15 Mar–11 Apr | **Listening and Reading** (spec `specs/listening-reading/`) | Every question verified blind and reviewed before it enters the bank; owner's labels vs the verifier on 50 items (agreement, kappa) | in progress: plan with six checkpoints approved 18 Nov (`specs/listening-reading/plan.md`); CP1 text tools built (waits on the owner's licence checks and labels); CP2a generation and blind check built |
 | 5 | 12 Apr–9 May | **Speaking Part 1–3, and opening to testers** (spec `specs/speaking/`) | Per-user limits and a daily cost cap working; ≥ 5 of 10 testers still using it after 2 weeks; old errors falling in later essays over 4 weeks | specified (not built; waits on the owner's decisions) |
 | — | 10–31 May | Buffer before the exam | | planned |
 
@@ -104,6 +105,7 @@ learner is an estimate with a range until measured against examiners.
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-18 | **NodeTrail is an English learning app** (owner's decision). README, `SPEC.md` and `CLAUDE.md` now describe the English app. The any-subject engine (Deep Research, other courses) stays in the code for other subjects later; `plan-m0-m1.md` is superseded. Phase 3 built through 3.5a, with gates waiting on the owner's recordings. Phase 4 plan approved with six checkpoints; CP1 and CP2a built. `dolater.md` lists everything waiting on the owner |
 | 2026-11-17 | Phase 3 started. The owner's decisions: the strict voice policy, the wav2vec2 recogniser with torchaudio, all target sound groups, one heavy profile at a time; direction: pronounce correctly first, then a simulated IELTS Speaking test (phase 5). Step 3.1 built: `/phat-am` records in the browser (16 kHz mono WAV made there), a quality check (length, quiet, clipping, noise, no speech) gives advice and stores nothing bad, recordings deleted after 24 h unless kept, owner only. No sound is judged yet |
 | 2026-11-16 | Vocabulary import (`specs/vocabulary-import/`): NGSL 1.2 + NAWL 1.2 (CC BY-SA 4.0, `data-sa/`), 3,533 of 3,768 headwords kept and merged with the 130 authored words (3,663 in all); levels estimated from frequency; Vietnamese, examples, topics and collocations written by deepseek-flash and checked by code (draft); IPA on 2,552 words (72%) where espeak-ng and the model agreed, none elsewhere. 92 calls, about US$0.12 real spend (the report's US$1.35 uses the deliberately high default prices). The owner's 50-entry check is pending |
 | 2026-11-15 | Phase 3 (Pronunciation) specified, nothing built: pipeline, target sounds, the voice policy and the owner's decisions listed. Facts read from Hugging Face: the candidate recogniser is Apache-2.0 with 1.26 GB of weights, and speechocean762 is Apache-2.0 but all its speakers speak Mandarin, so it tests the machinery, not Vietnamese learners |

@@ -1,5 +1,9 @@
 # NodeTrail v2: plan for M0 (source catalogue) and M1 (Deep Research)
 
+> **Superseded (18 Nov 2026).** NodeTrail is now an English learning app; the current plan is
+> `docs/v2/plan-english-pack.md`. This any-subject plan is kept for history; its code (source catalogue, Deep
+> Research) stays as the base for other subjects later.
+
 Status: written 2026-11-10 after the contest. **Decided by the lead (2026-11-10):** v2 is built on the personal
 branch `p1/v2`, started from `ptest2`; the source bar is "collect whatever can be collected with a recorded
 licence" instead of 3 sources from 2 publishers; the HTML crawler stays as a route. **M0 is built** on `p1/v2`
