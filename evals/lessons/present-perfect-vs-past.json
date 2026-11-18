@@ -1,0 +1,20 @@
+{
+  "lesson": "english-ielts/present-perfect-vs-past",
+  "status": "sample",
+  "grounding": "the lesson only (no cited chunks)",
+  "outcome": "pass",
+  "checkpoints": [
+    {
+      "checkpoint": "still-true",
+      "result": "agree"
+    },
+    {
+      "checkpoint": "time-word",
+      "result": "agree"
+    }
+  ],
+  "checker": [
+    "baidu/ernie-5.5-flash-preview:free"
+  ],
+  "generator_family": "claude"
+}
