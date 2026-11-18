@@ -35,6 +35,8 @@ jobs:
         run: uv run python -m app.evalkit.gates check ../../evals/baselines/placement-gate.json
       - name: Evaluation gate (level test on the English roadmap vs baseline)
         run: uv run python -m app.evalkit.english_gate check ../../evals/baselines/english-placement.json
+      - name: Evaluation gate (recommendation engine picks the right activity, simulated)
+        run: uv run python -m app.evalkit.recommend_gate check ../../evals/baselines/recommend-gate.json
 
   runner:
     runs-on: ubuntu-latest

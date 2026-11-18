@@ -13,7 +13,11 @@ Spec: `spec.md`, approved by the owner 18 Nov 2026.
 
 **Build (agent), in order:**
 - [x] M1 `data/maps/ielts-competencies.yaml`, its checker, vocabulary band nodes from FSRS
-- [ ] M2 `engine/recommend.py`, traces, unit tests, the simulation gate (at least 90% picks the right foundation)
+- [x] M2 `engine/recommend.py`, traces, unit tests, the simulation gate (at least 90% picks the right foundation).
+  First run: a hard 0.9 root-cause line sent 16.7% of "no weak foundation" learners back to known foundations
+  (noise near 0.9), so a foundation must be under 0.8 to be named the cause. Now 100% / 100% on the gated
+  scenarios; the reported borderline scenario (weak foundation 0.70-0.85) is picked 66.1% of the time, the cost
+  of that line
 - [ ] M3 `GET /today` and the home page "Hôm nay" on it
 - [ ] M4 the two-map page
 

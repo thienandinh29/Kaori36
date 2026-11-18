@@ -1,0 +1,34 @@
+{
+ "seed": 20261118,
+ "noise": 0.04,
+ "bar": 0.9,
+ "cells": [
+  {
+   "scenario": "weak_foundation",
+   "runs": 1000,
+   "right": 1000,
+   "share": 1.0,
+   "low": 0.9963,
+   "practice_when_foundation_weak": 0,
+   "foundation_when_none_weak": 0
+  },
+  {
+   "scenario": "no_weak_foundation",
+   "runs": 1000,
+   "right": 1000,
+   "share": 1.0,
+   "low": 0.9963,
+   "practice_when_foundation_weak": 0,
+   "foundation_when_none_weak": 0
+  },
+  {
+   "scenario": "borderline_foundation",
+   "runs": 1000,
+   "right": 661,
+   "share": 0.661,
+   "low": 0.6307,
+   "practice_when_foundation_weak": 339,
+   "foundation_when_none_weak": 0
+  }
+ ]
+}
