@@ -1,0 +1,110 @@
+"""Validation labels CLI (specs/validation/step-v1.md).
+
+    uv run python -m app.validation.cli backfill      # existing decisions -> labels (safe to rerun)
+    uv run python -m app.validation.cli summary       # items per content type and effective tier
+    uv run python -m app.validation.cli add-reviewer --name "Cô Lan" --role expert_teacher \
+        --expertise "10 năm dạy IELTS" --consented
+"""
+
+import argparse
+import json
+from datetime import UTC, datetime
+
+import psycopg
+
+from app.validation.store import LabelIn, add_label, add_reviewer, summary
+
+_VERDICT = {"verified": "right", "needs_review": "wrong"}
+
+
+def backfill(conn: psycopg.Connection) -> dict[str, int]:
+    """Copy the owner's sound labels and every Reading item's checks into `labels`."""
+    counts = {"speech_target": 0, "reading_code_check": 0, "reading_model": 0, "reading_owner": 0}
+    for rec, target, value, at in conn.execute(
+        "select recording_id::text,target,label,labelled_at from speech_labels"
+    ).fetchall():
+        add_label(
+            conn,
+            LabelIn(
+                content_type="speech_target",
+                content_id=f"{rec}:{target}",
+                aspect="phone_ok",
+                value=value,
+                role="owner_developer",
+                labelled_at=at,
+            ),
+        )
+        counts["speech_target"] += 1
+    rows = conn.execute(
+        "select id,status,review_was,checker_model,checked_at,reviewed_at,review_note "
+        "from reading_items where status <> 'generated'"
+    ).fetchall()
+    for item_id, status, was, model, checked_at, reviewed_at, note in rows:
+        base = {"content_type": "reading_item", "content_id": item_id, "aspect": "item_ok"}
+        add_label(
+            conn,
+            LabelIn(
+                **base,
+                value="wrong" if status == "dropped" else "right",
+                role="code_check",
+                name="reading",
+                labelled_at=checked_at,
+            ),
+        )
+        counts["reading_code_check"] += 1
+        before = was if status in ("approved", "rejected") else status
+        if model and before in _VERDICT:
+            add_label(
+                conn,
+                LabelIn(
+                    **base, value=_VERDICT[before], role="model", name=model, labelled_at=checked_at
+                ),
+            )
+            counts["reading_model"] += 1
+        if status in ("approved", "rejected"):
+            add_label(
+                conn,
+                LabelIn(
+                    **base,
+                    value="right" if status == "approved" else "wrong",
+                    role="owner_developer",
+                    note=note,
+                    labelled_at=reviewed_at,
+                ),
+            )
+            counts["reading_owner"] += 1
+    return counts
+
+
+def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database
+    from app.config import get_settings
+
+    parser = argparse.ArgumentParser(prog="python -m app.validation.cli")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("backfill")
+    sub.add_parser("summary")
+    rev = sub.add_parser("add-reviewer")
+    rev.add_argument("--name", required=True)
+    rev.add_argument("--role", required=True)
+    rev.add_argument("--expertise", default="")
+    rev.add_argument("--consented", action="store_true", help="they agreed to how labels are used")
+    args = parser.parse_args(argv)
+    with psycopg.connect(get_settings().database_url) as conn:
+        if args.cmd == "backfill":
+            out: object = backfill(conn)
+        elif args.cmd == "summary":
+            out = summary(conn)
+        else:
+            if not args.consented:
+                parser.error("a reviewer is added only after they consent (--consented)")
+            out = {
+                "reviewer_id": add_reviewer(
+                    conn, args.name, args.role, args.expertise, datetime.now(UTC)
+                )
+            }
+    print(json.dumps(out, ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover
+    raise SystemExit(main())
