@@ -82,7 +82,9 @@ only. Progress is measured by independent tests, never by NodeTrail's own master
 ## Non-functional
 - Vietnamese-first UI and explanations; the English being learned is shown and heard in English.
 - **A voice is personal data.** Recordings stay on our own machines, are deleted after analysis unless the learner
-  keeps them, and need consent. Only the owner records until a privacy review.
+  keeps them, and need consent. Only the owner records until a privacy review. The one exception to "on our own
+  machines": an owner's own kept recordings may be played to a reviewer they chose, through the private portal, only
+  after an explicit command (`specs/validation/step-v2b.md`); nobody else's voice is ever served.
 - Every explanation traceable to a source chunk.
 - Learner data private by default (Supabase RLS).
 - **Uploads (from the contest demo; for other subjects later):** an uploaded file is read, chunked and sent to the

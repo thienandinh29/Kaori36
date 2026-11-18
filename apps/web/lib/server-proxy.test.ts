@@ -211,6 +211,13 @@ describe("graph confirmation session proxy", () => {
     expect(sent(2)).toBeNull();
     await get("roadmap", token);
     expect(sent(3)).toBeNull();
+    expect(
+      (await get(`review/batches/${id}/items/${id}:3/audio`, token)).status,
+    ).toBe(200);
+    expect(sent(4)).toBe(token);
+    expect(
+      (await get(`review/batches/${id}/items/${id}:3/delete`, token)).status,
+    ).toBe(404);
     expect((await get("review/batches/not-a-uuid/next", token)).status).toBe(
       404,
     );

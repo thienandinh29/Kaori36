@@ -5,7 +5,7 @@ The token is a header, never a URL.
 
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Header, Path
+from fastapi import APIRouter, Header, Path, Response
 
 from app.services.review_portal import PortalLabel, ReviewPortal
 
@@ -32,5 +32,17 @@ def create_router(portal: ReviewPortal) -> APIRouter:
         token: Token = None,
     ) -> dict[str, Any]:
         return portal.label(token, batch_id, content_id, body)
+
+    @router.get("/review/batches/{batch_id}/items/{content_id}/audio")
+    def audio(
+        batch_id: BatchId,
+        content_id: Annotated[str, Path(max_length=200)],
+        token: Token = None,
+    ) -> Response:
+        return Response(
+            portal.audio(token, batch_id, content_id),
+            media_type="audio/wav",
+            headers={"Cache-Control": "no-store"},
+        )
 
     return router
