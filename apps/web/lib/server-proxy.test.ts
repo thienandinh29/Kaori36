@@ -188,6 +188,34 @@ describe("graph confirmation session proxy", () => {
       new Headers(fetchMock.mock.calls[0][1].headers).get("cookie"),
     ).toBeNull();
   });
+  it("forwards a well-formed reviewer token only on the portal's paths", async () => {
+    configure();
+    const fetchMock = vi.fn().mockResolvedValue(new Response("{}"));
+    vi.stubGlobal("fetch", fetchMock);
+    const id = "0b9d2f4e-1c2a-4d3b-8e5f-6a7b8c9d0e1f";
+    const token = "A".repeat(43);
+    const get = (path: string, value: string) =>
+      GET(
+        new NextRequest(`http://localhost:3000/api/backend/${path}`, {
+          headers: { "x-reviewer-token": value },
+        }),
+        context(path.split("/")),
+      );
+    const sent = (i: number) =>
+      new Headers(fetchMock.mock.calls[i][1].headers).get("X-Reviewer-Token");
+    expect((await get("review/me", token)).status).toBe(200);
+    expect(sent(0)).toBe(token);
+    expect((await get(`review/batches/${id}/next`, token)).status).toBe(200);
+    expect(sent(1)).toBe(token);
+    await get("review/me", "forged token");
+    expect(sent(2)).toBeNull();
+    await get("roadmap", token);
+    expect(sent(3)).toBeNull();
+    expect((await get("review/batches/not-a-uuid/next", token)).status).toBe(
+      404,
+    );
+    expect((await get("review/other", token)).status).toBe(404);
+  });
   it("allows exactly the English pack's routes and parameters", async () => {
     configure();
     const fetchMock = vi.fn().mockResolvedValue(new Response("{}"));

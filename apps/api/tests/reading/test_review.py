@@ -117,6 +117,17 @@ def test_decisions_and_their_refusals(stack) -> None:  # type: ignore[no-untyped
     out = report(rows)
     assert out["agreement"]["k"] == 2 and out["reject_reasons"] == {"wrong_key": 1}
     assert "note" in out  # fewer than 50 reviewed
+    with pool.connection() as conn:
+        labels = conn.execute(
+            "select content_id, value, tier, detail from labels where role='owner_developer' "
+            "order by content_id"
+        ).fetchall()
+        conn.execute("delete from labels")
+    # The owner's decisions are one source, Bronze (specs/validation/step-v2.md).
+    assert labels == [
+        ("bees-mcq-1", "wrong", "bronze", {"reason": "wrong_key"}),
+        ("bees-tfng-1", "right", "bronze", {"reason": None}),
+    ]
 
 
 def test_agreement_and_kappa() -> None:

@@ -4,6 +4,8 @@
     uv run python -m app.validation.cli summary       # items per content type and effective tier
     uv run python -m app.validation.cli add-reviewer --name "Cô Lan" --role expert_teacher \
         --expertise "10 năm dạy IELTS" --consented
+    uv run python -m app.validation.cli issue-token --reviewer <id>     # the private link, once
+    uv run python -m app.validation.cli make-batch --content reading_item --name "Đọc đợt 1"
 """
 
 import argparse
@@ -12,6 +14,15 @@ from datetime import UTC, datetime
 
 import psycopg
 
+from app.services.reading_review import load_passages
+from app.services.review_portal import (
+    QUEUES,
+    create_batch,
+    issue_token,
+    reading_strata,
+    revoke_tokens,
+)
+from app.validation.sampling import everything, stratified
 from app.validation.store import LabelIn, add_label, add_reviewer, summary
 
 _VERDICT = {"verified": "right", "needs_review": "wrong"}
@@ -88,12 +99,40 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database
     rev.add_argument("--role", required=True)
     rev.add_argument("--expertise", default="")
     rev.add_argument("--consented", action="store_true", help="they agreed to how labels are used")
+    tok = sub.add_parser("issue-token", help="print a reviewer's private link once")
+    tok.add_argument("--reviewer", required=True)
+    tok.add_argument("--base-url", default="http://localhost:3000")
+    sub.add_parser("revoke-token").add_argument("--reviewer", required=True)
+    bat = sub.add_parser("make-batch", help="a fixed stratified sample for reviewers")
+    bat.add_argument("--content", required=True, choices=sorted(QUEUES))
+    bat.add_argument("--name", required=True)
+    bat.add_argument("--size", type=int, default=50)
+    bat.add_argument("--seed", type=int, default=1)
     args = parser.parse_args(argv)
     with psycopg.connect(get_settings().database_url) as conn:
         if args.cmd == "backfill":
             out: object = backfill(conn)
         elif args.cmd == "summary":
             out = summary(conn)
+        elif args.cmd == "issue-token":
+            token = issue_token(conn, args.reviewer)
+            out = {
+                "link": f"{args.base_url.rstrip('/')}/kiem-duyet#{token}",
+                "note": "Shown once; send it privately. Revoke with revoke-token.",
+            }
+        elif args.cmd == "revoke-token":
+            out = {"revoked": revoke_tokens(conn, args.reviewer)}
+        elif args.cmd == "make-batch":
+            if args.content == "reading_item":
+                disagreed, agreed = reading_strata(conn)
+                sample = stratified(disagreed, agreed, args.size, args.seed)
+            else:
+                texts = load_passages(get_settings().reading_texts_dir)
+                sample = everything(list(texts), args.seed)
+            if not sample.item_ids:
+                parser.error("nothing to sample yet")
+            bid = create_batch(conn, args.name, args.content, sample, args.seed)
+            out = {"batch_id": bid, "items": len(sample.item_ids), "population": sample.population}
         else:
             if not args.consented:
                 parser.error("a reviewer is added only after they consent (--consented)")

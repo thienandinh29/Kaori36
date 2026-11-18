@@ -19,7 +19,7 @@ import { useLearner } from "@/components/english/use-learner";
 const t = vi.english.readingReview;
 
 /** The question as the learner sees it, plus its options or headings. */
-function Question({ item }: { item: ReviewItem }) {
+export function Question({ item }: { item: Pick<ReviewItem, "question"> }) {
   const q = item.question;
   const text =
     (q.statement as string | undefined) ??

@@ -6,8 +6,10 @@ earlier one.
 """
 
 from datetime import datetime
+from typing import Any
 
 import psycopg
+from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.validation.tiers import (
@@ -32,6 +34,7 @@ class LabelIn(BaseModel):
     reviewer_id: str | None = None
     note: str | None = Field(default=None, max_length=500)
     labelled_at: datetime | None = None
+    detail: dict[str, Any] | None = None  # e.g. the reviewer's own answer and reason
 
 
 def add_reviewer(
@@ -63,10 +66,11 @@ def add_label(conn: psycopg.Connection, label: LabelIn) -> None:
     source, independence = source_of(label.role, name=label.name, reviewer_id=label.reviewer_id)
     conn.execute(
         "insert into labels(content_type,content_id,aspect,value,role,source,independence,tier,"
-        "reviewer_id,note,labelled_at) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,coalesce(%s,now())) "
+        "reviewer_id,note,detail,labelled_at) "
+        "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,coalesce(%s,now())) "
         "on conflict (content_type,content_id,aspect,source) do update set value=excluded.value,"
         "role=excluded.role,independence=excluded.independence,tier=excluded.tier,"
-        "note=excluded.note,labelled_at=excluded.labelled_at",
+        "note=excluded.note,detail=excluded.detail,labelled_at=excluded.labelled_at",
         (
             label.content_type,
             label.content_id,
@@ -78,6 +82,7 @@ def add_label(conn: psycopg.Connection, label: LabelIn) -> None:
             tier,
             label.reviewer_id,
             label.note,
+            None if label.detail is None else Jsonb(label.detail),
             label.labelled_at,
         ),
     )
