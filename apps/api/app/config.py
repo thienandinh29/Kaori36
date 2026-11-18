@@ -41,6 +41,10 @@ class Settings(BaseSettings):
     vocab_imported_dir: Path = REPO_ROOT / "data-sa" / "vocabulary"
     # Lessons before practice (specs/grammar-lessons): one folder per course.
     lessons_dir: Path = REPO_ROOT / "data" / "lessons"
+    # Pronunciation (specs/pronunciation): target sounds and the sentences to read.
+    pronunciation_dir: Path = REPO_ROOT / "data" / "pronunciation"
+    # The pronunciation service (compose profile `pronunciation`); empty: no analysis.
+    pronunciation_url: str = ""
     sources_candidates: Path = REPO_ROOT / "data" / "sources" / "english-candidates.yaml"
     items_dir: Path = REPO_ROOT / "data" / "items"
     writing_dir: Path = REPO_ROOT / "data" / "writing"

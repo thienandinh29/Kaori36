@@ -163,6 +163,34 @@ def writing_model(settings: Any) -> Any:
     )
 
 
+def purge_recordings(database_url: str) -> int:
+    """Delete voice recordings past their deletion time (specs/pronunciation/step-3.1.md)."""
+    from app.services.recordings import purge_expired
+
+    with psycopg.connect(database_url) as conn:
+        return purge_expired(conn)
+
+
+def recording_analyser(settings: Any) -> Callable[[], bool] | None:
+    """Analyses one stored recording per call when the pronunciation service is configured."""
+    if not settings.pronunciation_url:
+        return None
+    from app.pronunciation.analysis import process_next, service_score
+    from app.services.recordings import load_checked_canonical, load_evidence, load_prompts
+
+    _, prompts = load_prompts(settings.pronunciation_dir)
+    canonical = load_checked_canonical(settings.pronunciation_dir, prompts)
+    sounds = {p.id: p.targets for p in prompts}
+    score = service_score(settings.pronunciation_url)
+    evidence = load_evidence(settings.pronunciation_dir, settings.courses_dir)
+
+    def run() -> bool:
+        with psycopg.connect(settings.database_url) as conn:
+            return process_next(conn, score, canonical, sounds, evidence=evidence)
+
+    return run
+
+
 def loop(
     database_url: str,
     *,
@@ -184,8 +212,15 @@ def loop(
         settings.scorer_url,
         writing_model(settings),
     )
+    purged_at = 0.0
+    analyse = recording_analyser(settings)
     while True:
         try:
+            if time.monotonic() - purged_at > 60:  # voice recordings past their time (step 3.1)
+                purge_recordings(database_url)
+                purged_at = time.monotonic()
+            if analyse is not None and analyse():
+                continue  # one recording at a time; the service is the slow part
             if process_next_essay(database_url, writing_dir, grammar):
                 continue  # essays are short: drain them before the next topic job
             if process_next_rewrite(database_url, grammar):

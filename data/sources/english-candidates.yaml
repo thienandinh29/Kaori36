@@ -153,11 +153,17 @@ candidates:
     url: https://openoregon.pressbooks.pub/esol23/
     use: A1-B1 grammar, including articles (indefinite and definite), the one CC BY candidate for beginners
     believed_licence: CC BY 4.0
-    status: to_check
+    status: verified
+    licence: CC BY 4.0
+    checked_on: 2026-11-17
+    licence_page: https://openoregon.pressbooks.pub/esol23/
+    checked_by: owner
     note: >-
-      Search results quote "Creative Commons Attribution 4.0 International License, except where otherwise noted";
-      the embedded videos are other people's and not covered. Open Oregon refuses this session (CloudFront 403), so
-      the owner reads the licence in a browser. Chapter seen in search: "Articles: indefinite and definite".
+      Read by the owner on the book's page: "A Digital Workbook for Beginning ESOL Copyright 2018 by Eric Dodson,
+      Davida Jordan, and Tim Krause is licensed under a Creative Commons Attribution 4.0 International License, except
+      where otherwise noted." The embedded videos are other people's and are not covered: only the authors' text is
+      used. Open Oregon refuses this cloud session, so fetching it needs another route (the owner's laptop or a copy).
+      Chapter seen: "Articles: indefinite and definite".
   - slug: wordnet
     name: Princeton WordNet
     url: https://wordnet.princeton.edu/

@@ -1,0 +1,15 @@
+# Sentences to read aloud (specs/pronunciation, step 3.1), written by the agent around the target sounds; draft until the owner
+# reviews them. Canonical phones per prompt are added in step 3.3 (reviewed by the owner); until then nothing is judged.
+prompts:
+  - {id: p01, level: A2, targets: [final-t, final-k, final-p], text: "I put the book on the desk and stopped to help my friend."}
+  - {id: p02, level: A2, targets: [final-s, final-z], text: "She buys two cups of tea and plays with her dogs."}
+  - {id: p03, level: A2, targets: [th-voiceless, th-voiced], text: "This is the third thing that my mother thinks about."}
+  - {id: p04, level: A2, targets: [sh-s], text: "She sells fresh fish at the shop by the sea."}
+  - {id: p05, level: B1, targets: [ch-j], text: "Jane chose a cheap jacket for the journey."}
+  - {id: p06, level: A2, targets: [r-l], text: "The red light on the left road is really bright."}
+  - {id: p07, level: B1, targets: [clusters], text: "He texts his friends about the street market every month."}
+  - {id: p08, level: A2, targets: [long-ee], text: "We need to keep the sheep in the green field."}
+  - {id: p09, level: A2, targets: [long-oo], text: "The new school pool is too cool for the students."}
+  - {id: p10, level: A2, targets: [ae-e], text: "The man had a bad bed and a black hat."}
+  - {id: p11, level: B1, targets: [final-t, th-voiceless, clusters], text: "I think the best part of the test was the last question."}
+  - {id: p12, level: B1, targets: [r-l, long-ee, ae-e], text: "Learning English really helps me travel and read the news."}

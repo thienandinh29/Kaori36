@@ -1,0 +1,30 @@
+# The expected (canonical) phones of each prompt, per word, in the recogniser's phone set (specs/pronunciation, step 3.3).
+# British RP with weak forms for function words (the, a, to, for, of), as said in a natural sentence. Drafted by the agent
+# from eSpeak (voice en-gb-x-rp, an authoring aid only) and corrected by hand: words eSpeak ran together were split, and
+# /j/ + /uː/ and /t/ + /s/ are written as two phones. DRAFT until the owner reviews it (a native Vietnamese speaker, not a
+# phonetician: the review is "does this match the model voice", listened to with the Piper button).
+# Only the target sounds of a prompt are ever judged; the other phones only help the alignment.
+p01: [[I, aɪ], [put, p ʊ t], [the, ð ə], [book, b ʊ k], ["on", ɒ n], [the, ð ə], [desk, d ɛ s k], [and, ɐ n d],
+      [stopped, s t ɒ p t], [to, t ə], [help, h ɛ l p], [my, m aɪ], [friend, f ɹ ɛ n d]]
+p02: [[She, ʃ iː], [buys, b aɪ z], [two, t uː], [cups, k ʌ p s], [of, ə v], [tea, t iː], [and, ɐ n d], [plays, p l eɪ z],
+      [with, w ɪ ð], [her, h ɜː], [dogs, d ɒ ɡ z]]
+p03: [[This, ð ɪ s], [is, ɪ z], [the, ð ə], [third, θ ɜː d], [thing, θ ɪ ŋ], [that, ð æ t], [my, m aɪ],
+      [mother, m ʌ ð ə], [thinks, θ ɪ ŋ k s], [about, ɐ b aʊ t]]
+p04: [[She, ʃ iː], [sells, s ɛ l z], [fresh, f ɹ ɛ ʃ], [fish, f ɪ ʃ], [at, ə t], [the, ð ə], [shop, ʃ ɒ p], [by, b aɪ],
+      [the, ð ə], [sea, s iː]]
+p05: [[Jane, dʒ eɪ n], [chose, tʃ əʊ z], [a, ɐ], [cheap, tʃ iː p], [jacket, dʒ æ k ɪ t], [for, f ə], [the, ð ə],
+      [journey, dʒ ɜː n ɪ]]
+p06: [[The, ð ə], [red, ɹ ɛ d], [light, l aɪ t], ["on", ɒ n], [the, ð ə], [left, l ɛ f t], [road, ɹ əʊ d], [is, ɪ z],
+      [really, ɹ iə l ɪ], [bright, b ɹ aɪ t]]
+p07: [[He, h iː], [texts, t ɛ k s t s], [his, h ɪ z], [friends, f ɹ ɛ n d z], [about, ɐ b aʊ t], [the, ð ə],
+      [street, s t ɹ iː t], [market, m ɑː k ɪ t], [every, ɛ v ɹ ɪ], [month, m ʌ n θ]]
+p08: [[We, w iː], [need, n iː d], [to, t ə], [keep, k iː p], [the, ð ə], [sheep, ʃ iː p], [in, ɪ n], [the, ð ə],
+      [green, ɡ ɹ iː n], [field, f iː l d]]
+p09: [[The, ð ə], [new, n j uː], [school, s k uː l], [pool, p uː l], [is, ɪ z], [too, t uː], [cool, k uː l], [for, f ə],
+      [the, ð ə], [students, s t j uː d ə n t s]]
+p10: [[The, ð ə], [man, m æ n], [had, h æ d], [a, ɐ], [bad, b æ d], [bed, b ɛ d], [and, ɐ n d], [a, ɐ],
+      [black, b l æ k], [hat, h æ t]]
+p11: [[I, aɪ], [think, θ ɪ ŋ k], [the, ð ə], [best, b ɛ s t], [part, p ɑː t], [of, ə v], [the, ð ə], [test, t ɛ s t],
+      [was, w ə z], [the, ð ə], [last, l ɑː s t], [question, k w ɛ s tʃ ə n]]
+p12: [[Learning, l ɜː n ɪ ŋ], [English, ɪ ŋ ɡ l ɪ ʃ], [really, ɹ iə l ɪ], [helps, h ɛ l p s], [me, m iː],
+      [travel, t ɹ æ v ə l], [and, ɐ n d], [read, ɹ iː d], [the, ð ə], [news, n j uː z]]

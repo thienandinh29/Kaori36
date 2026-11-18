@@ -37,6 +37,17 @@ import {
   parseLesson,
   parseLessonSummaries,
 } from "@/lib/lesson/decode";
+import {
+  parsePrompts,
+  parseRecording,
+  parseRecordingResult,
+  parseRecordings,
+  type Label,
+  type RecordingDetail,
+  type PronunciationPrompts,
+  type RecordingResult,
+  type RecordingRow,
+} from "@/lib/pronunciation/types";
 import type {
   CheckpointResult,
   LessonSummary,
@@ -300,6 +311,65 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
           answer,
         }),
       );
+    },
+    // Pronunciation (specs/pronunciation/step-3.1.md).
+    async pronunciationPrompts(
+      learnerId: string,
+    ): Promise<PronunciationPrompts> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePrompts(await request(`pronunciation/prompts?${q}`));
+    },
+    async sendRecording(
+      learnerId: string,
+      promptId: string,
+      consent: string,
+      keep: boolean,
+      wav: ArrayBuffer,
+    ): Promise<RecordingResult> {
+      const q = new URLSearchParams({
+        learner_id: learnerId,
+        prompt_id: promptId,
+        consent,
+        keep: String(keep),
+      });
+      return parseRecordingResult(
+        await request(`recordings?${q}`, {
+          method: "POST",
+          headers: { "Content-Type": "audio/wav" },
+          body: wav,
+        }),
+      );
+    },
+    async recordings(learnerId: string): Promise<RecordingRow[]> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseRecordings(await request(`recordings?${q}`));
+    },
+    async recording(learnerId: string, id: string): Promise<RecordingDetail> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseRecording(
+        await request(`recordings/${encodeURIComponent(id)}?${q}`),
+      );
+    },
+    /** The proxied WAV of a kept recording, for the owner's labelling (step 3.3b). */
+    recordingAudioUrl(learnerId: string, id: string): string {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return `/api/backend/recordings/${encodeURIComponent(id)}/audio?${q}`;
+    },
+    async saveLabels(
+      learnerId: string,
+      id: string,
+      labels: { target: number; label: Label }[],
+    ): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await post(`recordings/${encodeURIComponent(id)}/labels?${q}`, {
+        labels,
+      });
+    },
+    async deleteRecording(learnerId: string, id: string): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await request(`recordings/${encodeURIComponent(id)}?${q}`, {
+        method: "DELETE",
+      });
     },
     async deleteEssay(learnerId: string, essayId: string): Promise<void> {
       const q = new URLSearchParams({ learner_id: learnerId });

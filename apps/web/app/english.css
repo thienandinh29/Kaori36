@@ -1924,3 +1924,63 @@ svg.nt-trail {
 .nt-lesson-sources {
   font-size: 0.85rem;
 }
+
+/* --- Pronunciation (specs/pronunciation/step-3.1.md) ---------------------------------------- */
+.nt-pron {
+  display: grid;
+  gap: 12px;
+}
+.nt-pron-prompt {
+  border: 1px solid var(--nt-line, #e4dccd);
+  border-radius: 12px;
+  padding: 12px;
+}
+.nt-pron-text {
+  font-size: 1.25rem;
+  margin: 0.3em 0;
+}
+.nt-pron-live {
+  color: var(--green);
+  font-weight: 700;
+}
+.nt-pron-rows {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.nt-pron-rows li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.nt-pron-rows li > [data-testid="recording-scores"] {
+  flex-basis: 100%;
+  overflow-x: auto;
+}
+.nt-pron-scores {
+  border-collapse: collapse;
+  width: 100%;
+}
+.nt-pron-scores th,
+.nt-pron-scores td {
+  text-align: left;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.nt-pron audio {
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.nt-pron-labels {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.nt-pron-labels [aria-pressed="true"] {
+  background: var(--forest);
+  color: var(--white);
+}

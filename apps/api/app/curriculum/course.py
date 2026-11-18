@@ -13,7 +13,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.curriculum.figures import Figure, FigureKind, Ident
 
-Modality = Literal["mcq", "numeric", "code", "short_answer", "essay", "figure_description"]
+Modality = Literal[
+    "mcq", "numeric", "code", "short_answer", "essay", "figure_description", "speech"
+]  # speech: read aloud, scored by the pronunciation service (specs/pronunciation)
 Level = Literal["A1", "A2", "B1", "B2", "C1"]  # CEFR, for language courses (specs/english-course)
 LEVELS: tuple[Level, ...] = ("A1", "A2", "B1", "B2", "C1")
 NEEDS_RUBRIC: frozenset[str] = frozenset({"short_answer", "essay", "figure_description"})
