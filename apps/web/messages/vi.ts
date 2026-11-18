@@ -599,6 +599,21 @@ export const vi = {
       focus: "Sena đang tập trung",
       think: "Sena đang suy nghĩ",
     },
+    today: {
+      title: "Hôm nay",
+      target: (band: number, date: string) =>
+        `Mục tiêu: IELTS ${band.toFixed(1).replace(".", ",")} · kỳ thi dự kiến ${date.split("-").reverse().join("/")}`,
+      kinds: {
+        review: "Ôn tập",
+        diagnostic: "Bài đo ngắn",
+        learn_foundation: "Học nền tảng",
+        practise_competency: "Luyện dạng bài thi",
+      } as Record<string, string>,
+      via: "cho",
+      go: "Bắt đầu",
+      proposed:
+        "Liên kết giữa kỹ năng thi và nền tảng là đề xuất, chưa được giáo viên kiểm tra.",
+    },
     recheck: {
       title: "Kiểm tra lại sau một tuần",
       intro: "Một câu ngắn về phần bạn đã nắm:",

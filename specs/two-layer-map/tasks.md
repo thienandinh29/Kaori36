@@ -18,7 +18,9 @@ Spec: `spec.md`, approved by the owner 18 Nov 2026.
   (noise near 0.9), so a foundation must be under 0.8 to be named the cause. Now 100% / 100% on the gated
   scenarios; the reported borderline scenario (weak foundation 0.70-0.85) is picked 66.1% of the time, the cost
   of that line
-- [ ] M3 `GET /today` and the home page "Hôm nay" on it
+- [x] M3 `GET /today` and the home page "Hôm nay" on it (`app/services/today.py`, `app/api/today.py`,
+  `components/english/today-list.tsx`). No competency is measured yet, so the list today is a Writing diagnostic and
+  the foundations most exam skills share; Reading joins the available skills with CP4
 - [ ] M4 the two-map page
 
 **Owner's hands-on work:**

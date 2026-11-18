@@ -72,7 +72,6 @@ def _trace(
         concept_slug=slug,
         at=at,
         prior=p,
-        posterior=p,
         rule=rule,
         rule_vi=rule_vi,
         alternatives=list(alternatives),

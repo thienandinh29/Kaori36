@@ -14,7 +14,7 @@ const allowedEnglish = new RegExp(
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
     `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|` +
-    `rechecks/next|rechecks/${UUID}/answer|` +
+    `rechecks/next|rechecks/${UUID}/answer|today|` +
     `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
     `review/batches/${UUID}/items/${UUID}:[0-9]{1,3}|review/batches/${UUID}/items/${UUID}:[0-9]{1,3}/audio)$`,
 );
@@ -34,6 +34,7 @@ const forwardedParams = [
   "consent",
   "keep",
   "status",
+  "minutes",
 ];
 const learnerCookie = "nodetrail_learner";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;
