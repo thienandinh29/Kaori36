@@ -13,7 +13,8 @@ const allowedEnglish = new RegExp(
     `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
-    `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG})$`,
+    `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|` +
+    `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG})$`,
 );
 // The only path a learner may DELETE: their own essay (specs/writing/step-2.1.md).
 const deletable = new RegExp(`^(essays|phrases|recordings)/${UUID}$`);
@@ -34,6 +35,7 @@ const forwardedParams = [
 ];
 const learnerCookie = "nodetrail_learner";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;
+const reviewerToken = /^[A-Za-z0-9_-]{43}$/;
 
 async function proxy(
   request: NextRequest,
@@ -99,6 +101,10 @@ async function proxy(
       request.headers.get("x-demo-upload-consent") === "demo-v1"
     )
       headers.set("X-Demo-Upload-Consent", "demo-v1");
+    // The reviewer portal's private token (specs/validation/step-v2.md): only on its own paths.
+    const reviewer = request.headers.get("x-reviewer-token");
+    if (path.startsWith("review/") && reviewer && reviewerToken.test(reviewer))
+      headers.set("X-Reviewer-Token", reviewer);
     const signals = AbortSignal.any([
       request.signal,
       AbortSignal.timeout(25000),

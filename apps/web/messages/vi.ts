@@ -639,6 +639,54 @@ export const vi = {
       next: "Câu tiếp",
       done: "Đã lưu.",
     },
+    reviewPortal: {
+      title: "Kiểm tra nội dung NodeTrail",
+      hello: "Xin chào",
+      intro:
+        "Cảm ơn thầy/cô đã giúp kiểm tra. Mỗi lần chỉ có một mục; nếu không chắc, cứ chọn “Không chắc”. Thầy/cô không thấy điểm của máy hay nhãn của người khác.",
+      invalid:
+        "Đường link không hợp lệ hoặc đã bị thu hồi. Xin liên hệ chủ dự án để nhận link mới.",
+      batches: "Các đợt kiểm tra",
+      noBatches: "Hiện chưa có đợt nào cho thầy/cô.",
+      progress: "đã làm",
+      open: "Bắt đầu",
+      back: "Quay lại danh sách",
+      finished: "Đã xong đợt này. Cảm ơn thầy/cô!",
+      nothingNow:
+        "Hiện chưa có mục nào xem được trong đợt này. Chủ dự án sẽ báo khi sẵn sàng.",
+      unavailable:
+        "mục tạm thời không xem được (bài đọc đã đổi) và được bỏ qua.",
+      passage: "Bài đọc",
+      question: "Câu hỏi",
+      step1: "Bước 1: thầy/cô trả lời câu hỏi từ bài đọc (chưa xem đáp án).",
+      yourAnswer: "Câu trả lời của thầy/cô",
+      reveal: "Xem đáp án",
+      step2:
+        "Bước 2: đáp án của máy có đúng, và chỉ có một đáp án hợp lý không?",
+      key: "Đáp án",
+      verdicts: {
+        right: "Đúng",
+        wrong: "Sai",
+        unsure: "Không chắc",
+      } as Record<string, string>,
+      reasonPrompt: "Vì sao sai?",
+      reasons: {
+        wrong_key: "Đáp án sai",
+        not_answerable: "Không trả lời được từ bài đọc",
+        two_answers: "Có hai đáp án đều hợp lý",
+        unclear: "Câu hỏi không rõ",
+        other: "Khác",
+      } as Record<string, string>,
+      levelPrompt: "Bài này ở cấp độ CEFR nào?",
+      unsure: "Không chắc",
+      note: "Ghi chú (không bắt buộc)",
+      save: "Lưu và sang mục tiếp",
+      saved: "Đã lưu.",
+      tfng: { true: "TRUE", false: "FALSE", not_given: "NOT GIVEN" } as Record<
+        string,
+        string
+      >,
+    },
     pronunciation: {
       title: "Luyện phát âm",
       intro:

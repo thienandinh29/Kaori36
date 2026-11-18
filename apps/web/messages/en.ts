@@ -23,6 +23,53 @@ export const en = {
     retry: "Try again",
     about: "About",
     vocabulary: "Vocabulary",
+    reviewPortal: {
+      title: "Checking NodeTrail's content",
+      hello: "Hello",
+      intro:
+        "Thank you for helping. One item at a time; if you are not sure, choose “Not sure”. You never see the machine's scores or anyone else's labels.",
+      invalid:
+        "This link is not valid or has been revoked. Please ask the owner for a new one.",
+      batches: "Batches",
+      noBatches: "No batch for you yet.",
+      progress: "done",
+      open: "Start",
+      back: "Back to the list",
+      finished: "This batch is done. Thank you!",
+      nothingNow:
+        "Nothing in this batch can be shown yet. The owner will tell you when it is ready.",
+      unavailable:
+        "items could not be shown (their text changed) and were skipped.",
+      passage: "Passage",
+      question: "Question",
+      step1: "Step 1: answer the question from the passage (without the key).",
+      yourAnswer: "Your answer",
+      reveal: "Show the key",
+      step2: "Step 2: is the key right, with only one defensible answer?",
+      key: "Key",
+      verdicts: {
+        right: "Right",
+        wrong: "Wrong",
+        unsure: "Not sure",
+      } as Record<string, string>,
+      reasonPrompt: "Why is it wrong?",
+      reasons: {
+        wrong_key: "Wrong key",
+        not_answerable: "Not answerable from the passage",
+        two_answers: "Two defensible answers",
+        unclear: "Unclear question",
+        other: "Other",
+      } as Record<string, string>,
+      levelPrompt: "Which CEFR level is this text?",
+      unsure: "Not sure",
+      note: "Note (optional)",
+      save: "Save and continue",
+      saved: "Saved.",
+      tfng: { true: "TRUE", false: "FALSE", not_given: "NOT GIVEN" } as Record<
+        string,
+        string
+      >,
+    },
     roadmap: {
       mapTitle: "Course map",
       here: "You are here",

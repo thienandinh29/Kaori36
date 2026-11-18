@@ -33,6 +33,12 @@ a gate's truth.
   these, never used as proof (`research/`, the validation spec).
 
 ## 3. Find a reviewer for… (correctness; the one job only you can do)
+**How to give a reviewer access (V2 portal):** once they reply "Đồng ý", run `add-reviewer` (section 1), then
+`uv run python -m app.validation.cli issue-token --reviewer <id> --base-url <your web address>` and send the link
+privately (it is shown once; `revoke-token` ends it). Make their batch with
+`uv run python -m app.validation.cli make-batch --content reading_item --name "Đọc đợt 1"` (or `--content text_level`)
+after CP1, when the texts are in the bank.
+
 Find: **one English teacher** (grammar, vocabulary, Reading, text levels), **one person with IELTS rating experience**
 (Writing and Speaking bands), optionally **a phonetics-trained teacher** (pronunciation), and **3–5 testers**.
 Friends, lecturers or English-major students are fine for teacher-level checks; bands need trained raters. Until the

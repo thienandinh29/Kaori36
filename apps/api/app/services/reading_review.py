@@ -18,6 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from app.reading.items import Item, check, learner_view
 from app.services.backend import learner_uuid
+from app.validation.store import LabelIn, add_label
 
 STATUSES = ("needs_review", "verified", "approved", "rejected")
 Reason = Literal["wrong_key", "not_answerable", "two_answers", "unclear", "other"]
@@ -81,7 +82,8 @@ class ReadingReview:
             current = passage is not None and hashlib.sha256(passage.encode()).hexdigest() == digest
             items.append({
                 "id": item_id, "text": slug, "kind": item.kind, "skill": item.skill,
-                "question": learner_view(item), "key": _key(item), "evidence": list(item.evidence),
+                "question": learner_view(item), "key": key_of(item),
+                "evidence": list(item.evidence),
                 "checker_answer": answer, "checker_model": model, "note": note,
                 "passage": passage if current else None,
             })  # fmt: skip
@@ -118,10 +120,24 @@ class ReadingReview:
                 "review_was=%s where id=%s",
                 (new, self.clock(), note.strip() or None, status, item_id),
             )
+            # The owner's decision is one source, Bronze (specs/validation/step-v2.md).
+            add_label(
+                conn,
+                LabelIn(
+                    content_type="reading_item",
+                    content_id=item_id,
+                    aspect="item_ok",
+                    value="right" if new == "approved" else "wrong",
+                    role="owner_developer",
+                    note=note.strip() or None,
+                    detail={"reason": body.reason},
+                    labelled_at=self.clock(),
+                ),
+            )
         return {"id": item_id, "status": new}
 
 
-def _key(item: Any) -> object:
+def key_of(item: Any) -> object:
     if item.kind == "completion":
         return list(item.accepted)
     if item.kind == "headings":

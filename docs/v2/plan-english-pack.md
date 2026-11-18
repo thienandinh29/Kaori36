@@ -53,7 +53,7 @@ data to support them, and choosing the simple model that fits, and showing why, 
 ## Roadmap to summer 2027
 | When | Focus | Done when |
 |---|---|---|
-| 18 Nov – 31 Dec 2026 | **Stabilise and baseline.** The validation system (tiers: **V1 built 18 Nov**, `specs/validation/step-v1.md`; reviewer portal V2 next); Reading MVP (phase 4 CP1–CP4); the two-map engine M1–M2; a baseline from an independent test on four skills; KT-001 and FORGET-001 data collection starts | NodeTrail is the owner's daily study tool; the baseline is recorded |
+| 18 Nov – 31 Dec 2026 | **Stabilise and baseline.** The validation system (tiers: **V1 built 18 Nov**, `specs/validation/step-v1.md`; reviewer portal **V2 built 18 Nov**, `step-v2.md`); Reading MVP (phase 4 CP1–CP4); the two-map engine M1–M2; a baseline from an independent test on four skills; KT-001 and FORGET-001 data collection starts | NodeTrail is the owner's daily study tool; the baseline is recorded |
 | Jan – Feb 2027 | **Learn and research.** Daily use; the first essays rated by an independent rater; KT-001 report; FORGET-001 first numbers (after 4+ weeks of use) | A first ML case study with real data |
 | Mar – Apr 2027 | **AI reliability and analytics.** VER-001 benchmark of the question pipeline; Listening (phase 4 CP5); human-in-the-loop review in steady use; learning analytics report | Two more case studies with evidence |
 | May – Jun 2027 | **IELTS first.** Feature freeze except fixes; exam practice; independent mock tests | Exam readiness measured, not guessed |

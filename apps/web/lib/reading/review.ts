@@ -112,7 +112,9 @@ export function highlight(
 }
 
 /** The key as the owner reads it: TFNG words, an option letter, accepted answers, or paragraph:heading pairs. */
-export function keyText(item: ReviewItem): string {
+export function keyText(
+  item: Pick<ReviewItem, "kind" | "key" | "question">,
+): string {
   const k = item.key;
   if (item.kind === "tfng" && typeof k === "string")
     return k === "not_given" ? "NOT GIVEN" : k.toUpperCase();

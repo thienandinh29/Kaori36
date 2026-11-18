@@ -145,6 +145,14 @@ def create_app(
             )
         )
     )
+    from app.api import review_portal as review_portal_routes
+    from app.services.review_portal import ReviewPortal
+
+    app.include_router(
+        review_portal_routes.create_router(
+            ReviewPortal(lambda: app.state.pool, settings.reading_texts_dir)
+        )
+    )
     from app.api import lessons as lesson_routes
     from app.lessons.store import LessonStore, Paths
     from app.services.grammar import load_misconceptions
