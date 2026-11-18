@@ -1,0 +1,46 @@
+# Planted-error set for choosing the lesson checker (specs/grammar-lessons, option 2, 17 Nov 2026).
+# Written by the agent. Every `wrong` entry has exactly one planted error of the kind a generator makes; every
+# `right` entry is standard British/American English grammar. A checker should flag the wrong ones and pass the
+# right ones. Small on purpose (40): it ranks candidates, it does not certify one.
+claims:
+  - {id: c01, truth: right, text: "Use the present perfect with 'since' for a situation that started in the past and continues now: I have lived here since 2019."}
+  - {id: c02, truth: wrong, text: "Use the past simple with 'since' for a situation that continues now: I lived here since 2019."}
+  - {id: c03, truth: right, text: "'Ago' goes with the past simple: She left two hours ago."}
+  - {id: c04, truth: wrong, text: "'Ago' goes with the present perfect: She has left two hours ago."}
+  - {id: c05, truth: right, text: "The third person singular of the present simple adds -s or -es: He watches TV every night."}
+  - {id: c06, truth: wrong, text: "In the present simple, 'does' is followed by a verb with -s in questions: Does she likes coffee?"}
+  - {id: c07, truth: right, text: "Use 'an' before a vowel sound, so we say 'an hour' and 'a university'."}
+  - {id: c08, truth: wrong, text: "Use 'an' before any word spelled with a vowel letter, so we say 'an university'."}
+  - {id: c09, truth: right, text: "Uncountable nouns such as 'information' and 'advice' have no plural form: some useful information."}
+  - {id: c10, truth: wrong, text: "'Information' is countable, so we say 'many informations'."}
+  - {id: c11, truth: right, text: "The second conditional uses 'if' + past simple and 'would' + base verb: If I had more time, I would travel."}
+  - {id: c12, truth: wrong, text: "The second conditional uses 'if' + 'would': If I would have more time, I would travel."}
+  - {id: c13, truth: right, text: "The third conditional uses 'if' + past perfect and 'would have' + past participle: If she had studied, she would have passed."}
+  - {id: c14, truth: wrong, text: "The third conditional uses 'if' + past simple and 'would' + base verb: If she studied, she would pass yesterday."}
+  - {id: c15, truth: right, text: "The passive is formed with 'be' + past participle: The bridge was built in 1990."}
+  - {id: c16, truth: wrong, text: "The passive is formed with 'be' + base verb: The bridge was build in 1990."}
+  - {id: c17, truth: right, text: "After 'enjoy' and 'avoid', use the -ing form: I enjoy reading."}
+  - {id: c18, truth: wrong, text: "After 'enjoy', use 'to' + base verb: I enjoy to read."}
+  - {id: c19, truth: right, text: "A non-defining relative clause is separated by commas and cannot use 'that': My brother, who lives in Hue, is a doctor."}
+  - {id: c20, truth: wrong, text: "A non-defining relative clause uses 'that' after a comma: My brother, that lives in Hue, is a doctor."}
+checkpoints:
+  - {id: q01, truth: right, question: "Nam ___ at the bank since 2021.", options: [has worked, worked, works], key: has worked}
+  - {id: q02, truth: wrong, question: "She ___ to London three years ago.", options: [went, has gone, goes], key: has gone}
+  - {id: q03, truth: right, question: "If it rains tomorrow, we ___ at home.", options: [will stay, would stay, stayed], key: will stay}
+  - {id: q04, truth: wrong, question: "If I were you, I ___ the job.", options: [would take, will take, took], key: will take}
+  - {id: q05, truth: right, question: "He ___ coffee every morning.", options: [drinks, drink, is drink], key: drinks}
+  - {id: q06, truth: wrong, question: "There ___ a lot of traffic in the city centre.", options: [is, are, have], key: are}
+  - {id: q07, truth: right, question: "This is ___ best film I have ever seen.", options: [the, a, an], key: the}
+  - {id: q08, truth: wrong, question: "I need ___ advice about my course.", options: [some, an, many], key: an}
+  - {id: q09, truth: right, question: "The new library ___ next year.", options: [will be opened, will open by, opens by], key: will be opened}
+  - {id: q10, truth: wrong, question: "The results ___ last week.", options: [were published, published, have published], key: published}
+  - {id: q11, truth: right, question: "The number of students ___ increased.", options: [has, have, are], key: has}
+  - {id: q12, truth: wrong, question: "Neither of the answers ___ correct.", options: [is, are, be], key: be}
+  - {id: q13, truth: right, question: "She must ___ tired after the long trip.", options: [be, being, to be], key: be}
+  - {id: q14, truth: wrong, question: "He can't ___ the email; he was offline all day.", options: [have read, has read, read], key: has read}
+  - {id: q15, truth: right, question: "Not only ___ late, but he also forgot the tickets.", options: [was he, he was, he is], key: was he}
+  - {id: q16, truth: wrong, question: "I look forward to ___ from you.", options: [hearing, hear, heard], key: hear}
+  - {id: q17, truth: right, question: "When I arrived, the film ___ already started.", options: [had, has, was], key: had}
+  - {id: q18, truth: wrong, question: "I used to ___ in Da Nang when I was a child.", options: [live, living, lived], key: living}
+  - {id: q19, truth: right, question: "It is widely believed ___ technology improves education.", options: [that, what, which], key: that}
+  - {id: q20, truth: wrong, question: "The man ___ car was stolen called the police.", options: [whose, who, which], key: who}

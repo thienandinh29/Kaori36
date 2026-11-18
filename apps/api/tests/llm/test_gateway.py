@@ -177,6 +177,8 @@ def test_default_deepseek_routes_keep_independent_verifiers() -> None:
         for task, candidates in tasks.items():
             if task == "verify":
                 assert all(route.family == "gemini" for route in candidates)
+            elif task == "lesson_check":  # a checker: never the generator's family
+                assert all(route.family != "deepseek" for route in candidates)
             else:
                 assert all(route.provider == "deepseek" for route in candidates)
 
@@ -190,3 +192,46 @@ def test_missing_deepseek_never_falls_back_to_gemini(monkeypatch: pytest.MonkeyP
         asyncio.run(
             default_gateway().complete("items", "free", "s", [{"role": "user", "content": "q"}])
         )
+
+
+def free_routes() -> Routing:
+    ernie = Route(provider="openrouter", model="baidu/ernie-test:free", family="ernie")
+    dots = Route(provider="openrouter", model="dots-studio/dots-test:free", family="dots")
+    return Routing(tiers={"free": {"lesson_check": [ernie, dots], "items": [ernie]}})
+
+
+def test_free_models_check_lessons_only_and_fall_back() -> None:
+    fake = Fake([ProviderError("down", retryable=False), '{"count":1}'])
+    gateway = Gateway(free_routes(), {"openrouter": fake})
+    with verification_scope("deepseek"):
+        done = asyncio.run(
+            gateway.complete_with_metadata(
+                "lesson_check", "free", "s", [{"role": "user", "content": "q"}], Answer
+            )
+        )
+    assert done.route.family == "dots"  # Ernie failed: the backup checked
+    with pytest.raises(GatewayError, match="model_not_configured"):  # never for other tasks
+        asyncio.run(gateway.complete("items", "free", "s", [{"role": "user", "content": "q"}]))
+
+
+def test_lesson_check_needs_the_generator_family_and_skips_it() -> None:
+    gateway = Gateway(free_routes(), {"openrouter": Fake(['{"count":1}'])})
+    with pytest.raises(GatewayError, match="verification_scope"):
+        asyncio.run(
+            gateway.complete("lesson_check", "free", "s", [{"role": "user", "content": "q"}])
+        )
+    routing = free_routes()
+    routing.tiers["free"]["lesson_check"] = routing.tiers["free"]["lesson_check"][:1]
+    with verification_scope("ernie"), pytest.raises(GatewayError, match="No eligible"):
+        asyncio.run(
+            Gateway(routing, {"openrouter": Fake([])}).complete(
+                "lesson_check", "free", "s", [{"role": "user", "content": "q"}]
+            )
+        )
+
+
+def test_default_routing_checks_lessons_with_free_models_outside_deepseek() -> None:
+    routes_ = load_routing().tiers["free"]["lesson_check"]
+    assert [r.family for r in routes_] == ["ernie", "dots"]
+    assert all(r.model.endswith(":free") and r.provider == "openrouter" for r in routes_)
+    assert all(r.family != "deepseek" for r in routes_)

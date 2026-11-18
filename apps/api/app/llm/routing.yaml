@@ -16,12 +16,19 @@ tiers:
     verify: &verify
       - {provider: gemini, model: '${GEMINI_VERIFY_MODEL}', family: gemini}
       - {provider: vertex, model: '${VERTEX_VERIFY_MODEL}', family: gemini}
+    # The lesson checker (specs/grammar-lessons): free OpenRouter models, chosen by the planted-error
+    # test (evals/baselines/verifier-pick-*.json); dots is the backup if Ernie fails or is withdrawn.
+    # Only for public lesson text. With credit, put a paid model first here.
+    lesson_check: &lesson_check
+      - {provider: openrouter, model: 'baidu/ernie-5.5-flash-preview:free', family: ernie}
+      - {provider: openrouter, model: 'dots-studio/dots-3-note-preview:free', family: dots}
   pro:
     graph: &graph
       - {provider: deepseek, model: '${DEEPSEEK_PRO_MODEL}', family: deepseek}
     research: *graph
     items: *graph
     verify: *verify
+    lesson_check: *lesson_check
     tutor: &pro
       - {provider: deepseek, model: '${DEEPSEEK_PRO_MODEL}', family: deepseek}
     ask: *pro
