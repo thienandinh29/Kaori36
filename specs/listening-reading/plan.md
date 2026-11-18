@@ -92,3 +92,20 @@ its terms need the most care; it can come in at CP5 if you want real recordings.
 - **CP1 is passed when** 30 texts are in the bank with verified sources and the level report is committed. CP2 starts
   after that.
 
+## CP2a status (18 Nov 2026): built and run once for real
+Spec: `step-4.2b.md`.
+- **What was built:**
+  - `app/reading/generate.py`: the prompt, a tolerant output schema, and ids and items built by code;
+  - `app/reading/blind.py`: the passage and the learner's view only, graded by `items.grade`;
+  - `app/reading/pipeline.py`: the CLI, one generation per passage version, a check budget per run;
+  - migration `0024_reading_items.sql`;
+  - the gateway tasks `reading_items` (DeepSeek) and `reading_check` (free Ernie, dots as backup).
+- **First real run** (one private OpenStax text, "Elements of culture"; nothing committed from it):
+  - DeepSeek wrote 5 items. Code dropped 1: a completion sentence without a blank.
+  - Ernie verified 3 and sent 1 to review: a NOT GIVEN statement about a manager "rewarded" for driving customers
+    away, which the passage presents as punished. FALSE is defensible, so the key is doubtful: a real catch.
+  - It cost 4 of the day's 50 free checks, and well under US$0.01 of DeepSeek.
+- **Next:**
+  - CP2b, the planted-error test, needs about 50 generated items, so 10–12 texts and about 2 days of free checks;
+  - generation runs on the verified bank after CP1.
+

@@ -177,7 +177,7 @@ def test_default_deepseek_routes_keep_independent_verifiers() -> None:
         for task, candidates in tasks.items():
             if task == "verify":
                 assert all(route.family == "gemini" for route in candidates)
-            elif task == "lesson_check":  # a checker: never the generator's family
+            elif task in ("lesson_check", "reading_check"):  # checkers: never the generator family
                 assert all(route.family != "deepseek" for route in candidates)
             else:
                 assert all(route.provider == "deepseek" for route in candidates)
@@ -235,3 +235,14 @@ def test_default_routing_checks_lessons_with_free_models_outside_deepseek() -> N
     assert [r.family for r in routes_] == ["ernie", "dots"]
     assert all(r.model.endswith(":free") and r.provider == "openrouter" for r in routes_)
     assert all(r.family != "deepseek" for r in routes_)
+
+
+def test_reading_check_may_use_free_models_but_never_the_generator_family() -> None:
+    from app.llm.gateway import FREE_MODEL_TASKS, VERIFY_TASKS, load_routing
+
+    assert "reading_check" in FREE_MODEL_TASKS and "reading_check" in VERIFY_TASKS
+    routing = load_routing()
+    for tier in ("free", "pro"):
+        checkers = routing.tiers[tier]["reading_check"]
+        assert all(r.family != "deepseek" for r in checkers)
+        assert all(r.family == "deepseek" for r in routing.tiers[tier]["reading_items"])
