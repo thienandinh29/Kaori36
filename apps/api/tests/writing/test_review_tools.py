@@ -77,9 +77,11 @@ def correction_sheet(good: int, bad: int) -> list[dict[str, str]]:
 def test_correction_precision_and_the_owners_decision_threshold() -> None:
     few = score_corrections(correction_sheet(20, 2))
     assert few["overall"]["rated"] == 22 and "at least 50" in few["note"]
-    high = score_corrections(correction_sheet(58, 2))  # lower bound well above 0.80
+    high = score_corrections(correction_sheet(58, 2), "gold", True)  # lower bound above 0.80
     assert "may decide to let AI corrections count" in high["note"]
-    low = score_corrections(correction_sheet(40, 20))
+    owner = score_corrections(correction_sheet(58, 2))
+    assert owner["note"].startswith("Not a gate result") and owner["basis"]["truth"] == "bronze"
+    low = score_corrections(correction_sheet(40, 20), "gold", True)
     assert "keep AI corrections as hints" in low["note"]
     assert set(high["per_type"]) == {"SVA", "DET"} and high["per_type"]["DET"]["yes"] == 0
 
@@ -90,7 +92,10 @@ def test_the_command_line_reads_a_sheet_and_refuses_the_wrong_one(
     sheet = tmp_path / "feedback.csv"
     sheet.write_text("essay_id,criterion,kind,supported\ne1,tr,issue,y\ne1,cc,issue,n\n", "utf-8")
     assert main(["feedback", str(sheet)]) == 0
-    assert '"rated": 2' in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert '"rated": 2' in out and '"truth": "bronze"' in out
+    assert main(["feedback", str(sheet), "--rated-by", "teacher"]) == 0
+    assert '"declared": true' in capsys.readouterr().out
     assert main(["corrections", str(sheet)]) == 2  # no `correct` column: the wrong sheet
     assert "no 'correct' column" in capsys.readouterr().out
     sheet.write_text("essay_id,criterion,kind,supported\ne1,tr,issue,perhaps\n", "utf-8")

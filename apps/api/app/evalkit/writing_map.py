@@ -1,6 +1,10 @@
-"""Score the owner's mapping check (specs/writing/step-2.2.md; gate: mapping >= 90% on 100 errors).
+"""Score the mapping check (specs/writing/step-2.2.md; gate: mapping >= 90% on 100 errors).
 
-    uv run python -m app.evalkit.writing_map ../../data/private/writing/errors.csv
+    uv run python -m app.evalkit.writing_map ../../data/private/writing/errors.csv \
+        [--rated-by owner|teacher]
+
+Who filled the sheet sets the truth (specs/validation/step-v3.md): a teacher's check is Gold
+(declared), the owner's is Bronze and never meets the gate.
 
 Input: the sheet from `app.writing.export_errors` with `correct_node` filled by hand (empty: no node
 fits). Output: JSON metrics only, safe to commit; never the sheet itself.
@@ -18,6 +22,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from app.evalkit.stats import rate
+from app.validation.gate import RATED_BY, Truth, basis, measured, rated_by
 
 GATE_ACCURACY = 0.90
 GATE_MIN_ERRORS = 100
@@ -35,6 +40,7 @@ class MapScore:
     per_type: dict[str, dict[str, int]]
     gate_met: bool
     note: str
+    basis: dict[str, object]
 
 
 def base_type(errant_type: str) -> str:
@@ -42,7 +48,9 @@ def base_type(errant_type: str) -> str:
     return rest if head in {"M", "R", "U"} and rest else errant_type
 
 
-def score(rows: Sequence[dict[str, str]]) -> MapScore:
+def score(
+    rows: Sequence[dict[str, str]], truth: Truth = "bronze", declared: bool = False
+) -> MapScore:
     mapped = [r for r in rows if r["node"].strip()]
     correct = [r for r in mapped if r["node"].strip() == r["correct_node"].strip()]
     missed = [r for r in rows if not r["node"].strip() and r["correct_node"].strip()]
@@ -58,9 +66,12 @@ def score(rows: Sequence[dict[str, str]]) -> MapScore:
         if acc.low is not None and acc.high is not None
         else None
     )
-    met = point is not None and len(mapped) >= GATE_MIN_ERRORS and point >= GATE_ACCURACY
+    b = basis(truth, len(mapped), GATE_MIN_ERRORS, declared=declared)
+    met = measured(b) and point is not None and point >= GATE_ACCURACY
     if len(mapped) < GATE_MIN_ERRORS:
         note = f"{len(mapped)} mapped errors checked; the gate needs {GATE_MIN_ERRORS}."
+    elif not measured(b):
+        note = f"Not a gate result: {b['why_en']}."
     else:
         note = "Gate met." if met else f"Accuracy below {GATE_ACCURACY:.0%}: fix the rows first."
     return MapScore(
@@ -74,15 +85,19 @@ def score(rows: Sequence[dict[str, str]]) -> MapScore:
         per_type=dict(sorted(per_type.items())),
         gate_met=met,
         note=note,
+        basis=b,
     )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("sheet", type=Path)
+    parser.add_argument("--rated-by", choices=RATED_BY, default="owner")
     args = parser.parse_args(argv)
+    truth, declared = rated_by(args.rated_by)
     with args.sheet.open(encoding="utf-8", newline="") as f:
-        print(json.dumps(asdict(score(list(csv.DictReader(f)))), ensure_ascii=False, indent=2))
+        result = score(list(csv.DictReader(f)), truth, declared)
+    print(json.dumps(asdict(result), ensure_ascii=False, indent=2))
     return 0
 
 

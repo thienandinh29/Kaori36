@@ -1,4 +1,8 @@
-"""Thresholds per sound group from the owner's labels (specs/pronunciation/step-3.3.md, 3.3b).
+"""Thresholds per sound group from labelled sounds (specs/pronunciation/step-3.3.md, 3.3b).
+
+Truth (specs/validation/step-v3.md): Gold `phone_ok` labels from a trained reviewer when they exist;
+otherwise the owner's labels, as Bronze. Only a measured basis (Gold, at least MIN_RECORDINGS
+recordings) may be applied to the product; a Bronze report checks the pipeline, nothing more.
 
 Pure except `main`. Recordings, not phones, are split into a tune half and a check half, so no
 sentence is in both. A sound is flagged when its GOP is below the threshold. The threshold is
@@ -15,8 +19,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
+from app.validation.gate import Truth, basis, measured
+
 MAX_FALSE_SHARE = 0.10
 MIN_FLAGGED = 10
+MIN_RECORDINGS = 50  # the plan: 50-100 labelled sentences
 Half = Literal["tune", "check"]
 
 
@@ -126,6 +133,37 @@ def from_rows(rows: Iterable[tuple[str, Any, int, str]], groups: dict[str, str])
     return out
 
 
+def gold_rows(conn: Any) -> list[tuple[str, Any, int, str]]:
+    """Expert verdicts per target sound (agreeing experts only) as `from_rows` rows."""
+    from app.validation.tiers import Label, effective
+
+    rows = conn.execute(
+        "select l.content_id, l.role, l.value, l.independence, r.analysis "
+        "from labels l join speech_recordings r on r.id::text = split_part(l.content_id, ':', 1) "
+        "where l.content_type='speech_target' and l.aspect='phone_ok' and l.tier='gold' "
+        "and r.status='analysed' order by l.content_id, l.id"
+    ).fetchall()
+    groups: dict[str, tuple[Any, list[Label]]] = {}
+    for cid, role, value, key, analysis in rows:
+        groups.setdefault(cid, (analysis, []))[1].append(Label(role, value, key))
+    out = []
+    for cid, (analysis, labels) in groups.items():
+        e = effective(labels)
+        if e.tier == "gold" and e.value in ("right", "wrong"):
+            recording, target = cid.split(":", 1)
+            out.append((recording, analysis, int(target), e.value))
+    return out
+
+
+def with_basis(result: dict[str, Any], truth: Truth, recordings: int) -> dict[str, Any]:
+    return result | {"recordings": recordings, "basis": basis(truth, recordings, MIN_RECORDINGS)}
+
+
+def apply_allowed(result: dict[str, Any]) -> bool:
+    """Marks reach learners only from a measured (Gold) basis."""
+    return measured(result.get("basis", {}))
+
+
 def main(argv: list[str] | None = None) -> int:  # pragma: no cover - needs the database
     import psycopg
 
@@ -143,14 +181,25 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - needs the 
     settings = get_settings()
     sounds, _ = load_prompts(settings.pronunciation_dir)
     with psycopg.connect(settings.database_url) as conn:
-        rows = conn.execute(
-            "select r.id::text, r.analysis, l.target, l.label from speech_labels l "
-            "join speech_recordings r on r.id = l.recording_id where r.status = 'analysed'"
-        ).fetchall()
-    result = report(from_rows(rows, {s.id: s.group for s in sounds.values()}))
-    result["recordings"] = len({r[0] for r in rows})
+        rows = gold_rows(conn)
+        truth: Truth = "gold"
+        if not rows:
+            truth = "bronze"
+            rows = conn.execute(
+                "select r.id::text, r.analysis, l.target, l.label from speech_labels l "
+                "join speech_recordings r on r.id = l.recording_id where r.status = 'analysed'"
+            ).fetchall()
+    result = with_basis(
+        report(from_rows(rows, {s.id: s.group for s in sounds.values()})),
+        truth,
+        len({r[0] for r in rows}),
+    )
     args.out.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(result["groups"], indent=2))
+    print(json.dumps(result["basis"], indent=2, ensure_ascii=False))
+    if args.apply and not apply_allowed(result):
+        print("not applied: " + result["basis"].get("why_en", "the basis is not measured"))
+        return 1
     if args.apply:
         from datetime import date
 
