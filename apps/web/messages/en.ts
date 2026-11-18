@@ -23,6 +23,16 @@ export const en = {
     retry: "Try again",
     about: "About",
     vocabulary: "Vocabulary",
+    recheck: {
+      title: "A check, a week later",
+      intro: "One short question on something you know:",
+      draft: "Draft",
+      right: "Right, you still know this.",
+      wrong: "Not quite.",
+      key: "Answer",
+      failed: "Your answer was not saved. Please try again later.",
+      why: "This only measures whether what you learned lasts a week; it does not change your progress.",
+    },
     reviewPortal: {
       title: "Checking NodeTrail's content",
       hello: "Hello",

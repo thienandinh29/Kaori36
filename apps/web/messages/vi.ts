@@ -599,6 +599,16 @@ export const vi = {
       focus: "Sena đang tập trung",
       think: "Sena đang suy nghĩ",
     },
+    recheck: {
+      title: "Kiểm tra lại sau một tuần",
+      intro: "Một câu ngắn về phần bạn đã nắm:",
+      draft: "Bản nháp",
+      right: "Đúng, bạn vẫn nhớ phần này.",
+      wrong: "Chưa đúng.",
+      key: "Đáp án",
+      failed: "Chưa lưu được câu trả lời. Hãy thử lại sau.",
+      why: "Câu này chỉ để đo xem kiến thức có còn sau một tuần không; nó không làm thay đổi tiến độ của bạn.",
+    },
     homeToday: {
       vocabTitle: "Từ vựng",
       vocabCta: "Ôn từ vựng",

@@ -79,8 +79,10 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
     has every number to fill).
 - [ ] **Phase 3:** write the pronunciation gate report, `docs/v2/pronunciation-eval.md`.
 - [ ] **Phase 4:** the gate report (CP6).
-- [ ] **Research (`research/`):** KT-001 needs a public dataset's licence checked; FORGET-001 needs about 4 weeks of
-  reviews (at least 200); VER-001 needs the teacher's 50 labels above.
+- [ ] **Research (`research/`):** KT-001 needs a public dataset's licence checked; FORGET-001 is collecting: review vocabulary
+  most days and answer the "Kiểm tra lại sau một tuần" card on the home page when it appears (up to 3 a week); after
+  about 4 weeks run `uv run python -m app.studies.forget --learner <your id>` (private report; it says whether the
+  minimum of 200 delayed reviews is met); VER-001 needs the teacher's 50 labels above.
 - [ ] **One-command start:** run the stack and TEI indexing on your machine; record the time, chunk count and peak
   memory (`specs/one-command-start/tasks.md`).
 

@@ -252,8 +252,11 @@ describe("graph confirmation session proxy", () => {
       "nodes/past-perfect/practice",
       `grammar-runs/${id}/answers`,
       "vocab/answers",
+      `rechecks/${id}/answer`,
     ])
       expect((await post(path)).status).toBe(200);
+    expect((await get("rechecks/next", `?learner_id=${id}`)).status).toBe(200);
+    expect((await post("rechecks/not-a-uuid/answer")).status).toBe(404);
     expect(
       (await get("roadmap", `?learner_id=${id}&course=english-ielts&secret=x`))
         .status,

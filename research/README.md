@@ -24,5 +24,5 @@ reproducible from the repository and a data version.
 | Id | Question | Status |
 |---|---|---|
 | KT-001 | Does BKT predict the next answer better than simple baselines? | planned |
-| FORGET-001 | What is forgotten after about a week, and does the model know? | planned |
+| FORGET-001 | What is forgotten after about a week, and does the model know? | collecting (since 18 Nov 2026) |
 | VER-001 | How reliable and costly is the generated-content pipeline? | planned |

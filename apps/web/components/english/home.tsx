@@ -7,6 +7,7 @@ import { emptyVocabReason, newWordsToday } from "@/lib/english/view";
 import { vi } from "@/messages/vi";
 import { Sena } from "@/components/sena/sena";
 import { Problem } from "./problem";
+import { RecheckCard } from "./recheck-card";
 import { useRoadmap } from "./roadmap-view";
 import { TraceNote } from "./trace-note";
 import { useLearner } from "./use-learner";
@@ -75,6 +76,7 @@ export function EnglishHome() {
           )}
         </section>
       )}
+      {learner && <RecheckCard learner={learner} />}
       {roadmap?.level_test && (
         <section className="en-card">
           <h2>{t.homeToday.grammarTitle}</h2>

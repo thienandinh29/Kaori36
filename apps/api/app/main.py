@@ -122,6 +122,10 @@ def create_app(
         vocab_imported_dir=settings.vocab_imported_dir,
     )
     app.include_router(grammar_routes.create_router(grammar))
+    from app.api import rechecks as recheck_routes
+    from app.services.rechecks import Rechecks
+
+    app.include_router(recheck_routes.create_router(Rechecks(grammar)))
     from app.api import pronunciation as pronunciation_routes
     from app.services.recordings import Recordings
 
