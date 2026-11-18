@@ -13,7 +13,7 @@ const allowedEnglish = new RegExp(
     `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
-    `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels)$`,
+    `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG})$`,
 );
 // The only path a learner may DELETE: their own essay (specs/writing/step-2.1.md).
 const deletable = new RegExp(`^(essays|phrases|recordings)/${UUID}$`);
@@ -30,6 +30,7 @@ const forwardedParams = [
   "prompt_id",
   "consent",
   "keep",
+  "status",
 ];
 const learnerCookie = "nodetrail_learner";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;

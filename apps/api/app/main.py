@@ -135,6 +135,16 @@ def create_app(
             )
         )
     )
+    from app.api import reading_review as reading_review_routes
+    from app.services.reading_review import ReadingReview
+
+    app.include_router(
+        reading_review_routes.create_router(
+            ReadingReview(
+                lambda: app.state.pool, settings.reading_texts_dir, settings.draft_item_learners
+            )
+        )
+    )
     from app.api import lessons as lesson_routes
     from app.lessons.store import LessonStore, Paths
     from app.services.grammar import load_misconceptions

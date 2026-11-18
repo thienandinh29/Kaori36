@@ -32,7 +32,8 @@ labels) stays in git-ignored `data/private/`; only scores and metrics are commit
   record a model pronunciation of each prompt, if you want your own voice next to Piper's.
 - [ ] **Phase 4, CP2b:** confirm that each planted fault in the planted set is a real fault (about 1 h, once I have
   drafted it).
-- [ ] **Phase 4, CP3:** review at least 50 generated Reading questions on the review page (about 5 h, at 10 an hour).
+- [ ] **Phase 4, CP3:** review at least 50 generated Reading questions on `/duyet-doc` (about 5 h, at 10 an hour), then
+  `uv run python -m app.reading.agreement --out ../../evals/baselines/reading-agreement.json`.
 
 ## 3. Measurements for the gates
 - [ ] **Phase 1:** the level-test accuracy curve with intervals; explain one real decision trace in the decision log
