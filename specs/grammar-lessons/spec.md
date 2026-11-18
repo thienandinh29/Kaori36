@@ -157,6 +157,22 @@ scenes:
        0 unusable answers.
      - The bar was at least 18/20 caught, at most 2/20 false alarms and at most 1 unusable. Reports:
        `evals/baselines/verifier-pick-screen.json` and `verifier-pick-ernie.json`.
+   - **Built (18 Nov): `app/lessons/blind_check.py`.**
+     - **What the checker sees:** the lesson's teaching text (narration, examples, board) and the text of the
+       chunks it cites. It never sees checkpoints' keys or explanations.
+     - **How it answers:** each checkpoint in turn, with the options sorted. An answer that differs from the key,
+       or no usable answer, makes the lesson `needs_review`.
+     - **Who it may be:** it goes through the gateway's `lesson_check` route. A `verification_scope` names the
+       lesson's generator family, so the checker can never be the writer's family.
+     - **Its report** names the checker model and what the check was grounded on.
+     - **First run, on the sample lesson** (written by Claude, so not grounded on cited chunks): Ernie agreed with
+       both keys, so the lesson passed (`evals/lessons/present-perfect-vs-past.json`).
+     - **Planted wrong key:** with "last January" marked correct in a copy of the lesson, Ernie chose "since
+       January", and the lesson went to `needs_review`.
+     - **Not done yet:** lessons with cited chunks wait for the library (phase B2), so the CLI refuses them for now.
+       The check is not yet run automatically when lessons are generated (B3).
+     - Run it with:
+       `uv run python -m app.lessons.blind_check <lesson.yaml> --generator-family deepseek --out <json>`
    - **Limits.** With no credit on the account, OpenRouter allows 50 free requests a day and 20 a minute. A preview
      model can change or disappear: rerun the 40-item test before each batch of lessons, and switch to dots if Ernie
      fails the bar. The check reduces errors, it does not remove them, so owner review (step 8) stays.
