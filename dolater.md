@@ -30,7 +30,13 @@ a gate's truth.
   confirms the fix.
 - [ ] **Progress study:** take an independent test every 4 weeks (official sample papers under exam conditions, or a
   mock with a trained rater). A baseline first, before more learning. NodeTrail's own estimates are compared against
-  these, never used as proof (`research/`, the validation spec).
+  these, never used as proof (`research/`, the validation spec). Record each skill's result (scores only, never the
+  paper's content); NodeTrail's own estimate is snapshotted automatically:
+  `uv run python -m app.progress.cli add --learner <your id> --skill reading --paper "<which paper>" --timed --raw 31/40 --band 7.0 --marked-by answer_key --baseline`
+  (Writing and Speaking: `--marked-by trained_rater` if a rater banded it; `self` is kept as Bronze). Then
+  `... schedule --learner <your id>` for the next date and `... report --learner <your id>` (written to the private
+  `data/private/progress-report.json`). **The baseline is the most time-critical item on this list**: every week of
+  learning before it is a week the study cannot see.
 
 ## 3. Find a reviewer for… (correctness; the one job only you can do)
 **How to give a reviewer access (V2 portal):** once they reply "Đồng ý", run `add-reviewer` (section 1), then
