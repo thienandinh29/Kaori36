@@ -302,11 +302,11 @@ class Recordings:
         with self.pool().connection() as conn:
             row = conn.execute(
                 "select analysis from speech_recordings where id=%s and learner_id=%s "
-                "and status='analysed'",
+                "and status='analysed' and keep",
                 (rid, learner),
             ).fetchone()
-            if row is None:
-                raise HTTPException(404, "Không tìm thấy bản ghi đã phân tích.")
+            if row is None:  # an unkept recording is purged after a day, and its labels with it
+                raise HTTPException(404, "Chỉ gán nhãn được bản ghi đã phân tích và được giữ lại.")
             count = len(row[0]["targets"])
             if any(x.target >= count for x in labels):
                 raise HTTPException(422, "Vị trí âm không có trong kết quả phân tích.")

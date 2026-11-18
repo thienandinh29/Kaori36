@@ -29,7 +29,11 @@ set, and each target sound occurs at least once. The API and the worker refuse t
 - It sends the audio and the prompt's phones to `POST /score`.
 - It keeps only the target positions: phone, GOP, competitor, start and end in ms.
 - It stores the result in `speech_recordings.analysis` (migration `0022`) with the status `analysed`.
-- If the service fails, it stores a short reason with the status `failed` and does not retry.
+- If the service cannot be reached (still starting, down or overloaded: no connection, a timeout, HTTP 5xx or
+  429), nothing changes. The recording stays queued with its audio, and the worker tries again 30 s later. On first
+  start the service downloads its weights for several minutes, so this is the normal case.
+- If the recording itself cannot be scored (HTTP 4xx, such as "cannot align"), it stores a short reason with the status
+  `failed`. It is not retried.
 
 Either way, **the audio is cleared at once unless the learner chose to keep it** (the strict voice policy): the scores
 stay, the voice does not. Purging after 24 hours still removes the row.
@@ -64,8 +68,12 @@ time. Deleting the recording deletes its labels.
 
 **Thresholds** (`app/pronunciation/thresholds.py`, pure and tested). Each threshold is chosen per sound group in
 `sounds.yaml`.
-1. **Split.** Recordings, not phones, are split into a *tune* half and a *check* half by a hash of the recording id. A
-   sentence never sits in both halves. `unsure` labels are left out.
+1. **Split.** Recordings, not phones, are split into a *tune* half and a *check* half by a hash of the recording id, so
+   one take's sounds never sit in both halves. The same prompt read on another day can land in either half. With 12
+   prompts, a split by prompt would leave some sound groups with no examples in one half, so the check measures new
+   takes of the same sentences, not new sentences. `unsure` labels are left out.
+   Thresholds stay at or below 0. Below 0 the recogniser always heard a competing phone somewhere, so the check
+   measures exactly the product's mark rule (3.4).
 2. **Choose.** On the tune half, a sound is flagged when its GOP is below the threshold. The threshold chosen is the one
    that catches the most `wrong` labels while keeping the false-alarm share at 10% or less. The false-alarm share is
    flagged-but-right divided by flagged.

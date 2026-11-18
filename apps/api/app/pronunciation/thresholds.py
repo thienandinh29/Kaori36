@@ -55,10 +55,15 @@ def choose(items: Sequence[Labelled], max_false: float = MAX_FALSE_SHARE) -> flo
 
     Candidates sit just above each observed GOP, so "below the threshold" includes that sound.
     Ties in catches go to the lower threshold (fewer flags). None when nothing qualifies.
+    Thresholds stay at or below 0: below 0 some frame always prefers another phone, so the
+    product's rule (a low GOP and a heard competitor, `marks.marks`) flags exactly these sounds
+    and the measured rates describe what is shown.
     """
     best: tuple[int, float] | None = None
     for gop in sorted({x.gop for x in items}):
         threshold = round(gop + 1e-3, 3)
+        if threshold > 0:
+            break
         flagged, false, caught, _ = counts(items, threshold)
         if caught == 0 or false / flagged > max_false:
             continue
