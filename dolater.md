@@ -47,14 +47,14 @@ reviewer portal (V2) exists, they can work from the same sheets and pages.
 
 | Find a reviewer for… | Who | Their time | Unblocks |
 |---|---|---|---|
-| [ ] Pronunciation labels on your kept recordings (Đúng / Sai / Không chắc per target sound) and the canonical phones | Phonetics-trained teacher, or an English teacher | 3–4 h | The pronunciation gate (false alarms ≤ 10%) |
+| [ ] Pronunciation labels on your kept recordings, on the portal: `make-batch --content speech_target --learner <your id>` (add `--role expert_teacher` for a teacher). Only your own kept recordings can be sent, and only by this command | Phonetics-trained teacher, or an English teacher | 3–4 h | The pronunciation gate (false alarms ≤ 10%) |
 | [ ] CEFR levels of the 30 texts | English teacher | 1 h | CP1 sign-off |
 | [ ] Phase 4, CP2b: confirm the "two defensible answers" planted faults (wrong-key faults are Gold by construction) | English teacher | 1 h | The planted-error test |
 | [ ] Phase 4, CP3: a stratified batch of Reading questions on the portal `/kiem-duyet` (at least 50 for the gate; about 100 for the process rule), then `uv run python -m app.reading.agreement --out ../../evals/baselines/reading-agreement.json` (kappa, defect escape and false rejection against the expert, VER-001) | English teacher | 5–10 h | Gate 2 |
 | [ ] Text levels: the 30 texts on the portal (`make-batch --content text_level`), then `uv run python -m app.texts.levels score-gold --out ../../evals/baselines/text-levels.json` | English teacher | 1 h | CP1's level report |
 | [ ] Writing sheets: the same sheets you would fill, then score with `--rated-by teacher` (`app.evalkit.writing_map`, `app.evalkit.writing_review`); filled by you they are Bronze and never meet the gate | English teacher | 2 h | Phase 2 gate |
-| [ ] Vocabulary: the 50-entry sample right or wrong, then `score`; the seed list's definitions, examples, collocations and glosses (`data/vocabulary/core-seed.yaml`) | English teacher | 3 h | The imported list leaves draft |
-| [ ] Grammar: a stratified sample of the 76 draft MCQs and their misconception texts (`data/items/`) | English teacher | 2–3 h | Items served beyond you |
+| [ ] Vocabulary: entries on the portal (`make-batch --content vocab_entry --size 50`): definitions, examples, collocations, forms and glosses | English teacher | 3 h | The imported list leaves draft |
+| [ ] Grammar: items on the portal (`make-batch --content grammar_item --size 40`), answered blind then the key judged; the misconception texts (`data/items/misconceptions.vi.yaml`) still by sheet | English teacher | 2–3 h | Items served beyond you |
 | [ ] Writing: the error-type → node table (`data/writing/error-map.yaml`) and the 100-error mapping check | English teacher | 2 h | Writing evidence on grammar nodes |
 | [ ] Lessons: the sample lesson; the source gaps (there is/are, used to, nominalisation, participle clauses, cleft sentences, hedging, impersonal passive) | English teacher | 1–2 h | New milestones' lessons |
 | [ ] Pronunciation tips: a Vietnamese `tip_vi` for each of the 14 sounds (`data/pronunciation/sounds.yaml`) | English or phonetics teacher | 1 h | Tips on `/phat-am` |

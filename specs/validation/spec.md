@@ -1,6 +1,6 @@
 # Spec: the validation system (who decides what is true)
 
-Status: approved by the owner 18 Nov 2026. **V1 built** (`step-v1.md`: labels, reviewers, tiers, backfill); **V2 built** (`step-v2.md`: the portal `/kiem-duyet` with Reading and text-level queues; pronunciation, vocabulary, grammar and bands in V2b); **V5 written** (`reviewer-brief.vi.md`); **V3 built** (`step-v3.md`: every gate report states its basis; Gold or construction needed); V4 not built. The owner agreed to the direction: NodeTrail is a learning system
+Status: approved by the owner 18 Nov 2026. **V1 built** (`step-v1.md`: labels, reviewers, tiers, backfill); **V2 built** (`step-v2.md`: the portal `/kiem-duyet` with Reading and text-level queues; pronunciation, vocabulary, grammar and bands in V2b); **V5 written** (`reviewer-brief.vi.md`); **V2b built** (`step-v2b.md`: pronunciation, grammar and vocabulary queues; essay bands later); **V3 built** (`step-v3.md`: every gate report states its basis; Gold or construction needed); V4 not built. The owner agreed to the direction: NodeTrail is a learning system
 and a validation system side by side. This page says how truth is established, which gates change, and what is
 built. It is part of the master roadmap (`docs/v2/plan-english-pack.md`, "Principles").
 

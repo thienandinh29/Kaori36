@@ -14,7 +14,8 @@ const allowedEnglish = new RegExp(
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
     `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|` +
-    `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG})$`,
+    `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
+    `review/batches/${UUID}/items/${UUID}:[0-9]{1,3}|review/batches/${UUID}/items/${UUID}:[0-9]{1,3}/audio)$`,
 );
 // The only path a learner may DELETE: their own essay (specs/writing/step-2.1.md).
 const deletable = new RegExp(`^(essays|phrases|recordings)/${UUID}$`);

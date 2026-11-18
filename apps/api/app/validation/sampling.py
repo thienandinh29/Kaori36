@@ -41,3 +41,13 @@ def everything(ids: Sequence[str], seed: int) -> Sample:
     order = sorted(set(ids))
     random.Random(seed).shuffle(order)
     return Sample(order, {i: "all" for i in order}, {"all": len(order)})
+
+
+def random_sample(ids: Sequence[str], size: int, seed: int) -> Sample:
+    """A seeded random sample of at most `size` items (e.g. word-list entries)."""
+    if size < 1:
+        raise ValueError("a sample needs at least one item")
+    pool = sorted(set(ids))
+    rng = random.Random(seed)
+    order = rng.sample(pool, min(size, len(pool)))
+    return Sample(order, {i: "all" for i in order}, {"all": len(pool)})

@@ -14,16 +14,21 @@ from datetime import UTC, datetime
 
 import psycopg
 
+from app.services.backend import learner_uuid
 from app.services.reading_review import load_passages
 from app.services.review_portal import (
     QUEUES,
     create_batch,
+    grammar_items,
     issue_token,
     reading_strata,
     revoke_tokens,
+    speech_targets,
+    vocab_id,
 )
-from app.validation.sampling import everything, stratified
+from app.validation.sampling import everything, random_sample, stratified
 from app.validation.store import LabelIn, add_label, add_reviewer, summary
+from app.vocabulary.wordlist import shared_wordlist
 
 _VERDICT = {"verified": "right", "needs_review": "wrong"}
 
@@ -108,6 +113,12 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database
     bat.add_argument("--name", required=True)
     bat.add_argument("--size", type=int, default=50)
     bat.add_argument("--seed", type=int, default=1)
+    bat.add_argument(
+        "--role", help="speech_target only: expert_teacher instead of phonetics_expert"
+    )
+    bat.add_argument(
+        "--learner", help="speech_target only: the owner whose kept recordings to send"
+    )
     args = parser.parse_args(argv)
     with psycopg.connect(get_settings().database_url) as conn:
         if args.cmd == "backfill":
@@ -123,15 +134,40 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database
         elif args.cmd == "revoke-token":
             out = {"revoked": revoke_tokens(conn, args.reviewer)}
         elif args.cmd == "make-batch":
+            settings = get_settings()
             if args.content == "reading_item":
                 disagreed, agreed = reading_strata(conn)
                 sample = stratified(disagreed, agreed, args.size, args.seed)
-            else:
-                texts = load_passages(get_settings().reading_texts_dir)
+            elif args.content == "text_level":
+                texts = load_passages(settings.reading_texts_dir)
                 sample = everything(list(texts), args.seed)
+            elif args.content == "grammar_item":
+                ids = list(grammar_items(settings.items_dir / "english-ielts.yaml"))
+                sample = random_sample(ids, args.size, args.seed)
+            elif args.content == "vocab_entry":
+                words = shared_wordlist(
+                    settings.vocab_dir / "core-seed.yaml", settings.vocab_imported_dir
+                ).words
+                sample = random_sample([vocab_id(w) for w in words], args.size, args.seed)
+            else:
+                if not args.learner:
+                    parser.error("speech_target needs --learner (an owner's id)")
+                owners = {
+                    str(learner_uuid(x.strip()))
+                    for x in settings.draft_item_learners.split(",")
+                    if x.strip()
+                }
+                learner = str(learner_uuid(args.learner))
+                try:
+                    sample = everything(speech_targets(conn, learner, owners), args.seed)
+                except ValueError as err:
+                    parser.error(str(err))
             if not sample.item_ids:
                 parser.error("nothing to sample yet")
-            bid = create_batch(conn, args.name, args.content, sample, args.seed)
+            try:
+                bid = create_batch(conn, args.name, args.content, sample, args.seed, args.role)
+            except ValueError as err:
+                parser.error(str(err))
             out = {"batch_id": bid, "items": len(sample.item_ids), "population": sample.population}
         else:
             if not args.consented:

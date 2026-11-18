@@ -1,20 +1,28 @@
-"""The reviewer portal (specs/validation/step-v2.md).
+"""The reviewer portal (specs/validation/step-v2.md, step-v2b.md).
 
 Outside reviewers label content through a private link. Every call carries the reviewer's token;
 only its SHA-256 is stored. A view holds only what the judgement needs: never the item's status,
 the checker's answer, or anyone else's labels. Labels are written with the reviewer's own role, so
 they are Gold (app.validation.tiers).
+
+Pronunciation (V2b): a reviewer hears a recording only when it was kept, belongs to an owner
+(DRAFT_ITEM_LEARNERS) and the owner put it in a batch with an explicit command; nobody else's voice
+is ever served.
 """
 
 import hashlib
 import hmac
+import random
+import re
 import secrets
 from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
 import psycopg
+import yaml  # type: ignore[import-untyped]
 from fastapi import HTTPException
 from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
@@ -25,14 +33,51 @@ from app.services.reading_review import key_of as reading_key
 from app.services.reading_review import load_passages
 from app.validation.sampling import Sample
 from app.validation.store import LabelIn, add_label
+from app.vocabulary.wordlist import Word, shared_wordlist
 
 _ITEM: TypeAdapter[Any] = TypeAdapter(Item)
 LEVELS = ("A1", "A2", "B1", "B2", "C1")
-# Which queue each content type is, and the role that judges it.
+# Which queue each content type is, and the role that judges it by default.
 QUEUES: dict[str, tuple[str, str]] = {
     "reading_item": ("item_ok", "expert_teacher"),
     "text_level": ("cefr_level", "expert_teacher"),
+    "grammar_item": ("item_ok", "expert_teacher"),
+    "vocab_entry": ("entry_ok", "expert_teacher"),
+    "speech_target": ("phone_ok", "phonetics_expert"),
 }
+# Other roles a batch may be given (the spec: a phonetics-trained reviewer, or an English teacher).
+OTHER_ROLES: dict[str, frozenset[str]] = {"speech_target": frozenset({"expert_teacher"})}
+# The reasons a "wrong" verdict may give, per content type (none for a sound).
+REASONS: dict[str, frozenset[str]] = {
+    "reading_item": frozenset({"wrong_key", "not_answerable", "two_answers", "unclear", "other"}),
+    "grammar_item": frozenset({"wrong_key", "two_answers", "unclear", "other"}),
+    "vocab_entry": frozenset(
+        {"definition", "example", "collocation", "form", "gloss", "ipa", "other"}
+    ),
+    "speech_target": frozenset(),
+}
+
+
+def vocab_id(word: Word) -> str:
+    """A URL-safe id for a word-list entry: lemma and part of speech."""
+    return re.sub(r"[^a-z0-9]+", "-", f"{word.lemma}-{word.pos}".lower()).strip("-")
+
+
+def shuffled(item_id: str, n: int) -> list[int]:
+    """A fixed option order per item, so the correct option is not always first."""
+    order = list(range(n))
+    random.Random(hashlib.sha256(item_id.encode()).hexdigest()).shuffle(order)
+    return order
+
+
+@dataclass(frozen=True)
+class Sources:
+    """Where the file-based content lives (defaults: the repository's data folders)."""
+
+    items: Path | None = None  # data/items/english-ielts.yaml
+    vocab: Path | None = None  # data/vocabulary/core-seed.yaml
+    vocab_imported: Path | None = None  # data-sa/vocabulary
+    pronunciation: Path | None = None  # data/pronunciation
 
 
 class PortalLabel(BaseModel):
@@ -40,7 +85,7 @@ class PortalLabel(BaseModel):
     # Reading: the reviewer's own blind answer, then the verdict on the key.
     answer: str | None = Field(default=None, max_length=300)
     verdict: Literal["right", "wrong", "unsure"] | None = None
-    reason: Literal["wrong_key", "not_answerable", "two_answers", "unclear", "other"] | None = None
+    reason: str | None = Field(default=None, max_length=20)  # checked per content type
     # Text level.
     level: Literal["A1", "A2", "B1", "B2", "C1", "unsure"] | None = None
     note: str | None = Field(default=None, max_length=500)
@@ -69,9 +114,17 @@ def revoke_tokens(conn: psycopg.Connection, reviewer_id: str) -> int:
 
 
 def create_batch(
-    conn: psycopg.Connection, name: str, content_type: str, sample: Sample, seed: int
+    conn: psycopg.Connection,
+    name: str,
+    content_type: str,
+    sample: Sample,
+    seed: int,
+    role: str | None = None,
 ) -> str:
-    aspect, role = QUEUES[content_type]
+    aspect, default = QUEUES[content_type]
+    role = role or default
+    if role != default and role not in OTHER_ROLES.get(content_type, frozenset()):
+        raise ValueError(f"a {content_type} batch cannot go to {role}")
     row = conn.execute(
         "insert into review_batches(name,content_type,aspect,role,item_ids,strata,population,seed) "
         "values (%s,%s,%s,%s,%s,%s,%s,%s) returning id::text",
@@ -99,16 +152,35 @@ def reading_strata(conn: psycopg.Connection) -> tuple[list[str], list[str]]:
     return [i for i, s in rows if s == "needs_review"], [i for i, s in rows if s == "verified"]
 
 
+def speech_targets(conn: psycopg.Connection, learner: str, owners: set[str]) -> list[str]:
+    """Every target sound of an owner's kept, analysed recordings, as `<recording>:<index>`."""
+    if learner not in owners:
+        raise ValueError("only an owner's own recordings may be sent to a reviewer")
+    rows = conn.execute(
+        "select id::text, analysis from speech_recordings where learner_id::text=%s and keep "
+        "and status='analysed' and octet_length(audio) > 0",
+        (learner,),
+    ).fetchall()
+    return [f"{rid}:{i}" for rid, analysis in rows for i in range(len(analysis["targets"]))]
+
+
+def grammar_items(path: Path) -> dict[str, dict[str, Any]]:
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return {str(x["id"]): x for x in raw.get("items", [])}
+
+
 class ReviewPortal:
     def __init__(
         self,
         pool: Callable[[], ConnectionPool],
         texts_dir: Path,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
+        sources: Sources | None = None,
     ) -> None:
         self.pool = pool
         self.texts_dir = texts_dir
         self.clock = clock
+        self.sources = sources or Sources()
 
     def _reviewer(self, conn: psycopg.Connection, token: str | None) -> tuple[str, str, str]:
         if not token:
@@ -167,6 +239,12 @@ class ReviewPortal:
         return {"name": name, "role": role, "batches": batches}
 
     def _view(self, conn: psycopg.Connection, ctype: str, cid: str) -> dict[str, Any] | None:
+        if ctype == "grammar_item":
+            return self._grammar_view(cid)
+        if ctype == "vocab_entry":
+            return self._vocab_view(cid)
+        if ctype == "speech_target":
+            return self._speech_view(conn, cid)
         passages = load_passages(self.texts_dir)
         if ctype == "text_level":
             text = passages.get(cid)
@@ -193,6 +271,88 @@ class ReviewPortal:
             "key": reading_key(item),
         }
 
+    def _grammar_view(self, cid: str) -> dict[str, Any] | None:
+        if self.sources.items is None:
+            return None
+        item = grammar_items(self.sources.items).get(cid)
+        if item is None:
+            return None
+        options = item["options"]
+        order = shuffled(cid, len(options))
+        correct = [i for i, o in enumerate(options) if o.get("correct")]
+        return {
+            "content_id": cid,
+            "content_type": "grammar_item",
+            "prompt": item["prompt"],
+            "options": [options[i]["text"] for i in order],
+            "key": order.index(correct[0]) if len(correct) == 1 else None,
+        }
+
+    def _vocab_view(self, cid: str) -> dict[str, Any] | None:
+        if self.sources.vocab is None:
+            return None
+        words = shared_wordlist(self.sources.vocab, self.sources.vocab_imported).words
+        word = next((w for w in words if vocab_id(w) == cid), None)
+        if word is None:
+            return None
+        return {
+            "content_id": cid,
+            "content_type": "vocab_entry",
+            "lemma": word.lemma,
+            "pos": word.pos,
+            "level": word.level,
+            "ipa": word.ipa,
+            "definition": word.definition,
+            "vi": word.vi,
+            "examples": [e.text.replace("___", e.answer) for e in word.examples],
+            "collocations": [c.phrase for c in word.collocations],
+            "forms": [f.sentence.replace("___", f.answer) for f in word.forms],
+        }
+
+    def _speech_view(self, conn: psycopg.Connection, cid: str) -> dict[str, Any] | None:
+        if self.sources.pronunciation is None or ":" not in cid:
+            return None
+        rid, _, index = cid.partition(":")
+        row = conn.execute(
+            "select prompt_id, analysis from speech_recordings where id::text=%s and keep "
+            "and status='analysed' and octet_length(audio) > 0",
+            (rid,),
+        ).fetchone()
+        if row is None or not index.isdigit() or int(index) >= len(row[1]["targets"]):
+            return None  # deleted, no longer kept, or not this recording's target
+        from app.services.recordings import load_prompts
+
+        sounds, prompts = load_prompts(self.sources.pronunciation)
+        target = row[1]["targets"][int(index)]
+        sound = sounds.get(target["sound"])
+        prompt = next((p for p in prompts if p.id == row[0]), None)
+        return {
+            "content_id": cid,
+            "content_type": "speech_target",
+            "sentence": None if prompt is None else prompt.text,
+            "word": target["word"],
+            "ipa": None if sound is None else sound.ipa,
+            "sound_vi": None if sound is None else sound.name_vi,
+            "start_ms": target["start_ms"],
+            "end_ms": target["end_ms"],
+        }
+
+    def audio(self, token: str | None, batch_id: str, content_id: str) -> bytes:
+        """The whole recording of a target in the reviewer's batch, while it is still kept."""
+        with self.pool().connection() as conn:
+            _, _, role = self._reviewer(conn, token)
+            ctype, _, ids = self._batch(conn, batch_id, role)
+            if ctype != "speech_target" or content_id not in ids:
+                raise HTTPException(404, "Không có bản ghi này.")
+            row = conn.execute(
+                "select audio from speech_recordings where id::text=%s and keep "
+                "and octet_length(audio) > 0",
+                (content_id.partition(":")[0],),
+            ).fetchone()
+        if row is None:
+            raise HTTPException(404, "Bản ghi không còn.")
+        return bytes(row[0])
+
     def next(self, token: str | None, batch_id: str) -> dict[str, Any]:
         with self.pool().connection() as conn:
             rid, _, role = self._reviewer(conn, token)
@@ -217,11 +377,14 @@ class ReviewPortal:
             ctype, aspect, ids = self._batch(conn, batch_id, role)
             if content_id not in ids:
                 raise HTTPException(404, "Mục này không thuộc đợt kiểm tra.")
-            if ctype == "reading_item":
+            if ctype != "text_level":
                 if body.verdict is None or body.level is not None:
-                    raise HTTPException(422, "Hãy chọn đánh giá cho đáp án.")
-                if body.verdict == "wrong" and body.reason is None:
+                    raise HTTPException(422, "Hãy chọn đánh giá.")
+                reasons = REASONS[ctype]
+                if body.verdict == "wrong" and reasons and body.reason not in reasons:
                     raise HTTPException(422, "Hãy chọn lý do.")
+                if body.reason is not None and body.reason not in reasons:
+                    raise HTTPException(422, "Lý do không hợp lệ.")
                 value: str = body.verdict
                 detail = {"answer": body.answer, "reason": body.reason}
             else:

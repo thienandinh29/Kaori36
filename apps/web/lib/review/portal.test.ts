@@ -81,4 +81,59 @@ describe("reviewer portal helpers", () => {
       status: 401,
     });
   });
+
+  it("decodes the V2b views", () => {
+    const base = { total: 3, done: 0, unavailable: 0 };
+    expect(
+      parseNext({
+        ...base,
+        item: {
+          content_type: "grammar_item",
+          content_id: "g1",
+          prompt: "My sister ___ a nurse.",
+          options: ["are", "is"],
+          key: 1,
+        },
+      }).item,
+    ).toMatchObject({ contentType: "grammar_item", key: 1 });
+    expect(
+      parseNext({
+        ...base,
+        item: {
+          content_type: "speech_target",
+          content_id: "r:0",
+          sentence: null,
+          word: "think",
+          ipa: "θ",
+          sound_vi: null,
+          start_ms: 100,
+          end_ms: 180,
+        },
+      }).item,
+    ).toMatchObject({ contentType: "speech_target", startMs: 100, endMs: 180 });
+    expect(() =>
+      parseNext({
+        ...base,
+        item: {
+          content_type: "speech_target",
+          content_id: "r:0",
+          word: "x",
+          start_ms: -1,
+          end_ms: 1,
+        },
+      }),
+    ).toThrow(DataError);
+  });
+
+  it("fetches a recording with the header, keeping ':' unencoded", async () => {
+    const fetcher = vi.fn().mockResolvedValue(new Response(new Blob(["RIFF"])));
+    const id = "0b9d2f4e-1c2a-4d3b-8e5f-6a7b8c9d0e1f";
+    const blob = await reviewClient(TOKEN, fetcher).audio("b", `${id}:2`);
+    const [url, init] = fetcher.mock.calls[0];
+    expect(url).toBe(`/api/backend/review/batches/b/items/${id}:2/audio`);
+    expect((init.headers as Record<string, string>)["X-Reviewer-Token"]).toBe(
+      TOKEN,
+    );
+    expect(await blob.text()).toBe("RIFF");
+  });
 });

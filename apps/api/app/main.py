@@ -146,11 +146,20 @@ def create_app(
         )
     )
     from app.api import review_portal as review_portal_routes
-    from app.services.review_portal import ReviewPortal
+    from app.services.review_portal import ReviewPortal, Sources
 
     app.include_router(
         review_portal_routes.create_router(
-            ReviewPortal(lambda: app.state.pool, settings.reading_texts_dir)
+            ReviewPortal(
+                lambda: app.state.pool,
+                settings.reading_texts_dir,
+                sources=Sources(
+                    items=settings.items_dir / "english-ielts.yaml",
+                    vocab=settings.vocab_dir / "core-seed.yaml",
+                    vocab_imported=settings.vocab_imported_dir,
+                    pronunciation=settings.pronunciation_dir,
+                ),
+            )
         )
     )
     from app.api import lessons as lesson_routes

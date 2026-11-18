@@ -57,6 +57,12 @@ export const en = {
         wrong_key: "Wrong key",
         not_answerable: "Not answerable from the passage",
         two_answers: "Two defensible answers",
+        definition: "Wrong definition",
+        example: "Wrong or unnatural example",
+        collocation: "Wrong collocation",
+        form: "Wrong word form",
+        gloss: "Wrong Vietnamese gloss",
+        ipa: "Wrong IPA",
         unclear: "Unclear question",
         other: "Other",
       } as Record<string, string>,
@@ -65,6 +71,23 @@ export const en = {
       note: "Note (optional)",
       save: "Save and continue",
       saved: "Saved.",
+      verdictLabel: "Your verdict",
+      noKey: "(no single key)",
+      audioFailed:
+        "This recording cannot be played (it may have been deleted).",
+      playPart: "Play the part with this sound",
+      vocab: {
+        definition: "Definition",
+        gloss: "Vietnamese gloss",
+        examples: "Examples",
+        collocations: "Collocations",
+        forms: "Word forms",
+        prompt: "Is this entry correct and natural?",
+      },
+      speech: {
+        target: "Sound to judge",
+        prompt: "Was this sound pronounced correctly?",
+      },
       tfng: { true: "TRUE", false: "FALSE", not_given: "NOT GIVEN" } as Record<
         string,
         string
