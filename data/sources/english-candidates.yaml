@@ -48,6 +48,15 @@ candidates:
     use: reading texts for lower levels
     believed_licence: CC BY-SA 4.0
     status: to_check
+  - slug: openstax-reading
+    name: OpenStax textbooks as B2-C1 reading passages (Introduction to Sociology 3e, Astronomy 2e, World History vol. 1)
+    url: https://openstax.org/
+    use: academic reading texts, B2-C1 (specs/listening-reading/plan.md, CP1)
+    believed_licence: CC BY-NC-SA 4.0
+    status: to_check
+    # Each book's own collection metadata (GitHub openstax/osbooks-*, read 18 Nov by the agent) says "Creative Commons
+    # Attribution-NonCommercial-ShareAlike 4.0 International". The owner reads the licence on each book's openstax.org
+    # page before marking this verified. NonCommercial: allowed for study and flagged; ShareAlike: the bank shares alike.
   - slug: wikibooks-grammar
     name: Wikibooks, English Grammar
     url: https://en.wikibooks.org/wiki/English_Grammar

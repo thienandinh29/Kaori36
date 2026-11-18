@@ -1,5 +1,9 @@
 # Tasks: Listening and Reading (phase 4)
 
+**Plan with checkpoints: `plan.md` (approved by the owner, 18 Nov 2026).** The decisions below are answered there: Simple
+English Wikipedia and OpenStax as text sources; free Ernie as the checker through `reading_check`; the Piper voice; the NGSL
+word list.
+
 **Owner's decisions, before 4.1 starts:**
 - [ ] Read the licence of each candidate text source on its own page and set its status in `data/sources/english-candidates.yaml`
       (including VOA Learning English, which is not listed yet), noting any ShareAlike or NonCommercial term

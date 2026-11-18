@@ -1,0 +1,29 @@
+# Which texts to fetch for the first bank (specs/listening-reading/plan.md, CP1). The owner may change any of this.
+# Fetch: uv run python -m app.texts.fetch {simple-wiki|openstax} (from apps/api). Texts land in data/private/english-texts/
+# (git-ignored) until the owner has read the source's licence page and marked it verified in
+# data/sources/english-candidates.yaml; then fetch again with --out ../../data/english/texts and commit.
+simple_wikipedia:  # A2-B1, IELTS-style topics; runs on the owner's laptop (Wikimedia rate-limits the cloud sandbox)
+  - Water
+  - Recycling
+  - Climate change
+  - Internet
+  - Olympic Games
+  - Tea
+  - Elephant
+  - Rainforest
+  - Solar energy
+  - Volcano
+  - Honey bee
+  - Coffee
+  - Bicycle
+  - Chocolate
+  - Library
+  - Vaccine
+  - Great Wall of China
+  - Moon
+  - Association football
+  - Television
+openstax:  # B2-C1, academic; CC BY-NC-SA 4.0 in each book's metadata (checked 18 Nov), flagged NonCommercial
+  - {repo: openstax/osbooks-introduction-sociology, collection: introduction-sociology-3e, texts: 4}
+  - {repo: openstax/osbooks-astronomy, collection: astronomy-2e, texts: 3}
+  - {repo: openstax/osbooks-world-history, collection: world-history-volume-1, texts: 3}
