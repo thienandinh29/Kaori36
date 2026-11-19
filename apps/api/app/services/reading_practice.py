@@ -4,7 +4,8 @@ A question is served only when it is approved, its `item_ok` labels are Silver o
 value "right" (code checks plus the blind checker, or a teacher; the owner's approval adds
 nothing), and its passage is unchanged and still passes the code checks. Each answer is graded from
 the key and moves the item's Reading competency by BKT (mastery under `ielts-competencies`), logged
-in `reading_answers`.
+in `reading_answers`. Options and headings are shown in a fixed shuffled order (`presented`, step
+4.3c); answers arrive in that order and are graded and kept in the stored order (`to_stored`).
 """
 
 from collections.abc import Callable
@@ -22,12 +23,12 @@ from app.competencies.model import load_map
 from app.engine import bkt
 from app.engine.bkt import DEFAULT_PARAMS
 from app.engine.trace import fmt_p
-from app.reading.items import Item, check, grade, learner_view
+from app.reading.items import Item, check, grade, learner_view, presented, to_stored
 from app.reading.pipeline import sha256 as passage_sha256
 from app.services.backend import learner_uuid, save_trace
 from app.services.competency_evidence import competency_ids
 from app.services.learning import save_mastery
-from app.services.reading_review import key_of, read_texts
+from app.services.reading_review import read_texts
 from app.validation.tiers import Label, effective
 
 _ITEM: TypeAdapter[Any] = TypeAdapter(Item)
@@ -50,17 +51,15 @@ def load_texts(folder: Path) -> dict[str, tuple[str, str]]:
 
 
 def key_text(item: Any) -> str:
-    """The answer as a learner reads it."""
-    k: Any = key_of(item)
-    if item.kind == "tfng":
-        return "NOT GIVEN" if k == "not_given" else str(k).upper()
-    if item.kind == "mcq":
-        return f"{'ABCD'[k]}. {item.options[k]}"
-    if isinstance(k, list):
-        return " / ".join(map(str, k))
-    if isinstance(k, dict):
-        return ", ".join(f"{p}: {h}" for p, h in k.items())
-    return str(k)
+    """The answer as a learner reads it, in the shown order; paragraphs and headings from 1."""
+    shown: Any = presented(item)
+    if shown.kind == "tfng":
+        return "NOT GIVEN" if shown.key == "not_given" else str(shown.key).upper()
+    if shown.kind == "mcq":
+        return f"{'ABCD'[shown.key]}. {shown.options[shown.key]}"
+    if shown.kind == "completion":
+        return " / ".join(shown.accepted)
+    return ", ".join(f"{p + 1}: {h + 1}" for p, h in sorted(shown.key.items()))
 
 
 class ReadingPractice:
@@ -151,7 +150,7 @@ class ReadingPractice:
             "title": titles[slug][0],
             "passage": titles[slug][1],
             "items": [
-                {"id": i, **learner_view(item)}
+                {"id": i, **learner_view(presented(item))}
                 # Headings: which paragraphs to label (the positions, never the answers).
                 | ({"paragraphs": sorted(item.key)} if item.kind == "headings" else {})
                 for i, item in items
@@ -165,7 +164,7 @@ class ReadingPractice:
             found = next((it for its in self.served(conn, item_id).values() for i, it in its), None)
             if found is None:
                 raise HTTPException(404, "Câu hỏi này chưa được dùng cho người học.")
-            return self._record(conn, learner, item_id, found, answer, now)
+            return self._record(conn, learner, item_id, found, to_stored(found, answer), now)
 
     def _record(
         self,
@@ -179,7 +178,8 @@ class ReadingPractice:
     ) -> dict[str, Any]:
         """Grade from the key, move the item's Reading competency by BKT, log the answer.
 
-        Shared by practice and timed tests (step 4.3b), so both give the same evidence.
+        Shared by practice and timed tests (step 4.3b), so both give the same evidence. `answer`
+        is in the stored order (`to_stored`), as it is kept.
         """
         score = grade(item, answer)
         correct = score >= 1.0
@@ -278,11 +278,12 @@ class ReadingPractice:
                                 "key": key_text(item), "evidence": list(item.evidence),
                                 "at_seconds": None})  # fmt: skip
                     continue
+                kept = to_stored(item, given)  # given against the shown order
                 if item_id in served:  # still served: evidence, as in practice
-                    r = self._record(conn, learner, item_id, item, given, now, test_id)
+                    r = self._record(conn, learner, item_id, item, kept, now, test_id)
                     correct = r["correct"]
                 else:  # withdrawn since the test began: graded, but no evidence
-                    correct = grade(item, given) >= 1.0
+                    correct = grade(item, kept) >= 1.0
                 out.append({"id": item_id, "answer": given, "correct": correct,
                             "key": key_text(item), "evidence": list(item.evidence),
                             "at_seconds": at})  # fmt: skip

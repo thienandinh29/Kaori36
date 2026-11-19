@@ -2,7 +2,7 @@
 
 Only the owner (the ids in DRAFT_ITEM_LEARNERS) may list or decide. Approval is refused when the
 passage is missing or changed, or the item no longer passes the code checks: what the owner
-approves is exactly what a learner will later see.
+approves is exactly what a learner will later see, in the same shown order (step 4.3c).
 """
 
 from collections.abc import Callable
@@ -17,7 +17,8 @@ from fastapi import HTTPException
 from psycopg_pool import ConnectionPool
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
-from app.reading.items import Item, check, learner_view
+from app.reading.blind import shown_answer
+from app.reading.items import Item, check, learner_view, presented
 from app.reading.pipeline import sha256 as passage_sha256
 from app.services.backend import learner_uuid
 from app.validation.store import LabelIn, add_label
@@ -88,10 +89,12 @@ class ReadingReview:
         note: str | None, passage: str | None,
     ) -> dict[str, Any]:  # fmt: skip
         item = _ITEM.validate_python(data)
+        shown = presented(item)  # as learners will see it; the checker's answer read the same way
         return {
             "id": item_id, "text": slug, "kind": item.kind, "skill": item.skill,
-            "question": learner_view(item), "key": key_of(item), "evidence": list(item.evidence),
-            "checker_answer": answer, "checker_model": model, "note": note, "passage": passage,
+            "question": learner_view(shown), "key": key_of(shown), "evidence": list(item.evidence),
+            "checker_answer": shown_answer(item, answer), "checker_model": model, "note": note,
+            "passage": passage,
         }  # fmt: skip
 
     def texts(self, learner_id: str) -> dict[str, Any]:

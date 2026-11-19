@@ -5,7 +5,8 @@ questions from the passage's own sentences, with deliberate defects), the code c
 check (a fake checker that is sometimes wrong), the item file round trip, the owner's review, the
 labels, the practice routes and "Hôm nay". It looks for the errors a real run would hit: items
 that cannot be served or graded, paragraph numbering that differs between API and web, keys
-leaking to the learner, labels counted twice, stale fingerprints.
+leaking to the learner, labels counted twice, stale fingerprints, and (step 4.3c) answers given in
+the shown order but graded or kept in another.
 """
 
 import asyncio
@@ -34,7 +35,7 @@ from app.reading.generate import (
     GenTfng,
 )
 from app.reading.itemfile import export, import_
-from app.reading.items import BLANK, Item
+from app.reading.items import BLANK, Item, presented
 from app.reading.pipeline import check_pending, generate_text, sha256
 from app.services.grammar import GrammarService
 from app.services.reading_practice import ReadingPractice, key_text
@@ -161,25 +162,24 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         if s == "generated":
             keys[item_id] = _ITEM.validate_python(data)
 
-    # 3. The blind check: the fake checker answers from the key, wrong on about one in seven
-    #    and unusable on about one in eleven.
+    # 3. The blind check: the fake checker answers from the key of the question it is shown (the
+    #    shown order), wrong on about one in seven and unusable on about one in eleven.
     by_question: dict[str, Any] = {}
     for item in keys.values():
-        by_question[blind.question(item, passages[item.text])] = item
+        by_question[blind.question(presented(item), passages[item.text])] = item
 
     async def ask(system: str, text: str) -> blind.Reply | None:
         item = by_question[text]
+        shown = presented(item)
         if sum(map(ord, item.id)) % 11 == 0:
             return None  # an unusable reply, as free models give: flagged with no checker answer
         right = key_text(item)
-        if item.kind == "tfng":
-            right = right.replace("NOT GIVEN", "NOT GIVEN")
-        elif item.kind == "mcq":
-            right = "ABCD"[item.key]
-        elif item.kind == "headings":
-            right = ", ".join(f"{p}:{h}" for p, h in item.key.items())
-        elif item.kind == "completion":
-            right = item.accepted[0]
+        if shown.kind == "mcq":
+            right = "ABCD"[shown.key]
+        elif shown.kind == "headings":
+            right = ", ".join(f"{p}:{h}" for p, h in shown.key.items())
+        elif shown.kind == "completion":
+            right = shown.accepted[0]
         wrong = sum(map(ord, item.id)) % 7 == 0
         return blind.Reply(answer="FALSE" if wrong and item.kind == "tfng" else
                            ("Z" if wrong else right))  # fmt: skip
@@ -209,7 +209,9 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         n = export(conn, {s: ("openstax-reading", p) for s, p in passages.items()}, run["tmp"])
         conn.execute("delete from reading_items")
         conn.execute("delete from labels where content_type='reading_item'")
-        assert import_(conn, run["tmp"], passages) == {"added": n, "kept": 0, "stale": 0}
+        assert import_(conn, run["tmp"], passages) == {
+            "added": n, "updated": 0, "kept": 0, "stale": 0,
+        }  # fmt: skip
         backfill(conn)
         after = conn.execute(
             "select id, status, item, checker_answer from reading_items order by id"
@@ -258,6 +260,9 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         for q in text["items"]:
             assert "key" not in q and "evidence" not in q and "accepted" not in q, q["id"]
             served_ids.add(q["id"])
+            shown = presented(keys[q["id"]])  # learners see the shown order
+            assert q.get("options") == (list(shown.options) if shown.kind == "mcq" else None)
+            assert q.get("headings") == (list(shown.headings) if shown.kind == "headings" else None)
             if q["kind"] == "headings":
                 assert all(0 <= p < n_paras for p in q["paragraphs"]), q["id"]
     assert not served_ids & approved_flagged, "an approved but doubted item was served"
@@ -265,17 +270,18 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
     assert not served_ids & unanswered  # ... and none served: the owner never promotes
     for item_id in sorted(served_ids):
         item = keys[item_id]
+        shown = presented(item)  # a learner answers what is on the screen
         right: Any
-        if item.kind == "tfng":
-            right = {"true": "TRUE", "false": "FALSE", "not_given": "NOT GIVEN"}[item.key]
+        if shown.kind == "tfng":
+            right = {"true": "TRUE", "false": "FALSE", "not_given": "NOT GIVEN"}[shown.key]
             wrong: Any = "TRUE" if right != "TRUE" else "FALSE"
-        elif item.kind == "mcq":
-            right, wrong = item.key, (item.key + 1) % len(item.options)
-        elif item.kind == "completion":
-            right, wrong = item.accepted[0], "zzz"
+        elif shown.kind == "mcq":
+            right, wrong = shown.key, (shown.key + 1) % len(shown.options)
+        elif shown.kind == "completion":
+            right, wrong = shown.accepted[0], "zzz"
         else:
-            right = {str(p): h for p, h in item.key.items()}
-            wrong = {str(p): (h + 1) % len(item.headings) for p, h in item.key.items()}
+            right = {str(p): h for p, h in shown.key.items()}
+            wrong = {str(p): (h + 1) % len(shown.headings) for p, h in shown.key.items()}
         body = {"learner_id": learner}
         good = client.post(f"/reading/items/{item_id}/answer", json=body | {"answer": right})
         bad = client.post(f"/reading/items/{item_id}/answer", json=body | {"answer": wrong})
@@ -293,4 +299,14 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
     assert comps["reading-detail"]["available"] is True and "reading-detail" in measured
     with psycopg.connect(run["url"]) as conn:
         answers = conn.execute("select count(*) from reading_answers").fetchone()
+        kept = conn.execute(
+            "select item_id, answer from reading_answers where correct order by id"
+        ).fetchall()
     assert answers == (2 * len(served_ids),)
+    # Every right answer is kept in the stored order: the stored key, whatever was shown.
+    for item_id, answer in kept:
+        item = keys[item_id]
+        if item.kind == "mcq":
+            assert answer == item.key, item_id
+        elif item.kind == "headings":
+            assert {int(p): h for p, h in answer.items()} == item.key, item_id

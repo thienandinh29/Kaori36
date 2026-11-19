@@ -4,8 +4,9 @@
     uv run python -m app.reading.itemfile import [DIR]
 
 Generation runs where model calls are possible, review runs on the owner's laptop, and a sandbox's
-database is thrown away; so questions travel as one YAML file per text. Import only adds missing
-rows: a row that exists (perhaps already reviewed) is never overwritten.
+database is thrown away; so questions travel as one YAML file per text. Import adds missing rows,
+and brings a newer blind check into a row still undecided here (step 4.3c: before, a question
+imported while waiting for its check never received it). A decided row is never overwritten.
 """
 
 import argparse
@@ -24,7 +25,7 @@ REPO = Path(__file__).resolve().parents[4]
 DEFAULT_DIR = REPO / "data" / "english" / "reading-items"
 COLUMNS = (
     "id", "kind", "status", "item", "problems", "checker_answer", "checker_model",
-    "generated_at", "checked_at", "reviewed_at", "review_note", "review_was",
+    "generated_at", "checked_at", "reviewed_at", "review_note", "review_was", "check_view",
 )  # fmt: skip
 _TIMES = ("generated_at", "checked_at", "reviewed_at")
 _MARKS = ", ".join(["%s"] * len(COLUMNS))
@@ -61,11 +62,23 @@ def export(conn: psycopg.Connection[Any], texts: Mapping[str, tuple[str, str]], 
     return n
 
 
+# A newer check result for a row nobody has decided yet (same passage version).
+_NEWER_CHECK = (
+    "update reading_items set status=%s, checker_answer=%s, checker_model=%s, checked_at=%s, "
+    "check_view=%s where id=%s and passage_sha256=%s "
+    "and status in ('generated','verified','needs_review') "
+    "and (checked_at is null or checked_at < %s)"
+)
+
+
 def import_(
     conn: psycopg.Connection[Any], folder: Path, passages: Mapping[str, str]
 ) -> dict[str, int]:
-    """Add missing rows; never overwrite. `passages` (slug -> current text) finds stale versions."""
-    counts = {"added": 0, "kept": 0, "stale": 0}
+    """Add missing rows and newer checks of undecided rows; never touch a decided row.
+
+    `passages` (slug -> current text) finds stale versions.
+    """
+    counts = {"added": 0, "updated": 0, "kept": 0, "stale": 0}
     for path in sorted(folder.glob("*.yaml")):
         doc = yaml.safe_load(path.read_text(encoding="utf-8"))
         slug = str(doc["text_slug"])
@@ -85,9 +98,20 @@ def import_(
                     f"values (%s, %s, {_MARKS}) on conflict (id) do nothing",
                     (slug, digest, *values),
                 )
-                added = cur.rowcount == 1
-                counts["added" if added else "kept"] += 1
-                counts["stale"] += int(added and stale)
+                if cur.rowcount == 1:
+                    counts["added"] += 1
+                    counts["stale"] += int(stale)
+                    continue
+                got = dict(zip(COLUMNS, values, strict=True))
+                updated = 0
+                if got["status"] in ("verified", "needs_review") and got["checked_at"]:
+                    updated = conn.execute(
+                        _NEWER_CHECK,
+                        (got["status"], got["checker_answer"], got["checker_model"],
+                         got["checked_at"], got["check_view"], got["id"], digest,
+                         got["checked_at"]),
+                    ).rowcount  # fmt: skip
+                counts["updated" if updated == 1 else "kept"] += 1
     return counts
 
 
