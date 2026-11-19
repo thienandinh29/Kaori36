@@ -180,3 +180,15 @@ def test_review_by_passage_orders_agreed_first_and_times_decisions(stack) -> Non
     # Owner only, and unknown texts are 404.
     assert client.get("/reading/review/texts", params={"learner_id": other}).status_code == 403
     assert client.get("/reading/review/texts/nope", params=params).status_code == 404
+
+
+def test_the_owner_sees_the_shown_order_and_the_checkers_answer_in_it(stack) -> None:  # type: ignore[no-untyped-def]
+    """Step 4.3c: what the owner approves is what learners see, the checker's answer included."""
+    client, owner, _, pool, _ = stack
+    with pool.connection() as conn:
+        # Kept in the stored order: B is "Stored honey".
+        conn.execute("update reading_items set checker_answer='B' where id='bees-mcq-1'")
+    out = client.get("/reading/review", params={"learner_id": owner}).json()
+    mcq = next(i for i in out["items"] if i["id"] == "bees-mcq-1")
+    assert mcq["question"]["options"][mcq["key"]] == "Stored honey"
+    assert mcq["key"] == 0 and mcq["checker_answer"] == "A"  # both read against the page

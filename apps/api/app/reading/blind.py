@@ -1,8 +1,10 @@
 """Blind check of a Reading item (specs/listening-reading/step-4.2b.md).
 
 The checker sees the passage and the learner's view of the question only: no key, no accepted
-answers, no evidence. Its reply is turned into an answer and graded by `items.grade`, the same
-function that grades learners. Full marks gives `verified`; anything else gives `needs_review`.
+answers, no evidence, and options and headings in the shown order (`items.presented`, step 4.3c), as
+learners see them. Its reply is turned into an answer, mapped to the stored order and graded by
+`items.grade`, the same function that grades learners. Full marks gives `verified`; anything else
+gives `needs_review`. The answer is kept in the stored order, like every recorded answer.
 """
 
 import re
@@ -11,7 +13,16 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
-from app.reading.items import Completion, Headings, Mcq, Tfng, grade
+from app.reading.items import (
+    Completion,
+    Headings,
+    Mcq,
+    Tfng,
+    grade,
+    presented,
+    to_presented,
+    to_stored,
+)
 from app.writing.analysis import paragraphs
 
 ReadingItem = Tfng | Mcq | Completion | Headings
@@ -79,10 +90,33 @@ def answer_of(item: ReadingItem, reply: Reply) -> object:
 Outcome = Literal["verified", "needs_review"]
 
 
+def written(item: ReadingItem, answer: object) -> str | None:
+    """An option letter or paragraph:heading pairs for `item`'s order; None when not readable."""
+    if isinstance(item, Mcq) and isinstance(answer, int) and 0 <= answer < len(item.options):
+        return LETTERS[answer]
+    if isinstance(item, Headings) and isinstance(answer, dict) and answer:
+        return ", ".join(f"{p}:{h}" for p, h in sorted(answer.items()))
+    return None
+
+
+def shown_answer(item: ReadingItem, kept: str | None) -> str | None:
+    """A kept checker answer (stored order) as it reads against the shown order, for review."""
+    if kept is None or not isinstance(item, Mcq | Headings):
+        return kept
+    shown = written(presented(item), to_presented(item, answer_of(item, Reply(answer=kept))))
+    return kept if shown is None else shown
+
+
 async def check(item: ReadingItem, passage: str, ask: Ask) -> tuple[Outcome, str | None]:
-    """The outcome and the checker's raw answer (None when its reply was unusable)."""
-    reply = await ask(SYSTEM, question(item, passage))
+    """The outcome and the checker's answer (None when its reply was unusable).
+
+    The checker sees `presented(item)`; its answer is graded and kept in the stored order (an
+    option letter or paragraph:heading pairs; any other reply as written).
+    """
+    shown = presented(item)
+    reply = await ask(SYSTEM, question(shown, passage))
     if reply is None:
         return "needs_review", None
-    right = grade(item, answer_of(item, reply)) == 1.0
-    return ("verified" if right else "needs_review"), reply.answer[:200]
+    answer = to_stored(item, answer_of(shown, reply))
+    right = grade(item, answer) == 1.0
+    return ("verified" if right else "needs_review"), written(item, answer) or reply.answer[:200]

@@ -2,12 +2,15 @@
 
 Spec: specs/listening-reading/step-4.2a.md. No model decides anything here: the key grades, code
 checks that every item rests on sentences really in its passage, and only items the owner approved
-are served.
+are served. Options and headings are shown in a fixed shuffled order per item (`presented`, step
+4.3c): the generator's order gave answers away.
 """
 
+import hashlib
+import random
 import re
 import unicodedata
-from typing import Annotated, Literal, Self
+from typing import Annotated, Literal, Self, overload
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -34,6 +37,20 @@ def _contains(haystack: str, needle: str) -> bool:
     """Whole-word, case-insensitive containment after normalisation."""
     pattern = rf"(?<![\w']){re.escape(_norm(needle).casefold())}(?![\w'])"
     return re.search(pattern, _norm(haystack).casefold()) is not None
+
+
+# An option that points at other options ("both A and B", "all of the above") breaks once the
+# options are shuffled, so code refuses it (step 4.3c).
+_REFERS_WORDS = re.compile(
+    r"\b(?:all|none|both|neither|either) of (?:the )?(?:above|these|them|the options)\b"
+    r"|\b(?:options?|answers?|choices?) [A-D]\b",
+    re.IGNORECASE,
+)
+_REFERS_LETTERS = re.compile(r"\b[A-D] (?:and|or|&) [A-D]\b")
+
+
+def _refers_to_options(option: str) -> bool:
+    return bool(_REFERS_WORDS.search(option) or _REFERS_LETTERS.search(option))
 
 
 class _Base(BaseModel):
@@ -123,6 +140,9 @@ def check(item: Tfng | Mcq | Completion | Headings, passage: str) -> list[str]:
             problems.append("options are not distinct")
         if _contains(item.stem, item.options[item.key]):
             problems.append("the stem contains the key option")
+        for o in item.options:
+            if _refers_to_options(o):
+                problems.append(f"an option refers to other options: {o!r}")
     if isinstance(item, Headings):
         count = len(paragraphs(passage))
         for p in item.key:
@@ -159,6 +179,87 @@ def grade(item: Tfng | Mcq | Completion | Headings, answer: object) -> float:
 
 
 def learner_view(item: Tfng | Mcq | Completion | Headings) -> dict[str, object]:
-    """What the learner sees: no key, no accepted answers, no evidence."""
+    """What the learner sees: no key, no accepted answers, no evidence.
+
+    Callers pass `presented(item)`, so options and headings are in the shown order.
+    """
     hidden = {"key", "accepted", "evidence", "status", "origin"}
     return item.model_dump(mode="json", exclude=hidden)
+
+
+# --- The shown order (specs/listening-reading/step-4.3c.md) ---
+#
+# The generator's order gave answers away: the multiple-choice key was B in half the bank and many
+# headings lists followed the paragraphs. Every surface (learners, the owner's review, the expert
+# portal, the blind checker) shows `presented(item)`; every stored answer is in the stored order
+# (`to_stored`), so a stored item, its key and every recorded answer keep one meaning.
+
+
+def _order(item_id: str, n: int) -> list[int]:
+    """Position i shows stored entry order[i]: a uniform shuffle, fixed per item id."""
+    order = list(range(n))
+    random.Random(hashlib.sha256(f"reading-order:{item_id}".encode()).hexdigest()).shuffle(order)
+    return order
+
+
+def _index(value: object, n: int) -> int | None:
+    if isinstance(value, int) and not isinstance(value, bool) and 0 <= value < n:
+        return value
+    return None
+
+
+@overload
+def presented(item: Mcq) -> Mcq: ...
+@overload
+def presented(item: Headings) -> Headings: ...
+@overload
+def presented(
+    item: Tfng | Mcq | Completion | Headings,
+) -> Tfng | Mcq | Completion | Headings: ...
+def presented(
+    item: Tfng | Mcq | Completion | Headings,
+) -> Tfng | Mcq | Completion | Headings:
+    """The item as everyone sees it: options or headings in their shown order, the key remapped."""
+    if isinstance(item, Mcq):
+        order = _order(item.id, len(item.options))
+        options = tuple(item.options[i] for i in order)
+        return item.model_copy(update={"options": options, "key": order.index(item.key)})
+    if isinstance(item, Headings):
+        order = _order(item.id, len(item.headings))
+        key = {p: order.index(h) for p, h in item.key.items()}
+        headings = tuple(item.headings[i] for i in order)
+        return item.model_copy(update={"headings": headings, "key": key})
+    return item
+
+
+def to_stored(item: Tfng | Mcq | Completion | Headings, answer: object) -> object:
+    """An answer given against `presented(item)`, in the stored order (graded and kept so).
+
+    Anything that is not a valid position is returned unchanged, so it stays wrong.
+    """
+    if isinstance(item, Mcq):
+        i = _index(answer, len(item.options))
+        return answer if i is None else _order(item.id, len(item.options))[i]
+    if isinstance(item, Headings) and isinstance(answer, dict):
+        order = _order(item.id, len(item.headings))
+        out: dict[object, object] = {}
+        for p, h in answer.items():
+            i = _index(h, len(order))
+            out[p] = h if i is None else order[i]
+        return out
+    return answer
+
+
+def to_presented(item: Tfng | Mcq | Completion | Headings, answer: object) -> object:
+    """A stored-order answer (a learner's or the checker's) in the shown order."""
+    if isinstance(item, Mcq):
+        i = _index(answer, len(item.options))
+        return answer if i is None else _order(item.id, len(item.options)).index(i)
+    if isinstance(item, Headings) and isinstance(answer, dict):
+        order = _order(item.id, len(item.headings))
+        out: dict[object, object] = {}
+        for p, h in answer.items():
+            i = _index(h, len(order))
+            out[p] = h if i is None else order.index(i)
+        return out
+    return answer

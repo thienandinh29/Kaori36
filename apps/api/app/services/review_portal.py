@@ -28,7 +28,7 @@ from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
-from app.reading.items import Item, learner_view
+from app.reading.items import Item, Mcq, learner_view, presented, to_stored
 from app.reading.pipeline import sha256 as passage_sha256
 from app.services.reading_review import key_of as reading_key
 from app.services.reading_review import load_passages
@@ -69,6 +69,20 @@ def shuffled(item_id: str, n: int) -> list[int]:
     order = list(range(n))
     random.Random(hashlib.sha256(item_id.encode()).hexdigest()).shuffle(order)
     return order
+
+
+def _stored_letter(conn: psycopg.Connection, item_id: str, answer: str) -> str:
+    """An expert's option letter, chosen in the shown order, kept in the stored order (step 4.3c).
+
+    Every recorded Reading answer is in the stored order; typed answers are kept as typed.
+    """
+    letter = answer.strip().upper()
+    row = conn.execute("select item from reading_items where id=%s", (item_id,)).fetchone()
+    item = None if row is None else _ITEM.validate_python(row[0])
+    if not isinstance(item, Mcq) or len(letter) != 1 or letter not in "ABCD"[: len(item.options)]:
+        return answer
+    stored = to_stored(item, "ABCD".index(letter))
+    return "ABCD"[stored] if isinstance(stored, int) else answer
 
 
 @dataclass(frozen=True)
@@ -261,15 +275,15 @@ class ReviewPortal:
         passage = passages.get(slug)
         if passage is None or passage_sha256(passage) != digest:
             return None  # the text is missing or changed: nothing fair to judge
-        item = _ITEM.validate_python(data)
+        shown = presented(_ITEM.validate_python(data))  # the order learners see (step 4.3c)
         return {
             "content_id": cid,
             "content_type": ctype,
-            "kind": item.kind,
-            "skill": item.skill,
+            "kind": shown.kind,
+            "skill": shown.skill,
             "passage": passage,
-            "question": learner_view(item),
-            "key": reading_key(item),
+            "question": learner_view(shown),
+            "key": reading_key(shown),
         }
 
     def _grammar_view(self, cid: str) -> dict[str, Any] | None:
@@ -387,7 +401,10 @@ class ReviewPortal:
                 if body.reason is not None and body.reason not in reasons:
                     raise HTTPException(422, "Lý do không hợp lệ.")
                 value: str = body.verdict
-                detail = {"answer": body.answer, "reason": body.reason}
+                answer = body.answer
+                if ctype == "reading_item" and answer is not None:
+                    answer = _stored_letter(conn, content_id, answer)
+                detail = {"answer": answer, "reason": body.reason}
             else:
                 if body.level is None or body.verdict is not None:
                     raise HTTPException(422, "Hãy chọn cấp độ.")

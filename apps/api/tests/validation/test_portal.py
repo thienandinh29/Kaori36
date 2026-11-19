@@ -160,3 +160,17 @@ def test_a_changed_passage_is_not_served(portal: dict[str, Any], tmp_path: Path)
         .json()
     )
     assert got["item"] is None and got["unavailable"] == got["total"]
+
+
+def test_an_experts_option_letter_is_kept_in_the_stored_order(portal: dict[str, Any]) -> None:
+    """Step 4.3c: the expert answers what the page shows; the record means the stored option."""
+    c, tok = portal["client"], h(portal["tokens"]["teacher"])
+    assert "bees-mcq-1" in portal["disagreed"] + portal["agreed"]
+    url = f"/review/batches/{portal['reading']}/items/bees-mcq-1"
+    # On the page "Stored honey" is A; as stored it is B.
+    assert c.post(url, headers=tok, json={"answer": "A", "verdict": "right"}).status_code == 200
+    with portal["pool"].connection() as conn:
+        detail = conn.execute(
+            "select detail from labels where content_id='bees-mcq-1' and role='expert_teacher'"
+        ).fetchone()
+    assert detail == ({"answer": "B", "reason": None},)

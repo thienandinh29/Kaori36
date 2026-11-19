@@ -91,6 +91,9 @@ async def generate_text(
     return len(kept), len(dropped)
 
 
+RECHECK_KINDS = ("mcq", "headings")  # checks that saw the generator's order (step 4.3c)
+
+
 async def check_pending(
     conn: psycopg.Connection[Any],
     passages: dict[str, str],
@@ -99,28 +102,45 @@ async def check_pending(
     model: Callable[[], str | None],
     now: datetime,
 ) -> dict[str, int]:
-    """Blind-check up to `limit` stored items whose passage is still the current one."""
-    counts = {"verified": 0, "needs_review": 0}
-    rows = conn.execute(
+    """Blind-check up to `limit` stored items whose passage is still the current one.
+
+    First, undecided multiple-choice and headings items whose check saw the stored order are
+    checked again in the shown order (step 4.3c); an unusable reply leaves such an item as it
+    was, to be tried again on the next run. Then items not yet checked, oldest first.
+    """
+    counts = {"verified": 0, "needs_review": 0, "rechecked": 0}
+    again = conn.execute(
+        "select id,text_slug,passage_sha256,item from reading_items where kind = any(%s) "
+        "and status in ('verified','needs_review') and check_view is null "
+        "and checked_at is not null order by checked_at, id",
+        (list(RECHECK_KINDS),),
+    ).fetchall()
+    new = conn.execute(
         "select id,text_slug,passage_sha256,item from reading_items where status='generated' "
         "order by generated_at, id"
     ).fetchall()
-    for item_id, slug, digest, data in rows:
-        if sum(counts.values()) >= limit:
-            break
-        passage = passages.get(slug)
-        if passage is None or sha256(passage) != digest:
-            continue  # text gone or edited: its items wait (a new version is generated afresh)
-        outcome, answer = await blind.check(_ITEM.validate_python(data), passage, ask)
-        conn.execute(
-            "update reading_items set status=%s, checker_answer=%s, checker_model=%s, "
-            "checked_at=%s where id=%s",
-            # No usable reply: no checker judged it, so none is named (the label backfill would
-            # otherwise record the last model that answered as doubting this item).
-            (outcome, answer, model() if answer is not None else None, now, item_id),
-        )
-        conn.commit()  # each check is paid for: keep it even if a later one fails
-        counts[outcome] += 1
+    used = 0
+    for recheck, rows in ((True, again), (False, new)):
+        for item_id, slug, digest, data in rows:
+            if used >= limit:
+                return counts
+            passage = passages.get(slug)
+            if passage is None or sha256(passage) != digest:
+                continue  # text gone or edited: its items wait (a new version is generated afresh)
+            outcome, answer = await blind.check(_ITEM.validate_python(data), passage, ask)
+            used += 1
+            if recheck and answer is None:
+                continue  # the earlier check stands until a usable reply replaces it
+            conn.execute(
+                "update reading_items set status=%s, checker_answer=%s, checker_model=%s, "
+                "checked_at=%s, check_view='shuffled' where id=%s",
+                # No usable reply: no checker judged it, so none is named (the label backfill
+                # would otherwise record the last model that answered as doubting this item).
+                (outcome, answer, model() if answer is not None else None, now, item_id),
+            )
+            conn.commit()  # each check is paid for: keep it even if a later one fails
+            counts[outcome] += 1
+            counts["rechecked"] += int(recheck)
     return counts
 
 

@@ -10,7 +10,10 @@ from app.reading.items import (
     check,
     grade,
     learner_view,
+    presented,
     servable,
+    to_presented,
+    to_stored,
 )
 
 PASSAGE = (
@@ -122,3 +125,56 @@ def test_items_parse_by_kind() -> None:
     parsed = adapter.validate_python({**BASE, "kind": "mcq", "id": "x", "stem": "Which one is it?",
                                       "options": ["a b", "c d", "e f"], "key": 0})  # fmt: skip
     assert isinstance(parsed, Mcq)
+
+
+# --- The shown order (specs/listening-reading/step-4.3c.md) ---
+
+
+def test_options_that_point_at_other_options_are_refused() -> None:
+    for o in ("Both A and B", "All of the above", "none of these", "A or C", "Option B"):
+        bad = mcq(options=["In winter", "In summer", o])
+        assert any("refers to other options" in p for p in check(bad, PASSAGE)), o
+    # Ordinary words are not references.
+    ok = mcq(options=["In winter", "In summer", "Both in spring and in autumn"])
+    assert check(ok, PASSAGE) == []
+
+
+def test_the_shown_order_is_fixed_per_item_and_keeps_the_key_right() -> None:
+    for item in (mcq(), headings()):
+        shown = presented(item)
+        assert presented(item) == shown  # the same every time it is shown
+        assert grade(item, to_stored(item, shown.key)) == 1.0
+        assert to_presented(item, item.key) == shown.key
+        assert to_stored(item, to_presented(item, item.key)) == item.key
+    m = presented(mcq())
+    assert sorted(m.options) == sorted(mcq().options)
+    assert m.options[m.key] == "In summer"  # the right option, wherever it is shown
+    h = presented(headings())
+    assert sorted(h.headings) == sorted(headings().headings)
+    assert [h.headings[k] for _, k in sorted(h.key.items())] == [
+        "How it began", "A long building project", "Festival season",
+    ]  # fmt: skip
+    for plain in (tfng(), completion()):
+        assert presented(plain) is plain and to_stored(plain, "x") == "x"
+
+
+def test_invalid_answers_stay_invalid() -> None:
+    for answer in (-1, 7, True, "B", None):
+        assert to_stored(mcq(), answer) == answer and grade(mcq(), to_stored(mcq(), answer)) == 0
+    assert to_stored(headings(), {0: 99, 1: "x"}) == {0: 99, 1: "x"}
+    assert to_stored(headings(), "0:1") == "0:1"
+
+
+def test_the_shown_order_spreads_the_key() -> None:
+    """Over many items the key lands in every position about equally (the generator's B-bias
+    and paragraph-order headings no longer show), and answering headings in order is chance."""
+    positions = [0] * 4
+    for n in range(400):
+        item = mcq(id=f"m{n}", options=["In winter", "In summer", "In spring", "Never"], key=1)
+        positions[presented(item).key] += 1
+    assert all(70 <= c <= 130 for c in positions), positions  # 100 each expected
+    in_order = 0
+    for n in range(300):
+        shown = presented(headings(id=f"h{n}"))  # stored key: paragraph i -> heading i
+        in_order += sum(1 for p, h in shown.key.items() if h == p)
+    assert in_order < 300  # 900 paragraphs; chance (1 in 4 headings) is about 225

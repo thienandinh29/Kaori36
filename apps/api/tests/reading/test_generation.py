@@ -9,7 +9,7 @@ import pytest
 
 from app.reading import blind
 from app.reading.generate import Generated, build, prompt
-from app.reading.items import Headings, Mcq, Tfng
+from app.reading.items import Headings, Mcq, Tfng, presented
 from app.reading.pipeline import check_pending, generate_text, sha256
 
 PASSAGE = (
@@ -63,31 +63,57 @@ def test_build_assigns_ids_and_drops_items_that_fail_code_checks() -> None:
     assert any("not in the passage" in p for p in dropped[0][2])
 
 
-def test_the_checker_never_sees_a_key_and_is_graded_like_a_learner() -> None:
+def test_the_checker_sees_the_shown_order_and_is_graded_like_a_learner() -> None:
+    """Step 4.3c: the checker is shown what learners see; its answer is kept in the stored order."""
     kept, _ = build("bees", PASSAGE, generated())
     mcq = next(i for i in kept if isinstance(i, Mcq))
-    q = blind.question(mcq, PASSAGE)
-    assert "key" not in q.lower() and "evidence" not in q.lower() and "B. Stored honey" in q
+    seen: list[str] = []
 
     def replying(answer: str) -> blind.Ask:
         async def ask(system: str, text: str) -> blind.Reply | None:
+            seen.append(text)
             return blind.Reply(answer=answer)
 
         return ask
 
-    assert asyncio.run(blind.check(mcq, PASSAGE, replying("B")))[0] == "verified"
-    assert asyncio.run(blind.check(mcq, PASSAGE, replying("A")))[0] == "needs_review"
+    # "Stored honey" is B as generated and A as shown: the checker answers what it sees.
+    assert asyncio.run(blind.check(mcq, PASSAGE, replying("A"))) == ("verified", "B")
+    assert "A. Stored honey" in seen[-1]
+    assert "key" not in seen[-1].lower() and "evidence" not in seen[-1].lower()
+    assert asyncio.run(blind.check(mcq, PASSAGE, replying("B")))[0] == "needs_review"
     tfng = next(i for i in kept if isinstance(i, Tfng) and i.key == "not_given")
     assert asyncio.run(blind.check(tfng, PASSAGE, replying("NOT GIVEN")))[0] == "verified"
     heads = next(i for i in kept if isinstance(i, Headings))
     assert "Paragraph 2:" in blind.question(heads, PASSAGE)
-    assert asyncio.run(blind.check(heads, PASSAGE, replying("0:0, 1:1, 2:2")))[0] == "verified"
-    assert asyncio.run(blind.check(heads, PASSAGE, replying("0:0, 1:2, 2:1")))[0] == "needs_review"
+    # As generated the headings followed the paragraphs (0:0, 1:1, 2:2): answering in that
+    # order no longer passes; the shown key does, and is kept in the stored order.
+    shown = blind.question(presented(heads), PASSAGE)
+    assert "0. Surviving winter" in shown and "3. Life in a colony" in shown
+    assert asyncio.run(blind.check(heads, PASSAGE, replying("0:3, 1:1, 2:0"))) == (
+        "verified", "0:0, 1:1, 2:2",
+    )  # fmt: skip
+    assert asyncio.run(blind.check(heads, PASSAGE, replying("0:0, 1:1, 2:2")))[0] == "needs_review"
+    # An unreadable reply is kept as written.
+    assert asyncio.run(blind.check(mcq, PASSAGE, replying("none of them"))) == (
+        "needs_review", "none of them",
+    )  # fmt: skip
 
     async def unusable(system: str, text: str) -> blind.Reply | None:
         return None
 
     assert asyncio.run(blind.check(mcq, PASSAGE, unusable)) == ("needs_review", None)
+
+
+def test_a_kept_checker_answer_reads_against_the_shown_order() -> None:
+    """The owner's review page shows the shown order, so a kept answer is translated for it."""
+    kept, _ = build("bees", PASSAGE, generated())
+    mcq = next(i for i in kept if isinstance(i, Mcq))
+    heads = next(i for i in kept if isinstance(i, Headings))
+    assert blind.shown_answer(mcq, "B") == "A"  # stored B = "Stored honey" = shown A
+    assert blind.shown_answer(heads, "0:0, 1:1, 2:2") == "0:3, 1:1, 2:0"
+    assert blind.shown_answer(mcq, "Z") == "Z" and blind.shown_answer(mcq, None) is None
+    tfng = next(i for i in kept if isinstance(i, Tfng))
+    assert blind.shown_answer(tfng, "TRUE") == "TRUE"
 
 
 @pytest.fixture
@@ -120,16 +146,18 @@ def test_pipeline_generates_once_per_passage_version_and_respects_the_check_budg
         return dict(rows.fetchall())
 
     first = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 3, lambda: "m", NOW))
-    assert first == {"verified": 0, "needs_review": 3}  # the budget: 3 of 5, in id order
+    assert first == {"verified": 0, "needs_review": 3, "rechecked": 0}  # 3 of 5, in id order
     assert list(statuses().values()).count("generated") == 2  # wait for the next run
     second = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 10, lambda: "m", NOW))
-    assert second == {"verified": 2, "needs_review": 0}  # the next run continues
+    assert second == {"verified": 2, "needs_review": 0, "rechecked": 0}  # the next run continues
+    views = conn.execute("select distinct check_view from reading_items where text_slug='bees'")
+    assert views.fetchall() == [("shuffled",)]  # every check saw the shown order
     assert statuses()["bees-tfng-1"] == statuses()["bees-tfng-2"] == "verified"
     assert statuses()["bees-mcq-1"] == "needs_review"
     edited = PASSAGE + " Bees also make wax."
     conn.execute("update reading_items set status='generated' where id='bees-mcq-1'")
     stale = asyncio.run(check_pending(conn, {"bees": edited}, ask, 10, lambda: None, NOW))
-    assert stale == {"verified": 0, "needs_review": 0}  # items of an edited text are never checked
+    assert stale == {"verified": 0, "needs_review": 0, "rechecked": 0}  # an edited text: unchecked
     assert sha256(edited) != sha256(PASSAGE)
 
 
@@ -163,3 +191,49 @@ def test_a_long_run_of_underscores_is_one_gap_and_drops_keep_what_was_written() 
     assert (item_id, kind, problems) == ("bees-mcq-1", "mcq", ["no evidence sentence"])
     assert written["stem"] == out.mcq[0].stem  # kept for diagnosis
     assert "no index appears twice" in prompt(PASSAGE)
+
+
+def test_checks_that_saw_the_stored_order_are_done_again_first(conn) -> None:  # type: ignore[no-untyped-def]
+    """Step 4.3c: undecided MCQ and headings checks made before the shuffle are repeated."""
+
+    async def gen(system: str, text: str) -> Generated | None:
+        return generated()
+
+    asyncio.run(generate_text(conn, "bees", PASSAGE, gen, NOW))
+    # As before the shuffle: the MCQ "verified" in the stored order; the T/F/NG and the decided
+    # headings item are not repeated (their order never leaked, or the owner decided).
+    conn.execute(
+        "update reading_items set status='verified', checker_answer='B', checker_model='old', "
+        "checked_at=%s where id in ('bees-mcq-1','bees-tfng-1')",
+        (NOW,),
+    )
+    conn.execute(
+        "update reading_items set status='approved', checked_at=%s where id='bees-headings-1'",
+        (NOW,),
+    )
+    replies: list[str | None] = [None, "B"]  # unusable first, then the stored letter (now wrong)
+
+    async def ask(system: str, text: str) -> blind.Reply | None:
+        answer = replies.pop(0) if "Stored honey" in text else "wrong"
+        return None if answer is None else blind.Reply(answer=answer)
+
+    def row() -> tuple[object, ...]:
+        r = conn.execute(
+            "select status, checker_answer, checker_model, check_view from reading_items "
+            "where id='bees-mcq-1'"
+        ).fetchone()
+        assert r is not None
+        return tuple(r)
+
+    # The re-check comes before new items; an unusable reply leaves the earlier check standing.
+    once = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 1, lambda: "m", NOW))
+    assert once == {"verified": 0, "needs_review": 0, "rechecked": 0}
+    assert row() == ("verified", "B", "old", None)
+    again = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 1, lambda: "m", NOW))
+    assert again == {"verified": 0, "needs_review": 1, "rechecked": 1}
+    # "B" in the shown order is "Nectar from flowers", stored A: kept in the stored order.
+    assert row() == ("needs_review", "A", "m", "shuffled")
+    statuses = dict(conn.execute("select id, status from reading_items").fetchall())
+    assert statuses["bees-tfng-1"] == "verified" and statuses["bees-headings-1"] == "approved"
+    nothing_left = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 0, lambda: "m", NOW))
+    assert nothing_left == {"verified": 0, "needs_review": 0, "rechecked": 0}

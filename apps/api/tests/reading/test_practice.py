@@ -84,6 +84,14 @@ def test_only_silver_approved_items_are_served(env: dict[str, Any]) -> None:
     assert [i["id"] for i in text["items"]] == ["bees-tfng-1", "bees-mcq-1", "bees-headings-1"]
     assert all("key" not in i and "evidence" not in i for i in text["items"])
     assert text["items"][2]["paragraphs"] == [0, 1, 2]  # positions only
+    # The shown order (step 4.3c): fixed per question, never the generator's.
+    assert text["items"][1]["options"] == [
+        "Stored honey",
+        "Nectar from flowers",
+        "Pollen",
+        "Leaves",
+    ]
+    assert text["items"][2]["headings"][:2] == ["Surviving winter", "Making honey"]
     # A teacher's Gold label serves the disputed item.
     with env["pool"].connection() as conn:
         label(conn, "bees-completion-1", "expert_teacher", reviewer_id=env["teacher"])
@@ -115,18 +123,34 @@ def test_answers_are_graded_from_the_key_and_move_the_competency(env: dict[str, 
     assert right["competency"] == "reading-detail"
     assert right["evidence"] == ["A single colony can hold up to sixty thousand bees."]
     assert right["trace"]["prior"] == 0.2 and right["trace"]["posterior"] > 0.2
-    wrong = post("bees-mcq-1", 0).json()
-    assert wrong["correct"] is False and wrong["key"] == "B. Stored honey"
+    # Options and headings come in the shown order (step 4.3c): "Stored honey", B as generated,
+    # is A on the page, and the key reads as the page does.
+    wrong = post("bees-mcq-1", 1).json()  # B on the page: "Nectar from flowers"
+    assert wrong["correct"] is False and wrong["key"] == "A. Stored honey"
     # The same competency (stored as a 32-bit real, so compared approximately).
     assert wrong["trace"]["prior"] == pytest.approx(right["trace"]["posterior"], abs=1e-6)
-    heads = post("bees-headings-1", {"0": 0, "1": 1, "2": 3}).json()
+    assert post("bees-mcq-1", 0).json()["correct"] is True
+    # Headings on the page: 0 Surviving winter, 1 Making honey, 2 Enemies of bees, 3 Life in a
+    # colony, 4 Bee dances. Answering in paragraph order (0, 1, 2) no longer scores.
+    in_order = post("bees-headings-1", {"0": 0, "1": 1, "2": 2}).json()
+    assert in_order["score"] == 0.333  # only paragraph 2 ("Making honey" is shown second)
+    heads = post("bees-headings-1", {"0": 3, "1": 1, "2": 4}).json()
     assert heads["correct"] is False and heads["score"] == 0.667  # 2 of 3 paragraphs
+    assert heads["key"] == "1: 4, 2: 2, 3: 1"  # paragraphs and headings from 1, as on the page
     with pool.connection() as conn:
         rows = conn.execute(
-            "select item_id, correct from reading_answers where learner_id=%s order by id",
+            "select item_id, correct, answer from reading_answers where learner_id=%s order by id",
             (learner,),
         ).fetchall()
-    assert rows == [("bees-tfng-1", True), ("bees-mcq-1", False), ("bees-headings-1", False)]
+    # Kept in the stored order: the MCQ's right answer is the stored key (1), the headings
+    # answer the generator's indices.
+    assert rows == [
+        ("bees-tfng-1", True, "TRUE"),
+        ("bees-mcq-1", False, 0),
+        ("bees-mcq-1", True, 1),
+        ("bees-headings-1", False, {"0": 2, "1": 1, "2": 4}),
+        ("bees-headings-1", False, {"0": 0, "1": 1, "2": 3}),
+    ]
     assert post("bees-tfng-2", "TRUE").status_code == 404  # not served
     assert post("bees-headings-1", {"x": 1}).status_code == 422
     unknown = c.get("/reading/texts", params={"learner_id": "00000000-0000-4000-8000-000000000999"})
@@ -200,10 +224,12 @@ def test_a_timed_test_grades_once_counts_blanks_wrong_without_evidence(
     submit = f"/reading/tests/{started['test_id']}/submit"
     body = {"learner_id": learner, "answers": {
         "bees-tfng-1": {"answer": "TRUE", "at_seconds": 95},
-        "bees-mcq-1": {"answer": 0, "at_seconds": 300},
+        "bees-mcq-1": {"answer": 1, "at_seconds": 300},
     }}  # fmt: skip
     out = c.post(submit, json=body).json()
     assert (out["correct"], out["total"], out["answered"]) == (1, 3, 2)
+    mcq = next(i for i in out["items"] if i["id"] == "bees-mcq-1")
+    assert (mcq["answer"], mcq["key"]) == (1, "A. Stored honey")  # as on the page
     assert out["over_time"] is False and out["seconds"] == 720
     by_id = {i["id"]: i for i in out["items"]}
     assert by_id["bees-tfng-1"]["correct"] and by_id["bees-tfng-1"]["at_seconds"] == 95
