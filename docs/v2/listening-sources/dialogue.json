@@ -1,0 +1,17 @@
+[
+ ["M", "Good morning, Riverside Sports Centre. How can I help you?"],
+ ["F", "Hi. I'd like to book a badminton court for this Saturday, please."],
+ ["M", "Of course. What time were you thinking of?"],
+ ["F", "Around ten in the morning, if possible."],
+ ["M", "Let me check. Ten o'clock is taken, I'm afraid, but there's a court free at eleven thirty."],
+ ["F", "Eleven thirty is fine. How long can we have it for?"],
+ ["M", "Courts are booked by the hour, so until half past twelve. It's eight pounds fifty for members and twelve pounds for non-members."],
+ ["F", "I'm not a member yet. Is it worth joining?"],
+ ["M", "If you play every week, yes. Membership is forty pounds a year, and you also get ten per cent off in the cafe."],
+ ["F", "That sounds good. I'll think about it. Can I take the booking now anyway?"],
+ ["M", "Sure. Could I have your surname, please?"],
+ ["F", "It's Henderson. H, E, N, D, E, R, S, O, N."],
+ ["M", "Thank you. And a phone number?"],
+ ["F", "Oh seven seven, double four, five one, two nine three."],
+ ["M", "Lovely. Please arrive fifteen minutes early, and bring your own rackets. We only have a few to borrow."]
+]
