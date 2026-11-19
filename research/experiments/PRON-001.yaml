@@ -1,0 +1,39 @@
+experiment_id: PRON-001
+title: Does comparing /æ/ only with its expected confusion make the /æ/–/ɛ/ group usable?
+track: ai-engineering
+status: done (19 Nov 2026), synthetic only
+background: >
+  The synthetic benchmark (specs/pronunciation/step-3.6b.md) found the /æ/–/ɛ/ group failing on a clean native voice: GOP
+  compares the canonical phone with every other phone, and this recogniser spreads British /æ/ over /a/, /ɛ/, /ɪ/, /ʌ/.
+  Scoring against /a/ instead did not help.
+hypothesis: >
+  (Stated before the run.) Comparing the target only with the confusion we care about, /æ/ against /ɛ/, or the TRAP
+  phone group against the DRESS group, stops correct /æ/ being marked while /æ/ said as /ɛ/ is still caught.
+counts_against: >
+  Correct /æ/ still marked about as often as with GOP, or fewer /ɛ/ swaps caught.
+method: >
+  The self-hosted Piper voice says 10 words with the TRAP vowel and the same words with it swapped for /ɛ/, 5 times each,
+  in "say ... again": once from its own phonemes (set "phonemes") and once as natural speech from text using real
+  minimal pairs bad/bed, man/men, had/head, sad/said, pan/pen, pat/pet, lad/led, tan/ten, mat/met, band/bend (set
+  "text"). Each recording is aligned to the right word's canonical phones (data/pronunciation/canonical.yaml, /æ/) by the
+  service's own code, and the target segment scored: GOP as now; A = mean over frames of log P(æ) − log P(ɛ);
+  B = mean of log ΣP(æ, a, aː) − log ΣP(ɛ, e, eː). A sound is called wrong below 0. Scripts and per-recording scores
+  in research/experiments/PRON-001/.
+results:
+  text:
+    gop_rule: {clean_marked: 30/50, swaps_caught: 45/50, auc: 0.85}
+    a_ae_vs_e: {clean_marked: 5/50, swaps_caught: 45/50, auc: 0.94}
+    b_trap_vs_dress: {clean_marked: 5/50, swaps_caught: 45/50, auc: 0.97}
+  phonemes:
+    gop_rule: {clean_marked: 50/50, swaps_caught: 40/50, auc: 0.15}
+    a_ae_vs_e: {clean_marked: 23/50, swaps_caught: 40/50, auc: 0.83}
+    b_trap_vs_dress: {clean_marked: 16/50, swaps_caught: 40/50, auc: 0.84}
+conclusion: >
+  Supported on synthetic speech: on natural speech the group comparison cuts false alarms on correct /æ/ from 60% to 10%
+  with the same catches (AUC 0.85 to 0.97). The phoneme-built set is less natural (Piper rarely says /æ/ for British
+  English) but moves the same way. Not shown: Vietnamese speakers, or any other sound pair.
+next: >
+  If the owner agrees: the service takes an optional contrast per target sound (the phone group to compare with), the
+  /æ/–/ɛ/ group uses it, and the 3.3b gate and the L2-ARCTIC benchmark (3.6b part 2) decide as for every group.
+  The same idea may help /iː/–/ɪ/ and /uː/–/ʊ/ (long-oo had 2/10 clean false alarms).
+label_tier: construction (synthetic, one native voice); nothing here is Gold
