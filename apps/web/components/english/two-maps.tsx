@@ -5,6 +5,7 @@ import { englishClient } from "@/lib/english/client";
 import type { Estimate, Maps } from "@/lib/english/maps";
 import { vi } from "@/messages/vi";
 import { Problem } from "./problem";
+import { SkillGraph } from "./skill-graph";
 import { useLearner } from "./use-learner";
 
 const t = vi.english.maps;
@@ -35,6 +36,7 @@ export function TwoMaps() {
   const { learner, error: learnerError, retry } = useLearner();
   const [maps, setMaps] = useState<Maps | null>(null);
   const [error, setError] = useState<unknown>(null);
+  const [view, setView] = useState<"graph" | "list">("graph");
   useEffect(() => {
     if (!learner) return;
     let live = true;
@@ -56,43 +58,59 @@ export function TwoMaps() {
       {maps.target.linksStatus === "proposed" && (
         <p className="en-muted">{t.proposed}</p>
       )}
-      {maps.skills.map((s) => (
-        <section key={s.skill} className="en-mapskill">
-          <h2>{t.skills[s.skill] ?? s.skill}</h2>
-          {s.competencies.map((c) => (
-            <article
-              key={c.slug}
-              className="en-mapcomp"
-              data-testid={`comp-${c.slug}`}
-            >
-              <h3>{c.nameVi}</h3>
-              <Bar e={c} />
-              <Status e={c} unit={t.essays} />
-              {!c.available && <p className="en-muted">{t.notYet}</p>}
-              <ul className="en-mapfound">
-                {c.links.map((f) => (
-                  <li key={f.node}>
-                    <span className="en-muted">{t.kinds[f.kind]}</span>{" "}
-                    {f.href ? (
-                      <Link href={f.href}>{f.nameVi}</Link>
-                    ) : (
-                      <span>{f.nameVi}</span>
-                    )}{" "}
-                    {f.live ? (
-                      <>
-                        <Bar e={f} />
-                        <Status e={f} unit={t.answers} />
-                      </>
-                    ) : (
-                      <span className="en-badge draft">{t.notLive}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </section>
-      ))}
+      <div className="nt-actions" role="tablist">
+        {(["graph", "list"] as const).map((v) => (
+          <button
+            key={v}
+            type="button"
+            role="tab"
+            aria-selected={view === v}
+            className={`en-button small ${view === v ? "" : "ghost"}`}
+            onClick={() => setView(v)}
+          >
+            {t.views[v]}
+          </button>
+        ))}
+      </div>
+      {view === "graph" && <SkillGraph maps={maps} />}
+      {view === "list" &&
+        maps.skills.map((s) => (
+          <section key={s.skill} className="en-mapskill">
+            <h2>{t.skills[s.skill] ?? s.skill}</h2>
+            {s.competencies.map((c) => (
+              <article
+                key={c.slug}
+                className="en-mapcomp"
+                data-testid={`comp-${c.slug}`}
+              >
+                <h3>{c.nameVi}</h3>
+                <Bar e={c} />
+                <Status e={c} unit={t.essays} />
+                {!c.available && <p className="en-muted">{t.notYet}</p>}
+                <ul className="en-mapfound">
+                  {c.links.map((f) => (
+                    <li key={f.node}>
+                      <span className="en-muted">{t.kinds[f.kind]}</span>{" "}
+                      {f.href ? (
+                        <Link href={f.href}>{f.nameVi}</Link>
+                      ) : (
+                        <span>{f.nameVi}</span>
+                      )}{" "}
+                      {f.live ? (
+                        <>
+                          <Bar e={f} />
+                          <Status e={f} unit={t.answers} />
+                        </>
+                      ) : (
+                        <span className="en-badge draft">{t.notLive}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </section>
+        ))}
     </section>
   );
 }

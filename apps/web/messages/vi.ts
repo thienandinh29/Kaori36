@@ -749,6 +749,20 @@ export const vi = {
       answers: "lần",
       notYet: "NodeTrail chưa có bài luyện cho kỹ năng này.",
       notLive: "chưa có trong khóa học",
+      views: { graph: "Dạng đồ thị", list: "Dạng danh sách" } as Record<
+        string,
+        string
+      >,
+      filter: "Lọc theo kỹ năng",
+      all: "Tất cả",
+      legend:
+        "Bên trái: nền tảng (ngữ pháp, từ vựng, phát âm). Bên phải: kỹ năng thi. Nét liền: cần; nét đứt: giúp. Viền đỏ: nền tảng yếu nhất đang kéo một kỹ năng xuống.",
+      root: "điểm yếu gốc",
+      rootHint:
+        "Đây là nền tảng yếu nhất (dưới 80%) mà ít nhất một kỹ năng thi cần. Học nó trước sẽ giúp các kỹ năng phía sau.",
+      feeds: { requires: "Cần cho", helps: "Giúp" } as Record<string, string>,
+      pick: "Chạm vào một ô để xem nó cần gì, giúp gì và luyện ở đâu.",
+      practise: "Luyện ngay",
     },
     today: {
       title: "Hôm nay",
