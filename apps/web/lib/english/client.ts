@@ -22,6 +22,13 @@ import {
   type TextSummary,
 } from "@/lib/reading/practice";
 import {
+  parseStartedTest,
+  parseTestResult,
+  type StartedTest,
+  type TestResult,
+  type submission,
+} from "@/lib/reading/test";
+import {
   parseRecheck,
   parseRecheckResult,
   type RecheckQuestion,
@@ -376,6 +383,28 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseText(
         await request(`reading/texts/${encodeURIComponent(slug)}?${q}`),
+      );
+    },
+    async startReadingTest(
+      learnerId: string,
+      slug: string,
+    ): Promise<StartedTest> {
+      return parseStartedTest(
+        await post(`reading/texts/${encodeURIComponent(slug)}/tests`, {
+          learner_id: learnerId,
+        }),
+      );
+    },
+    async submitReadingTest(
+      learnerId: string,
+      testId: string,
+      answers: ReturnType<typeof submission>,
+    ): Promise<TestResult> {
+      return parseTestResult(
+        await post(`reading/tests/${encodeURIComponent(testId)}/submit`, {
+          learner_id: learnerId,
+          answers,
+        }),
       );
     },
     async answerReading(

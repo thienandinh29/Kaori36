@@ -80,6 +80,12 @@ export function ReadingPractice({ slug }: { slug: string }) {
     <section className="en-card nt-review" data-testid="reading-practice">
       <h1 lang="en">{text.title}</h1>
       <p className="en-muted">{t.draftNote}</p>
+      <p>
+        <Link className="en-button ghost small" href={`/doc/${slug}/thi`}>
+          {vi.english.readingTest.start}
+        </Link>{" "}
+        <span className="en-muted">{vi.english.readingTest.startHint}</span>
+      </p>
       <h2>{t.passage}</h2>
       <div lang="en" className="nt-review-passage">
         {marked

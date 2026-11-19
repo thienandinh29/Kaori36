@@ -2113,3 +2113,51 @@ svg.nt-trail {
     order: 0;
   }
 }
+
+/* Timed Reading test (specs/listening-reading/step-4.3b.md): the passage scrolls beside the questions on
+   wide screens, as on the exam paper; the clock stays in view. */
+.nt-test-clock {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--paper, inherit);
+  padding: 6px 0;
+}
+.nt-test-questions {
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 900px) {
+  .nt-reading-test-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .nt-reading-test-body .nt-review-passage,
+  .nt-reading-test-body .nt-test-questions {
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+}
+.nt-test-questions .nt-actions {
+  flex-wrap: wrap;
+}
+.nt-test-questions .nt-actions .en-button {
+  white-space: normal;
+  text-align: left;
+}
+.nt-test-questions input,
+.nt-test-questions select {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+  max-width: 100%;
+}
+.nt-reading-test .nt-review-passage p {
+  margin: 0 0 0.75rem;
+}
+.nt-reading-test {
+  overflow-wrap: anywhere;
+}

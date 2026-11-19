@@ -175,3 +175,72 @@ def test_a_text_file_in_another_unicode_form_is_still_served(env: dict[str, Any]
     )
     served = env["client"].get("/reading/texts", params={"learner_id": env["learner"]}).json()
     assert served["texts"][0]["questions"] == 3
+
+
+def test_a_timed_test_grades_once_counts_blanks_wrong_without_evidence(
+    env: dict[str, Any],
+) -> None:
+    """Step 4.3b: the start fixes questions and time; one submission; a blank gives no evidence."""
+    from datetime import timedelta
+
+    from app.services.reading_practice import TEST_SECONDS
+
+    pool, learner = env["pool"], env["learner"]
+    now = [NOW]
+    practice = ReadingPractice(lambda: pool, env["practice"].texts_dir, lambda: now[0])
+    app = FastAPI()
+    app.include_router(routes.create_router(practice))
+    c = TestClient(app)
+    started = c.post("/reading/texts/bees/tests", json={"learner_id": learner}).json()
+    assert started["limit_seconds"] == TEST_SECONDS == 1200
+    ids = [i["id"] for i in started["items"]]
+    assert ids == ["bees-tfng-1", "bees-mcq-1", "bees-headings-1"]
+    assert all("key" not in i and "evidence" not in i for i in started["items"])
+    now[0] = NOW + timedelta(minutes=12)
+    submit = f"/reading/tests/{started['test_id']}/submit"
+    body = {"learner_id": learner, "answers": {
+        "bees-tfng-1": {"answer": "TRUE", "at_seconds": 95},
+        "bees-mcq-1": {"answer": 0, "at_seconds": 300},
+    }}  # fmt: skip
+    out = c.post(submit, json=body).json()
+    assert (out["correct"], out["total"], out["answered"]) == (1, 3, 2)
+    assert out["over_time"] is False and out["seconds"] == 720
+    by_id = {i["id"]: i for i in out["items"]}
+    assert by_id["bees-tfng-1"]["correct"] and by_id["bees-tfng-1"]["at_seconds"] == 95
+    assert by_id["bees-headings-1"] == {
+        "id": "bees-headings-1", "answer": None, "correct": False,
+        "key": by_id["bees-headings-1"]["key"], "evidence": [], "at_seconds": None,
+    }  # fmt: skip
+    with pool.connection() as conn:
+        rows = conn.execute(
+            "select item_id, test_id::text from reading_answers where learner_id=%s order by id",
+            (learner,),
+        ).fetchall()
+    # Two answers as evidence, both tied to the test; the blank gave none.
+    assert rows == [("bees-tfng-1", started["test_id"]), ("bees-mcq-1", started["test_id"])]
+    assert c.post(submit, json=body).status_code == 409  # one submission per test
+
+
+def test_a_late_test_is_graded_but_marked_and_foreign_answers_are_refused(
+    env: dict[str, Any],
+) -> None:
+    from datetime import timedelta
+
+    from app.services.reading_practice import GRACE_SECONDS, TEST_SECONDS
+
+    pool, learner = env["pool"], env["learner"]
+    now = [NOW]
+    practice = ReadingPractice(lambda: pool, env["practice"].texts_dir, lambda: now[0])
+    app = FastAPI()
+    app.include_router(routes.create_router(practice))
+    c = TestClient(app)
+    started = c.post("/reading/texts/bees/tests", json={"learner_id": learner}).json()
+    submit = f"/reading/tests/{started['test_id']}/submit"
+    foreign = {"learner_id": learner, "answers": {"bees-tfng-2": {"answer": "TRUE"}}}
+    assert c.post(submit, json=foreign).status_code == 422  # not served, so not in the test
+    now[0] = NOW + timedelta(seconds=TEST_SECONDS + GRACE_SECONDS + 1)
+    late = c.post(submit, json={"learner_id": learner, "answers": {}}).json()
+    assert late["over_time"] is True and late["correct"] == 0 and late["answered"] == 0
+    other = "00000000-0000-4000-8000-000000000999"
+    assert c.post("/reading/texts/bees/tests", json={"learner_id": other}).status_code == 404
+    assert c.post("/reading/texts/none/tests", json={"learner_id": learner}).status_code == 404
