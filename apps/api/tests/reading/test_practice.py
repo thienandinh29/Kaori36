@@ -91,6 +91,19 @@ def test_only_silver_approved_items_are_served(env: dict[str, Any]) -> None:
     assert "bees-completion-1" in [i["id"] for i in text["items"]]
 
 
+def test_the_owners_approval_alone_never_serves(env: dict[str, Any]) -> None:
+    """Code checks and the owner, with no checker label (its reply was unusable): Bronze."""
+    c, learner = env["client"], env["learner"]
+    with env["pool"].connection() as conn:
+        conn.execute("delete from labels where content_id='bees-tfng-2' and role='model'")
+        conn.execute("update reading_items set status='approved' where id='bees-tfng-2'")
+        label(conn, "bees-tfng-2", "owner_developer")
+    text = c.get("/reading/texts/bees", params={"learner_id": learner}).json()
+    assert "bees-tfng-2" not in [i["id"] for i in text["items"]]
+    assert c.post("/reading/items/bees-tfng-2/answer",
+                  json={"learner_id": learner, "answer": "TRUE"}).status_code == 404  # fmt: skip
+
+
 def test_answers_are_graded_from_the_key_and_move_the_competency(env: dict[str, Any]) -> None:
     c, learner, pool = env["client"], env["learner"], env["pool"]
 

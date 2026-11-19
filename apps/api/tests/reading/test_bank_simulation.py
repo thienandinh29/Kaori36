@@ -161,13 +161,16 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         if s == "generated":
             keys[item_id] = _ITEM.validate_python(data)
 
-    # 3. The blind check: the fake checker answers from the key, wrong on every seventh.
+    # 3. The blind check: the fake checker answers from the key, wrong on about one in seven
+    #    and unusable on about one in eleven.
     by_question: dict[str, Any] = {}
     for item in keys.values():
         by_question[blind.question(item, passages[item.text])] = item
 
-    async def ask(system: str, text: str) -> blind.Reply:
+    async def ask(system: str, text: str) -> blind.Reply | None:
         item = by_question[text]
+        if sum(map(ord, item.id)) % 11 == 0:
+            return None  # an unusable reply, as free models give: flagged with no checker answer
         right = key_text(item)
         if item.kind == "tfng":
             right = right.replace("NOT GIVEN", "NOT GIVEN")
@@ -187,6 +190,15 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         )
     assert counts["verified"] + counts["needs_review"] == len(keys)
     assert counts["needs_review"] > 0
+    with pool.connection() as conn:
+        unanswered = {
+            r[0]
+            for r in conn.execute(
+                "select id from reading_items "
+                "where status='needs_review' and checker_answer is null"
+            ).fetchall()
+        }
+    assert unanswered, "the simulation should include unusable checker replies"
 
     # 4. The item file: export, a fresh database, import; nothing lost or changed.
     with pool.connection() as conn:
@@ -214,7 +226,7 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         ).fetchall()
     approved_flagged = set()
     for k, (item_id, s) in enumerate(pending):
-        if s == "verified" or k % 2 == 0:
+        if s == "verified" or k % 2 == 0 or item_id in unanswered:
             review.decide(learner, item_id, Decision(decision="approve"))
             if s == "needs_review":
                 approved_flagged.add(item_id)
@@ -249,6 +261,8 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
             if q["kind"] == "headings":
                 assert all(0 <= p < n_paras for p in q["paragraphs"]), q["id"]
     assert not served_ids & approved_flagged, "an approved but doubted item was served"
+    assert unanswered <= approved_flagged  # every one approved by the owner alone ...
+    assert not served_ids & unanswered  # ... and none served: the owner never promotes
     for item_id in sorted(served_ids):
         item = keys[item_id]
         right: Any

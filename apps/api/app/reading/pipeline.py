@@ -113,7 +113,9 @@ async def check_pending(
         conn.execute(
             "update reading_items set status=%s, checker_answer=%s, checker_model=%s, "
             "checked_at=%s where id=%s",
-            (outcome, answer, model(), now, item_id),
+            # No usable reply: no checker judged it, so none is named (the label backfill would
+            # otherwise record the last model that answered as doubting this item).
+            (outcome, answer, model() if answer is not None else None, now, item_id),
         )
         conn.commit()  # each check is paid for: keep it even if a later one fails
         counts[outcome] += 1
