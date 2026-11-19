@@ -130,3 +130,115 @@ export function keyText(
       .join(", ");
   return String(k);
 }
+
+// --- Review by passage (specs/listening-reading/step-4.2f.md) ---
+
+export interface ReviewText {
+  slug: string;
+  title: string;
+  agreed: number;
+  flagged: number;
+}
+export interface ReviewStats {
+  decisions: number;
+  medianSeconds: number | null;
+  overturned: number;
+}
+export interface ReviewTexts {
+  texts: ReviewText[];
+  stats: ReviewStats;
+}
+export interface PassageItem extends Omit<ReviewItem, "passage"> {
+  /** The blind checker agreed with the key. */
+  agreed: boolean;
+}
+export interface PassageReview {
+  slug: string;
+  title: string;
+  passage: string;
+  items: PassageItem[];
+}
+
+function count(value: unknown): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0)
+    throw new DataError("contract");
+  return value;
+}
+
+export function parseReviewTexts(value: unknown): ReviewTexts {
+  const d = record(value);
+  const s = record(d.stats);
+  const median = s.median_seconds;
+  if (median !== null && typeof median !== "number")
+    throw new DataError("contract");
+  return {
+    texts: list(d.texts).map((v) => {
+      const r = record(v);
+      return {
+        slug: string(r.slug),
+        title: string(r.title),
+        agreed: count(r.agreed),
+        flagged: count(r.flagged),
+      };
+    }),
+    stats: {
+      decisions: count(s.decisions),
+      medianSeconds: median,
+      overturned: count(s.overturned),
+    },
+  };
+}
+
+export function parsePassageReview(value: unknown): PassageReview {
+  const d = record(value);
+  return {
+    slug: string(d.slug),
+    title: string(d.title),
+    passage: string(d.passage),
+    items: list(d.items).map((v) => {
+      const r = record(v);
+      if (typeof r.agreed !== "boolean") throw new DataError("contract");
+      const [item] = parseQueue({
+        counts: { needs_review: 0, verified: 0, approved: 0, rejected: 0 },
+        items: [{ ...r, passage: null }],
+      }).items;
+      const { passage: _passage, ...rest } = item!;
+      void _passage;
+      return { ...rest, agreed: r.agreed };
+    }),
+  };
+}
+
+/** What a key press means on the review page (pure, so it is tested without a browser). */
+export type ReviewAction =
+  | { type: "approve" }
+  | { type: "reject" }
+  | { type: "reason"; reason: RejectReason }
+  | { type: "confirm" }
+  | { type: "cancel" }
+  | { type: "skip" }
+  | { type: "back" };
+
+export function shortcut(key: string, rejecting: boolean): ReviewAction | null {
+  if (rejecting) {
+    const n = Number(key);
+    if (Number.isInteger(n) && n >= 1 && n <= REJECT_REASONS.length)
+      return { type: "reason", reason: REJECT_REASONS[n - 1]! };
+    if (key === "Enter") return { type: "confirm" };
+    if (key === "Escape") return { type: "cancel" };
+    return null;
+  }
+  switch (key.length === 1 ? key.toLowerCase() : key) {
+    case "a":
+      return { type: "approve" };
+    case "r":
+      return { type: "reject" };
+    case "s":
+    case "ArrowRight":
+      return { type: "skip" };
+    case "ArrowLeft":
+      return { type: "back" };
+    default:
+      return null;
+  }
+}

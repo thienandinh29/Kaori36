@@ -4,6 +4,10 @@ import {
   type RejectReason,
   type ReviewQueue,
   type ReviewStatus,
+  parsePassageReview,
+  parseReviewTexts,
+  type PassageReview,
+  type ReviewTexts,
 } from "@/lib/reading/review";
 import { DataError } from "@/lib/decode";
 import { parseToday, type Today } from "@/lib/english/today";
@@ -420,6 +424,16 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       const q = new URLSearchParams({ learner_id: learnerId, status });
       return parseQueue(await request(`reading/review?${q}`));
     },
+    async reviewTexts(learnerId: string): Promise<ReviewTexts> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseReviewTexts(await request(`reading/review/texts?${q}`));
+    },
+    async reviewText(learnerId: string, slug: string): Promise<PassageReview> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePassageReview(
+        await request(`reading/review/texts/${encodeURIComponent(slug)}?${q}`),
+      );
+    },
     async decideReading(
       learnerId: string,
       itemId: string,
@@ -427,6 +441,7 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         decision: "approve" | "reject";
         reason?: RejectReason;
         note?: string;
+        seconds?: number;
       },
     ): Promise<void> {
       const q = new URLSearchParams({ learner_id: learnerId });

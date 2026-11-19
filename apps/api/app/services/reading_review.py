@@ -9,6 +9,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
+from statistics import median
 from typing import Any, Literal
 
 import yaml  # type: ignore[import-untyped]
@@ -31,6 +32,8 @@ class Decision(BaseModel):
     decision: Literal["approve", "reject"]
     reason: Reason | None = None
     note: str | None = Field(default=None, max_length=500)
+    # How long the question was on screen (step 4.2f): the owner's own speed, never a truth.
+    seconds: int | None = Field(default=None, ge=0, le=600)
 
 
 def _signature(folder: Path) -> tuple[tuple[str, int, int], ...]:
@@ -80,6 +83,80 @@ class ReadingReview:
         if learner_uuid(learner_id) not in self.owners:
             raise HTTPException(403, "Chỉ chủ dự án duyệt câu hỏi.")
 
+    def _view(
+        self, item_id: str, slug: str, data: Any, answer: str | None, model: str | None,
+        note: str | None, passage: str | None,
+    ) -> dict[str, Any]:  # fmt: skip
+        item = _ITEM.validate_python(data)
+        return {
+            "id": item_id, "text": slug, "kind": item.kind, "skill": item.skill,
+            "question": learner_view(item), "key": key_of(item), "evidence": list(item.evidence),
+            "checker_answer": answer, "checker_model": model, "note": note, "passage": passage,
+        }  # fmt: skip
+
+    def texts(self, learner_id: str) -> dict[str, Any]:
+        """Texts with questions waiting (step 4.2f), and the owner's own review speed."""
+        self._owner(learner_id)
+        texts = read_texts(self.texts_dir)
+        with self.pool().connection() as conn:
+            rows = conn.execute(
+                "select text_slug, passage_sha256, status, count(*) from reading_items "
+                "where status in ('verified','needs_review') group by 1, 2, 3"
+            ).fetchall()
+            decided = conn.execute(
+                "select r.review_was, r.status, (l.detail->>'seconds')::int "
+                "from reading_items r join labels l on l.content_type='reading_item' "
+                "and l.content_id=r.id and l.role='owner_developer' "
+                "where r.status in ('approved','rejected')"
+            ).fetchall()
+        waiting: dict[str, dict[str, int]] = {}
+        for slug, digest, status, n in rows:
+            text = texts.get(slug)
+            if text is None or passage_sha256(text[1]) != digest:
+                continue  # approval would be refused: not listed
+            counts = waiting.setdefault(slug, {"agreed": 0, "flagged": 0})
+            counts["agreed" if status == "verified" else "flagged"] += int(n)
+        seconds = sorted(s for _, _, s in decided if s is not None)
+        overturned = sum(
+            1 for was, now, _ in decided
+            if (was, now) in (("needs_review", "approved"), ("verified", "rejected"))
+        )  # fmt: skip
+        return {
+            "texts": [
+                {"slug": slug, "title": texts[slug][0], **counts}
+                for slug, counts in sorted(waiting.items())
+            ],
+            "stats": {
+                "decisions": len(decided),
+                "median_seconds": median(seconds) if seconds else None,
+                "overturned": overturned,
+            },
+        }
+
+    def text_items(self, learner_id: str, slug: str) -> dict[str, Any]:
+        """A text's waiting questions: the checker's agreed ones first, then the flagged."""
+        self._owner(learner_id)
+        text = read_texts(self.texts_dir).get(slug)
+        if text is None:
+            raise HTTPException(404, "Không tìm thấy bài đọc.")
+        with self.pool().connection() as conn:
+            rows = conn.execute(
+                "select id, item, checker_answer, checker_model, review_note, status "
+                "from reading_items where text_slug=%s and passage_sha256=%s "
+                "and status in ('verified','needs_review') "
+                "order by status='needs_review', "
+                "array_position(array['tfng','mcq','completion','headings'], kind), "
+                "length(id), id",
+                (slug, passage_sha256(text[1])),
+            ).fetchall()
+        items = [
+            self._view(i, slug, d, a, m, n, None) | {"agreed": status == "verified"}
+            for i, d, a, m, n, status in rows
+        ]
+        for item in items:
+            del item["passage"]  # the passage is sent once, below
+        return {"slug": slug, "title": text[0], "passage": text[1], "items": items}
+
     def queue(self, learner_id: str, status: str) -> dict[str, Any]:
         self._owner(learner_id)
         if status not in STATUSES:
@@ -98,16 +175,11 @@ class ReadingReview:
             ).fetchall()
         items = []
         for item_id, slug, digest, data, answer, model, note in rows:
-            item = _ITEM.validate_python(data)
             passage = passages.get(slug)
             current = passage is not None and passage_sha256(passage) == digest
-            items.append({
-                "id": item_id, "text": slug, "kind": item.kind, "skill": item.skill,
-                "question": learner_view(item), "key": key_of(item),
-                "evidence": list(item.evidence),
-                "checker_answer": answer, "checker_model": model, "note": note,
-                "passage": passage if current else None,
-            })  # fmt: skip
+            items.append(
+                self._view(item_id, slug, data, answer, model, note, passage if current else None)
+            )
         return {"counts": {s: int(counts.get(s, 0)) for s in STATUSES}, "items": items}
 
     def decide(self, learner_id: str, item_id: str, body: Decision) -> dict[str, str]:
@@ -151,7 +223,8 @@ class ReadingReview:
                     value="right" if new == "approved" else "wrong",
                     role="owner_developer",
                     note=note.strip() or None,
-                    detail={"reason": body.reason},
+                    detail={"reason": body.reason}
+                    | ({"seconds": body.seconds} if body.seconds is not None else {}),
                     labelled_at=self.clock(),
                 ),
             )
