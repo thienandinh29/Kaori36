@@ -83,3 +83,28 @@ def test_unknown_labels_are_not_counted(bad: str) -> None:
     rows = [{"level": bad, "words": "1", "mean_sentence_words": "1", "long_word_share": "0",
              "type_token_ratio": "0", "unknown_share": "0"}]  # fmt: skip
     assert score(rows)["labelled"] == 0
+
+
+def test_ielts_length_passages_join_sections_and_keep_paragraphs_whole() -> None:
+    from app.texts.fetch import page_text
+
+    p = f"{SENTENCE} They store it."  # 17 words
+    sections = ["\n\n".join([p] * 2), "\n\n".join([p] * 3)]
+    # Joined: paragraphs run on across sections, whole ones only, up to the limit.
+    assert page_text(sections, low=60, high=70, joined=True) == "\n\n".join([p] * 4)  # 68
+    # The first bank's rule: one section alone must be long enough.
+    assert page_text(sections, low=60, high=70, joined=False) is None  # 34 and 51 alone
+    assert page_text(sections, low=40, high=70, joined=False) == "\n\n".join([p] * 3)
+
+
+def test_author_date_citations_are_removed_and_other_brackets_kept() -> None:
+    from app.texts.fetch import CITATION
+
+    cases = {
+        "Congress banned it (White 2012). Later": "Congress banned it. Later",
+        "a varied life (Smith and Jones 2010a; Lee 2011).": "a varied life.",
+        "as shown (Brown et al. 2003).": "as shown.",
+        "Rome was founded (753 BCE) by": "Rome was founded (753 BCE) by",
+        "the (United Nations) and": "the (United Nations) and",
+    }
+    assert {k: CITATION.sub("", k) for k in cases} == cases

@@ -23,7 +23,9 @@ simple_wikipedia:  # A2-B1, IELTS-style topics; runs on the owner's laptop (Wiki
   - Moon
   - Association football
   - Television
-openstax:  # B2-C1, academic; CC BY-NC-SA 4.0 in each book's metadata (checked 18 Nov), flagged NonCommercial
-  - {repo: openstax/osbooks-introduction-sociology, collection: introduction-sociology-3e, texts: 4}
-  - {repo: openstax/osbooks-astronomy, collection: astronomy-2e, texts: 3}
-  - {repo: openstax/osbooks-world-history, collection: world-history-volume-1, texts: 3}
+openstax:  # B2-C1, academic; CC BY-NC-SA 4.0, read by the owner on each book's page 19 Nov; flagged NonCommercial
+  # `texts`: how many NEW texts a run adds, one per chapter; chapters already in data/english/texts/ are passed over.
+  # From 19 Nov texts are IELTS length (500-900 words, paragraphs joined across a page's sections).
+  - {repo: openstax/osbooks-introduction-sociology, collection: introduction-sociology-3e, texts: 8}
+  - {repo: openstax/osbooks-astronomy, collection: astronomy-2e, texts: 6}
+  - {repo: openstax/osbooks-world-history, collection: world-history-volume-1, texts: 6}

@@ -139,3 +139,15 @@ def test_one_question_given_as_an_object_is_accepted() -> None:
     raw["completion"] = raw["completion"][0]
     out = Generated.model_validate(raw)
     assert len(out.mcq) == 1 and len(out.completion) == 1
+
+
+def test_an_ielts_length_passage_gets_an_exams_worth_of_questions() -> None:
+    from app.reading.generate import LONG_PASSAGE_WORDS
+
+    short = prompt(PASSAGE)
+    assert "two statements" in short and "exactly one must be `not_given`" in short
+    assert "one question," in short and "one sentence," in short
+    long_passage = "\n\n".join([PASSAGE] * (LONG_PASSAGE_WORDS // len(PASSAGE.split()) + 1))
+    long = prompt(long_passage)
+    assert "five statements" in long and "one or two must be `not_given`" in long
+    assert "three questions," in long and "three sentences," in long

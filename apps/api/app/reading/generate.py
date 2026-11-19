@@ -65,6 +65,9 @@ class Generated(BaseModel):
         return [value] if isinstance(value, dict) else value
 
 
+LONG_PASSAGE_WORDS = 450
+
+
 def prompt(passage: str) -> str:
     n = len(paragraphs(passage))
     headings = (
@@ -73,14 +76,26 @@ def prompt(passage: str) -> str:
         if n >= 3
         else "- `headings`: null.\n"
     )
+    # An IELTS-length passage gets about an exam's worth of questions (about 13 per passage);
+    # a short one keeps the first bank's set, so earlier items keep their meaning.
+    long = len(passage.split()) >= LONG_PASSAGE_WORDS
+    tfng = (
+        "five statements, keys `true`, `false` or `not_given`; one or two must be `not_given`, "
+        "and at least one each `true` and `false`"
+        if long
+        else "two statements, keys `true`, `false` or `not_given`; exactly one must be `not_given`"
+    )
+    mcq, completion = (
+        ("three questions", "three sentences") if long else ("one question", "one sentence")
+    )
     return (
         f"Passage:\n\n{passage}\n\nWrite:\n"
-        "- `tfng`: two statements, keys `true`, `false` or `not_given`; exactly one must be "
-        "`not_given` (the passage says nothing either way; give it no evidence).\n"
-        "- `mcq`: one question with 4 options and `key`, the 0-based index of the one right "
-        "option. The stem must not contain the right option's words.\n"
-        "- `completion`: one sentence with exactly one ___ and `accepted`, the answer copied "
-        "word for word from the passage, at most `max_words` words (1-3).\n"
+        f"- `tfng`: {tfng} (`not_given`: the passage says nothing either way; give it no "
+        "evidence).\n"
+        f"- `mcq`: {mcq}, each with 4 options and `key`, the 0-based index of the one right "
+        "option. A stem must not contain its right option's words.\n"
+        f"- `completion`: {completion}, each with exactly one ___ and `accepted`, the answer "
+        "copied word for word from the passage, at most `max_words` words (1-3).\n"
         + headings
         + "Each of tfng, mcq and completion has `skill` (detail, main_idea, inference, "
         "writers_view or skimming) and `evidence`: the passage sentences, copied exactly, that "
