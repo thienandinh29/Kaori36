@@ -20,6 +20,7 @@ export const en = {
       explore: "Explore a topic",
       writing: "Writing",
       reading: "Reading",
+      listening: "Listening",
     },
     draft: "Draft",
     retry: "Try again",
@@ -54,6 +55,13 @@ export const en = {
       finish: "Done",
       finished: "You have answered every question for this text.",
       back: "Choose another text",
+    },
+    listening: {
+      title: "Listening practice",
+      intro:
+        "Hear sentences from the open texts and write them down, or fill the missing word. Marked against the sentence that was read; a misspelling is wrong, as in the exam.",
+      noVoice:
+        "The server voice is off, so listening cannot be practised. Start the stack with the speech profile and reload.",
     },
     maps: {
       title: "Skill map",

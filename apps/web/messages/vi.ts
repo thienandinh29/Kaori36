@@ -404,6 +404,7 @@ export const vi = {
       explore: "Khám phá chủ đề",
       writing: "Viết",
       reading: "Đọc",
+      listening: "Nghe",
       pronunciation: "Phát âm",
     },
     brandSub: "Tiếng Anh · CEFR A2–C1 · luyện IELTS",
@@ -628,6 +629,49 @@ export const vi = {
       next: "Câu tiếp",
       finish: "Xong",
       finished: "Bạn đã làm hết câu hỏi của bài này.",
+      back: "Chọn bài khác",
+    },
+    listening: {
+      title: "Luyện Nghe",
+      intro:
+        "Nghe từng câu trong các bài đọc nguồn mở rồi chép lại, hoặc điền từ còn thiếu. Đúng sai chấm theo đúng câu đã đọc; viết sai chính tả là sai, như trong bài thi.",
+      voiceNote:
+        "Giọng đọc máy (Piper), giọng Anh-Anh. Chỉ dùng những câu máy đọc được chính xác: không có số, tên riêng hay ngoặc.",
+      noVoice:
+        "Chưa bật giọng đọc của máy chủ nên chưa luyện nghe được. Chạy ngăn xếp với hồ sơ speech (COMPOSE_PROFILES có speech) rồi tải lại trang.",
+      none: "Chưa có câu nào phù hợp để luyện nghe.",
+      counts: (d: number, g: number) =>
+        `${d} câu chép chính tả · ${g} câu điền từ`,
+      kinds: {
+        dictation: "Nghe và chép lại cả câu",
+        gap: "Nghe rồi điền từ còn thiếu",
+      } as Record<string, string>,
+      item: "Câu",
+      play: "Nghe",
+      slow: "Nghe chậm",
+      playsLeft: (n: number) => `Còn ${n} lượt nghe`,
+      noPlays: "Đã hết lượt nghe. Hãy viết những gì bạn nghe được.",
+      audioFailed:
+        "Không phát được âm thanh. Kiểm tra giọng đọc của máy chủ rồi thử lại.",
+      typeSentence: "Câu bạn nghe được:",
+      typeWord: "Từ còn thiếu:",
+      check: "Kiểm tra",
+      right: "Đúng.",
+      wrong: "Chưa đúng.",
+      score: (p: number) => `Đúng ${p}% số từ.`,
+      sentence: "Câu đã đọc",
+      key: "Đáp án",
+      legend:
+        "Chữ đậm trên nền cam: viết sai · Gạch ngang: bỏ sót · In nghiêng: viết thừa · Còn lại: đúng.",
+      status: {
+        right: "đúng",
+        wrong: "sai",
+        missed: "bỏ sót",
+        extra: "thừa",
+      } as Record<string, string>,
+      next: "Câu tiếp",
+      finish: "Xong",
+      finished: "Bạn đã làm hết bài nghe của văn bản này.",
       back: "Chọn bài khác",
     },
     maps: {

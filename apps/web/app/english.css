@@ -2161,3 +2161,49 @@ svg.nt-trail {
 .nt-reading-test {
   overflow-wrap: anywhere;
 }
+
+/* Listening dictation: each word marked (specs/listening-reading/step-4.4b.md). Colour is not the
+   only signal: missed words are struck through, extra ones italic, and each has a title. */
+.nt-dictation-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  overflow-wrap: anywhere;
+}
+.nt-word {
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.nt-word.is-right {
+  background: var(--nt-known-soft);
+  color: var(--nt-known);
+}
+.nt-word.is-wrong {
+  background: var(--nt-gap-soft);
+  color: var(--nt-gap-ink);
+  font-weight: 600;
+}
+.nt-word.is-missed {
+  color: var(--nt-gap-ink);
+  text-decoration: line-through;
+}
+.nt-word.is-extra {
+  font-style: italic;
+  opacity: 0.7;
+}
+/* The answer box takes the whole width: a dictated sentence is long. */
+.nt-listen-form {
+  display: grid;
+  gap: 8px;
+}
+.nt-listen-form label {
+  display: grid;
+  gap: 6px;
+}
+.nt-listen-form input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.nt-listen-form button {
+  justify-self: start;
+}

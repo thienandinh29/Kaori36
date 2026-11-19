@@ -22,6 +22,14 @@ import {
   type TextSummary,
 } from "@/lib/reading/practice";
 import {
+  parseListeningResult,
+  parseListeningText,
+  parseListeningTexts,
+  type ListeningResult,
+  type ListeningText,
+  type ListeningTexts,
+} from "@/lib/listening/practice";
+import {
   parseStartedTest,
   parseTestResult,
   type StartedTest,
@@ -404,6 +412,37 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         await post(`reading/tests/${encodeURIComponent(testId)}/submit`, {
           learner_id: learnerId,
           answers,
+        }),
+      );
+    },
+    /** Listening from the Reading bank (specs/listening-reading/step-4.4b.md). */
+    async listeningTexts(learnerId: string): Promise<ListeningTexts> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseListeningTexts(await request(`listening/texts?${q}`));
+    },
+    async listeningText(
+      learnerId: string,
+      slug: string,
+    ): Promise<ListeningText> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseListeningText(
+        await request(`listening/texts/${encodeURIComponent(slug)}?${q}`),
+      );
+    },
+    /** The proxied WAV of one sentence, made by the server voice (never the text itself). */
+    listeningAudioUrl(itemId: string, pace: "normal" | "slow"): string {
+      const q = new URLSearchParams({ pace });
+      return `/api/backend/listening/items/${encodeURIComponent(itemId)}/audio?${q}`;
+    },
+    async answerListening(
+      learnerId: string,
+      itemId: string,
+      answer: string,
+    ): Promise<ListeningResult> {
+      return parseListeningResult(
+        await post(`listening/items/${encodeURIComponent(itemId)}/answer`, {
+          learner_id: learnerId,
+          answer,
         }),
       );
     },
