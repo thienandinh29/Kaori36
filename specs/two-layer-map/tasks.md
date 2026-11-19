@@ -22,7 +22,7 @@ Spec: `spec.md`, approved by the owner 18 Nov 2026.
   `components/english/today-list.tsx`). No competency is measured yet, so the list today is a Writing diagnostic and
   the foundations most exam skills share; Reading joins the available skills with CP4
 - [x] Writing evidence (`writing-evidence.md`): essays measure the Writing competencies, so the list changes
-- [ ] M4 the two-map page
+- [x] M4 the two-map page `/ban-do` (`GET /maps`, `components/english/two-maps.tsx`): every competency with its foundations, status and the evidence behind each estimate; "Bản đồ kỹ năng" in the nav
 
 **Owner's hands-on work:**
 - [ ] Follow the daily list for two weeks; note each day whether it was the right thing to do

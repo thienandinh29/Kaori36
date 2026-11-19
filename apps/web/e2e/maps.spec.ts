@@ -27,6 +27,8 @@ test("the skill map shows the four skills, statuses and proposed links", async (
   await expect(
     grammar.getByText("chưa có trong khóa học").first(),
   ).toBeVisible();
+  // Not-live foundations still show their Vietnamese names (the image carries the proposed path).
+  await expect(grammar.getByText("agreement-long-subjects")).toHaveCount(0);
   const link = grammar.getByRole("link", { name: /Mạo từ/ }).first();
   await expect(link).toHaveAttribute("href", /^\/on-tap\//);
   await expect(maps.getByText("đề xuất", { exact: false })).toBeVisible();
