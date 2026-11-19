@@ -40,6 +40,8 @@ COMPETENCY = {
 }
 PARAMS = DEFAULT_PARAMS["mcq"]  # objective items graded from a key, like grammar questions
 KIND_ORDER = ("tfng", "mcq", "completion", "headings")
+TEST_SECONDS = 20 * 60  # about 20 minutes per IELTS passage (step 4.3b)
+GRACE_SECONDS = 30  # network and a last click; later is graded but marked over time
 
 
 def load_texts(folder: Path) -> dict[str, tuple[str, str]]:
@@ -163,41 +165,133 @@ class ReadingPractice:
             found = next((it for its in self.served(conn, item_id).values() for i, it in its), None)
             if found is None:
                 raise HTTPException(404, "Câu hỏi này chưa được dùng cho người học.")
-            score = grade(found, answer)
-            correct = score >= 1.0
-            competency = COMPETENCY[found.skill]
-            cmap = self.cmap
-            subject, ids = competency_ids(conn, cmap)
-            row = conn.execute(
-                "select p_known from mastery where learner_id=%s and concept_id=%s",
-                (learner, ids[competency]),
-            ).fetchone()
-            before = float(row[0]) if row else PARAMS.p_init
-            after, trace = bkt.update_traced(
-                before, correct, PARAMS, concept_slug=competency, now=now, item_id=item_id
-            )
-            name = next(c.name_vi for c in cmap.competencies if c.slug == competency)
-            trace = trace.model_copy(
-                update={
-                    "rule": "reading.answer",
-                    "rule_vi": (
-                        f"{name}: trả lời {'đúng' if correct else 'sai'} (chấm theo đáp án) → "
-                        f"ước lượng từ {fmt_p(before)} thành {fmt_p(after)}."
-                    ),
-                }
-            )
-            save_mastery(conn, learner, ids[competency], after)
-            save_trace(conn, learner, subject, trace)
-            conn.execute(
-                "insert into reading_answers(learner_id,item_id,competency,answer,score,correct,"
-                "p_before,p_after,answered_at) values (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                (learner, item_id, competency, Jsonb(answer), score, correct, before, after, now),
-            )
+            return self._record(conn, learner, item_id, found, answer, now)
+
+    def _record(
+        self,
+        conn: psycopg.Connection[Any],
+        learner: Any,
+        item_id: str,
+        item: Any,
+        answer: Any,
+        now: datetime,
+        test_id: Any = None,
+    ) -> dict[str, Any]:
+        """Grade from the key, move the item's Reading competency by BKT, log the answer.
+
+        Shared by practice and timed tests (step 4.3b), so both give the same evidence.
+        """
+        score = grade(item, answer)
+        correct = score >= 1.0
+        competency = COMPETENCY[item.skill]
+        cmap = self.cmap
+        subject, ids = competency_ids(conn, cmap)
+        row = conn.execute(
+            "select p_known from mastery where learner_id=%s and concept_id=%s",
+            (learner, ids[competency]),
+        ).fetchone()
+        before = float(row[0]) if row else PARAMS.p_init
+        after, trace = bkt.update_traced(
+            before, correct, PARAMS, concept_slug=competency, now=now, item_id=item_id
+        )
+        name = next(c.name_vi for c in cmap.competencies if c.slug == competency)
+        how = "trong bài thi có giờ" if test_id is not None else "chấm theo đáp án"
+        trace = trace.model_copy(
+            update={
+                "rule": "reading.answer",
+                "rule_vi": (
+                    f"{name}: trả lời {'đúng' if correct else 'sai'} ({how}) → "
+                    f"ước lượng từ {fmt_p(before)} thành {fmt_p(after)}."
+                ),
+            }
+        )
+        save_mastery(conn, learner, ids[competency], after)
+        save_trace(conn, learner, subject, trace)
+        conn.execute(
+            "insert into reading_answers(learner_id,item_id,competency,answer,score,correct,"
+            "p_before,p_after,answered_at,test_id) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+            (learner, item_id, competency, Jsonb(answer), score, correct, before, after, now,
+             test_id),
+        )  # fmt: skip
         return {
             "correct": correct,
             "score": round(score, 3),
-            "key": key_text(found),
-            "evidence": list(found.evidence),
+            "key": key_text(item),
+            "evidence": list(item.evidence),
             "competency": competency,
             "trace": trace.model_dump(mode="json"),
         }
+
+    # --- Timed tests (specs/listening-reading/step-4.3b.md) ---
+
+    def start_test(self, learner_id: str, slug: str) -> dict[str, Any]:
+        """Fix the text's served questions and the start time; the server keeps the clock."""
+        now = self.clock()
+        view = self.text(learner_id, slug)  # 404 when nothing is served
+        with self.pool().connection() as conn:
+            learner = self._learner(conn, learner_id)
+            row = conn.execute(
+                "insert into reading_tests(learner_id,text_slug,item_ids,limit_seconds,started_at) "
+                "values (%s,%s,%s,%s,%s) returning id::text",
+                (learner, slug, [i["id"] for i in view["items"]], TEST_SECONDS, now),
+            ).fetchone()
+        assert row is not None
+        return view | {"test_id": row[0], "limit_seconds": TEST_SECONDS,
+                       "started_at": now.isoformat()}  # fmt: skip
+
+    def submit_test(
+        self, learner_id: str, test_id: str, answers: dict[str, tuple[Any, int | None]]
+    ) -> dict[str, Any]:
+        """Grade every question once. A blank is wrong in the score but gives no evidence."""
+        now = self.clock()
+        with self.pool().connection() as conn, conn.transaction():
+            learner = self._learner(conn, learner_id)
+            row = conn.execute(
+                "select item_ids, started_at, limit_seconds, submitted_at, text_slug "
+                "from reading_tests where id::text=%s and learner_id=%s for update",
+                (test_id, learner),
+            ).fetchone()
+            if row is None:
+                raise HTTPException(404, "Không tìm thấy bài thi.")
+            item_ids, started, limit, submitted, slug = row
+            if submitted is not None:
+                raise HTTPException(409, "Bài thi này đã được nộp.")
+            unknown = sorted(set(answers) - set(item_ids))
+            if unknown:
+                raise HTTPException(422, "Có câu trả lời không thuộc bài thi này.")
+            seconds = round((now - started).total_seconds())
+            over = seconds > limit + GRACE_SECONDS
+            served = dict(self.served(conn).get(slug, []))
+            stored = {
+                r[0]: _ITEM.validate_python(r[1])
+                for r in conn.execute(
+                    "select id, item from reading_items where id = any(%s)", (list(item_ids),)
+                ).fetchall()
+            }
+            out = []
+            for item_id in item_ids:
+                item = stored[item_id]
+                given, at = answers.get(item_id, (None, None))
+                blank = given is None or given == "" or given == {}
+                if blank:
+                    out.append({"id": item_id, "answer": None, "correct": False,
+                                "key": key_text(item), "evidence": list(item.evidence),
+                                "at_seconds": None})  # fmt: skip
+                    continue
+                if item_id in served:  # still served: evidence, as in practice
+                    r = self._record(conn, learner, item_id, item, given, now, test_id)
+                    correct = r["correct"]
+                else:  # withdrawn since the test began: graded, but no evidence
+                    correct = grade(item, given) >= 1.0
+                out.append({"id": item_id, "answer": given, "correct": correct,
+                            "key": key_text(item), "evidence": list(item.evidence),
+                            "at_seconds": at})  # fmt: skip
+            right = sum(x["correct"] for x in out)
+            conn.execute(
+                "update reading_tests set submitted_at=%s, correct=%s, total=%s, over_time=%s "
+                "where id::text=%s",
+                (now, right, len(out), over, test_id),
+            )
+        return {"test_id": test_id, "correct": right, "total": len(out),
+                "answered": sum(x["answer"] is not None for x in out), "over_time": over,
+                "seconds": seconds, "items": out}  # fmt: skip

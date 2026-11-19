@@ -686,6 +686,28 @@ export const vi = {
       grammarTitle: "Ngữ pháp",
       nextTest: "Kiểm tra cột mốc tiếp theo",
     },
+    readingTest: {
+      start: "Làm bài thi (20 phút)",
+      startHint:
+        "Cả bài đọc và mọi câu hỏi trên một trang, có đồng hồ. Chỉ biết đúng sai sau khi nộp bài.",
+      left: "Còn lại",
+      submit: "Nộp bài",
+      confirmEarly: (n: number) =>
+        `Còn ${n} câu chưa trả lời. Câu bỏ trống tính là sai. Vẫn nộp bài?`,
+      timeUp: "Hết giờ: bài đã được nộp.",
+      answeredCount: (n: number, total: number) =>
+        `Đã trả lời ${n}/${total} câu`,
+      score: (n: number, total: number) => `Đúng ${n}/${total} câu`,
+      noBand:
+        "Đây là số câu đúng, không phải band IELTS: NodeTrail chưa được hiệu chỉnh theo điểm của giám khảo.",
+      overTime:
+        "Bài nộp sau khi hết giờ: vẫn được chấm, nhưng được ghi là quá giờ.",
+      took: (t: string) => `Thời gian làm bài: ${t}`,
+      yours: "Bạn trả lời",
+      blank: "bỏ trống (tính là sai, không tính vào tiến độ)",
+      at: (t: string) => `lúc ${t}`,
+      practice: "Luyện từng câu",
+    },
     readingReview: {
       title: "Duyệt câu hỏi Đọc",
       intro:

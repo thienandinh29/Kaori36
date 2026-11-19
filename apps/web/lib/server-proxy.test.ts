@@ -262,6 +262,12 @@ describe("graph confirmation session proxy", () => {
       200,
     );
     expect((await post("reading/items/bees-tfng-1/answer")).status).toBe(200);
+    expect((await post("reading/texts/bees/tests")).status).toBe(200);
+    expect(
+      (await post("reading/tests/0b7e3c1e-0000-4000-8000-000000000001/submit"))
+        .status,
+    ).toBe(200);
+    expect((await post("reading/tests/not-a-uuid/submit")).status).toBe(404);
     expect(
       (await get("reading/review/texts", `?learner_id=${id}`)).status,
     ).toBe(200);
