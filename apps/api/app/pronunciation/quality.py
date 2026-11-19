@@ -109,3 +109,52 @@ def check(
         snr_db=round(snr, 1),
         speech_seconds=round(voiced, 2),
     )
+
+
+TRIM_BELOW_PEAK_DB = 30.0  # frames this far under the loudest are silence at the edges
+TRIM_MARGIN = 0.25  # seconds kept around the speech
+
+
+def _wav(x: array[int]) -> bytes:
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(RATE)
+        w.writeframes(x.tobytes())
+    return buf.getvalue()
+
+
+def trim(data: bytes, margin: float = TRIM_MARGIN) -> bytes:
+    """The recording without the silence before and after the speech (step 3.7c): a learner who
+    waits before saying one word, or after, no longer makes it "too quiet". Unreadable audio is
+    returned as it is (the check refuses it)."""
+    try:
+        x = samples(data)
+    except BadAudio:
+        return data
+    levels = [
+        _db(math.sqrt(sum(s * s for s in x[i : i + FRAME]) / FRAME))
+        for i in range(0, len(x) - FRAME + 1, FRAME)
+    ]
+    if not levels:
+        return data
+    floor = max(levels) - TRIM_BELOW_PEAK_DB
+    loud = [i for i, level in enumerate(levels) if level > floor and level > QUIET_DB - 10]
+    if not loud:
+        return data
+    keep = round(margin * RATE)
+    start = max(0, loud[0] * FRAME - keep)
+    end = min(len(x), (loud[-1] + 1) * FRAME + keep)
+    return _wav(x[start:end])
+
+
+def pad(data: bytes, seconds: float) -> bytes:
+    """Silence added evenly to both ends up to `seconds`, so the aligner always has some context."""
+    x = samples(data)
+    short = round(seconds * RATE) - len(x)
+    if short <= 0:
+        return data
+    before = array("h", bytes(short // 2 * 2))
+    after = array("h", bytes((short - short // 2) * 2))
+    return _wav(before + x + after)

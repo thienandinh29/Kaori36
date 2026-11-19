@@ -44,6 +44,11 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
   const [noMic, setNoMic] = useState(false);
   const recorder = useRef<MediaRecorder | null>(null);
   const timer = useRef<number | null>(null);
+  // Analyse as soon as the take is ready when the owner already agreed (step 3.7c: one tap less).
+  const auto = useRef(false);
+  useEffect(() => {
+    auto.current = Boolean(status?.analysis && agreed);
+  }, [status, agreed]);
 
   useEffect(() => {
     if (!learner) return;
@@ -97,6 +102,7 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
             wav,
             url: URL.createObjectURL(new Blob([wav], { type: "audio/wav" })),
           });
+          if (auto.current) void analyse(wav);
         } catch {
           setResult({
             ok: false,
@@ -122,8 +128,8 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
     if (timer.current) window.clearTimeout(timer.current);
     if (recorder.current?.state === "recording") recorder.current.stop();
   }
-  async function analyse() {
-    if (!take || !learner || !status) return;
+  async function analyse(wav: ArrayBuffer | undefined = take?.wav) {
+    if (!wav || !learner || !status) return;
     setBusy(true);
     try {
       setResult(
@@ -131,7 +137,7 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
           learner,
           `${lemma}:${pos}`,
           status.consent,
-          take.wav,
+          wav,
         ),
       );
     } catch {
@@ -183,7 +189,7 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
                 disabled={busy}
                 onClick={() => void analyse()}
               >
-                {busy ? vi.english.loading : t.analyse}
+                {busy ? t.analysing : result ? t.again : t.analyse}
               </button>
             ) : (
               <div className="en-feedback">
@@ -198,6 +204,7 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
                       /* the choice holds for this page only */
                     }
                     setAgreed(true);
+                    void analyse();
                   }}
                 >
                   {t.agree}

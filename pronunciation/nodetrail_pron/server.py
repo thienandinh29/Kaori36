@@ -86,12 +86,22 @@ def create_app(pin: Pin, recognise: Recognise, vocab: Mapping[str, int], blank: 
     return app
 
 
+WARM_UP_SECONDS = 1.0
+
+
+def warm_up(recognise: Recognise) -> None:
+    """One inference on silence before serving: the first real call took about 5 s (lazy
+    initialisation in the runtime), the next ones about 0.2 s (measured 19 Nov, step 3.7c)."""
+    recognise([0.0] * int(16_000 * WARM_UP_SECONDS))
+
+
 def main() -> None:
     import uvicorn
 
     pin = Pin.from_env()
     folder = fetch(pin, Path(os.environ.get("PRON_CACHE", "/models")))
     model = Recogniser(folder)
+    warm_up(model)
     uvicorn.run(
         create_app(pin, model, model.vocab, model.blank),
         host=os.environ.get("PRON_HOST", "127.0.0.1"),

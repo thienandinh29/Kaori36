@@ -1,4 +1,4 @@
-# ruff: noqa: RUF001, RUF002
+# ruff: noqa: RUF001, RUF002, RUF003
 """Saying one vocabulary word (specs/pronunciation/step-3.7.md): its dictionary IPA as the
 recogniser's phones, and the service's per-phone output as the learner sees it.
 
@@ -42,21 +42,64 @@ def phones_from_ipa(ipa: str) -> list[str]:
     return out
 
 
+# The recogniser writes some British vowels with its own symbols (the keys below are the
+# dictionary's, the values the model's): on the native British voice almost every one of them was
+# heard as the model's symbol (measured 19 Nov, 80 words x 3 recordings; step-3.7c.md). A sound is
+# scored against the model's symbol and shown in the dictionary's.
+MODEL_FORM = {"ɒ": "ɔ", "ɔː": "oː", "əʊ": "oʊ", "ɑː": "aː", "eə": "ɛː"}
+DICTIONARY_FORM = {v: k for k, v in MODEL_FORM.items()}
+# What the model hears on correct native speech for a sound, which is no error: weak and unstressed
+# variants only. The confusions that matter (long/short vowel pairs, TH/T...) are never listed here.
+ACCEPTED = {
+    "ə": {"ɐ", "ɪ", "ɨ"},
+    "ɪ": {"ɨ", "i", "ə"},
+    "i": {"ɪ", "iː"},
+    "ɑː": {"a", "ɑ"},
+    "eə": {"ɛ", "eː"},
+    "ɒ": {"ɑ"},
+    "u": {"ʊ", "uː"},
+}
+# Where the recogniser cannot tell on native speech: English voiced stops are often voiceless
+# unaspirated, which this model (trained mostly on other languages) hears as p, t, k (b 13/30,
+# d 25/51, g 15/27 low on the native voice, mostly inside words), and the Southern British /uː/ is
+# fronted, heard as iː (10/21). Such a reading is shown as unsure (amber, never counted low or
+# used for guidance) and nothing is claimed about what was heard. A real error of this kind is
+# hidden too; that is the price of no false alarms until Gold labels measure it.
+UNSURE = {"b": {"p"}, "d": {"t"}, "ɡ": {"k"}, "uː": {"iː", "ʉː"}}
+DROPPABLE = {"ə"}  # an unstressed schwa may vanish in natural speech: never shown as dropped
+ACCEPTED_CLOSENESS = 85
+
+
+def model_phones(phones: Sequence[str]) -> list[str]:
+    """The expected phones in the recogniser's own symbols (what is sent for alignment)."""
+    return [MODEL_FORM.get(p, p) for p in phones]
+
+
 def per_phone(phones: Sequence[str], scored: Mapping[str, Any]) -> list[dict[str, Any]]:
-    """Each expected phone with its score, what competed with it, and whether it was dropped."""
+    """Each expected phone (dictionary form) with its score, what competed with it (shown in the
+    dictionary's symbols), and whether it was dropped; native variants count as close."""
     got = scored["phones"]
     if len(got) != len(phones):
         raise ValueError("the service returned a different number of phones")
-    return [
-        {
-            "phone": p,
-            "gop": g["gop"],
-            "closeness": closeness(float(g["gop"])),
-            "heard": g["competitor"],
-            "dropped": is_dropped(g),
-        }
-        for p, g in zip(phones, got, strict=True)
-    ]
+    out: list[dict[str, Any]] = []
+    for p, g in zip(phones, got, strict=True):
+        near = closeness(float(g["gop"]))
+        heard = g["competitor"]
+        dropped = is_dropped(g) and p not in DROPPABLE
+        if heard in ACCEPTED.get(p, ()) or (p in DROPPABLE and is_dropped(g)):
+            near, heard = max(near, ACCEPTED_CLOSENESS), None
+        elif heard in UNSURE.get(p, ()) and not dropped:
+            near, heard = max(near, LOW), None
+        out.append(
+            {
+                "phone": p,
+                "gop": g["gop"],
+                "closeness": near,
+                "heard": DICTIONARY_FORM.get(heard, heard) if heard else None,
+                "dropped": dropped,
+            }
+        )
+    return out
 
 
 # --- Guidance from repeated attempts (specs/pronunciation/step-3.7b.md) ---
@@ -70,7 +113,8 @@ def closeness(gop: float) -> int:
 
 
 def low(p: Mapping[str, Any]) -> bool:
-    return bool(p["dropped"]) or closeness(float(p["gop"])) < LOW
+    near = p.get("closeness")
+    return bool(p["dropped"]) or (closeness(float(p["gop"])) if near is None else int(near)) < LOW
 
 
 def repeated(attempts: Sequence[Sequence[Mapping[str, Any]]]) -> list[dict[str, Any]]:
