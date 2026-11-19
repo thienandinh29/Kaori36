@@ -133,7 +133,19 @@ def create_app(
 
     reading = ReadingPractice(lambda: app.state.pool, settings.reading_texts_dir)
     app.include_router(reading_practice_routes.create_router(reading))
-    app.include_router(today_routes.create_router(TodayService(grammar, reading=reading)))
+    from app.api import listening_practice as listening_routes
+    from app.api.speech import SpeechClient
+    from app.services.listening_practice import ListeningPractice
+
+    listening = ListeningPractice(
+        lambda: app.state.pool,
+        settings.reading_texts_dir,
+        SpeechClient(settings.tts_url) if settings.tts_url else None,
+    )
+    app.include_router(listening_routes.create_router(listening))
+    app.include_router(
+        today_routes.create_router(TodayService(grammar, reading=reading, listening=listening))
+    )
     from app.api import pronunciation as pronunciation_routes
     from app.services.recordings import Recordings
 

@@ -31,12 +31,14 @@ from app.services.competency_evidence import SUBJECT as COMPETENCY_SUBJECT
 from app.services.grammar import GrammarService
 
 if TYPE_CHECKING:
+    from app.services.listening_practice import ListeningPractice
     from app.services.reading_practice import ReadingPractice
 
 GRAMMAR = "english-ielts"
 PRONUNCIATION = "english-pronunciation"
 PHRASES = "my-phrases"
-# Writing always; Reading while a question is served (CP4); Listening with CP5, Speaking phase 5.
+# Writing always; Reading while a question is served (CP4); Listening while the server voice is
+# on (CP5, step 4.4b); Speaking in phase 5.
 AVAILABLE_SKILLS = frozenset({"writing"})
 BAND_NAMES_VI = {
     "vocab-a1": "Từ vựng A1",
@@ -56,9 +58,11 @@ class TodayService:
         cmap: CompetencyMap | None = None,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
         reading: "ReadingPractice | None" = None,
+        listening: "ListeningPractice | None" = None,
     ) -> None:
         self.grammar = grammar
         self.reading = reading
+        self.listening = listening
         self._available: set[str] = set(AVAILABLE_SKILLS)
         self.cmap = cmap or load_map()
         self.live = load_foundations().live
@@ -141,9 +145,18 @@ class TodayService:
                 (learner,),
             ).fetchall():
                 comp_n[comp] = comp_n.get(comp, 0) + int(n)
+            # Listening evidence: one per answer (specs/listening-reading/step-4.4b.md).
+            for comp, n in conn.execute(
+                "select competency, count(*) from listening_answers where learner_id=%s "
+                "group by competency",
+                (learner,),
+            ).fetchall():
+                comp_n[comp] = comp_n.get(comp, 0) + int(n)
             self._available = set(AVAILABLE_SKILLS)
             if self.reading is not None and self.reading.any_served(conn):
                 self._available.add("reading")
+            if self.listening is not None and self.listening.available and self.listening.items():
+                self._available.add("listening")
             cards = conn.execute(
                 "select list_slug, word_key, fsrs_state, due_at from vocab_cards "
                 "where learner_id=%s",
