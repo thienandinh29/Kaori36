@@ -573,6 +573,8 @@ export const vi = {
       importedFrom:
         "Từ và định nghĩa: {list} 1.2 (Browne, Culligan & Phillips, CC BY-SA 4.0). Nghĩa tiếng Việt, câu ví dụ: bản nháp tự động.",
       levelSuggested: "gợi ý",
+      levelMix: "Trộn A1–C1",
+      levelMixNote: "xen kẽ mọi cấp độ",
       levelLeft: "còn {n} từ mới",
       levelAllStarted: "đã học hết",
       levelStarted: "đã bắt đầu {started}/{words}",

@@ -14,7 +14,7 @@ from psycopg_pool import ConnectionPool
 from app.api import vocab as vocab_routes
 from app.config import Settings
 from app.main import create_app
-from app.services.vocabulary import VocabPractice, start_of_day
+from app.services.vocabulary import VocabPractice, interleave, start_of_day
 from app.vocabulary.items import build_item, item_id, parse_item_id, pick
 from app.vocabulary.wordlist import load_wordlist
 
@@ -121,6 +121,16 @@ def test_max_level_and_limit_cap_the_new_words(setup: Setup) -> None:
     assert {e.card.level for e in a2.entries if e.card} == {"A2"}
     assert len(a2.entries) == min(a2_words, 10)  # the daily new-word limit
     assert len(practice.session(learner, "core-seed", limit=2, now=NOW).entries) == 2
+
+
+def test_without_a_chosen_level_new_words_take_turns_across_levels(setup: Setup) -> None:
+    assert interleave(["a1", "a2", "b1", "c1", "b2"], lambda w: {"a": 0, "b": 1, "c": 2}[w[0]]) == [
+        "a1", "b1", "c1", "a2", "b2",
+    ]  # fmt: skip  # easiest level first, each level in its own list order
+    practice, learner, _ = setup
+    mixed = practice.session(learner, "core-seed", max_level="C1", now=NOW)
+    levels = [e.card.level for e in mixed.entries if e.card]
+    assert levels[:4] == ["A2", "B1", "B2", "C1"] and len(set(levels)) == 4
 
 
 def test_a_card_for_a_word_no_longer_in_the_list_is_skipped(setup: Setup) -> None:
