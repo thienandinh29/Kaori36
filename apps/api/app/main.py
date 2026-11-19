@@ -234,6 +234,8 @@ def create_app(
                 settings.vocab_imported_dir,
                 settings.draft_item_learners,
                 service_score(settings.pronunciation_url) if settings.pronunciation_url else None,
+                lambda: app.state.pool,
+                settings.pronunciation_dir / "phone-tips.yaml",
             )
         )
     )

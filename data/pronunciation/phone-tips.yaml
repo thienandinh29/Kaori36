@@ -1,0 +1,80 @@
+# How to say each sound, and what to change when one sound keeps coming out as another
+# (specs/pronunciation/step-3.7b.md). DRAFT: written by the agent from general phonetics for Vietnamese learners of
+# British English, not from a checked source; shown as "Bản nháp, chưa được giáo viên duyệt" until a teacher reviews it
+# (dolater.md, "Pronunciation tips"). Phones are the recogniser's (app/pronunciation/word.py).
+phones:
+  iː: {how: "i dài: kéo môi sang hai bên như đang cười, lưỡi nâng cao, giữ âm lâu hơn chữ \"i\" tiếng Việt.", example: see}
+  ɪ: {how: "i ngắn và thả lỏng: miệng mở hơn /iː/ một chút, môi không kéo căng, nói thật ngắn.", example: sit}
+  i: {how: "i nhẹ ở âm không nhấn, như cuối từ happy: ngắn, không kéo dài.", example: happy}
+  ɛ: {how: "như \"e\" tiếng Việt, miệng mở vừa.", example: bed}
+  æ: {how: "hạ hàm dưới, mở miệng rộng, lưỡi thấp và đẩy ra trước: âm nằm giữa \"e\" và \"a\".", example: cat}
+  ʌ: {how: "như \"â\" ngắn tiếng Việt: miệng mở vừa, môi thả lỏng, nói gọn.", example: cup}
+  ɑː: {how: "như \"a\" tiếng Việt nhưng lưỡi lùi về sau, miệng mở to, môi không tròn, kéo dài.", example: car}
+  ɒ: {how: "o ngắn: miệng mở to, môi tròn nhẹ, lưỡi lùi sau, nói ngắn.", example: hot}
+  ɔː: {how: "o dài: tròn môi và chu môi ra trước, miệng mở vừa, giữ âm lâu. Gần \"o\" tiếng Việt nhưng tròn môi hơn và dài hơn.", example: law}
+  ʊ: {how: "u ngắn và thả lỏng: môi tròn nhẹ, nói ngắn.", example: book}
+  uː: {how: "u dài: chu tròn môi về trước, giữ âm lâu.", example: food}
+  u: {how: "u nhẹ ở âm không nhấn: ngắn, môi tròn nhẹ.", example: education}
+  ɜː: {how: "ơ dài: môi thả lỏng, không tròn, lưỡi ở giữa miệng, giữ âm lâu. Không uốn lưỡi (giọng Anh).", example: bird}
+  ə: {how: "ơ rất nhẹ và ngắn ở âm không nhấn; đừng đọc rõ thành \"a\" hay \"o\".", example: about}
+  eɪ: {how: "bắt đầu từ \"e\" rồi trượt sang \"i\", như \"ây\": phải nghe được phần trượt cuối.", example: day}
+  aɪ: {how: "như \"ai\" tiếng Việt.", example: my}
+  ɔɪ: {how: "như \"oi\" tiếng Việt.", example: boy}
+  aʊ: {how: "như \"ao\" tiếng Việt.", example: now}
+  əʊ: {how: "bắt đầu từ \"ơ\" rồi trượt sang \"u\" (giọng Anh): đừng giữ nguyên một âm \"ô\".", example: go}
+  iə: {how: "từ \"i\" trượt sang \"ơ\", như \"ia\".", example: near}
+  eə: {how: "từ \"e\" trượt sang \"ơ\" nhẹ; giọng Anh không uốn lưỡi ở cuối.", example: hair}
+  ʊə: {how: "từ \"u\" trượt sang \"ơ\", như \"ua\".", example: tour}
+  p: {how: "đầu từ: bật hơi mạnh (đặt tay trước miệng sẽ thấy hơi). Cuối từ: khép hai môi lại, đừng nuốt mất.", example: stop}
+  b: {how: "như \"b\" tiếng Việt, rung dây thanh.", example: big}
+  t: {how: "đầu lưỡi chạm lợi trên rồi bật ra. Ở cuối từ phải nghe được, đừng bỏ.", example: cat}
+  d: {how: "như /t/ nhưng rung dây thanh; ở cuối từ vẫn phải nghe được.", example: bed}
+  k: {how: "đầu từ: bật hơi. Cuối từ: cuống lưỡi chạm vòm mềm rồi bật nhẹ, đừng nuốt.", example: book}
+  ɡ: {how: "như \"g\" tiếng Việt nhưng bật rõ hơn, nhất là ở cuối từ.", example: dog}
+  f: {how: "răng trên chạm nhẹ môi dưới rồi thổi hơi.", example: fish}
+  v: {how: "như /f/ nhưng rung dây thanh: răng trên chạm môi dưới, cảm thấy rung.", example: very}
+  θ: {how: "đặt đầu lưỡi giữa hai hàm răng rồi thổi hơi, không rung. Đừng nói thành \"t\", \"s\" hay \"f\".", example: think}
+  ð: {how: "như /θ/ (lưỡi giữa hai hàm răng) nhưng rung dây thanh. Đừng nói thành \"d\" hay \"z\".", example: this}
+  s: {how: "xì rõ: đầu lưỡi gần lợi trên, răng gần khép. Âm /s/ cuối từ phải nghe được.", example: bus}
+  z: {how: "như /s/ nhưng rung dây thanh, như tiếng ong \"zzz\". Đừng đọc thành /s/ ở cuối từ.", example: dogs}
+  ʃ: {how: "chu môi ra trước, lưỡi lùi sau hơn /s/, như khi nói \"suỵt\".", example: ship}
+  ʒ: {how: "như /ʃ/ nhưng rung dây thanh.", example: vision}
+  tʃ: {how: "như \"ch\" nhưng bật mạnh hơn, môi chu ra trước.", example: chair}
+  dʒ: {how: "như /tʃ/ nhưng rung dây thanh, như \"j\" trong job; đừng đọc thành \"d\" hay \"z\".", example: job}
+  h: {how: "thở ra nhẹ, như \"h\" tiếng Việt.", example: hat}
+  m: {how: "như \"m\" tiếng Việt; ở cuối từ khép môi lại.", example: time}
+  n: {how: "như \"n\" tiếng Việt; ở cuối từ đặt đầu lưỡi lên lợi trên.", example: ten}
+  ŋ: {how: "như \"ng\" tiếng Việt; không thêm \"g\" phía sau.", example: sing}
+  l: {how: "đầu lưỡi chạm lợi trên. Ở cuối từ (feel, school) giữ lưỡi lâu hơn một chút, đừng bỏ.", example: light}
+  ɹ: {how: "cong nhẹ đầu lưỡi lên nhưng không chạm vòm miệng, môi hơi tròn; không rung lưỡi như \"r\" tiếng Việt.", example: red}
+  j: {how: "như âm \"d\" giọng miền Nam (\"y\").", example: yes}
+  w: {how: "chu tròn môi rồi mở ra nhanh, như \"qu\" trong \"qua\".", example: we}
+# What to change when the recogniser keeps hearing one sound as another ("expected>heard"), with a minimal pair to
+# hear the difference (first word: the right sound; second: the one heard).
+pairs:
+  "ɔː>ɑː": {tip: "Bạn đang mở miệng mà chưa tròn môi. /ɔː/ cần tròn và chu môi ra trước; /ɑː/ thì môi không tròn.", minimal: [caught, cart]}
+  "ɔː>ɒ": {tip: "Giữ âm lâu hơn và tròn môi hơn: /ɔː/ là âm dài.", minimal: [port, pot]}
+  "ɒ>ɔː": {tip: "Nói ngắn hơn, miệng mở rộng hơn.", minimal: [pot, port]}
+  "iː>ɪ": {tip: "Kéo môi sang hai bên như cười và giữ âm lâu hơn: /iː/ là âm dài.", minimal: [sheep, ship]}
+  "ɪ>iː": {tip: "Thả lỏng môi, nói ngắn lại: /ɪ/ là âm ngắn.", minimal: [ship, sheep]}
+  "uː>ʊ": {tip: "Chu môi tròn hơn và giữ âm lâu hơn.", minimal: [pool, pull]}
+  "ʊ>uː": {tip: "Nói ngắn và thả lỏng môi hơn.", minimal: [pull, pool]}
+  "æ>ɛ": {tip: "Hạ hàm dưới, mở miệng rộng hơn: /æ/ mở hơn /e/ nhiều.", minimal: [bad, bed]}
+  "ɛ>æ": {tip: "Khép miệng bớt lại, như \"e\" tiếng Việt.", minimal: [bed, bad]}
+  "ʌ>ɑː": {tip: "Nói ngắn hơn, lưỡi ở giữa miệng: /ʌ/ là âm ngắn.", minimal: [cut, cart]}
+  "ɑː>ʌ": {tip: "Mở miệng to hơn và giữ âm lâu hơn.", minimal: [cart, cut]}
+  "əʊ>ɔː": {tip: "Đừng giữ nguyên một âm \"ô\": bắt đầu từ \"ơ\" rồi trượt sang \"u\".", minimal: [coat, caught]}
+  "eɪ>ɛ": {tip: "Phải trượt sang \"i\" ở cuối âm, như \"ây\".", minimal: [late, let]}
+  "θ>t": {tip: "Đừng để lưỡi chạm lợi trên: đặt đầu lưỡi giữa hai hàm răng rồi thổi hơi.", minimal: [three, tree]}
+  "θ>s": {tip: "Đưa đầu lưỡi ra giữa hai hàm răng thay vì giữ sau răng.", minimal: [think, sink]}
+  "θ>f": {tip: "Dùng lưỡi, không dùng môi: lưỡi giữa hai hàm răng, môi dưới không chạm răng.", minimal: [three, free]}
+  "ð>d": {tip: "Đầu lưỡi giữa hai hàm răng, rung dây thanh, đừng chạm lợi trên.", minimal: [they, day]}
+  "ð>z": {tip: "Đưa đầu lưỡi ra giữa hai hàm răng.", minimal: [breathe, breeze]}
+  "ʃ>s": {tip: "Chu môi ra trước và lùi lưỡi lại, như \"suỵt\".", minimal: [ship, sip]}
+  "s>ʃ": {tip: "Kéo môi sang hai bên, đầu lưỡi gần lợi trên hơn.", minimal: [sip, ship]}
+  "tʃ>ʃ": {tip: "Chặn hơi bằng lưỡi trước rồi mới bật ra, như \"ch\".", minimal: [chip, ship]}
+  "ɹ>l": {tip: "Đầu lưỡi không chạm lợi trên: cong lưỡi lên, môi hơi tròn.", minimal: [right, light]}
+  "l>ɹ": {tip: "Cho đầu lưỡi chạm hẳn lợi trên.", minimal: [light, right]}
+  "z>s": {tip: "Rung dây thanh (đặt tay lên cổ sẽ thấy rung) và kéo dài âm cuối một chút.", minimal: [rise, rice]}
+  "v>f": {tip: "Rung dây thanh: răng trên chạm môi dưới và cảm thấy rung.", minimal: [van, fan]}
+dropped: "Bạn đang bỏ mất âm này. Nói chậm từng âm một, giữ âm cuối rõ ràng trước khi dừng, rồi nói lại cả từ."

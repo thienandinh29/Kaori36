@@ -113,3 +113,103 @@ def test_bad_audio_gets_advice_and_a_refused_alignment_is_said_plainly() -> None
     assert quiet["ok"] is False and quiet["problems"] == ["too_quiet"]
     out = asyncio.run(s.say(OWNER, "choose:verb", "voice-v1", speech()))
     assert out == {"ok": False, "problems": ["not_analysed"], "phones": []}
+
+
+# --- Step 3.7b: guidance from repeated attempts, and sounds to focus on ---
+import yaml  # type: ignore[import-untyped]  # noqa: E402
+
+from app.pronunciation.word import closeness, focus, repeated  # noqa: E402
+
+TIPS = DATA / "data" / "pronunciation" / "phone-tips.yaml"
+
+
+def attempt(*phones: tuple[str, float, str | None, bool]) -> list[dict[str, Any]]:
+    return [{"phone": p, "gop": g, "heard": h, "dropped": d} for p, g, h, d in phones]
+
+
+GOOD = attempt(("p", -0.1, None, False), ("ɔː", -0.2, None, False), ("t", -0.1, None, False))
+ORAL = attempt(("p", -0.1, None, False), ("ɔː", -1.5, "ɑː", False), ("t", -0.1, None, False))
+DROP = attempt(("p", -0.1, None, False), ("ɔː", -0.2, None, False), ("t", -9.0, None, True))
+
+
+def test_closeness_matches_the_web_and_low_is_under_70() -> None:
+    assert (closeness(0), closeness(-3), closeness(-30)) == (100, 37, 0)
+    assert closeness(-1.5) < 70 < closeness(-0.2)
+
+
+def test_a_sound_low_twice_in_the_last_three_attempts_gets_a_guide() -> None:
+    assert repeated([ORAL]) == []  # once is not a pattern
+    assert repeated([GOOD, ORAL, ORAL])[0]["times"] == 2  # newest fine, still a pattern
+    g = repeated([ORAL, GOOD, ORAL])
+    assert [(x["phone"], x["heard"], x["times"], x["of"]) for x in g] == [("ɔː", "ɑː", 2, 3)]
+    assert repeated([ORAL, GOOD, GOOD, ORAL]) == []  # only the last three count
+    d = repeated([DROP, DROP])
+    assert d[0]["phone"] == "t" and d[0]["dropped"] is True and d[0]["heard"] is None
+    other_word = attempt(("k", -5.0, "g", False))
+    assert repeated([ORAL, other_word, ORAL])[0]["of"] == 2  # a different sound sequence is skipped
+
+
+def test_focus_ranks_sounds_by_how_often_they_are_low() -> None:
+    rows = focus([ORAL, ORAL, ORAL, GOOD, DROP])
+    assert [(r["phone"], r["low"], r["seen"], r["heard"]) for r in rows] == [
+        ("ɔː", 3, 5, "ɑː"),
+        ("t", 1, 5, None),
+    ]
+    assert focus([ORAL, ORAL]) == []  # seen fewer than 3 times: not enough to say
+
+
+def test_every_sound_has_a_tip_and_every_pair_names_known_sounds() -> None:
+    tips = yaml.safe_load(TIPS.read_text(encoding="utf-8"))
+    assert set(tips["phones"]) == RECOGNISER
+    assert all(t["how"] and t["example"] for t in tips["phones"].values())
+    for key, pair in tips["pairs"].items():
+        expected, heard = key.split(">")
+        assert {expected, heard} <= RECOGNISER, key
+        assert pair["tip"] and len(pair["minimal"]) == 2
+    assert tips["dropped"]
+
+
+def test_attempts_are_kept_without_audio_and_guide_the_next_try(database_url: str) -> None:
+    from psycopg_pool import ConnectionPool
+
+    pool = ConnectionPool(database_url, open=True)
+    with pool.connection() as conn:
+        row = conn.execute("insert into learners(display_name) values ('S') returning id::text")
+        learner = row.fetchone()
+        assert learner is not None
+    seq = iter([-1.5, -0.2, -1.6])  # ɔː low, fine, low again
+
+    def score(audio: bytes, phones: list[str]) -> dict[str, Any]:
+        g = next(seq)
+        return {"recognised": [], "phones": [
+            {"phone": p, "gop": g if p == "ɔː" else -0.1,
+             "competitor": "ɑː" if p == "ɔː" and g < -1 else None,
+             "peak": 0.8, "other_peak": 0.1}
+            for p in phones
+        ]}  # fmt: skip
+
+    s = WordSay(VOCAB, IMPORTED, learner[0], score, lambda: pool, TIPS)
+    outs = [
+        asyncio.run(s.say(learner[0], "important:adjective", "voice-v1", speech()))
+        for _ in range(3)
+    ]
+    assert outs[0]["guide"] == [] and outs[1]["guide"] == []
+    guide = outs[2]["guide"][0]
+    assert (guide["phone"], guide["heard"], guide["times"]) == ("ɔː", "ɑː", 2)
+    assert "tròn" in guide["change"] and guide["minimal"] == ["caught", "cart"] and guide["how"]
+    assert all(p["how"] for p in outs[2]["phones"])
+    with pool.connection() as conn:
+        cols = [
+            r[0]
+            for r in conn.execute(
+                "select column_name from information_schema.columns where table_name='say_attempts'"
+            ).fetchall()
+        ]
+        n = conn.execute("select count(*) from say_attempts where learner_id=%s", (learner[0],))
+        assert n.fetchone() == (3,)
+    assert not any("audio" in c for c in cols)  # never the recording
+    f = s.focus(learner[0])
+    assert f["attempts"] == 3 and f["sounds"][0]["phone"] == "ɔː" and f["sounds"][0]["how"]
+    with pool.connection() as conn:
+        conn.execute("delete from say_attempts")
+    pool.close()

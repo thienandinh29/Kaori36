@@ -12,6 +12,7 @@ import type {
 } from "@/lib/pronunciation/types";
 import { vi } from "@/messages/vi";
 import { Problem } from "@/components/english/problem";
+import { SayFocus } from "./say-focus";
 import { SpeakButton } from "@/components/english/speak-button";
 import { useLearner } from "@/components/english/use-learner";
 
@@ -372,6 +373,7 @@ export function PronunciationPage() {
 
   return (
     <>
+      {data.can_record && <SayFocus learner={learner} />}
       <section className="en-card nt-pron" data-testid="pronunciation">
         <h1>{t.title}</h1>
         <p className="en-muted">{t.intro}</p>

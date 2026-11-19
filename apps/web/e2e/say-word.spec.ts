@@ -42,11 +42,45 @@ test("a learner says a word, hears it back, and the owner sees each sound", asyn
         ok: true,
         problems: [],
         phones: [
-          { phone: "tʃ", gop: -0.2, heard: null, dropped: false },
-          { phone: "uː", gop: -4.0, heard: "ʊ", dropped: false },
-          { phone: "z", gop: -7.0, heard: "s", dropped: true },
+          {
+            phone: "tʃ",
+            gop: -0.2,
+            closeness: 94,
+            heard: null,
+            dropped: false,
+            how: "như ch",
+          },
+          {
+            phone: "uː",
+            gop: -4.0,
+            closeness: 26,
+            heard: "ʊ",
+            dropped: false,
+            how: "u dài: chu tròn môi",
+          },
+          {
+            phone: "z",
+            gop: -7.0,
+            closeness: 10,
+            heard: "s",
+            dropped: true,
+            how: "rung dây thanh",
+          },
         ],
         heard: ["tʃ", "ʊ"],
+        guide: [
+          {
+            index: 1,
+            phone: "uː",
+            times: 2,
+            of: 3,
+            heard: "ʊ",
+            dropped: false,
+            how: "u dài: chu tròn môi",
+            change: "Chu môi tròn hơn và giữ âm lâu hơn.",
+            minimal: ["pool", "pull"],
+          },
+        ],
       }),
     });
   });
@@ -63,8 +97,20 @@ test("a learner says a word, hears it back, and the owner sees each sound", asyn
   await say.getByRole("button", { name: "Tôi đồng ý" }).click();
   await say.getByRole("button", { name: "Phân tích từng âm" }).click();
   const result = say.getByTestId("say-result");
-  await expect(result).toContainText("bỏ mất âm");
-  await expect(result).toContainText("nghe giống ʊ");
+  // The word's IPA, each sound coloured; a tap shows the score, what was heard and how to say it.
+  const phones = result.locator(".nt-ipa-phone");
+  await expect(phones).toHaveText(["tʃ", "uː", "z"]);
+  await expect(phones.nth(2)).toHaveClass(/is-dropped/);
+  await phones.nth(1).click();
+  const detail = result.getByTestId("phone-detail");
+  await expect(detail).toContainText("26/100");
+  await expect(detail).toContainText("nghe giống /ʊ/");
+  await expect(detail).toContainText("chu tròn môi");
+  // The same sound low twice in the last three tries: a guide with a pair to hear.
+  const guide = result.getByTestId("say-guide");
+  await expect(guide).toContainText("Âm /uː/ chưa chuẩn 2/3 lần gần đây");
+  await expect(guide).toContainText("pool");
+  await expect(guide).toContainText("bản nháp");
   await expect(result).toContainText("chưa phải điểm đúng sai");
   expect(sent).toHaveLength(1);
   expect(sent[0]).toMatch(/^[a-z' -]+:[a-z]+\|voice-v1$/);

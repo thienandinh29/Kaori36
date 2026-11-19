@@ -68,7 +68,7 @@ reviewer portal (V2) exists, they can work from the same sheets and pages.
 | [ ] Grammar: items on the portal (`make-batch --content grammar_item --size 40`), answered blind then the key judged; the misconception texts (`data/items/misconceptions.vi.yaml`) still by sheet | English teacher | 2–3 h | Items served beyond you |
 | [ ] Writing: the error-type → node table (`data/writing/error-map.yaml`) and the 100-error mapping check | English teacher | 2 h | Writing evidence on grammar nodes |
 | [ ] Lessons: the sample lesson; the source gaps (there is/are, used to, nominalisation, participle clauses, cleft sentences, hedging, impersonal passive) | English teacher | 1–2 h | New milestones' lessons |
-| [ ] Pronunciation tips: a Vietnamese `tip_vi` for each of the 14 sounds (`data/pronunciation/sounds.yaml`) | English or phonetics teacher | 1 h | Tips on `/phat-am` |
+| [ ] Pronunciation tips: a Vietnamese `tip_vi` for each of the 14 sounds (`data/pronunciation/sounds.yaml`), and review the draft `data/pronunciation/phone-tips.yaml` (how to say 46 sounds, 25 common confusions with minimal pairs; shown as guides when a word's sound stays low) | English or phonetics teacher | 2 h | Tips on `/phat-am` and the word guides |
 | [ ] Speaking (phase 5): ratings of 30+ recordings | IELTS rater | 3 h | Any Speaking band |
 | [ ] Testers: try the app and report what breaks or confuses | 3–5 testers | 1 h each | Wider use |
 
