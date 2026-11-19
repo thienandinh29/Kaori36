@@ -1,0 +1,659 @@
+{
+ "date": "2026-11-19",
+ "machine": "cloud container, 4 CPUs, int8 (faster-whisper) / float32 (transformers)",
+ "audio": "50 recordings, 153 s, the self-hosted Piper voice: 12 read-aloud prompts clean and at 10 dB SNR, 20 learner-error sentences, 6 with fillers",
+ "texts": [
+  {
+   "set": "read",
+   "ref": "I put the book on the desk and stopped to help my friend."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "I put the book on the desk and stopped to help my friend."
+  },
+  {
+   "set": "read",
+   "ref": "She buys two cups of tea and plays with her dogs."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "She buys two cups of tea and plays with her dogs."
+  },
+  {
+   "set": "read",
+   "ref": "This is the third thing that my mother thinks about."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "This is the third thing that my mother thinks about."
+  },
+  {
+   "set": "read",
+   "ref": "She sells fresh fish at the shop by the sea."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "She sells fresh fish at the shop by the sea."
+  },
+  {
+   "set": "read",
+   "ref": "Jane chose a cheap jacket for the journey."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "Jane chose a cheap jacket for the journey."
+  },
+  {
+   "set": "read",
+   "ref": "The red light on the left road is really bright."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "The red light on the left road is really bright."
+  },
+  {
+   "set": "read",
+   "ref": "He texts his friends about the street market every month."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "He texts his friends about the street market every month."
+  },
+  {
+   "set": "read",
+   "ref": "We need to keep the sheep in the green field."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "We need to keep the sheep in the green field."
+  },
+  {
+   "set": "read",
+   "ref": "The new school pool is too cool for the students."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "The new school pool is too cool for the students."
+  },
+  {
+   "set": "read",
+   "ref": "The man had a bad bed and a black hat."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "The man had a bad bed and a black hat."
+  },
+  {
+   "set": "read",
+   "ref": "I think the best part of the test was the last question."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "I think the best part of the test was the last question."
+  },
+  {
+   "set": "read",
+   "ref": "Learning English really helps me travel and read the news."
+  },
+  {
+   "set": "read-noisy",
+   "ref": "Learning English really helps me travel and read the news."
+  },
+  {
+   "set": "errors",
+   "ref": "She go to school by bus every day."
+  },
+  {
+   "set": "errors",
+   "ref": "Yesterday I buy a new phone."
+  },
+  {
+   "set": "errors",
+   "ref": "He don't like spicy food."
+  },
+  {
+   "set": "errors",
+   "ref": "I have went to Da Nang last summer."
+  },
+  {
+   "set": "errors",
+   "ref": "There is many people in the market."
+  },
+  {
+   "set": "errors",
+   "ref": "I am agree with this idea."
+  },
+  {
+   "set": "errors",
+   "ref": "My sister have two cat."
+  },
+  {
+   "set": "errors",
+   "ref": "He can speaks English very well."
+  },
+  {
+   "set": "errors",
+   "ref": "I am study at university now."
+  },
+  {
+   "set": "errors",
+   "ref": "The weather is more hotter than last year."
+  },
+  {
+   "set": "errors",
+   "ref": "I didn't went to class yesterday."
+  },
+  {
+   "set": "errors",
+   "ref": "She is very interesting in music."
+  },
+  {
+   "set": "errors",
+   "ref": "We was very tired after the trip."
+  },
+  {
+   "set": "errors",
+   "ref": "Many student live in dormitory."
+  },
+  {
+   "set": "errors",
+   "ref": "I look forward to meet you."
+  },
+  {
+   "set": "errors",
+   "ref": "If I will have time, I will call you."
+  },
+  {
+   "set": "errors",
+   "ref": "He suggested me to go home."
+  },
+  {
+   "set": "errors",
+   "ref": "I have lived here since five years."
+  },
+  {
+   "set": "errors",
+   "ref": "Childrens like playing games."
+  },
+  {
+   "set": "errors",
+   "ref": "This is the most good restaurant in town."
+  },
+  {
+   "set": "fillers",
+   "ref": "Um, I think the city is, uh, very crowded."
+  },
+  {
+   "set": "fillers",
+   "ref": "Well, uh, I usually study in the evening."
+  },
+  {
+   "set": "fillers",
+   "ref": "Um, my hometown is, um, quite small."
+  },
+  {
+   "set": "fillers",
+   "ref": "I, uh, I like reading books."
+  },
+  {
+   "set": "fillers",
+   "ref": "So, um, the main reason is money."
+  },
+  {
+   "set": "fillers",
+   "ref": "Uh, I would say, um, it depends."
+  }
+ ],
+ "results": {
+  "faster-whisper tiny.en": {
+   "load_s": 0.7,
+   "peak_rss_mb": 278,
+   "rtf": 0.125,
+   "wer_read": 0.008,
+   "wer_read-noisy": 0.129,
+   "wer_errors": 0.132,
+   "errors_verbatim": "12/20",
+   "errors_kept": "13/20",
+   "errors_hidden": [
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "I have went to Da Nang last summer.",
+     "I went down and lost summer."
+    ],
+    [
+     "He can speaks English very well.",
+     "He can speak English very well."
+    ],
+    [
+     "The weather is more hotter than last year.",
+     "The weather is more hot as in last year."
+    ],
+    [
+     "She is very interesting in music.",
+     "She's very interested in music."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games"
+    ]
+   ],
+   "fillers_kept": "1/9",
+   "timestamps": true
+  },
+  "faster-whisper base.en": {
+   "load_s": 9.5,
+   "peak_rss_mb": 434,
+   "rtf": 0.181,
+   "wer_read": 0.0,
+   "wer_read-noisy": 0.032,
+   "wer_errors": 0.132,
+   "errors_verbatim": "10/20",
+   "errors_kept": "11/20",
+   "errors_hidden": [
+    [
+     "Yesterday I buy a new phone.",
+     "Yesterday I'd buy a new phone"
+    ],
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "I have went to Da Nang last summer.",
+     "I've went dawn and lost summer."
+    ],
+    [
+     "My sister have two cat.",
+     "My sister have two cats"
+    ],
+    [
+     "He can speaks English very well.",
+     "He can speak English very well."
+    ],
+    [
+     "She is very interesting in music.",
+     "Sheen is very interested in music."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "I have lived here since five years.",
+     "I have lived here since 5 years."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games"
+    ]
+   ],
+   "fillers_kept": "5/9",
+   "timestamps": true
+  },
+  "faster-whisper base.en + prompt": {
+   "load_s": 6.9,
+   "peak_rss_mb": 572,
+   "rtf": 1.047,
+   "wer_read": 0.202,
+   "wer_read-noisy": 0.185,
+   "wer_errors": 0.488,
+   "errors_verbatim": "3/20",
+   "errors_kept": "13/20",
+   "errors_hidden": [
+    [
+     "Yesterday I buy a new phone.",
+     "Yesterday I'd buy a new phone."
+    ],
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "I have went to Da Nang last summer.",
+     "I've went dawn and lost summer."
+    ],
+    [
+     "He can speaks English very well.",
+     "He can speak English very well. Thanks for taking the rest of our time here at SDSU. It's been a while. And we brought you the announcement."
+    ],
+    [
+     "She is very interesting in music.",
+     "She is very interested in music. music."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory. See you next week! See you next week! Happy New Year! Happy New Year!"
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games. . ."
+    ]
+   ],
+   "fillers_kept": "5/9",
+   "timestamps": true
+  },
+  "faster-whisper distil-small.en": {
+   "load_s": 17.6,
+   "peak_rss_mb": 723,
+   "rtf": 0.349,
+   "wer_read": 0.0,
+   "wer_read-noisy": 0.056,
+   "wer_errors": 0.093,
+   "errors_verbatim": "11/20",
+   "errors_kept": "13/20",
+   "errors_hidden": [
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "I am agree with this idea.",
+     "I agree with this idea"
+    ],
+    [
+     "My sister have two cat.",
+     "My sister have two cats."
+    ],
+    [
+     "He can speaks English very well.",
+     "He can speak English very well."
+    ],
+    [
+     "I am study at university now.",
+     "I am studying at university now."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children like playing games."
+    ]
+   ],
+   "fillers_kept": "5/9",
+   "timestamps": true
+  },
+  "faster-whisper small.en": {
+   "load_s": 22.7,
+   "peak_rss_mb": 953,
+   "rtf": 0.459,
+   "wer_read": 0.008,
+   "wer_read-noisy": 0.04,
+   "wer_errors": 0.093,
+   "errors_verbatim": "10/20",
+   "errors_kept": "13/20",
+   "errors_hidden": [
+    [
+     "Yesterday I buy a new phone.",
+     "Yesterday I'd buy a new phone."
+    ],
+    [
+     "He don't like spicy food.",
+     "You don't like spicy food."
+    ],
+    [
+     "My sister have two cat.",
+     "My sister have two cats"
+    ],
+    [
+     "He can speaks English very well.",
+     "He can speak English very well."
+    ],
+    [
+     "We was very tired after the trip.",
+     "We were very tired after the trip."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games."
+    ]
+   ],
+   "fillers_kept": "6/9",
+   "timestamps": true
+  },
+  "faster-whisper small.en + prompt": {
+   "load_s": 20.0,
+   "peak_rss_mb": 946,
+   "rtf": 0.471,
+   "wer_read": 0.008,
+   "wer_read-noisy": 0.048,
+   "wer_errors": 0.062,
+   "errors_verbatim": "15/20",
+   "errors_kept": "16/20",
+   "errors_hidden": [
+    [
+     "Yesterday I buy a new phone.",
+     "Yesterday I'd buy a new phone."
+    ],
+    [
+     "I have went to Da Nang last summer.",
+     "I went to Dhanang last summer."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games."
+    ]
+   ],
+   "fillers_kept": "8/9",
+   "timestamps": true
+  },
+  "faster-whisper large-v3-turbo": {
+   "load_s": 58.9,
+   "peak_rss_mb": 2165,
+   "rtf": 1.213,
+   "wer_read": 0.0,
+   "wer_read-noisy": 0.008,
+   "wer_errors": 0.093,
+   "errors_verbatim": "12/20",
+   "errors_kept": "15/20",
+   "errors_hidden": [
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "I have went to Da Nang last summer.",
+     "I went to Da Nang last summer."
+    ],
+    [
+     "He can speaks English very well.",
+     "\"'He can speak English very well.'"
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games."
+    ]
+   ],
+   "fillers_kept": "6/9",
+   "timestamps": true
+  },
+  "faster-whisper large-v3-turbo + prompt": {
+   "load_s": 3.1,
+   "peak_rss_mb": 2041,
+   "rtf": 1.225,
+   "wer_read": 0.0,
+   "wer_read-noisy": 0.008,
+   "wer_errors": 0.078,
+   "errors_verbatim": "13/20",
+   "errors_kept": "15/20",
+   "errors_hidden": [
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "I have went to Da Nang last summer.",
+     "I went to Danang last summer."
+    ],
+    [
+     "He can speaks English very well.",
+     "He can speak English very well."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games."
+    ]
+   ],
+   "fillers_kept": "8/9",
+   "timestamps": true
+  },
+  "moonshine-tiny": {
+   "load_s": 0.4,
+   "peak_rss_mb": 507,
+   "rtf": 0.028,
+   "wer_read": 0.024,
+   "wer_read-noisy": 0.169,
+   "wer_errors": 0.109,
+   "errors_verbatim": "11/20",
+   "errors_kept": "12/20",
+   "errors_hidden": [
+    [
+     "Yesterday I buy a new phone.",
+     "Yesterday I'd buy a new phone."
+    ],
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "My sister have two cat.",
+     "My sister have two cats."
+    ],
+    [
+     "I am study at university now.",
+     "I am studying at university now."
+    ],
+    [
+     "I didn't went to class yesterday.",
+     "I didn't win to class yesterday."
+    ],
+    [
+     "She is very interesting in music.",
+     "She and his very interesting and music."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games."
+    ]
+   ],
+   "fillers_kept": "3/9",
+   "timestamps": false
+  },
+  "moonshine-base": {
+   "load_s": 0.4,
+   "peak_rss_mb": 645,
+   "rtf": 0.044,
+   "wer_read": 0.0,
+   "wer_read-noisy": 0.113,
+   "wer_errors": 0.116,
+   "errors_verbatim": "9/20",
+   "errors_kept": "9/20",
+   "errors_hidden": [
+    [
+     "Yesterday I buy a new phone.",
+     "Yesterday I'd buy a new phone."
+    ],
+    [
+     "He don't like spicy food.",
+     "He didn't like spicy food."
+    ],
+    [
+     "I have went to Da Nang last summer.",
+     "I went down and lost summer."
+    ],
+    [
+     "I am agree with this idea.",
+     "I agree with this idea."
+    ],
+    [
+     "My sister have two cat.",
+     "My sister have two cats."
+    ],
+    [
+     "He can speaks English very well.",
+     "He can speak English very well."
+    ],
+    [
+     "I am study at university now.",
+     "I am studying at university now."
+    ],
+    [
+     "I didn't went to class yesterday.",
+     "I didn't want to class yesterday."
+    ],
+    [
+     "She is very interesting in music.",
+     "She is very interesting and music."
+    ],
+    [
+     "Many student live in dormitory.",
+     "Many students live in dormitory."
+    ],
+    [
+     "Childrens like playing games.",
+     "Children's like playing games."
+    ]
+   ],
+   "fillers_kept": "5/9",
+   "timestamps": false
+  },
+  "wav2vec2-large-960h-lv60-self": {
+   "load_s": 0.6,
+   "peak_rss_mb": 1729,
+   "rtf": 0.128,
+   "wer_read": 0.032,
+   "wer_read-noisy": 0.137,
+   "wer_errors": 0.07,
+   "errors_verbatim": "13/20",
+   "errors_kept": "16/20",
+   "errors_hidden": [
+    [
+     "I am agree with this idea.",
+     "I AGREE WITH THIS IDEA"
+    ],
+    [
+     "He can speaks English very well.",
+     "HE CAN SPEAK ENGLISH VERY WELL"
+    ],
+    [
+     "Many student live in dormitory.",
+     "MANY STUDENTS LIVE IN DORMITORY"
+    ],
+    [
+     "Childrens like playing games.",
+     "CHILDREN'S LIKE PLAYING GAMES"
+    ]
+   ],
+   "fillers_kept": "5/9",
+   "timestamps": true
+  }
+ }
+}
