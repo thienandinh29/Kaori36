@@ -50,7 +50,7 @@ Chi tiết và cổng đo của từng giai đoạn: [`docs/v2/plan-english-pack
 | 1 | Lộ trình, kiểm tra trình độ, từ vựng, ngữ pháp | Đã làm; chờ duyệt câu hỏi và đo độ chính xác xếp trình độ |
 | 2 | Viết (Task 2, rồi Task 1) | Đã làm (2.1–2.5); cổng đo chờ bài viết có điểm giám khảo |
 | 3 | Phát âm | Đã làm (3.1–3.5a); cổng đo chờ nhãn của người có chuyên môn ngữ âm trên 50–100 bản ghi |
-| 4 | Đọc và Nghe | Đang làm: lấy bài đọc, tạo câu hỏi, kiểm chứng mù và hàng duyệt đã có; trang luyện Đọc đã có (19/11); chờ bài đọc |
+| 4 | Đọc và Nghe | Đang làm: lấy bài đọc, tạo câu hỏi, kiểm chứng mù và hàng duyệt đã có; trang luyện Đọc đã có (19/11); 10 bài đọc OpenStax và 49 câu hỏi đầu tiên đã tạo và kiểm chứng mù, chờ duyệt |
 | Song song | Hệ thống kiểm chứng (nhãn Vàng/Bạc/Đồng, cổng duyệt cho giáo viên, nghiên cứu tiến bộ cá nhân); hai bản đồ và «Hôm nay» | Đã làm |
 | 5 | Nói, và mở cho người dùng thử | Đã có đặc tả |
 
