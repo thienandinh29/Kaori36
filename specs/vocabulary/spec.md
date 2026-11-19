@@ -50,6 +50,10 @@ The owner's request: see the words by level and choose where new words come from
 - Web (`/tu-vung`): a picker of the levels with how many words are left and started; the suggested one is marked and
   chosen by default; the choice is remembered in this browser. When a level is used up, the page says so and points to
   another level.
+- **Mixed levels (19 Nov 2026, the owner's request).** Without `level`, new words now take turns across the levels up to
+  the cap (A1, A2, B1, B2, C1, then the next word of each), easiest first and each level in its own list order, instead
+  of finishing the list in file order. The web's first chip, "Trộn A1–C1", asks for exactly that (`max_level=C1`) and
+  is the default when this browser has no choice stored; a single level stays one tap away.
 - The 30-word seed list stays the content until a licensed larger list is imported (`data/sources/english-candidates.yaml`:
   NGSL and NAWL wait on the owner's licence check).
 

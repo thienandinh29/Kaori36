@@ -242,14 +242,16 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     },
     async vocabSession(
       learnerId: string,
-      chosen?: Level,
+      chosen?: Level | "mix",
       topic?: string,
     ): Promise<VocabSession> {
       const q = new URLSearchParams({
         learner_id: learnerId,
         list: VOCAB_LIST,
       });
-      if (chosen) q.set("level", chosen);
+      // "mix": new words from every level in turn, A1 to C1 (the server interleaves them)
+      if (chosen === "mix") q.set("max_level", "C1");
+      else if (chosen) q.set("level", chosen);
       if (topic) q.set("topic", topic);
       return parseVocabSession(await request(`vocab/session?${q}`));
     },

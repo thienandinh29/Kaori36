@@ -24,7 +24,11 @@ import { Problem } from "./problem";
 import { QuestionCard } from "./question-card";
 import { TraceNote } from "./trace-note";
 import { useLearner } from "./use-learner";
-import { VocabLevelPicker, VocabTopicPicker } from "./vocab-levels";
+import {
+  type LevelChoice,
+  VocabLevelPicker,
+  VocabTopicPicker,
+} from "./vocab-levels";
 import { SpeakButton } from "./speak-button";
 import { WordCard } from "./word-card";
 import { originLabels } from "@/lib/english/word-origin";
@@ -41,20 +45,19 @@ function storedTopic(): string {
   }
 }
 
-/** Keep the chosen level when this topic has it, else the stored one, the suggestion, the first. */
-function levelFor(l: VocabLevels, current: Level | null): Level | null {
-  const has = (x: Level | null) => !!x && l.levels.some((v) => v.level === x);
-  if (has(current)) return current;
-  const stored = storedLevel(l);
-  if (stored) return stored;
-  if (has(l.suggested)) return l.suggested;
-  return l.levels[0]?.level ?? null;
+/** Keep the chosen level when this topic has it, else the stored one, else every level mixed. */
+function levelFor(l: VocabLevels, current: LevelChoice | null): LevelChoice {
+  const has = (x: LevelChoice | null) =>
+    x === "mix" || (!!x && l.levels.some((v) => v.level === x));
+  if (has(current)) return current as LevelChoice;
+  return storedLevel(l) ?? "mix";
 }
 
 /** The level this browser chose before, if it is still one the list has. */
-function storedLevel(levels: VocabLevels): Level | null {
+function storedLevel(levels: VocabLevels): LevelChoice | null {
   try {
     const saved = window.localStorage.getItem(LEVEL_KEY);
+    if (saved === "mix") return "mix";
     return levels.levels.some((l) => l.level === saved)
       ? (saved as Level)
       : null;
@@ -84,7 +87,7 @@ export function VocabSession() {
   const [error, setError] = useState<unknown>(null);
   const [version, setVersion] = useState(0);
   const [levels, setLevels] = useState<VocabLevels | null>(null);
-  const [chosen, setChosen] = useState<Level | null>(null);
+  const [chosen, setChosen] = useState<LevelChoice | null>(null);
   // Read once in the browser (null on the server); the pickers only render after a client fetch.
   const [topic, setTopic] = useState<string | null>(() =>
     typeof window === "undefined" ? null : storedTopic(),
@@ -142,7 +145,7 @@ export function VocabSession() {
     setTopic(next);
   }
 
-  function choose(level: Level) {
+  function choose(level: LevelChoice) {
     try {
       window.localStorage.setItem(LEVEL_KEY, level);
     } catch {
@@ -251,7 +254,10 @@ export function VocabSession() {
                   session.new_available,
                 ) === "done"
               ? t.vocab.empty
-              : t.vocab.noMoreAtLevel.replace("{level}", chosen ?? "")}
+              : t.vocab.noMoreAtLevel.replace(
+                  "{level}",
+                  chosen === "mix" ? "A1–C1" : (chosen ?? ""),
+                )}
         </p>
       </>
     );

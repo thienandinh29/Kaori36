@@ -4,6 +4,9 @@ import { vi } from "@/messages/vi";
 
 const t = vi.english.vocab;
 
+/** A level, or every level A1–C1 in turn ("mix", the default). */
+export type LevelChoice = Level | "mix";
+
 /** Choose the level new words come from (specs/vocabulary, levels). Due reviews come first anyway. */
 export function VocabLevelPicker({
   levels,
@@ -11,13 +14,27 @@ export function VocabLevelPicker({
   onChoose,
 }: {
   levels: Levels;
-  chosen: Level;
-  onChoose: (level: Level) => void;
+  chosen: LevelChoice;
+  onChoose: (level: LevelChoice) => void;
 }) {
+  const all = levels.levels.reduce(
+    (n, l) => n + Math.max(l.words - l.started, 0),
+    0,
+  );
   return (
     <div className="nt-levels" role="group" aria-label={t.levelPick}>
       <p className="en-muted">{t.levelPick}</p>
       <div className="nt-levels-row">
+        <button
+          type="button"
+          aria-pressed={chosen === "mix"}
+          className={chosen === "mix" ? "is-chosen" : undefined}
+          onClick={() => onChoose("mix")}
+        >
+          <strong>{t.levelMix}</strong>
+          <small>{t.levelLeft.replace("{n}", String(all))}</small>
+          <small>{t.levelMixNote}</small>
+        </button>
         {levels.levels.map((l) => {
           const left = l.words - l.started;
           return (

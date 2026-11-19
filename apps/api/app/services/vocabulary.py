@@ -5,7 +5,7 @@ no session state. FSRS decides when a word returns (`engine.srs`); there is no B
 prerequisite graph for words.
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
@@ -94,6 +94,19 @@ def learning_level(conn: psycopg.Connection[Any], learner: UUID) -> str:
         (learner,),
     ).fetchone()
     return next_level(found[0]) if found and found[0] in LEVELS else "C1"
+
+
+def interleave[W](words: Sequence[W], level_of: Callable[[W], int]) -> list[W]:
+    """New words from several levels taken in turn, easiest level first, each level keeping its
+    list order (most useful first), so a session mixes levels instead of finishing one first."""
+    queues: dict[int, list[W]] = {}
+    for w in words:
+        queues.setdefault(level_of(w), []).append(w)
+    out: list[W] = []
+    rows = [queues[k] for k in sorted(queues)]
+    for i in range(max((len(r) for r in rows), default=0)):
+        out.extend(r[i] for r in rows if i < len(r))
+    return out
 
 
 def start_of_day(now: datetime) -> datetime:
@@ -200,7 +213,7 @@ class VocabPractice:
             chosen = LEVELS.index(level)
             fresh = [w for w in pool if wl.level_index(w) == chosen]
         else:
-            fresh = [w for w in pool if wl.level_index(w) <= top]
+            fresh = interleave([w for w in pool if wl.level_index(w) <= top], wl.level_index)
         for word in fresh[: min(new_left, max(limit - len(entries), 0))]:
             kind, n = "recall", 0  # new words: flashcards first, then typed from memory
             item = vitems.build_item(wl, word, kind, n)
