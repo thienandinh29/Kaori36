@@ -22,6 +22,12 @@ import {
   type TextSummary,
 } from "@/lib/reading/practice";
 import {
+  parseSayResult,
+  parseSayStatus,
+  type SayResult,
+  type SayStatus,
+} from "@/lib/english/say-word";
+import {
   parseShadowText,
   parseShadowTexts,
   type ShadowText,
@@ -433,6 +439,26 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseListeningText(
         await request(`listening/texts/${encodeURIComponent(slug)}?${q}`),
+      );
+    },
+    /** Saying a vocabulary word (specs/pronunciation/step-3.7.md). */
+    async sayStatus(learnerId: string): Promise<SayStatus> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseSayStatus(await request(`vocab/say/status?${q}`));
+    },
+    async sayWord(
+      learnerId: string,
+      word: string,
+      consent: string,
+      wav: ArrayBuffer,
+    ): Promise<SayResult> {
+      const q = new URLSearchParams({ learner_id: learnerId, word, consent });
+      return parseSayResult(
+        await request(`vocab/say?${q}`, {
+          method: "POST",
+          headers: { "Content-Type": "audio/wav" },
+          body: wav,
+        }),
       );
     },
     /** Shadowing sentences (step 4.4d): shown and voiced, never dictation sentences. */

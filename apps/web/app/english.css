@@ -2315,3 +2315,31 @@ svg.nt-trail {
 [data-testid="skill-graph"] > .nt-actions + .en-muted {
   margin-top: 10px;
 }
+
+/* Saying a word (specs/pronunciation/step-3.7.md): each sound with its raw closeness. */
+.nt-say {
+  margin: 6px 0;
+}
+.nt-phones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+.nt-phones li {
+  display: grid;
+  justify-items: center;
+  min-width: 44px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--line, #efe9df);
+}
+.nt-phones li.is-dropped {
+  background: var(--nt-gap-soft, #fde8dc);
+  color: var(--nt-gap-ink, #9a3412);
+}
+.nt-phones small {
+  color: var(--muted, #6b6258);
+}

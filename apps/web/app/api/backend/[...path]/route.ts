@@ -17,7 +17,7 @@ const allowedEnglish = new RegExp(
     `rechecks/next|rechecks/${UUID}/answer|today|maps|` +
     `reading/texts|reading/texts/${SLUG}|reading/texts/${SLUG}/tests|reading/tests/${UUID}/submit|reading/items/${SLUG}/answer|` +
     `listening/texts|listening/texts/${SLUG}|listening/items/${SLUG}/audio|listening/items/${SLUG}/answer|` +
-    `shadowing/texts|shadowing/texts/${SLUG}|` +
+    `shadowing/texts|shadowing/texts/${SLUG}|vocab/say|vocab/say/status|` +
     `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
     `review/batches/${UUID}/items/${UUID}:[0-9]{1,3}|review/batches/${UUID}/items/${UUID}:[0-9]{1,3}/audio)$`,
 );
@@ -39,6 +39,7 @@ const forwardedParams = [
   "status",
   "minutes",
   "pace",
+  "word",
 ];
 const learnerCookie = "nodetrail_learner";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;
@@ -121,7 +122,7 @@ async function proxy(
       const limit =
         path === "uploads"
           ? Number(process.env.NODETRAIL_MAX_UPLOAD_BYTES) + 64 * 1024
-          : path === "recordings"
+          : path === "recordings" || path === "vocab/say"
             ? 600 * 1024 // a 15-second 16 kHz mono WAV is about 480 KB
             : 64 * 1024;
       if (

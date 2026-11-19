@@ -944,6 +944,37 @@ export const vi = {
         string
       >,
     },
+    sayWord: {
+      say: "Nói từ này",
+      stop: "Dừng",
+      recording: "Đang ghi… nói từ này một lần.",
+      noMic:
+        "Không dùng được micro. Hãy cho phép trình duyệt dùng micro rồi thử lại.",
+      yours: "Giọng bạn",
+      compare:
+        "Nghe lại giọng mình rồi bấm nút loa để so với giọng mẫu. Bản ghi chỉ nằm trong trình duyệt của bạn.",
+      serviceOff:
+        "Chưa bật dịch vụ phân tích phát âm (hồ sơ pronunciation). Bạn vẫn nghe lại và so với giọng mẫu được.",
+      consent:
+        "Để phân tích từng âm, bản ghi được gửi tới máy chủ của NodeTrail (không gửi cho dịch vụ AI nào khác), phân tích ngay rồi bỏ đi, không lưu lại.",
+      agree: "Tôi đồng ý",
+      analyse: "Phân tích từng âm",
+      heard: "nghe giống",
+      dropped: "bỏ mất âm",
+      rawNote:
+        "Số là mức gần với âm chuẩn (0–100), chưa phải điểm đúng sai: ngưỡng chấm chỉ có sau khi giáo viên kiểm tra. Hãy tin xu hướng qua nhiều lần nói hơn một con số.",
+      problems: {
+        too_short: "Bản ghi quá ngắn.",
+        too_long: "Bản ghi quá dài.",
+        too_quiet: "Giọng quá nhỏ, hãy nói gần micro hơn.",
+        too_noisy: "Quá ồn, hãy thử ở chỗ yên tĩnh hơn.",
+        clipped: "Giọng quá to, hãy lùi xa micro một chút.",
+        no_speech: "Không nghe thấy tiếng nói.",
+        format: "Không đọc được bản ghi.",
+        no_ipa: "Từ này chưa có phiên âm nên chưa phân tích được.",
+        not_analysed: "Chưa phân tích được lần này, hãy thử lại.",
+      } as Record<string, string>,
+    },
     pronunciation: {
       title: "Luyện phát âm",
       intro:
