@@ -405,6 +405,7 @@ export const vi = {
       writing: "Viết",
       reading: "Đọc",
       listening: "Nghe",
+      shadowing: "Nói đuổi",
       pronunciation: "Phát âm",
     },
     brandSub: "Tiếng Anh · CEFR A2–C1 · luyện IELTS",
@@ -673,6 +674,56 @@ export const vi = {
       finish: "Xong",
       finished: "Bạn đã làm hết bài nghe của văn bản này.",
       back: "Chọn bài khác",
+    },
+    shadowing: {
+      title: "Nói đuổi (shadowing)",
+      intro:
+        "Nghe một câu rồi nói theo ngay, cố bắt kịp nhịp và ngữ điệu. Ghi âm giọng mình để so với câu mẫu. Bản ghi chỉ nằm trong trình duyệt của bạn, không gửi đi đâu và không chấm điểm.",
+      tabs: { bank: "Câu mẫu", video: "Video YouTube" } as Record<
+        string,
+        string
+      >,
+      noVoice:
+        "Chưa bật giọng đọc của máy chủ nên chưa có câu mẫu. Bạn vẫn dùng được tab Video YouTube.",
+      pickText: "Chọn bài:",
+      sentence: (n: number, total: number) => `Câu ${n}/${total}`,
+      listen: "Nghe mẫu",
+      slow: "Nghe chậm",
+      record: "Ghi âm",
+      stop: "Dừng",
+      recording: "Đang ghi… nói theo câu mẫu.",
+      noMic:
+        "Không dùng được micro. Hãy cho phép trình duyệt dùng micro rồi thử lại.",
+      yours: "Giọng bạn",
+      model: "Câu mẫu",
+      timing: (s: number, p: number) => `${s.toFixed(1)} giây · ${p} lần ngắt`,
+      pace: (r: number) =>
+        r > 1.15
+          ? `Bạn nói chậm hơn mẫu (×${r}).`
+          : r < 0.85
+            ? `Bạn nói nhanh hơn mẫu (×${r}).`
+            : `Nhịp của bạn gần với mẫu (×${r}).`,
+      measuresNote:
+        "Chỉ đo thời gian và số lần ngắt từ âm thanh, không đánh giá đúng sai hay phát âm.",
+      prev: "Câu trước",
+      next: "Câu sau",
+      voiceNote:
+        "Câu mẫu là giọng đọc máy (Piper), ngữ điệu phẳng hơn người thật.",
+      videoIntro:
+        "Dán đường link video YouTube bạn thích. Chọn một đoạn, lặp lại, nghe chậm rồi nói đuổi theo. Video phát bằng trình phát chính thức của YouTube; NodeTrail không tải video về.",
+      link: "Link YouTube:",
+      open: "Mở video",
+      badLink:
+        "Không đọc được link này. Hãy dán link video YouTube (youtube.com hoặc youtu.be).",
+      setA: "Đặt điểm A",
+      setB: "Đặt điểm B",
+      loop: "Lặp A–B",
+      stopLoop: "Thôi lặp",
+      span: (a: string, b: string) => `Đoạn lặp: ${a} – ${b}`,
+      noSpan: "Chọn điểm A và B (cách nhau ít nhất nửa giây) để lặp một đoạn.",
+      speed: "Tốc độ:",
+      playerFailed:
+        "Không tải được trình phát YouTube. Kiểm tra kết nối mạng rồi thử lại.",
     },
     maps: {
       title: "Bản đồ kỹ năng",

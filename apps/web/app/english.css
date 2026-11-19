@@ -2207,3 +2207,35 @@ svg.nt-trail {
 .nt-listen-form button {
   justify-self: start;
 }
+
+/* Shadowing (step 4.4d): the sentence large enough to read along; a 16:9 player. */
+.nt-shadow-text {
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+.nt-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+.nt-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+/* A long text title must not widen the page on a phone. */
+.nt-pick {
+  display: grid;
+  gap: 6px;
+}
+.nt-pick select {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  text-overflow: ellipsis;
+}
+.nt-recorder {
+  margin-top: 10px;
+}

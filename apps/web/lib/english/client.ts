@@ -22,6 +22,12 @@ import {
   type TextSummary,
 } from "@/lib/reading/practice";
 import {
+  parseShadowText,
+  parseShadowTexts,
+  type ShadowText,
+  type ShadowTexts,
+} from "@/lib/shadowing/texts";
+import {
   parseListeningResult,
   parseListeningText,
   parseListeningTexts,
@@ -427,6 +433,17 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseListeningText(
         await request(`listening/texts/${encodeURIComponent(slug)}?${q}`),
+      );
+    },
+    /** Shadowing sentences (step 4.4d): shown and voiced, never dictation sentences. */
+    async shadowTexts(learnerId: string): Promise<ShadowTexts> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseShadowTexts(await request(`shadowing/texts?${q}`));
+    },
+    async shadowText(learnerId: string, slug: string): Promise<ShadowText> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseShadowText(
+        await request(`shadowing/texts/${encodeURIComponent(slug)}?${q}`),
       );
     },
     /** The proxied WAV of one sentence, made by the server voice (never the text itself). */
