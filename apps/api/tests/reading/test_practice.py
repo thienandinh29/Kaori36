@@ -138,3 +138,27 @@ def test_reading_becomes_available_and_measured_in_today(env: dict[str, Any]) ->
     )
     kinds = [(a["kind"], a["target"]) for a in today.today(learner, 50)["activities"]]
     assert ("diagnostic", "reading-detail") not in kinds  # measured now
+
+
+def test_a_text_file_in_another_unicode_form_is_still_served(env: dict[str, Any]) -> None:
+    """The fingerprint is of the NFC text, as the bank stores it (app/reading/pipeline.sha256)."""
+    import unicodedata
+
+    from app.reading.pipeline import sha256
+
+    word = "café"
+    assert sha256(unicodedata.normalize("NFD", word)) == sha256(word)
+    # The served file rewritten in NFD (as some editors save it): the questions stay served.
+    texts = env["practice"].texts_dir
+    nfd = unicodedata.normalize("NFD", PASSAGE + " Café.")
+    nfc = unicodedata.normalize("NFC", nfd)
+    assert nfd != nfc
+    with env["pool"].connection() as conn:
+        conn.execute(
+            "update reading_items set passage_sha256=%s where text_slug='bees'", (sha256(nfc),)
+        )
+    (texts / "bees.yaml").write_text(
+        yaml.safe_dump({"slug": "bees", "title": "Honey bees", "text": nfd}), "utf-8"
+    )
+    served = env["client"].get("/reading/texts", params={"learner_id": env["learner"]}).json()
+    assert served["texts"][0]["questions"] == 3

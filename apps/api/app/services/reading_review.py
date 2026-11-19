@@ -5,7 +5,6 @@ passage is missing or changed, or the item no longer passes the code checks: wha
 approves is exactly what a learner will later see.
 """
 
-import hashlib
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -17,6 +16,7 @@ from psycopg_pool import ConnectionPool
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from app.reading.items import Item, check, learner_view
+from app.reading.pipeline import sha256 as passage_sha256
 from app.services.backend import learner_uuid
 from app.validation.store import LabelIn, add_label
 
@@ -79,7 +79,7 @@ class ReadingReview:
         for item_id, slug, digest, data, answer, model, note in rows:
             item = _ITEM.validate_python(data)
             passage = passages.get(slug)
-            current = passage is not None and hashlib.sha256(passage.encode()).hexdigest() == digest
+            current = passage is not None and passage_sha256(passage) == digest
             items.append({
                 "id": item_id, "text": slug, "kind": item.kind, "skill": item.skill,
                 "question": learner_view(item), "key": key_of(item),
@@ -106,7 +106,7 @@ class ReadingReview:
                 raise HTTPException(409, "Câu hỏi này đã được duyệt hoặc chưa qua bước kiểm tra.")
             if body.decision == "approve":
                 passage = load_passages(self.texts_dir).get(slug)
-                if passage is None or hashlib.sha256(passage.encode()).hexdigest() != digest:
+                if passage is None or passage_sha256(passage) != digest:
                     raise HTTPException(
                         422, "Bài đọc không còn hoặc đã thay đổi; không duyệt được."
                     )

@@ -7,7 +7,6 @@ the key and moves the item's Reading competency by BKT (mastery under `ielts-com
 in `reading_answers`.
 """
 
-import hashlib
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -25,6 +24,7 @@ from app.engine import bkt
 from app.engine.bkt import DEFAULT_PARAMS
 from app.engine.trace import fmt_p
 from app.reading.items import Item, check, grade, learner_view
+from app.reading.pipeline import sha256 as passage_sha256
 from app.services.backend import learner_uuid, save_trace
 from app.services.competency_evidence import competency_ids
 from app.services.learning import save_mastery
@@ -100,7 +100,7 @@ class ReadingPractice:
         out: dict[str, list[tuple[str, Any]]] = {}
         for item_id, slug, digest, data in rows:
             text = texts.get(slug)
-            if text is None or hashlib.sha256(text[1].encode()).hexdigest() != digest:
+            if text is None or passage_sha256(text[1]) != digest:
                 continue
             e = effective(labels.get(item_id, []))
             if e.tier not in ("silver", "gold") or e.value != "right":

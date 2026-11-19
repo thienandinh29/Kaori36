@@ -1,16 +1,20 @@
 """Generate, check and store Reading questions, offline (specs/listening-reading/step-4.2b.md).
 
-    uv run python -m app.reading.pipeline [folder] [--only SLUG] [--max-checks 40] [--unverified]
+    uv run python -m app.reading.pipeline [folder] [--only SLUG] [--max-checks 40]
+        [--max-cost 0.50] [--unverified]
 
 Texts come from the bank (verified sources only); `--unverified` reads a private folder's raw
 entries for development, and nothing from it may be committed. Each text is generated once per
 passage version. Then up to `--max-checks` stored items are checked blind (the free checker allows
-50 requests a day); the rest wait for the next run.
+50 requests a day); the rest wait for the next run. Every model call is recorded in `llm_calls`
+(`app/reading/calls.py`); no new text is generated once the run's recorded cost reaches
+`--max-cost`.
 """
 
 import argparse
 import asyncio
 import hashlib
+import unicodedata
 from collections.abc import Awaitable, Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -21,15 +25,22 @@ from psycopg.types.json import Jsonb
 from pydantic import TypeAdapter
 
 from app.reading import blind
+from app.reading.calls import CallLog
 from app.reading.generate import SYSTEM, Generated, ReadingItem, build, prompt
 from app.reading.items import Item
+from app.writing.model_calls import Prices
 
 Generate = Callable[[str, str], Awaitable[Generated | None]]  # (system, prompt) -> output
 _ITEM: TypeAdapter[ReadingItem] = TypeAdapter(Item)
 
 
 def sha256(passage: str) -> str:
-    return hashlib.sha256(passage.encode()).hexdigest()
+    """The passage's fingerprint, the same wherever it is read: of its NFC form.
+
+    The bank stores NFC text, so digests made before this normalisation stay valid; the review
+    queue and the practice page hash a text file as read, and NFC makes them agree.
+    """
+    return hashlib.sha256(unicodedata.normalize("NFC", passage).encode()).hexdigest()
 
 
 def generated_already(conn: psycopg.Connection[Any], slug: str, digest: str) -> bool:
@@ -109,14 +120,14 @@ async def check_pending(
     return counts
 
 
-def gateway_generate() -> Generate:  # pragma: no cover - calls a model
+def gateway_generate(observe: Callable[[Any], None]) -> Generate:  # pragma: no cover - model
     from app.llm.gateway import Gateway, GenerationLimits, complete_with_metadata, gateway_scope
     from app.llm.providers import default_gateway
 
     base = default_gateway()
     gateway = Gateway(
         base.routing, base.adapters, request_timeout=180, total_timeout=400,
-        task_limits={"reading_items": GenerationLimits(8192, 0)},
+        task_limits={"reading_items": GenerationLimits(8192, 0)}, observe_attempt=observe,
     )  # fmt: skip
 
     async def gen(system: str, text: str) -> Generated | None:
@@ -133,14 +144,27 @@ def gateway_generate() -> Generate:  # pragma: no cover - calls a model
     return gen
 
 
-def gateway_ask() -> tuple[blind.Ask, Callable[[], str | None]]:  # pragma: no cover - model
-    from app.llm.gateway import GatewayError, complete_with_metadata, verification_scope
+def gateway_ask(
+    observe: Callable[[Any], None],
+) -> tuple[blind.Ask, Callable[[], str | None]]:  # pragma: no cover - model
+    from app.llm.gateway import (
+        Gateway,
+        GatewayError,
+        complete_with_metadata,
+        gateway_scope,
+        verification_scope,
+    )
+    from app.llm.providers import default_gateway
+
+    base = default_gateway()
+    gateway = Gateway(base.routing, base.adapters, observe_attempt=observe)
 
     last: list[str] = []
 
     async def ask(system: str, text: str) -> blind.Reply | None:
         try:
-            with verification_scope("deepseek"):  # the generator's family is never the checker
+            # The generator's family is never the checker.
+            with gateway_scope(gateway), verification_scope("deepseek"):
                 out = await complete_with_metadata(
                     "reading_check",
                     "free",
@@ -168,6 +192,7 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database a
     parser.add_argument("--max-checks", type=int, default=40)
     parser.add_argument("--unverified", action="store_true", help="development: a private folder")
     parser.add_argument("--no-generate", action="store_true", help="only check stored items")
+    parser.add_argument("--max-cost", type=float, default=0.50, help="US$ for this run")
     args = parser.parse_args(argv)
     if args.unverified:
         passages = {e.slug: e.text for e in load_entries(args.folder)}
@@ -179,17 +204,28 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database a
     if args.only:
         passages = {k: v for k, v in passages.items() if k in args.only}
     now = datetime.now(UTC)
-    ask, model = gateway_ask()
-    with psycopg.connect(get_settings().database_url) as conn:
+    settings = get_settings()
+    log = CallLog(Prices(settings.llm_price_input_per_mtok, settings.llm_price_output_per_mtok))
+    ask, model = gateway_ask(log.observe)
+    with psycopg.connect(settings.database_url) as conn:
         if not args.no_generate:
-            gen = gateway_generate()
+            gen = gateway_generate(log.observe)
             for slug, passage in passages.items():
+                if log.cost_usd >= args.max_cost:
+                    print(f"cost cap US${args.max_cost:.2f} reached: {slug} and later texts wait")
+                    break
                 done = asyncio.run(generate_text(conn, slug, passage, gen, now))
+                log.flush(conn, now)
                 conn.commit()
                 if done is not None:
                     print(f"{slug}: kept {done[0]}, dropped {done[1]}")
-        counts = asyncio.run(check_pending(conn, passages, ask, args.max_checks, model, now))
+        try:
+            counts = asyncio.run(check_pending(conn, passages, ask, args.max_checks, model, now))
+        finally:
+            log.flush(conn, now)
+            conn.commit()
     print(f"checked: {counts}")
+    print(log.summary())
     return 0
 
 
