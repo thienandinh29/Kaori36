@@ -2239,3 +2239,79 @@ svg.nt-trail {
 .nt-recorder {
   margin-top: 10px;
 }
+
+/* The skill map as a graph (M4 graph view): foundations left, IELTS skills right. Status is shown in
+   words inside each node, never by colour alone. */
+.nt-skill-graph {
+  width: 100%;
+  height: min(70vh, 640px);
+  border: 1px solid var(--line, #e5ded3);
+  border-radius: 12px;
+  background: var(--paper, #fffdf8);
+}
+.nt-gnode {
+  width: 190px;
+  height: 64px;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line, #d8d0c4);
+  background: #fff;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  font-size: 12px;
+}
+.nt-gnode strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nt-gnode-meta {
+  color: var(--muted, #6b6258);
+}
+.nt-gnode.is-competency {
+  border-width: 2px;
+  border-color: var(--accent, #4338ca);
+}
+.nt-gnode.map-weak {
+  background: var(--nt-gap-soft, #fde8dc);
+}
+.nt-gnode.map-growing {
+  background: #fef6d8;
+}
+.nt-gnode.map-known {
+  background: var(--nt-known-soft, #e2f3e6);
+}
+.nt-gnode.map-not_live {
+  opacity: 0.6;
+  border-style: dashed;
+}
+.nt-gnode.is-root {
+  border-color: #c2410c;
+  border-width: 3px;
+}
+.nt-gnode.is-selected {
+  outline: 3px solid var(--accent, #4338ca);
+  outline-offset: 2px;
+}
+.nt-graph-panel {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+.en-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--accent, #4338ca);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+.nt-graph-panel .en-button {
+  justify-self: start;
+}
+[data-testid="skill-graph"] > .nt-actions + .en-muted {
+  margin-top: 10px;
+}

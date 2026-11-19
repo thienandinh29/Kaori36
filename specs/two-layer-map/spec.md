@@ -97,7 +97,7 @@ The rules, in order:
 | M1 | `ielts-competencies.yaml` with layer-2 nodes and links, its checker, and vocabulary band nodes derived from FSRS |
 | M2 | `engine/recommend.py`: the rules above, traces, unit tests and the simulation gate |
 | M3 | API `GET /today` (the ordered list with traces) and the home page "Hôm nay" built on it |
-| M4 | A page showing both maps side by side: foundations under each competency, with what is measured and how surely |
+| M4 | A page showing both maps side by side: foundations under each competency, with what is measured and how surely; graph view (19 Nov, the owner's request): foundations left, competencies right, "cần" solid and "giúp" dashed, one skill at a time by default ("Tất cả" for all), a details panel with a practise link, and the weakest measured `requires` foundation under 0.8 marked "điểm yếu gốc" (never an unmeasured one); the list stays as "Dạng danh sách" |
 
 Reading competency evidence arrives with CP4, Listening with CP5, Speaking with phase 5. Until then those nodes show
 "chưa đo" (not measured), and rule 2 sends the learner to a first diagnostic.
