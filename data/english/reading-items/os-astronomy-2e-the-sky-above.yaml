@@ -1,0 +1,123 @@
+text_slug: os-astronomy-2e-the-sky-above
+source: openstax-reading
+versions:
+- passage_sha256: 4cfeb1653f42cdad82d4fb3622bcbe059cda3391c72e96ad8eef74cfa7680775
+  items:
+  - id: os-astronomy-2e-the-sky-above-completion-1
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-the-sky-above-headings-1
+    kind: headings
+    status: verified
+    item:
+      id: os-astronomy-2e-the-sky-above-headings-1
+      key:
+        '0': 3
+        '1': 0
+        '2': 1
+        '3': 2
+      kind: headings
+      text: os-astronomy-2e-the-sky-above
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The apparent motion of the night sky
+      - Modern understanding of celestial motion
+      - Fixed patterns and the uses of the celestial sphere
+      - The celestial dome and the horizon
+      - The invention of the telescope
+      - The nature of meteors
+    problems: []
+    checker_answer: 0:3, 1:0, 2:1, 3:2
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-the-sky-above-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-astronomy-2e-the-sky-above-mcq-1
+      key: 1
+      kind: mcq
+      stem: Why do meteors appear to move relative to other objects on the celestial sphere?
+      text: os-astronomy-2e-the-sky-above
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - They are fixed to the celestial sphere but rotate faster.
+      - They are small pieces of cosmic dust burning up in Earth's atmosphere.
+      - They are planets that have significant motions of their own.
+      - They are stars that move quickly across the sky.
+      evidence:
+      - Only meteors—brief “shooting stars” that flash into view for just a few seconds—move appreciably with respect
+        to other objects on the celestial sphere.
+      - (This is because they are not stars at all. Rather, they are small pieces of cosmic dust, burning up as
+        they hit Earth’s atmosphere.)
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-the-sky-above-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-astronomy-2e-the-sky-above-tfng-1
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-the-sky-above
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - A grouping of stars such as the Big Dipper has the same shape during the course of the night, although it
+        turns with the sky.
+      statement: The Big Dipper changes its shape as the celestial sphere rotates.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-the-sky-above-tfng-2
+    kind: tfng
+    status: verified
+    item:
+      id: os-astronomy-2e-the-sky-above-tfng-2
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-the-sky-above
+      skill: inference
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The ancient Greeks believed that stars were made of the same material as Earth.
+    problems: []
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null

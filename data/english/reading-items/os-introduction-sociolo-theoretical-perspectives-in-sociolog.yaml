@@ -1,0 +1,106 @@
+text_slug: os-introduction-sociolo-theoretical-perspectives-in-sociolog
+source: openstax-reading
+versions:
+- passage_sha256: d760f980d752e784db7a471c5582be614664aa2f3322baac6c41308a4a11bfe6
+  items:
+  - id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-completion-1
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-headings-1
+    kind: headings
+    status: verified
+    item:
+      id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+      kind: headings
+      text: os-introduction-sociolo-theoretical-perspectives-in-sociolog
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - Weaknesses of a theoretical approach
+      - The rise of global communication and trade
+      - Research on the emerging global culture
+      - How to conduct online surveys
+      - The history of ancient empires
+    problems: []
+    checker_answer: 0:0, 1:1, 2:2
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-mcq-1
+    kind: mcq
+    status: dropped
+    item: {}
+    problems:
+    - no evidence sentence
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-tfng-1
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-theoretical-perspectives-in-sociolog
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Many sociologists now believe that functionalism is no longer useful as a macro-level theory, but that it
+        does serve a useful purpose in some mid-level analyses.
+      statement: Functionalism is still regarded by many sociologists as a valuable macro-level theory.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-tfng-2
+    kind: tfng
+    status: verified
+    item:
+      id: os-introduction-sociolo-theoretical-perspectives-in-sociolog-tfng-2
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-theoretical-perspectives-in-sociolog
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - 'Sociologists around the world look closely for signs of what would be an unprecedented event: the emergence
+        of a global culture.'
+      statement: Sociologists are paying attention to the possible development of a global culture.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null

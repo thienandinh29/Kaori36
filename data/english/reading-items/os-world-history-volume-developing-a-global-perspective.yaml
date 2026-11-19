@@ -1,0 +1,102 @@
+text_slug: os-world-history-volume-developing-a-global-perspective
+source: openstax-reading
+versions:
+- passage_sha256: ac1584ef07118d8d65b9ce9b06efd5d7121f5c6fc4078d6ab53c19e8ef6314e8
+  items:
+  - id: os-world-history-volume-developing-a-global-perspective-completion-1
+    kind: completion
+    status: verified
+    item:
+      id: os-world-history-volume-developing-a-global-perspective-completion-1
+      kind: completion
+      text: os-world-history-volume-developing-a-global-perspective
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - behavior
+      evidence:
+      - Santayana’s comment rings true, however, in that we can discern patterns of human behavior by careful study
+        of the past.
+      sentence: Careful study of the past helps us identify patterns of human ___.
+      max_words: 1
+    problems: []
+    checker_answer: behavior
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-developing-a-global-perspective-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-world-history-volume-developing-a-global-perspective-mcq-1
+      key: 1
+      kind: mcq
+      stem: According to the passage, what advantage does studying history give a person?
+      text: os-world-history-volume-developing-a-global-perspective
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - The ability to predict future events with complete accuracy
+      - A clearer understanding of the present and what may come
+      - The skill to avoid all mistakes made by previous generations
+      - A guarantee of repeating the successes of past civilizations
+      evidence:
+      - It is this knowledge of possibilities that allows the student of history to see the present with more clarity
+        and prescience.
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-developing-a-global-perspective-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-world-history-volume-developing-a-global-perspective-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-developing-a-global-perspective
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - We have all heard the philosopher George Santayana’s observation, “Those who do not learn from history are
+        doomed to repeat it.”
+      statement: Santayana believed that people who fail to learn from history will inevitably repeat it.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-developing-a-global-perspective-tfng-2
+    kind: tfng
+    status: verified
+    item:
+      id: os-world-history-volume-developing-a-global-perspective-tfng-2
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-developing-a-global-perspective
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Santayana was a professor at Harvard University.
+    problems: []
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null

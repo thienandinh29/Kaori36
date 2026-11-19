@@ -1,0 +1,134 @@
+text_slug: os-world-history-volume-early-civilizations
+source: openstax-reading
+versions:
+- passage_sha256: 69847600518913f9ae0db24118b353c521c359710d49e4d223831e0c24e3cf8d
+  items:
+  - id: os-world-history-volume-early-civilizations-completion-1
+    kind: completion
+    status: verified
+    item:
+      id: os-world-history-volume-early-civilizations-completion-1
+      kind: completion
+      text: os-world-history-volume-early-civilizations
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - specific tasks
+      evidence:
+      - Individuals performed specific tasks such as farming, writing, or performing religious rituals.
+      sentence: Early civilizations developed a system of specialization in which individuals performed ___ such
+        as farming, writing, or performing religious rituals.
+      max_words: 3
+    problems: []
+    checker_answer: specific tasks
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-civilizations-headings-1
+    kind: headings
+    status: needs_review
+    item:
+      id: os-world-history-volume-early-civilizations-headings-1
+      key:
+        '0': 2
+        '1': 4
+        '2': 0
+      kind: headings
+      text: os-world-history-volume-early-civilizations
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The rise of social stratification and inherited wealth
+      - How exchange systems created hierarchy and class
+      - Small-scale self-sufficient societies before civilization
+      - The role of religion in maintaining peace
+      - Surplus, specialization and the growth of cities
+    problems: []
+    checker_answer: 0:2, 1:4, 2:1
+    checker_model: dots-studio/dots-3-note-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-civilizations-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-world-history-volume-early-civilizations-mcq-1
+      key: 1
+      kind: mcq
+      stem: What did the food surplus produced in early civilizations make possible, according to the passage?
+      text: os-world-history-volume-early-civilizations
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Decisions reached through consensus among elders
+      - Growth in population and the development of larger cities
+      - A return to hunting and gathering as a main way of life
+      - Equal wealth and status among all families
+      evidence:
+      - For farming communities, this food surplus meant family size grew to six or seven children and caused the
+        global human population to skyrocket.
+      - Population growth rooted in agricultural production led to larger cities, in which the food produced by
+        farmers in outlying rural areas was distributed among the population of the urban center, where food was
+        not produced.
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-civilizations-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-world-history-volume-early-civilizations-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-early-civilizations
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - For farming communities, this food surplus meant family size grew to six or seven children and caused the
+        global human population to skyrocket.
+      statement: In early farming communities, families typically had six or seven children.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-civilizations-tfng-2
+    kind: tfng
+    status: needs_review
+    item:
+      id: os-world-history-volume-early-civilizations-tfng-2
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-early-civilizations
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Group leaders in nomadic societies made decisions by holding formal votes among all adult members.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: dots-studio/dots-3-note-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null

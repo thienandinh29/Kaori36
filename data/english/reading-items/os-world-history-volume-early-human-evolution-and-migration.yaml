@@ -1,0 +1,135 @@
+text_slug: os-world-history-volume-early-human-evolution-and-migration
+source: openstax-reading
+versions:
+- passage_sha256: fe8d9df3af523b5284e4ba1dde7161e0964b83111560d3ec869c6ec63aa188cb
+  items:
+  - id: os-world-history-volume-early-human-evolution-and-migration-completion-1
+    kind: completion
+    status: verified
+    item:
+      id: os-world-history-volume-early-human-evolution-and-migration-completion-1
+      kind: completion
+      text: os-world-history-volume-early-human-evolution-and-migration
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - guesswork
+      evidence:
+      - The nature of this work, however, requires using some extrapolation, educated speculation, and outright
+        guesswork to piece together the bits of unearthed evidence into an intelligible story.
+      sentence: Some of the work of piecing together evidence involves educated speculation and outright ___.
+      max_words: 3
+    problems: []
+    checker_answer: guesswork
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-human-evolution-and-migration-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-world-history-volume-early-human-evolution-and-migration-mcq-1
+      key: 1
+      kind: mcq
+      stem: What does the writer suggest about the conclusions researchers reach concerning the prehistoric past?
+      text: os-world-history-volume-early-human-evolution-and-migration
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - They are always permanent and cannot be revised.
+      - Some of them rest partly on speculation and may later be abandoned.
+      - They are based on an abundance of archaeological finds.
+      - They are produced by a single field of specialists.
+      evidence:
+      - The nature of this work, however, requires using some extrapolation, educated speculation, and outright
+        guesswork to piece together the bits of unearthed evidence into an intelligible story.
+      - This means that even as we have had to discard old theories when new information has emerged, there remain
+        plenty of things we’ll simply never know for sure.
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-human-evolution-and-migration-mcq-2
+    kind: mcq
+    status: verified
+    item:
+      id: os-world-history-volume-early-human-evolution-and-migration-mcq-2
+      key: 2
+      kind: mcq
+      stem: What is the writer’s attitude towards experts’ efforts to reconstruct our distant past?
+      text: os-world-history-volume-early-human-evolution-and-migration
+      skill: writers_view
+      origin: generated
+      status: draft
+      options:
+      - Dismissive of their methods as worthless
+      - Confident that all questions will soon be resolved
+      - Appreciative but aware of the method’s limits
+      - Indifferent to the topic
+      evidence:
+      - Through painstaking reconstructions and study, these specialists have used a relatively small number of
+        archaeological finds and material remnants of our distant ancestors to paint a striking picture of our prehistoric
+        past, going back millions of years.
+      - The nature of this work, however, requires using some extrapolation, educated speculation, and outright
+        guesswork to piece together the bits of unearthed evidence into an intelligible story.
+    problems: []
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-human-evolution-and-migration-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-world-history-volume-early-human-evolution-and-migration-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-early-human-evolution-and-migration
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Their evolution was influenced by many variables, including changes in climate, diet, and survival strategies.
+      statement: The evolution of our ancestors was shaped by factors such as climate, diet and survival strategies.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-early-human-evolution-and-migration-tfng-2
+    kind: tfng
+    status: verified
+    item:
+      id: os-world-history-volume-early-human-evolution-and-migration-tfng-2
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-early-human-evolution-and-migration
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Archaeologists working on human origins receive more government funding than genetic scientists
+        do.
+    problems: []
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
