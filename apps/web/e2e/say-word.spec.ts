@@ -93,9 +93,8 @@ test("a learner says a word, hears it back, and the owner sees each sound", asyn
   await page.waitForTimeout(1200);
   await say.getByRole("button", { name: "Dừng" }).click();
   await expect(say.locator("audio")).toHaveCount(1);
-  // Consent first, then the analysis.
+  // Consent first; agreeing analyses this take straight away (step 3.7c).
   await say.getByRole("button", { name: "Tôi đồng ý" }).click();
-  await say.getByRole("button", { name: "Phân tích từng âm" }).click();
   const result = say.getByTestId("say-result");
   // The word's IPA, each sound coloured; a tap shows the score, what was heard and how to say it.
   const phones = result.locator(".nt-ipa-phone");
@@ -114,6 +113,16 @@ test("a learner says a word, hears it back, and the owner sees each sound", asyn
   await expect(result).toContainText("chưa phải điểm đúng sai");
   expect(sent).toHaveLength(1);
   expect(sent[0]).toMatch(/^[a-z' -]+:[a-z]+\|voice-v1$/);
+  // Once agreed, the next take is analysed as soon as it stops: no extra tap.
+  await say.getByRole("button", { name: "Nói từ này" }).click();
+  await expect(say).toContainText("Đang ghi");
+  await page.waitForTimeout(1200);
+  await say.getByRole("button", { name: "Dừng" }).click();
+  await expect(say.getByTestId("say-result")).toBeVisible();
+  await expect.poll(() => sent.length).toBe(2);
+  await expect(
+    say.getByRole("button", { name: "Phân tích lại" }),
+  ).toBeVisible();
 });
 
 test("without the analysis, saying a word is compared by ear only", async ({

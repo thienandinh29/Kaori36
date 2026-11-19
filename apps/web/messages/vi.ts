@@ -959,6 +959,8 @@ export const vi = {
         "Để phân tích từng âm, bản ghi được gửi tới máy chủ của NodeTrail (không gửi cho dịch vụ AI nào khác), phân tích ngay rồi bỏ đi, không lưu lại.",
       agree: "Tôi đồng ý",
       analyse: "Phân tích từng âm",
+      analysing: "Đang phân tích…",
+      again: "Phân tích lại",
       heard: "nghe giống",
       dropped: "bỏ mất âm",
       rawNote:
@@ -976,7 +978,8 @@ export const vi = {
       minimal: "Nghe để phân biệt",
       draft: "Hướng dẫn là bản nháp, chưa được giáo viên duyệt.",
       problems: {
-        too_short: "Bản ghi quá ngắn.",
+        too_short:
+          "Bản ghi quá ngắn: đợi hiện chữ “Đang ghi” rồi mới nói, nói trọn từ rồi bấm Dừng.",
         too_long: "Bản ghi quá dài.",
         too_quiet: "Giọng quá nhỏ, hãy nói gần micro hơn.",
         too_noisy: "Quá ồn, hãy thử ở chỗ yên tĩnh hơn.",

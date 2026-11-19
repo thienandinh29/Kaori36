@@ -21,14 +21,22 @@ from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
 
 from app.pronunciation import quality
-from app.pronunciation.word import WINDOW, focus, per_phone, phones_from_ipa, repeated
+from app.pronunciation.word import (
+    WINDOW,
+    focus,
+    model_phones,
+    per_phone,
+    phones_from_ipa,
+    repeated,
+)
 from app.services.backend import learner_uuid
 from app.services.recordings import CONSENT
 from app.vocabulary.wordlist import shared_wordlist
 
 Score = Callable[[bytes, list[str]], dict[str, Any]]
-WORD_MIN_SECONDS = 0.6
+WORD_MIN_SECONDS = 0.3  # of the trimmed recording: a short word said quickly is still a word
 WORD_MIN_SPEECH = 0.15
+WORD_PAD_SECONDS = 1.0  # what the aligner receives at least (silence added at both ends)
 FOCUS_DAYS = 30
 
 
@@ -111,12 +119,16 @@ class WordSay:
             raise HTTPException(404, "Không tìm thấy từ này.")
         if not entry.ipa:
             return {"ok": False, "problems": ["no_ipa"], "phones": []}
+        # Silence before and after the word is cut first (step 3.7c): loudness and length are
+        # judged on the speech, not on how long the learner waited before or after it.
+        audio = quality.trim(audio)
         q = quality.check(audio, WORD_MIN_SECONDS, WORD_MIN_SPEECH)
         if not q.ok:
             return {"ok": False, "problems": list(q.problems), "phones": []}
+        audio = quality.pad(audio, WORD_PAD_SECONDS)
         phones = phones_from_ipa(entry.ipa)
         try:
-            scored = await asyncio.to_thread(self.score, audio, phones)
+            scored = await asyncio.to_thread(self.score, audio, model_phones(phones))
         except Exception:  # the service refused (an unknown phone, no alignment) or is down
             return {"ok": False, "problems": ["not_analysed"], "phones": []}
         result = per_phone(phones, scored)
@@ -126,7 +138,9 @@ class WordSay:
         # The audio is dropped here; only the per-sound scores are kept (step 3.7b).
         guide: list[dict[str, Any]] = []
         if self.pool is not None:
-            scores = [{k: p[k] for k in ("phone", "gop", "heard", "dropped")} for p in result]
+            scores = [
+                {k: p[k] for k in ("phone", "gop", "closeness", "heard", "dropped")} for p in result
+            ]
             with self.pool().connection() as conn:
                 conn.execute(
                     "insert into say_attempts(learner_id, word, phones) values (%s,%s,%s)",

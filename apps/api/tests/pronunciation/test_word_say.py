@@ -1,4 +1,4 @@
-# ruff: noqa: RUF001
+# ruff: noqa: RUF001, RUF003
 """Step 3.7: saying a vocabulary word, analysed in memory and never stored."""
 
 import asyncio
@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 from fastapi import HTTPException
 
-from app.pronunciation.word import per_phone, phones_from_ipa
+from app.pronunciation.word import MODEL_FORM, low, model_phones, per_phone, phones_from_ipa
 from app.services.word_say import WordSay
 from app.vocabulary.wordlist import shared_wordlist
 
@@ -44,10 +44,49 @@ def test_dictionary_ipa_becomes_the_recognisers_phones(ipa: str, phones: list[st
     assert phones_from_ipa(ipa) == phones
 
 
+# The model's own symbols for five British vowels (step 3.7c), also in the pinned vocab.json.
+RECOGNISER_FORMS = {"ɔ", "oː", "oʊ", "aː", "ɛː"}
+
+
 def test_every_word_in_the_list_uses_only_phones_the_recogniser_knows() -> None:
     words = shared_wordlist(VOCAB, IMPORTED).words
     used = {p for w in words if w.ipa for p in phones_from_ipa(w.ipa)}
     assert used <= RECOGNISER, used - RECOGNISER
+    sent = {p for w in words if w.ipa for p in model_phones(phones_from_ipa(w.ipa))}
+    assert sent <= (RECOGNISER - set(MODEL_FORM)) | RECOGNISER_FORMS
+
+
+def row(gop: float, heard: str | None, peak: float = 0.8) -> dict[str, Any]:
+    return {"phone": "?", "gop": gop, "competitor": heard, "peak": peak, "other_peak": peak / 2}
+
+
+def test_british_vowels_are_scored_in_the_models_symbols_and_shown_in_the_dictionarys() -> None:
+    assert model_phones(["p", "ɒ", "t", "ɔː", "əʊ", "ɑː", "eə"]) == [
+        "p", "ɔ", "t", "oː", "oʊ", "aː", "ɛː",
+    ]  # fmt: skip
+    # /ɔː/ heard as the model's ɔ is shown as /ɒ/, the confusion a learner knows
+    out = per_phone(
+        ["p", "ɔː", "t"], {"phones": [row(-0.1, None), row(-2.5, "ɔ"), row(-0.1, None)]}
+    )
+    assert [(p["phone"], p["heard"]) for p in out] == [("p", None), ("ɔː", "ɒ"), ("t", None)]
+
+
+def test_native_variants_are_close_and_a_weak_schwa_may_vanish() -> None:
+    out = per_phone(
+        ["ə", "ɑː", "ə", "ɪ"],
+        {"phones": [row(-2.5, "ɐ"), row(-2.0, "a"), row(-9.0, None, peak=0.01), row(-3.0, "iː")]},
+    )
+    assert [(p["closeness"], p["heard"], p["dropped"]) for p in out] == [
+        (85, None, False), (85, None, False), (85, None, False), (37, "iː", False),
+    ]  # fmt: skip  # /ɪ/ heard as /iː/ is a real confusion, never excused
+
+
+def test_what_the_recogniser_cannot_tell_is_unsure_not_low() -> None:
+    out = per_phone(["b", "d", "uː", "d"], {"phones": [
+        row(-4.0, "p"), row(-4.0, "t"), row(-4.0, "iː"), row(-9.0, "t", peak=0.01),
+    ]})  # fmt: skip
+    assert [(p["closeness"], p["heard"], low(p)) for p in out[:3]] == [(70, None, False)] * 3
+    assert out[3]["dropped"] and low(out[3])  # a dropped /d/ is still shown
 
 
 def test_each_phone_shows_its_score_what_was_heard_and_a_dropped_sound() -> None:
@@ -113,6 +152,26 @@ def test_bad_audio_gets_advice_and_a_refused_alignment_is_said_plainly() -> None
     assert quiet["ok"] is False and quiet["problems"] == ["too_quiet"]
     out = asyncio.run(s.say(OWNER, "choose:verb", "voice-v1", speech()))
     assert out == {"ok": False, "problems": ["not_analysed"], "phones": []}
+
+
+def test_silence_around_the_word_is_cut_and_a_quick_word_is_padded() -> None:
+    sent: list[int] = []
+
+    def score(audio: bytes, phones: list[str]) -> dict[str, Any]:
+        sent.append(len(audio))
+        return {"recognised": [], "phones": [row(-0.1, None) for _ in phones]}
+
+    s = service(score)
+    # Two seconds of a quiet room before the word and one after made it "too quiet" (step 3.7c)
+    waited = wav(hiss(2.0, 30) + tone(0.4, 3000) + hiss(1.0, 30, 2))
+    assert asyncio.run(s.say(OWNER, "choose:verb", "voice-v1", waited))["ok"]
+    assert sent[-1] < len(waited) / 2  # sent without most of the silence
+    # A word said straight after the tap, 0.35 s in 0.45 s, was "too short"
+    quick = wav(hiss(0.05, 30) + tone(0.35, 3000) + hiss(0.05, 30, 2))
+    assert asyncio.run(s.say(OWNER, "choose:verb", "voice-v1", quick))["ok"]
+    assert sent[-1] >= 44 + 2 * 16_000  # padded to a second for the aligner
+    blip = wav(hiss(0.05, 30) + tone(0.1, 3000))
+    assert asyncio.run(s.say(OWNER, "choose:verb", "voice-v1", blip))["problems"] == ["too_short"]
 
 
 # --- Step 3.7b: guidance from repeated attempts, and sounds to focus on ---
@@ -182,8 +241,8 @@ def test_attempts_are_kept_without_audio_and_guide_the_next_try(database_url: st
     def score(audio: bytes, phones: list[str]) -> dict[str, Any]:
         g = next(seq)
         return {"recognised": [], "phones": [
-            {"phone": p, "gop": g if p == "ɔː" else -0.1,
-             "competitor": "ɑː" if p == "ɔː" and g < -1 else None,
+            {"phone": p, "gop": g if p == "oː" else -0.1,  # /ɔː/ in the model's symbol
+             "competitor": "aː" if p == "oː" and g < -1 else None,
              "peak": 0.8, "other_peak": 0.1}
             for p in phones
         ]}  # fmt: skip

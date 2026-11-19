@@ -82,3 +82,16 @@ def test_fetch_downloads_once_and_refuses_a_changed_file(tmp_path: Path) -> None
     with pytest.raises(SystemExit, match=r"vocab\.json"):
         fetch(pin, tmp_path, download)
     assert key("pytorch_model.bin") == "PYTORCH_MODEL"
+
+
+def test_the_model_runs_once_on_silence_before_serving() -> None:
+    from nodetrail_pron.server import warm_up
+
+    seen: list[int] = []
+
+    def model(samples: list[float]) -> list[list[float]]:
+        seen.append(len(samples))
+        return fake(samples)
+
+    warm_up(model)
+    assert seen == [16_000]
