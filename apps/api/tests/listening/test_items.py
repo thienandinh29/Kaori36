@@ -97,3 +97,16 @@ def test_the_real_bank_gives_safe_items_with_unique_ids() -> None:
             ids.add(i.id)
         total += len(items)
     assert total >= 100  # 143 on 19 Nov: enough to practise while the recogniser is chosen
+
+
+def test_shadowing_never_shows_a_dictation_or_gap_sentence() -> None:
+    from app.listening.items import shadow_sentences, shadowable
+
+    assert shadowable("The bees (and wasps) fly.") is False
+    assert shadowable("Bees fly to flowers every day.") is True
+    for path in sorted(TEXTS.glob("*.yaml")):
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        used = {i.sentence for i in build(doc["slug"], doc["text"])}
+        shadows = shadow_sentences(doc["slug"], doc["text"])
+        assert shadows, doc["slug"]  # every text has some
+        assert not used & {s.sentence for s in shadows}

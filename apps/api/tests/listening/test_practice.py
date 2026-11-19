@@ -154,3 +154,19 @@ def test_listening_becomes_available_and_measured_in_today(env: dict[str, Any]) 
     assert ("diagnostic", "listening-dictation") not in [(a["kind"], a["target"]) for a in acts]
     links = {a["target"]: a["href"] for a in acts if a["target"].startswith("listening-")}
     assert all(link == "/nghe" for link in links.values())
+
+
+def test_shadowing_shows_its_own_sentences_and_voices_them(env: dict[str, Any]) -> None:
+    c, s, learner = env["client"], env["silent"], env["learner"]
+    listed = c.get("/shadowing/texts", params={"learner_id": learner}).json()
+    assert listed["available"] is True and listed["texts"][0]["slug"] == "bees"
+    text = c.get("/shadowing/texts/bees", params={"learner_id": learner}).json()
+    dictation = {i.sentence for i in env["practice"].items()["bees"]}
+    shown = [x["text"] for x in text["sentences"]]
+    assert shown and not set(shown) & dictation
+    first = text["sentences"][0]["id"]
+    r = c.get(f"/listening/items/{first}/audio")
+    assert r.status_code == 200 and env["voice"].said[-1] == (shown[0], "normal")
+    assert c.get("/listening/items/bees-shadow-99/audio").status_code == 404
+    assert s.get("/shadowing/texts", params={"learner_id": learner}).json()["available"] is False
+    assert s.get("/shadowing/texts/bees", params={"learner_id": learner}).status_code == 503

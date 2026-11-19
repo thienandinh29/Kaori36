@@ -21,6 +21,7 @@ export const en = {
       writing: "Writing",
       reading: "Reading",
       listening: "Listening",
+      shadowing: "Shadowing",
     },
     draft: "Draft",
     retry: "Try again",

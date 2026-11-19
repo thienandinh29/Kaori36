@@ -40,6 +40,17 @@ def create_router(practice: ListeningPractice) -> APIRouter:
             wav, media_type="audio/wav", headers={"Cache-Control": "private, max-age=86400"}
         )
 
+    # Shadowing (step 4.4d): sentences shown and voiced; audio through the route above.
+    @router.get("/shadowing/texts")
+    def shadow_texts(learner_id: str = Query(min_length=1, max_length=200)) -> dict[str, Any]:
+        return practice.shadow_texts(learner_id)
+
+    @router.get("/shadowing/texts/{slug}")
+    def shadow_text(
+        slug: Slug, learner_id: str = Query(min_length=1, max_length=200)
+    ) -> dict[str, Any]:
+        return practice.shadow_text(learner_id, slug)
+
     @router.post("/listening/items/{item_id}/answer")
     def answer(body: ListeningAnswer, item_id: ItemId) -> dict[str, Any]:
         return practice.answer(body.learner_id, item_id, body.answer)

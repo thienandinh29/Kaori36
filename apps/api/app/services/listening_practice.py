@@ -20,7 +20,7 @@ from app.competencies.model import load_map
 from app.engine import bkt
 from app.engine.bkt import BKTParams
 from app.engine.trace import fmt_p
-from app.listening.items import ListeningItem, build, grade
+from app.listening.items import ListeningItem, ShadowSentence, build, grade, shadow_sentences
 from app.services.backend import learner_uuid, save_trace
 from app.services.competency_evidence import competency_ids
 from app.services.learning import save_mastery
@@ -49,6 +49,7 @@ class ListeningPractice:
         self.clock = clock
         self.cmap = load_map()
         self._built: tuple[object, dict[str, list[ListeningItem]]] | None = None
+        self._shadow: tuple[object, dict[str, list[ShadowSentence]]] | None = None
         self._audio: OrderedDict[tuple[str, str], bytes] = OrderedDict()
 
     @property
@@ -63,6 +64,53 @@ class ListeningPractice:
             built = {slug: build(slug, text) for slug, (_, text) in texts.items()}
             self._built = (key, {s: its for s, its in built.items() if its})
         return self._built[1]
+
+    def shadows(self) -> dict[str, list[ShadowSentence]]:
+        """Text slug -> its shadowing sentences (step 4.4d), rebuilt only when the bank changes."""
+        texts = read_texts(self.texts_dir)
+        key = tuple(sorted((s, t) for s, (_, t) in texts.items()))
+        if self._shadow is None or self._shadow[0] != key:
+            built = {slug: shadow_sentences(slug, text) for slug, (_, text) in texts.items()}
+            self._shadow = (key, {s: ss for s, ss in built.items() if ss})
+        return self._shadow[1]
+
+    def _spoken(self, item_id: str) -> str:
+        """What the voice says for an item or a shadowing sentence."""
+        if "-shadow-" in item_id:
+            for ss in self.shadows().values():
+                for x in ss:
+                    if x.id == item_id:
+                        return x.sentence
+            raise HTTPException(404, "Không tìm thấy câu nói đuổi.")
+        return self._item(item_id).sentence
+
+    def shadow_texts(self, learner_id: str) -> dict[str, Any]:
+        with self.pool().connection() as conn:
+            self._learner(conn, learner_id)
+        if not self.available:
+            return {"available": False, "texts": []}
+        titles = read_texts(self.texts_dir)
+        return {
+            "available": True,
+            "texts": [
+                {"slug": slug, "title": titles[slug][0], "sentences": len(ss)}
+                for slug, ss in sorted(self.shadows().items())
+            ],
+        }
+
+    def shadow_text(self, learner_id: str, slug: str) -> dict[str, Any]:
+        """Shadowing shows the sentence: these are never dictation or gap sentences."""
+        self._voice()
+        with self.pool().connection() as conn:
+            self._learner(conn, learner_id)
+        ss = self.shadows().get(slug)
+        if not ss:
+            raise HTTPException(404, "Chưa có câu nói đuổi cho văn bản này.")
+        return {
+            "slug": slug,
+            "title": read_texts(self.texts_dir)[slug][0],
+            "sentences": [{"id": x.id, "text": x.sentence} for x in ss],
+        }
 
     def _item(self, item_id: str) -> ListeningItem:
         for its in self.items().values():
@@ -117,12 +165,12 @@ class ListeningPractice:
     async def audio(self, item_id: str, pace: str) -> bytes:
         self._voice()
         assert self.speech is not None
-        item = self._item(item_id)
-        key = (item.id, pace)
+        spoken = self._spoken(item_id)
+        key = (item_id, pace)
         if key in self._audio:
             self._audio.move_to_end(key)
             return self._audio[key]
-        wav = await self.speech.speak(item.sentence, pace)
+        wav = await self.speech.speak(spoken, pace)
         self._audio[key] = wav
         while len(self._audio) > AUDIO_CACHE:
             self._audio.popitem(last=False)

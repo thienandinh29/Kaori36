@@ -145,3 +145,38 @@ def grade(item: ListeningItem, answer: str) -> tuple[float, bool, list[WordMark]
         return mark_dictation(item.sentence, answer)
     ok = grade_typed(answer, [item.answer])
     return float(ok), ok, []
+
+
+# --- Shadowing (specs/listening-reading/step-4.4d.md) ---
+SHADOW_PER_TEXT = 8
+SHADOW_MIN_WORDS, SHADOW_MAX_WORDS = 5, 25
+_SHADOW_UNSAFE = re.compile(r"[()\[\]\"“”;:/\\]|https?|www\.")
+
+
+@dataclass(frozen=True)
+class ShadowSentence:
+    id: str
+    text: str  # the bank text's slug
+    sentence: str  # shown and spoken: shadowing reads along
+
+
+def shadowable(sentence: str) -> bool:
+    """Short enough to say in one breath group, with nothing the voice reads oddly."""
+    n = len(sentence.split())
+    return (
+        SHADOW_MIN_WORDS <= n <= SHADOW_MAX_WORDS
+        and len(sentence) <= MAX_CHARS
+        and _SHADOW_UNSAFE.search(sentence) is None
+        and sentence[-1:] in ".?!"
+    )
+
+
+def shadow_sentences(slug: str, passage: str) -> list[ShadowSentence]:
+    """Up to SHADOW_PER_TEXT sentences, never one used for dictation or gap-fill (shadowing shows
+    the sentence, which would give those answers away)."""
+    used = {i.sentence for i in build(slug, passage)}
+    pool = [s for s in sentences(passage) if shadowable(s) and s not in used]
+    return [
+        ShadowSentence(f"{slug}-shadow-{n + 1}", slug, pool[i])
+        for n, i in enumerate(_spread(len(pool), SHADOW_PER_TEXT))
+    ]
