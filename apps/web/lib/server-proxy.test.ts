@@ -257,6 +257,14 @@ describe("graph confirmation session proxy", () => {
       expect((await post(path)).status).toBe(200);
     expect((await get("rechecks/next", `?learner_id=${id}`)).status).toBe(200);
     expect((await get("maps", `?learner_id=${id}`)).status).toBe(200);
+    expect((await get("reading/texts", `?learner_id=${id}`)).status).toBe(200);
+    expect((await get("reading/texts/bees", `?learner_id=${id}`)).status).toBe(
+      200,
+    );
+    expect((await post("reading/items/bees-tfng-1/answer")).status).toBe(200);
+    expect(
+      (await get("reading/texts/Bad_Slug", `?learner_id=${id}`)).status,
+    ).toBe(404);
     expect((await get("maps/extra", `?learner_id=${id}`)).status).toBe(404);
     expect(
       (await get("today", `?learner_id=${id}&minutes=50&x=1`)).status,

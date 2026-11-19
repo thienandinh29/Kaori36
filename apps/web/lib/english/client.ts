@@ -9,6 +9,15 @@ import { DataError } from "@/lib/decode";
 import { parseToday, type Today } from "@/lib/english/today";
 import { parseMaps, type Maps } from "@/lib/english/maps";
 import {
+  parseAnswer,
+  parseText,
+  parseTexts,
+  type Answer,
+  type AnswerResult,
+  type ReadingText,
+  type TextSummary,
+} from "@/lib/reading/practice";
+import {
   parseRecheck,
   parseRecheckResult,
   type RecheckQuestion,
@@ -355,6 +364,28 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       );
     },
     /** The owner's Reading review queue (specs/listening-reading/step-4.2c.md). */
+    async readingTexts(learnerId: string): Promise<TextSummary[]> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseTexts(await request(`reading/texts?${q}`));
+    },
+    async readingText(learnerId: string, slug: string): Promise<ReadingText> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseText(
+        await request(`reading/texts/${encodeURIComponent(slug)}?${q}`),
+      );
+    },
+    async answerReading(
+      learnerId: string,
+      itemId: string,
+      answer: Answer,
+    ): Promise<AnswerResult> {
+      return parseAnswer(
+        await post(`reading/items/${encodeURIComponent(itemId)}/answer`, {
+          learner_id: learnerId,
+          answer,
+        }),
+      );
+    },
     async maps(learnerId: string): Promise<Maps> {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseMaps(await request(`maps?${q}`));
