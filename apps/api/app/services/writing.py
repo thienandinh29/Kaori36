@@ -26,11 +26,12 @@ from app.curriculum.store import sync_course
 from app.engine import bkt
 from app.engine.graph import UNSEEN_P_KNOWN
 from app.engine.trace import fmt_p
+from app.services import competency_evidence
 from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
 from app.services.plans import NAMES_VI, Plans
 from app.services.vocabulary import start_of_day
-from app.writing import feedback, llm_corrections, task1
+from app.writing import competency, feedback, llm_corrections, task1
 from app.writing.analysis import analyse, load_linking_words, words
 from app.writing.error_map import ErrorMap, load_error_map
 from app.writing.feedback import FeedbackOut
@@ -677,6 +678,13 @@ def _apply_evidence(
     return [replace(i, evidence=i.id in used) for i in grammar.issues], moved
 
 
+def _competency_allowed(step: "GrammarStep", learner: UUID) -> bool:
+    """Draft rules count only for the owners (specs/two-layer-map/writing-evidence.md)."""
+    return competency_evidence.rules(step.writing_dir).status == "reviewed" or (
+        learner in step.draft_learners
+    )
+
+
 def process_next_essay(
     database_url: str,
     writing_dir: Path,
@@ -728,6 +736,14 @@ def process_next_essay(
                         for i in [*issues, *ai_issues]
                     ]
                     result["evidence"] = moved
+                if step is not None and _competency_allowed(step, learner):
+                    rules = competency_evidence.rules(writing_dir)
+                    found = competency.observations(
+                        rules, result, text, task, competency_evidence.known_b1()
+                    )
+                    result["competency_evidence"] = competency_evidence.apply(
+                        conn, learner, essay_id, found, rules.params(), now or datetime.now(UTC)
+                    )
                 conn.execute(
                     "update essays set status='done', result=%s, analysed_at=now() where id=%s",
                     (Jsonb(result), essay_id),

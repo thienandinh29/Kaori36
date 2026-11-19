@@ -1,10 +1,11 @@
 """Today's list (specs/two-layer-map/spec.md, M3): reads the learner's state and asks the engine.
 
 Read-only. Foundations: grammar nodes (a milestone counts as its weakest hidden node),
-pronunciation sound groups, and vocabulary bands derived from FSRS cards. Competencies: none is
-measured yet (Reading arrives with CP4, Writing criteria after the phase 2 gate), so the engine
-asks for a diagnostic of the skills NodeTrail can practise and otherwise works from shared
-foundations. Every activity carries a link and the engine's DecisionTrace.
+pronunciation sound groups, and vocabulary bands derived from FSRS cards. Competencies: Writing ones
+from essay checks (app.services.competency_evidence; measured after 3 essays), the rest not yet
+(Reading arrives with CP4), so the engine asks for a diagnostic of a skill it can practise and
+otherwise works from shared foundations. Every activity carries a link and the engine's
+DecisionTrace.
 """
 
 from collections.abc import Callable
@@ -17,6 +18,7 @@ from app.competencies.model import VOCAB_BANDS, CompetencyMap, load_map
 from app.curriculum.course import load_course
 from app.engine.graph import UNSEEN_P_KNOWN
 from app.engine.recommend import Activity, Estimate, recommend
+from app.services.competency_evidence import SUBJECT as COMPETENCY_SUBJECT
 from app.services.grammar import GrammarService
 
 GRAMMAR = "english-ielts"
@@ -92,6 +94,21 @@ class TodayService:
                 (learner, GRAMMAR),
             ).fetchall():
                 seen[node] = int(count)
+            # Competency estimates (Writing evidence from essays); evidence = distinct essays.
+            comp_p: dict[str, float] = dict(
+                conn.execute(
+                    "select c.slug, m.p_known from mastery m join concepts c on c.id=m.concept_id "
+                    "join subjects s on s.id=c.subject_id where m.learner_id=%s and s.slug=%s",
+                    (learner, COMPETENCY_SUBJECT),
+                ).fetchall()
+            )
+            comp_n: dict[str, int] = dict(
+                conn.execute(
+                    "select competency, count(distinct source_id) from competency_observations "
+                    "where learner_id=%s group by competency",
+                    (learner,),
+                ).fetchall()
+            )
             cards = conn.execute(
                 "select list_slug, word_key, fsrs_state, due_at from vocab_cards "
                 "where learner_id=%s",
@@ -129,7 +146,10 @@ class TodayService:
         result = recommend(
             self.cmap,
             {k: v for k, v in foundations.items() if k in self.live},
-            {},
+            {
+                slug: Estimate(float(value), int(comp_n.get(slug, 0)))
+                for slug, value in comp_p.items()
+            },
             due,
             AVAILABLE_SKILLS,
             now.date(),

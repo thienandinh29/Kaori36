@@ -21,6 +21,7 @@ Spec: `spec.md`, approved by the owner 18 Nov 2026.
 - [x] M3 `GET /today` and the home page "Hôm nay" on it (`app/services/today.py`, `app/api/today.py`,
   `components/english/today-list.tsx`). No competency is measured yet, so the list today is a Writing diagnostic and
   the foundations most exam skills share; Reading joins the available skills with CP4
+- [x] Writing evidence (`writing-evidence.md`): essays measure the Writing competencies, so the list changes
 - [ ] M4 the two-map page
 
 **Owner's hands-on work:**
