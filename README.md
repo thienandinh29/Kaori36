@@ -16,7 +16,7 @@ NodeTrail kiểm tra trình độ của bạn, dựng lộ trình ngữ pháp th
 | Ngữ pháp | Bài học kiểu lớp học: giọng đọc tiếng Anh, phụ đề Anh–Việt, bảng trắng, câu hỏi kiểm tra giữa bài (`/hoc/...`); luyện tập theo cột mốc (`/on-tap/...`) | Đã có trình phát và một bài mẫu; bài từ giáo trình mở đang làm |
 | Viết | Task 2 và Task 1: lỗi ngữ pháp (LanguageTool, ERRANT), nhận xét theo bốn tiêu chí có trích dẫn, khoảng band, viết lại đoạn, cụm từ hay thành thẻ ôn; mỗi bài viết cập nhật năm kỹ năng Viết trên bản đồ (`/viet`) | Đã chạy; cổng đo chờ bài viết có điểm giám khảo |
 | Phát âm | Đọc to câu mẫu, kiểm tra chất lượng bản ghi, chấm từng âm người Việt hay nhầm (phụ âm cuối, th, s/sh, r/l, nguyên âm dài…) (`/phat-am`) | Đã chạy, chỉ cho chủ dự án; chưa đánh dấu đúng/sai cho đến khi đo tỉ lệ báo nhầm |
-| Đọc và Nghe | Bài đọc từ nguồn mở (Simple English Wikipedia, OpenStax), câu hỏi kiểu IELTS được tạo sẵn, kiểm chứng mù rồi giáo viên duyệt; nghe bằng giọng máy | Đang làm (giai đoạn 4): tạo câu hỏi, kiểm chứng mù và hàng duyệt đã có; chờ bài đọc đã kiểm giấy phép |
+| Đọc và Nghe | Bài đọc từ nguồn mở (Simple English Wikipedia, OpenStax), câu hỏi kiểu IELTS được tạo sẵn, kiểm chứng mù rồi giáo viên duyệt; nghe bằng giọng máy | Đang làm (giai đoạn 4): tạo câu hỏi, kiểm chứng mù, hàng duyệt và trang luyện Đọc (`/doc`) đã có; trang luyện chỉ đưa câu hỏi đạt mức Silver, nên chưa có gì để luyện cho đến khi có bài đọc đã kiểm giấy phép |
 | Nói | Part 1–3, bản ghi chép lời nói, nhận xét ngữ pháp, từ vựng, phát âm, độ trôi chảy | Đã có đặc tả; chưa làm |
 
 ## Nguyên tắc: AI giải thích, bộ máy quyết định
@@ -50,7 +50,7 @@ Chi tiết và cổng đo của từng giai đoạn: [`docs/v2/plan-english-pack
 | 1 | Lộ trình, kiểm tra trình độ, từ vựng, ngữ pháp | Đã làm; chờ duyệt câu hỏi và đo độ chính xác xếp trình độ |
 | 2 | Viết (Task 2, rồi Task 1) | Đã làm (2.1–2.5); cổng đo chờ bài viết có điểm giám khảo |
 | 3 | Phát âm | Đã làm (3.1–3.5a); cổng đo chờ nhãn của người có chuyên môn ngữ âm trên 50–100 bản ghi |
-| 4 | Đọc và Nghe | Đang làm: lấy bài đọc, tạo câu hỏi, kiểm chứng mù và hàng duyệt đã có; trang luyện Đọc đang làm; chờ bài đọc |
+| 4 | Đọc và Nghe | Đang làm: lấy bài đọc, tạo câu hỏi, kiểm chứng mù và hàng duyệt đã có; trang luyện Đọc đã có (19/11); chờ bài đọc |
 | Song song | Hệ thống kiểm chứng (nhãn Vàng/Bạc/Đồng, cổng duyệt cho giáo viên, nghiên cứu tiến bộ cá nhân); hai bản đồ và «Hôm nay» | Đã làm |
 | 5 | Nói, và mở cho người dùng thử | Đã có đặc tả |
 

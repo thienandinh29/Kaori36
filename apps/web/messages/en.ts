@@ -19,11 +19,42 @@ export const en = {
       levelTest: "Level test",
       explore: "Explore a topic",
       writing: "Writing",
+      reading: "Reading",
     },
     draft: "Draft",
     retry: "Try again",
     about: "About",
     vocabulary: "Vocabulary",
+    readingPractice: {
+      title: "Reading practice",
+      intro:
+        "Open texts with IELTS-style questions. Every question passed code checks and a blind answer by another model; right or wrong comes from the key.",
+      none: "No text is ready yet. A text needs its licence checked, then its questions need verifying before they reach you.",
+      counts: (q: number, w: number) => `${q} questions · ${w} words`,
+      draftNote:
+        "Questions generated automatically, not yet reviewed by a teacher.",
+      passage: "Passage",
+      question: "Question",
+      kinds: {
+        tfng: "True / False / Not given",
+        mcq: "Multiple choice",
+        completion: "Completion",
+        headings: "Matching headings",
+      } as Record<string, string>,
+      headingsPrompt:
+        "Choose a heading for each paragraph (numbered at its start).",
+      paragraph: (n: number) => `Paragraph ${n}`,
+      maxWords: (n: number) => `At most ${n} words:`,
+      check: "Check",
+      right: "Right.",
+      wrong: "Not quite.",
+      key: "Answer",
+      evidence: "The sentence that decides it is highlighted in the passage.",
+      next: "Next question",
+      finish: "Done",
+      finished: "You have answered every question for this text.",
+      back: "Choose another text",
+    },
     maps: {
       title: "Skill map",
       intro: (n: number) =>

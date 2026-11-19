@@ -17,6 +17,7 @@ const LINKS = [
   { href: "/ban-do", label: t.nav.maps },
   { href: "/tu-vung", label: t.homeToday.vocabTitle },
   { href: "/viet", label: t.nav.writing },
+  { href: "/doc", label: t.nav.reading },
   { href: "/phat-am", label: t.nav.pronunciation },
   { href: "/kiem-tra", label: t.nav.levelTest },
   { href: "/gioi-thieu", label: t.about.nav },

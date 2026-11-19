@@ -19,7 +19,7 @@ word list.
 **Build (agent), in order:**
 - [ ] 4.1 text bank with licences and level features
 - [ ] 4.2 Reading items, blind verification, review queue, planted-error test
-- [ ] 4.3 Reading practice, skill nodes, evidence
+- [x] 4.3 Reading practice, competency evidence (`step-4.3.md`, built 19 Nov; serves nothing until CP1 texts and Silver questions exist)
 - [ ] 4.4 Listening audio and items
 - [ ] 4.5 gate report
 

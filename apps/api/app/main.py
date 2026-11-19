@@ -126,10 +126,14 @@ def create_app(
     from app.services.rechecks import Rechecks
 
     app.include_router(recheck_routes.create_router(Rechecks(grammar)))
+    from app.api import reading_practice as reading_practice_routes
     from app.api import today as today_routes
+    from app.services.reading_practice import ReadingPractice
     from app.services.today import TodayService
 
-    app.include_router(today_routes.create_router(TodayService(grammar)))
+    reading = ReadingPractice(lambda: app.state.pool, settings.reading_texts_dir)
+    app.include_router(reading_practice_routes.create_router(reading))
+    app.include_router(today_routes.create_router(TodayService(grammar, reading=reading)))
     from app.api import pronunciation as pronunciation_routes
     from app.services.recordings import Recordings
 
