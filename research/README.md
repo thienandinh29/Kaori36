@@ -26,3 +26,4 @@ reproducible from the repository and a data version.
 | KT-001 | Does BKT predict the next answer better than simple baselines? | planned |
 | FORGET-001 | What is forgotten after about a week, and does the model know? | collecting (since 18 Nov 2026) |
 | VER-001 | How reliable and costly is the generated-content pipeline? | planned |
+| PRON-001 | Does comparing /æ/ only with /ɛ/ make that sound group usable? | done 19 Nov, synthetic: false alarms 60% → 10%, catches unchanged |
