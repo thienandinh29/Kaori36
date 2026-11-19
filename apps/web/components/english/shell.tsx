@@ -14,6 +14,7 @@ const t = vi.english;
 const LINKS = [
   { href: "/", label: t.nav.today },
   { href: "/lo-trinh", label: t.nav.roadmap },
+  { href: "/ban-do", label: t.nav.maps },
   { href: "/tu-vung", label: t.homeToday.vocabTitle },
   { href: "/viet", label: t.nav.writing },
   { href: "/phat-am", label: t.nav.pronunciation },

@@ -1,6 +1,6 @@
 # Spec: two maps and one recommendation engine
 
-Status: **approved 18 Nov 2026** (decisions in `tasks.md`: overall 7.0, exam assumed July 2027); M1, M2 and M3 built (M2: root cause only below 0.8, see `tasks.md`). Proposed by the owner. The owner reviews this page before any
+Status: **approved 18 Nov 2026** (decisions in `tasks.md`: overall 7.0, exam assumed July 2027); M1–M4 built (M2: root cause only below 0.8, see `tasks.md`). Proposed by the owner. The owner reviews this page before any
 code. It fits the current plan (`docs/v2/plan-english-pack.md`) and should be settled before phase 4's CP4, because
 CP4's Reading skill nodes are the first nodes of layer 2.
 

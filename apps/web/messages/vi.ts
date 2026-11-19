@@ -399,6 +399,7 @@ export const vi = {
     nav: {
       today: "Hôm nay",
       roadmap: "Lộ trình",
+      maps: "Bản đồ kỹ năng",
       levelTest: "Kiểm tra trình độ",
       explore: "Khám phá chủ đề",
       writing: "Viết",
@@ -598,6 +599,31 @@ export const vi = {
       mastered: "Sena bắn tim: bạn đã nắm vững",
       focus: "Sena đang tập trung",
       think: "Sena đang suy nghĩ",
+    },
+    maps: {
+      title: "Bản đồ kỹ năng",
+      intro: (n: number) =>
+        `Mỗi kỹ năng thi IELTS và các nền tảng nó cần. Một kỹ năng được tính là đã đo sau ${n} bài; trước đó NodeTrail chỉ đoán. Đây là ước lượng, không phải band điểm.`,
+      proposed:
+        "Liên kết giữa kỹ năng thi và nền tảng là đề xuất, chưa được giáo viên kiểm tra.",
+      skills: {
+        reading: "Đọc",
+        listening: "Nghe",
+        writing: "Viết",
+        speaking: "Nói",
+      } as Record<string, string>,
+      status: {
+        unmeasured: "Chưa đo",
+        weak: "Cần học",
+        growing: "Đang tiến bộ",
+        known: "Đã chắc",
+      } as Record<string, string>,
+      kinds: { requires: "Cần", helps: "Giúp" } as Record<string, string>,
+      basedOn: (n: number, unit: string) => `dựa trên ${n} ${unit}`,
+      essays: "bài",
+      answers: "lần",
+      notYet: "NodeTrail chưa có bài luyện cho kỹ năng này.",
+      notLive: "chưa có trong khóa học",
     },
     today: {
       title: "Hôm nay",

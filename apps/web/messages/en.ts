@@ -15,6 +15,7 @@ export const en = {
     nav: {
       today: "Today",
       roadmap: "Roadmap",
+      maps: "Skill map",
       levelTest: "Level test",
       explore: "Explore a topic",
       writing: "Writing",
@@ -23,6 +24,31 @@ export const en = {
     retry: "Try again",
     about: "About",
     vocabulary: "Vocabulary",
+    maps: {
+      title: "Skill map",
+      intro: (n: number) =>
+        `Each IELTS skill and the foundations it needs. A skill counts as measured after ${n} pieces of work; before that NodeTrail only guesses. These are estimates, not bands.`,
+      proposed:
+        "The links between exam skills and foundations are proposed, not yet checked by a teacher.",
+      skills: {
+        reading: "Reading",
+        listening: "Listening",
+        writing: "Writing",
+        speaking: "Speaking",
+      } as Record<string, string>,
+      status: {
+        unmeasured: "Not measured",
+        weak: "To learn",
+        growing: "Growing",
+        known: "Secure",
+      } as Record<string, string>,
+      kinds: { requires: "Needs", helps: "Helps" } as Record<string, string>,
+      basedOn: (n: number, unit: string) => `based on ${n} ${unit}`,
+      essays: "essays",
+      answers: "answers",
+      notYet: "NodeTrail has no practice for this skill yet.",
+      notLive: "not in the course yet",
+    },
     today: {
       title: "Today",
       target: (band: number, date: string) =>

@@ -76,3 +76,53 @@ def test_unknown_learner_and_bad_minutes(env) -> None:  # type: ignore[no-untype
         == 404
     )
     assert client.get("/today", params={"learner_id": "x", "minutes": 5}).status_code == 422
+
+
+def test_maps_show_every_competency_with_its_foundations(env) -> None:  # type: ignore[no-untyped-def]
+    client, learner, _ = env
+    out = client.get("/maps", params={"learner_id": learner}).json()
+    assert [s["skill"] for s in out["skills"]] == ["reading", "listening", "writing", "speaking"]
+    comps = {c["slug"]: c for s in out["skills"] for c in s["competencies"]}
+    assert len(comps) == 17
+    assert all(c["status"] == "unmeasured" and c["p"] is None for c in comps.values())
+    assert comps["writing-grammar"]["available"] is True
+    assert comps["reading-detail"]["available"] is False
+    links = {link["node"]: link for link in comps["writing-grammar"]["links"]}
+    assert links["articles-basic"]["live"] is True
+    assert links["articles-basic"]["href"] == "/on-tap/phan/articles-basic"
+    assert links["agreement-long-subjects"]["live"] is False  # proposed path only
+    assert links["agreement-long-subjects"]["href"] is None
+    assert links["agreement-long-subjects"]["name_vi"] != "agreement-long-subjects"  # a real name
+    assert links["articles-basic"]["status"] == "unmeasured"  # no answers yet
+    assert out["known"] == 0.9 and out["root_cause_below"] == 0.8 and out["min_evidence"] == 3
+    assert out["target"]["links_status"] == "proposed"
+
+
+def test_maps_status_follows_the_evidence(env) -> None:  # type: ignore[no-untyped-def]
+    import uuid as _uuid
+
+    from app.services import competency_evidence
+    from app.writing.competency import Observation
+
+    client, learner, pool = env
+    with pool.connection() as conn:
+        rules = competency_evidence.rules(ROOT / "writing")
+        for passed in (True, True, True):
+            obs = [Observation("writing-coherence", "paragraphs", passed, 4.0, "x")]
+            competency_evidence.apply(conn, _uuid.UUID(learner), _uuid.uuid4(), obs,
+                                      rules.params(), NOW)  # fmt: skip
+        obs = [Observation("writing-grammar", "error_rate", False, 9.0, "x")]
+        competency_evidence.apply(
+            conn, _uuid.UUID(learner), _uuid.uuid4(), obs, rules.params(), NOW
+        )
+    comps = {
+        c["slug"]: c
+        for s in client.get("/maps", params={"learner_id": learner}).json()["skills"]
+        for c in s["competencies"]
+    }
+    coherence = comps["writing-coherence"]
+    assert coherence["evidence"] == 3 and coherence["status"] in ("growing", "known", "weak")
+    assert coherence["p"] > 0.2
+    grammar = comps["writing-grammar"]
+    assert grammar["evidence"] == 1 and grammar["status"] == "unmeasured"  # one essay is not enough
+    assert grammar["p"] is not None  # the estimate is shown, flagged as unmeasured
