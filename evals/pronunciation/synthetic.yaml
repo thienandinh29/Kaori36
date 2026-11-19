@@ -1,0 +1,36 @@
+# Synthetic pronunciation benchmark (specs/pronunciation/step-3.6b.md). Every word is said by the self-hosted Piper voice
+# inside "say ... again", from exact phonemes: as written, with the target sound swapped (`subs`), or with it left out
+# (`drop`). Canonical phones are the ones in data/pronunciation/canonical.yaml. The swaps and drops are the errors the
+# phase 3 spec lists for Vietnamese learners; the agent chose the words (draft).
+#
+# What this can show: whether the pipeline reacts to a controlled error at all (sensitivity), and false alarms on a clean
+# voice. What it cannot show: anything about a Vietnamese accent or real learners. Piper is one native British voice.
+cases:
+  - {sound: th-voiceless, word: think, phones: [θ, ɪ, ŋ, k], target: 0, subs: [t, s, f]}
+  - {sound: th-voiceless, word: month, phones: [m, ʌ, n, θ], target: 3, subs: [t], drop: true}
+  - {sound: th-voiced, word: this, phones: [ð, ɪ, s], target: 0, subs: [d, z]}
+  - {sound: th-voiced, word: that, phones: [ð, æ, t], target: 0, subs: [d]}
+  - {sound: final-t, word: light, phones: [l, aɪ, t], target: 2, drop: true}
+  - {sound: final-t, word: test, phones: [t, ɛ, s, t], target: 3, drop: true}
+  - {sound: final-k, word: book, phones: [b, ʊ, k], target: 2, drop: true}
+  - {sound: final-k, word: desk, phones: [d, ɛ, s, k], target: 3, drop: true}
+  - {sound: final-p, word: help, phones: [h, ɛ, l, p], target: 3, drop: true}
+  - {sound: final-p, word: shop, phones: [ʃ, ɒ, p], target: 2, drop: true}
+  - {sound: final-s, word: cups, phones: [k, ʌ, p, s], target: 3, drop: true}
+  - {sound: final-s, word: this, phones: [ð, ɪ, s], target: 2, drop: true}
+  - {sound: final-z, word: plays, phones: [p, l, eɪ, z], target: 3, subs: [s], drop: true}
+  - {sound: final-z, word: dogs, phones: [d, ɒ, ɡ, z], target: 3, subs: [s], drop: true}
+  - {sound: sh-s, word: she, phones: [ʃ, iː], target: 0, subs: [s]}
+  - {sound: sh-s, word: sheep, phones: [ʃ, iː, p], target: 0, subs: [s]}
+  - {sound: ch-j, word: cheap, phones: [tʃ, iː, p], target: 0, subs: [ʃ, t]}
+  - {sound: ch-j, word: jacket, phones: [dʒ, æ, k, ɪ, t], target: 0, subs: [z]}
+  - {sound: r-l, word: road, phones: [ɹ, əʊ, d], target: 0, subs: [l]}
+  - {sound: r-l, word: light, phones: [l, aɪ, t], target: 0, subs: [ɹ]}
+  - {sound: clusters, word: street, phones: [s, t, ɹ, iː, t], target: 1, drop: true}
+  - {sound: clusters, word: texts, phones: [t, ɛ, k, s, t, s], target: 4, drop: true}
+  - {sound: long-ee, word: sheep, phones: [ʃ, iː, p], target: 1, subs: [ɪ]}
+  - {sound: long-ee, word: keep, phones: [k, iː, p], target: 1, subs: [ɪ]}
+  - {sound: long-oo, word: pool, phones: [p, uː, l], target: 1, subs: [ʊ]}
+  - {sound: long-oo, word: cool, phones: [k, uː, l], target: 1, subs: [ʊ]}
+  - {sound: ae-e, word: bad, phones: [b, æ, d], target: 1, subs: [ɛ]}
+  - {sound: ae-e, word: man, phones: [m, æ, n], target: 1, subs: [ɛ]}

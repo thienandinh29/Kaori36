@@ -22,6 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.engine.milestones import ASSUMED_KNOWN
 from app.pronunciation.canonical import Word, load_canonical, phone_set
 from app.pronunciation.canonical import check as check_canonical
+from app.pronunciation.evidence import is_dropped
 from app.pronunciation.marks import load_applied, marks, outcomes
 from app.pronunciation.quality import Quality, check
 from app.services.backend import learner_uuid
@@ -279,6 +280,12 @@ class Recordings:
             "failed": row[7] is not None,
             "labels": [{"target": t, "label": label} for t, label in labels],
             "marks": marks(row[6]["targets"], self.group_of, self.applied) if row[6] else [],
+            # Step 3.6b: marks that are dropped sounds (said as "bỏ mất", not "nghe giống").
+            "dropped": [
+                i
+                for i in (marks(row[6]["targets"], self.group_of, self.applied) if row[6] else [])
+                if is_dropped(row[6]["targets"][i])
+            ],
             # Step 3.6a: target sounds of an applied group that are neither marked nor accepted.
             "unsure": [
                 i

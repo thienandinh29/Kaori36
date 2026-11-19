@@ -16,6 +16,12 @@ Outcome = Literal["right", "wrong", "inconclusive"]
 # sometimes gets it right (guess, higher for sounds that are easy to hit by chance).
 LEARNER_SLIP = 0.10
 LEARNER_GUESS = 0.25
+# A target sound counts as dropped when neither it nor any other phone reaches this probability
+# in its aligned frames (step 3.6b). On the synthetic benchmark (each case said 5 times) 0.1 caught
+# 53 of 65 dropped sounds and none of 140 clean or 110 swapped ones; 0.2 caught 57 but called 3
+# clean sounds dropped. Re-check on Vietnamese speakers
+# (evals/baselines/pronunciation-synthetic.json).
+DROPPED_PEAK = 0.1
 
 
 @dataclass(frozen=True)
@@ -39,8 +45,17 @@ class Rates:
         )  # fmt: skip
 
 
+def is_dropped(target: Mapping[str, Any]) -> bool:
+    """Neither the target phone nor any other phone peaks in its frames: it was not said."""
+    peak, other = target.get("peak"), target.get("other_peak")
+    return peak is not None and other is not None and peak < DROPPED_PEAK and other < DROPPED_PEAK
+
+
 def outcome(target: Mapping[str, Any], threshold: float, accept: float) -> Outcome:
-    """A target sound's outcome: wrong needs a low GOP and a heard competitor; right a high GOP."""
+    """A target sound's outcome: wrong needs a low GOP and a heard competitor, or a dropped sound;
+    right needs a high GOP."""
+    if is_dropped(target):
+        return "wrong"
     gop = float(target["gop"])
     if gop < threshold and target.get("competitor"):
         return "wrong"

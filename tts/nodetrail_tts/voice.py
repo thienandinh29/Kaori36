@@ -124,3 +124,25 @@ class Speaker:
         audio = buf.getvalue()
         self.cache.put((text, pace), audio)
         return audio
+
+    def phonemes(self, phonemes: list[str], pace: Pace) -> bytes:
+        """Exact phonemes (the voice's own symbols) to WAV; ValueError for an unknown symbol."""
+        import numpy as np
+        from piper import SynthesisConfig
+
+        symbols = [c for p in phonemes for c in p]
+        unknown = sorted({c for c in symbols if c not in self._voice.config.phoneme_id_map})
+        if unknown:
+            raise ValueError(f"phonemes the voice does not know: {unknown}")
+        ids = self._voice.phonemes_to_ids(symbols)
+        samples = self._voice.phoneme_ids_to_audio(
+            ids, SynthesisConfig(length_scale=LENGTH_SCALE[pace])
+        )
+        pcm = (np.clip(np.asarray(samples), -1, 1) * 32767).astype("<i2").tobytes()
+        buf = io.BytesIO()
+        with wave.open(buf, "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(self._voice.config.sample_rate)
+            w.writeframes(pcm)
+        return buf.getvalue()

@@ -24,6 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
+from app.pronunciation.evidence import is_dropped
 from app.validation.gate import Truth, basis, measured
 
 MAX_FALSE_SHARE = 0.10
@@ -41,6 +42,7 @@ class Labelled:
     group: str
     gop: float
     wrong: bool
+    dropped: bool = False  # the product calls it wrong whatever its GOP (step 3.6b)
 
 
 def half(recording: str) -> Half:
@@ -59,7 +61,7 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
 
 def counts(items: Sequence[Labelled], threshold: float) -> tuple[int, int, int, int]:
     """(flagged, false alarms, wrong caught, wrong total)."""
-    flagged = [x for x in items if x.gop < threshold]
+    flagged = [x for x in items if x.gop < threshold or x.dropped]
     false = sum(not x.wrong for x in flagged)
     caught = sum(x.wrong for x in flagged)
     return len(flagged), false, caught, sum(x.wrong for x in items)
@@ -93,7 +95,7 @@ def choose_accept(
     """The lowest `accept` (at or above `threshold`) with at most `max_wrong` of accepted sounds
     labelled wrong: as many sounds conclusive as the limit allows. None when nothing qualifies."""
     for gop in sorted({x.gop for x in items if x.gop >= threshold}):
-        accepted = [x for x in items if x.gop >= gop]
+        accepted = [x for x in items if x.gop >= gop and not x.dropped]
         if accepted and sum(x.wrong for x in accepted) / len(accepted) <= max_wrong:
             return round(gop, 3)
     return None
@@ -106,7 +108,13 @@ def outcomes(
     so `GOP < threshold` is the product's `wrong` (`evidence.outcome`)."""
     out = {t: {"right": 0, "wrong": 0, "inconclusive": 0} for t in ("said_right", "said_wrong")}
     for x in items:
-        o = "wrong" if x.gop < threshold else "right" if x.gop >= accept else "inconclusive"
+        o = (
+            "wrong"
+            if x.gop < threshold or x.dropped
+            else "right"
+            if x.gop >= accept
+            else "inconclusive"
+        )
         out["said_wrong" if x.wrong else "said_right"][o] += 1
     return out
 
@@ -186,7 +194,10 @@ def from_rows(rows: Iterable[tuple[str, Any, int, str]], groups: dict[str, str])
         if label == "unsure":
             continue
         t = analysis["targets"][target]
-        out.append(Labelled(str(recording), groups[t["sound"]], float(t["gop"]), label == "wrong"))
+        out.append(
+            Labelled(str(recording), groups[t["sound"]], float(t["gop"]), label == "wrong",
+                     is_dropped(t))
+        )  # fmt: skip
     return out
 
 

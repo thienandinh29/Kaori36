@@ -151,6 +151,9 @@ def summarise(
                 "competitor": phones[t.phone]["competitor"],
                 "start_ms": phones[t.phone]["start_ms"],
                 "end_ms": phones[t.phone]["end_ms"],
+                # Step 3.6b: whether the phone was there at all (absent in older analyses).
+                "peak": phones[t.phone].get("peak"),
+                "other_peak": phones[t.phone].get("other_peak"),
             }
             for t in targets(words, sounds)
         ],

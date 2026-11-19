@@ -72,7 +72,11 @@ function Marks({
           return (
             <li key={i}>
               <u lang="en">{s.word}</u>: {sound?.name_vi ?? s.sound}
-              {s.competitor ? ` (${t.heard} /${s.competitor}/)` : ""}
+              {detail.dropped.includes(i)
+                ? ` (${t.dropped(s.phone)})`
+                : s.competitor
+                  ? ` (${t.heard} /${s.competitor}/)`
+                  : ""}
               {sound?.tip_vi && <p className="en-muted">{sound.tip_vi}</p>}
             </li>
           );

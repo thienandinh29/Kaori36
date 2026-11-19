@@ -76,6 +76,8 @@ def create_app(pin: Pin, recognise: Recognise, vocab: Mapping[str, int], blank: 
                     "end_ms": s.end * FRAME_MS,
                     "gop": s.gop,
                     "competitor": names[s.competitor] if s.competitor is not None else None,
+                    "peak": s.peak,
+                    "other_peak": s.other_peak,
                 }
                 for s in gop(lp, segments, blank)
             ],

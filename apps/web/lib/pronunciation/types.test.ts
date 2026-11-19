@@ -95,6 +95,8 @@ describe("pronunciation decoders (step 3.3a)", () => {
     const base = { ...row, failed: false, analysis: null };
     expect(parseRecording(base).unsure).toEqual([]);
     expect(parseRecording({ ...base, unsure: [1, 2] }).unsure).toEqual([1, 2]);
+    expect(parseRecording(base).dropped).toEqual([]);
+    expect(parseRecording({ ...base, dropped: [0] }).dropped).toEqual([0]);
     expect(() => parseRecording({ ...base, unsure: ["1"] })).toThrow();
   });
   it("reads marks as target indexes", () => {

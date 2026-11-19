@@ -9,6 +9,12 @@ standard CTC trellis, Viterbi). Each canonical phone gets the frames where the p
 GOP for a phone is the mean, over its frames, of log P(canonical) minus the log-probability of the
 best non-blank competitor; 0 means the canonical phone was the most likely, below 0 that another
 phone was more likely. The competitor is the phone most often best in those frames.
+
+For dropped sounds (step 3.6b) each score also has `peak`, the highest probability of the
+canonical phone in its frames, and `other_peak`, the highest probability of any other phone there
+(blank and the neighbouring canonical phones left out). Alignment gives every canonical phone at
+least one frame even when it was never said; then neither peaks: the frames are blank or belong
+to a neighbour. GOP alone misses this, because it compares only phones and ignores blank.
 """
 
 import math
@@ -39,6 +45,8 @@ class PhoneScore:
     end: int
     gop: float
     competitor: int | None  # the best other phone in these frames; None when the canonical one wins
+    peak: float = 1.0  # highest P(canonical phone) in these frames
+    other_peak: float = 0.0  # highest P(another phone), blank and neighbours left out
 
 
 def align(log_probs: Matrix, tokens: Sequence[int], blank: int = 0) -> list[Segment]:
@@ -88,7 +96,9 @@ def align(log_probs: Matrix, tokens: Sequence[int], blank: int = 0) -> list[Segm
 
 def gop(log_probs: Matrix, segments: Sequence[Segment], blank: int = 0) -> list[PhoneScore]:
     out = []
-    for seg in segments:
+    for i, seg in enumerate(segments):
+        neighbours = {s.token for s in segments[max(0, i - 1) : i + 2]} - {seg.token}
+        peak = other_peak = NEG
         diffs, winners = [], Counter[int]()
         for f in range(seg.start, seg.end):
             row = log_probs[f]
@@ -96,9 +106,22 @@ def gop(log_probs: Matrix, segments: Sequence[Segment], blank: int = 0) -> list[
             diffs.append(row[seg.token] - best[0])
             if best[0] > row[seg.token]:
                 winners[best[1]] += 1
+            peak = max(peak, row[seg.token])
+            others = [p for k, p in enumerate(row) if k not in (blank, seg.token, *neighbours)]
+            other_peak = max([other_peak, *others])
         mean = sum(diffs) / len(diffs)
         competitor = winners.most_common(1)[0][0] if winners and mean < 0 else None
-        out.append(PhoneScore(seg.token, seg.start, seg.end, round(mean, 3), competitor))
+        out.append(
+            PhoneScore(
+                seg.token,
+                seg.start,
+                seg.end,
+                round(mean, 3),
+                competitor,
+                round(math.exp(peak), 3),
+                round(math.exp(other_peak), 3),
+            )
+        )
     return out
 
 

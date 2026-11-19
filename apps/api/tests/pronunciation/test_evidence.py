@@ -48,3 +48,16 @@ def test_rates_from_outcome_counts() -> None:
     assert Rates.from_counts({}, {}) == Rates(0.0, 0.0, 0.0, 0.0)
     with pytest.raises(TypeError):
         Rates(1, 0, 0)  # type: ignore[call-arg]
+
+
+def test_a_dropped_sound_is_wrong_whatever_its_score() -> None:
+    from app.pronunciation.evidence import DROPPED_PEAK, is_dropped
+
+    gone = {"gop": 0.0, "competitor": None, "peak": 0.01, "other_peak": 0.02}
+    assert is_dropped(gone) and outcome(gone, -1.0, -0.2) == "wrong"
+    swapped = {"gop": -3.0, "competitor": "t", "peak": 0.01, "other_peak": 0.95}
+    assert not is_dropped(swapped)  # another phone peaked: said, but something else
+    old = {"gop": 0.5, "competitor": None}  # an analysis from before step 3.6b
+    assert not is_dropped(old) and outcome(old, -1.0, -0.2) == "right"
+    edge = {"gop": 0.5, "competitor": None, "peak": DROPPED_PEAK, "other_peak": 0.0}
+    assert not is_dropped(edge)  # the rule is strictly below
