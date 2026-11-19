@@ -1,0 +1,295 @@
+text_slug: os-introduction-sociolo-what-is-social-stratification
+source: openstax-reading
+versions:
+- passage_sha256: fa2729710fdb80d4faa487e2fe92039ed1238e31f0eabd0b5788d4175d4ed882
+  items:
+  - id: os-introduction-sociolo-what-is-social-stratification-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-completion-1
+      kind: completion
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - income
+      evidence:
+      - In most societies, stratification is an economic system, based on wealth, the net value of money and assets
+        a person has, and income, a person’s wages or investment dividends.
+      sentence: In most societies, stratification is an economic system based on wealth and ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-completion-2
+      kind: completion
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - achievement
+      evidence:
+      - Open systems are based on achievement and allow for movement and interaction between layers and classes.
+      sentence: Open systems are based on ___ and allow for movement and interaction between layers and classes.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-completion-3
+      kind: completion
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - ideology
+      evidence:
+      - Every culture has an ideology that supports its system of stratification.
+      sentence: Every culture has an ___ that supports its system of stratification.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-headings-1
+    kind: headings
+    status: dropped
+    item: {}
+    problems:
+    - two paragraphs share a heading
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-mcq-1
+      key: 0
+      kind: mcq
+      stem: What is the main point the passage makes about how sociologists view social stratification?
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - It is a system created and supported by society that affects people's standing.
+      - It is determined entirely by inherited wealth.
+      - It exists only in the United States.
+      - It is the same as geological layers in rock.
+      evidence:
+      - But sociologists see how the structure of society affects a person's social standing and therefore is created
+        and supported by society.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-mcq-2
+      key: 2
+      kind: mcq
+      stem: Why does the passage suggest first-generation college students may struggle compared with other students?
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - They are less talented than students whose parents attended college.
+      - They cannot afford tuition under any circumstances.
+      - They do not receive the resources and support that families with college experience provide.
+      - They are not permitted to attend college by law.
+      evidence:
+      - They lack access to the resources and support commonly provided to those whose parents have gone to college.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-mcq-3
+      key: 3
+      kind: mcq
+      stem: What attitude does the passage express about closed systems of stratification?
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: writers_view
+      origin: generated
+      status: draft
+      options:
+      - They are the fairest systems available.
+      - They allow considerable movement between levels.
+      - They permit social relationships between levels.
+      - They allow little change in social position.
+      evidence:
+      - Closed systems accommodate little change in social position. They do not allow people to shift levels and
+        do not permit social relationships between levels.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Geologists also use the word “stratification” to describe the distinct vertical layers found in rock.
+      - Social stratification refers to a society’s categorization of its people into rankings based on factors
+        like wealth, income, education, family background, and power.
+      statement: Sociologists and geologists both use the term "stratification" to describe layers.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-tfng-2
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - An individual’s place within this stratification is called socioeconomic status (SES).
+      statement: According to the passage, an individual's position in a stratification system is known as their
+        socioeconomic status.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Most Americans believe the rising and falling is based on individual choices. But sociologists see how the
+        structure of society affects a person's social standing and therefore is created and supported by society.
+      statement: Sociologists consider social stratification to be the result of individual choices and personal
+        effort.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Many believe that teaching is a noble profession, so teachers should do their jobs for love of their profession
+        and the good of their students—not for money. Yet, the same attitude is not applied to professional athletes,
+        executives, or those working in corporate world. Cultural attitudes and beliefs like these support and perpetuate
+        social and economic inequalities.
+      statement: Teachers are paid less than professional athletes partly because of cultural attitudes about why
+        teachers work.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-what-is-social-stratification-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-what-is-social-stratification-tfng-5
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-what-is-social-stratification
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - The caste system in India has been officially dismantled, but is still deeply embedded in Indian society,
+        particularly in rural areas.
+      statement: The passage states that the caste system in India has been fully eliminated in both cities and
+        rural areas.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

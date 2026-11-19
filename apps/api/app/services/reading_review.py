@@ -5,9 +5,9 @@ passage is missing or changed, or the item no longer passes the code checks: wha
 approves is exactly what a learner will later see.
 """
 
-import hashlib
 from collections.abc import Callable
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
@@ -17,6 +17,7 @@ from psycopg_pool import ConnectionPool
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from app.reading.items import Item, check, learner_view
+from app.reading.pipeline import sha256 as passage_sha256
 from app.services.backend import learner_uuid
 from app.validation.store import LabelIn, add_label
 
@@ -32,14 +33,34 @@ class Decision(BaseModel):
     note: str | None = Field(default=None, max_length=500)
 
 
+def _signature(folder: Path) -> tuple[tuple[str, int, int], ...]:
+    """What the folder holds now: a file's name, modification time and size."""
+    files = sorted(folder.glob("*.yaml")) if folder.is_dir() else []
+    return tuple((p.name, (st := p.stat()).st_mtime_ns, st.st_size) for p in files)
+
+
+@lru_cache(maxsize=8)
+def _read(folder: Path, signature: tuple[tuple[str, int, int], ...]) -> dict[str, tuple[str, str]]:
+    out: dict[str, tuple[str, str]] = {}
+    for name, _, _ in signature:
+        raw = yaml.safe_load((folder / name).read_text(encoding="utf-8"))
+        if isinstance(raw, dict) and raw.get("slug") and raw.get("text"):
+            out[str(raw["slug"])] = (str(raw.get("title") or raw["slug"]), str(raw["text"]))
+    return out
+
+
+def read_texts(folder: Path) -> dict[str, tuple[str, str]]:
+    """Text slug -> (title, passage), parsed again only when a file changes.
+
+    Answering and reviewing read the bank on every request; parsing every YAML file each time
+    made an answer take about 0.3 s with 30 texts (found by tests/reading/test_bank_simulation.py).
+    """
+    return dict(_read(folder, _signature(folder)))
+
+
 def load_passages(folder: Path) -> dict[str, str]:
     """Text slug -> passage, from the bank's folder (raw entries; serving also needs the bank)."""
-    out: dict[str, str] = {}
-    for path in sorted(folder.glob("*.yaml")) if folder.is_dir() else []:
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-        if isinstance(raw, dict) and raw.get("slug") and raw.get("text"):
-            out[str(raw["slug"])] = str(raw["text"])
-    return out
+    return {slug: text for slug, (_, text) in read_texts(folder).items()}
 
 
 class ReadingReview:
@@ -79,7 +100,7 @@ class ReadingReview:
         for item_id, slug, digest, data, answer, model, note in rows:
             item = _ITEM.validate_python(data)
             passage = passages.get(slug)
-            current = passage is not None and hashlib.sha256(passage.encode()).hexdigest() == digest
+            current = passage is not None and passage_sha256(passage) == digest
             items.append({
                 "id": item_id, "text": slug, "kind": item.kind, "skill": item.skill,
                 "question": learner_view(item), "key": key_of(item),
@@ -106,7 +127,7 @@ class ReadingReview:
                 raise HTTPException(409, "Câu hỏi này đã được duyệt hoặc chưa qua bước kiểm tra.")
             if body.decision == "approve":
                 passage = load_passages(self.texts_dir).get(slug)
-                if passage is None or hashlib.sha256(passage.encode()).hexdigest() != digest:
+                if passage is None or passage_sha256(passage) != digest:
                     raise HTTPException(
                         422, "Bài đọc không còn hoặc đã thay đổi; không duyệt được."
                     )

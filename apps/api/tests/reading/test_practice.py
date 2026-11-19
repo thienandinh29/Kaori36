@@ -91,6 +91,19 @@ def test_only_silver_approved_items_are_served(env: dict[str, Any]) -> None:
     assert "bees-completion-1" in [i["id"] for i in text["items"]]
 
 
+def test_the_owners_approval_alone_never_serves(env: dict[str, Any]) -> None:
+    """Code checks and the owner, with no checker label (its reply was unusable): Bronze."""
+    c, learner = env["client"], env["learner"]
+    with env["pool"].connection() as conn:
+        conn.execute("delete from labels where content_id='bees-tfng-2' and role='model'")
+        conn.execute("update reading_items set status='approved' where id='bees-tfng-2'")
+        label(conn, "bees-tfng-2", "owner_developer")
+    text = c.get("/reading/texts/bees", params={"learner_id": learner}).json()
+    assert "bees-tfng-2" not in [i["id"] for i in text["items"]]
+    assert c.post("/reading/items/bees-tfng-2/answer",
+                  json={"learner_id": learner, "answer": "TRUE"}).status_code == 404  # fmt: skip
+
+
 def test_answers_are_graded_from_the_key_and_move_the_competency(env: dict[str, Any]) -> None:
     c, learner, pool = env["client"], env["learner"], env["pool"]
 
@@ -138,3 +151,27 @@ def test_reading_becomes_available_and_measured_in_today(env: dict[str, Any]) ->
     )
     kinds = [(a["kind"], a["target"]) for a in today.today(learner, 50)["activities"]]
     assert ("diagnostic", "reading-detail") not in kinds  # measured now
+
+
+def test_a_text_file_in_another_unicode_form_is_still_served(env: dict[str, Any]) -> None:
+    """The fingerprint is of the NFC text, as the bank stores it (app/reading/pipeline.sha256)."""
+    import unicodedata
+
+    from app.reading.pipeline import sha256
+
+    word = "café"
+    assert sha256(unicodedata.normalize("NFD", word)) == sha256(word)
+    # The served file rewritten in NFD (as some editors save it): the questions stay served.
+    texts = env["practice"].texts_dir
+    nfd = unicodedata.normalize("NFD", PASSAGE + " Café.")
+    nfc = unicodedata.normalize("NFC", nfd)
+    assert nfd != nfc
+    with env["pool"].connection() as conn:
+        conn.execute(
+            "update reading_items set passage_sha256=%s where text_slug='bees'", (sha256(nfc),)
+        )
+    (texts / "bees.yaml").write_text(
+        yaml.safe_dump({"slug": "bees", "title": "Honey bees", "text": nfd}), "utf-8"
+    )
+    served = env["client"].get("/reading/texts", params={"learner_id": env["learner"]}).json()
+    assert served["texts"][0]["questions"] == 3

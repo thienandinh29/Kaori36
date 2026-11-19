@@ -1,0 +1,317 @@
+text_slug: os-world-history-volume-the-age-of-empires-in-the-americas
+source: openstax-reading
+versions:
+- passage_sha256: 07461c642140f24d7c9151c3e1c0dc9d4e08fa8b098fafa0cc06cf5aa36ae213
+  items:
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-1
+      kind: completion
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - Tiwanaku
+      evidence:
+      - Known today as the Inca, its cultural and technological roots extend back to the earlier Andean cultures
+        of the Moche, Nazca, and Tiwanaku.
+      sentence: The Inca's cultural and technological roots extend back to earlier Andean cultures such as the Moche,
+        Nazca, and ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-2
+      kind: completion
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - Chanka
+      evidence:
+      - The leap to imperial expansion is explained by another Inca legend, this time telling of a military challenge
+        from a rival group known as the Chanka and involving real historical figures.
+      sentence: Pachacuti took the additional title after a victory over a rival group known as the ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-3
+      kind: completion
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - road
+      evidence:
+      - Apart from the sheer power of numbers, the Inca military excelled in its ability to move swiftly along the
+        empire’s complicated highland road systems to surprise the enemy and put down any emerging rebellions.
+      sentence: The Inca military was skilled at moving quickly along the empire's complicated highland ___ systems.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-headings-1
+      key:
+        '0': 4
+        '1': 7
+        '2': 0
+        '3': 3
+        '4': 6
+        '5': 2
+        '6': 1
+      kind: headings
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The story of the Ayar brothers
+      - Inca warriors and their tactics
+      - Pachacuti and the wars of expansion
+      - The rise of Cuzco as an imperial city
+      - Earlier civilizations of the Americas
+      - Daily life in modern Cuzco
+      - The legend of the Chanka victory
+      - Roots and early settlement of the Inca
+      - Spanish colonial administration
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-1
+      key: 1
+      kind: mcq
+      stem: What is the passage mainly about?
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - The religious beliefs of the Aztecs
+      - The origins and rise of the Inca civilization and its empire
+      - The geography of Lake Titicaca
+      - Spanish exploration of the Eastern Woodlands
+      evidence:
+      - At around the same time the Aztec Empire was expanding across Mesoamerica, an equally impressive new civilization
+        was on the rise in the Andes region of South America.
+      - The empire’s growth began in earnest around 1430 during his reign, and as king he oversaw the conquest of
+        much of modern Peru.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-2
+      key: 1
+      kind: mcq
+      stem: What does the writer suggest about the story of the Ayar brothers?
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - It is entirely accurate history
+      - It contains some possible truth despite being fantastical
+      - It proves that climate change ended the Inca
+      - It was invented by the Spanish
+      evidence:
+      - The fantastical story of the Ayar brothers, with its descriptions of magic and supernatural events, is clearly
+        partly fictional, and it is not the only origin myth about the Inca. However, it may preserve a kernel of
+        truth about the early group that founded Cuzco, perhaps after some type of migration prompted by changes
+        in climate.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-3
+      key: 1
+      kind: mcq
+      stem: How did the Inca military often win battles, according to the passage?
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - By using gunpowder weapons
+      - By relying on superior numbers to force surrender
+      - By avoiding all contact with enemies
+      - By fighting only in the Amazon basin
+      evidence:
+      - Typically, they could use their great numbers to overwhelm and awe the enemy into capitulation.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - The heart of what became the Inca Empire was the city of Cuzco, located more than eleven thousand feet above
+        sea level in the central Andes and northwest of the shores of Lake Titicaca.
+      statement: Cuzco was located to the northwest of Lake Titicaca.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - This left only one brother, Ayar Manco, who reached Cuzco, dipped his golden cane into the ground, and founded
+        the city.
+      statement: According to the Ayar brothers story, all four brothers reached Cuzco.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - The empire’s growth began in earnest around 1430 during his reign, and as king he oversaw the conquest of
+        much of modern Peru.
+      statement: Inca expansion began in earnest around 1430, during the reign of Pachacuti.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-4
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: inference
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The Inca were the first people to build stone structures in the Andes.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-5
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-the-age-of-empires-in-the-americas
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - If that failed, they rushed into the fray, often with little discipline but with great courageous resolve.
+      statement: The Inca warriors' main weakness in battle was their lack of discipline.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

@@ -1,0 +1,316 @@
+text_slug: os-introduction-sociolo-deviance-and-control
+source: openstax-reading
+versions:
+- passage_sha256: bb635220f6adc4b49fc71505a03e82b3f589a3178a5ac03499e5a142db5b4f95
+  items:
+  - id: os-introduction-sociolo-deviance-and-control-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-completion-1
+      kind: completion
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - control
+      evidence:
+      - Both types of sanctions play a role in social control.
+      sentence: Both positive and negative types of sanctions play a role in social ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-completion-2
+      kind: completion
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - control
+      evidence:
+      - All societies practice social control, the regulation and enforcement of norms.
+      sentence: The regulation and enforcement of norms is known as social ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-completion-3
+      kind: completion
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - federal
+      evidence:
+      - Beginning in 1916, state after state began passing laws prohibiting marijuana use, and in 1937 Congress
+        passed a federal law banning it.
+      sentence: In 1937, Congress passed a ___ law banning marijuana.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-headings-1
+      key:
+        '0': 3
+        '1': 1
+        '2': 2
+        '3': 4
+        '4': 5
+        '5': 6
+      kind: headings
+      text: os-introduction-sociolo-deviance-and-control
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - How sanctions reward conformity and punish violation
+      - The relative nature of deviance and the example of funeral behaviour
+      - The history of marijuana prohibition and changing perceptions
+      - Deviance versus crime and their differing social significance
+      - Deviance as a tool used to oppress people
+      - Gambling and the gap between law and perceived deviance
+      - How social control maintains social order
+      - The structure of the court system in the United States
+      - Methods sociologists use to count crimes
+      - The role of families in reporting crime
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-mcq-1
+      key: 0
+      kind: mcq
+      stem: What is the main point the writer makes about perceptions of deviance?
+      text: os-introduction-sociolo-deviance-and-control
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - They depend heavily on the circumstances in which behaviour occurs.
+      - They are fixed by federal law and rarely change.
+      - They are shared identically by all societies.
+      - They are based mainly on the biological traits of the person.
+      evidence:
+      - 'Deviance may be considered relative: Behaviors may be considered deviant based mostly on the circumstances
+        in which they occurred; those circumstances may drive the perception of deviance more than the behavior
+        itself.'
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-mcq-2
+      key: 0
+      kind: mcq
+      stem: Why does the writer describe early restrictions on marijuana?
+      text: os-introduction-sociolo-deviance-and-control
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - To show that perceptions of what is criminal can be shaped by prejudice against newcomers.
+      - To prove that cannabis use has always caused violence.
+      - To explain how the federal government collects taxes on drugs.
+      - To argue that immigrants introduced cannabis to the United States.
+      evidence:
+      - They used marijuana more frequently than most Americans. Police and others began to circulate rumors regarding
+        the substance’s link to violence and immorality.
+      - Perceptions and proclamations of deviance have long been a means to oppress people by labeling their private
+        behavior as criminal.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-mcq-3
+      key: 1
+      kind: mcq
+      stem: What does the passage say is the underlying goal of social control?
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - To reward every employee who follows the rules.
+      - To keep social order in place.
+      - To increase punishments for shoplifting.
+      - To encourage people to break norms.
+      evidence:
+      - The underlying goal of social control is to maintain social order, an arrangement of practices and behaviors
+        on which society’s members base their daily lives.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Sociologists may study both with equal interest, but, as a whole, society views crime as far more significant.
+      statement: The passage states that society as a whole regards crime as much more important than other forms
+        of deviance.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - While it was not a widely used substance in the United States, it had been accepted as a medicinal and recreational
+        option, and was neither prohibited nor significantly regulated until the early 1900s.
+      statement: According to the passage, marijuana was widely used and heavily regulated in the United States
+        before the early 1900s.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-deviance-and-control
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - But in many cultures, funerals are followed by social gatherings – some taking on a party-like atmosphere
+        – so those same jovial behaviors would be perfectly acceptable, and even encouraged, just an hour later.
+      statement: Jovial behaviour at a funeral is always treated as deviant in every culture.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - While most states had eliminated their anti-LGBTQ laws by the time the Supreme Court struck them down in
+        2003, 14 states still had some version of them on the books.
+      statement: The passage says that by 2003 every state had removed all of its anti-LGBTQ laws.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-deviance-and-control-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-deviance-and-control-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-deviance-and-control
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The passage states how much money states collected from fines on illegal gambling.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

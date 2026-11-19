@@ -19,7 +19,7 @@ import time
 import unicodedata
 import urllib.parse
 import urllib.request
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Collection, Iterable, Sequence
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -33,8 +33,15 @@ REPO = Path(__file__).resolve().parents[4]
 PICKS = REPO / "data" / "english" / "text-picks.yaml"
 PRIVATE = REPO / "data" / "private" / "english-texts"
 MIN_WORDS, MAX_WORDS = 150, 600
+# IELTS-length academic passages (an exam passage is 700-900 words): OpenStax texts from 19 Nov.
+LONG_MIN, LONG_MAX = 500, 900
 # Wikimedia asks for a descriptive agent; no personal contact details are sent.
 USER_AGENT = "NodeTrail-text-bank/0.1 (open-source educational project; one request per second)"
+# "(White 2012)", "(Smith and Jones 2010a; Lee 2011)", "(Brown et al. 2003)".
+CITATION = re.compile(
+    r"\s*\((?:[A-Z][\w'.-]*(?:[ ,&]+(?:and|et al\.|[A-Z][\w'.-]*))*"
+    r" \d{4}[a-z]?(?:, p+\. ?\d+)?[;,]? ?)+\)"
+)
 WIKI_API = "https://simple.wikipedia.org/w/api.php"
 
 
@@ -48,6 +55,7 @@ def paragraphs(text: str) -> list[str]:
     out = []
     for p in re.split(r"\n\s*\n|\n(?==)", text):
         p = re.sub(r"\s*\(\s*\)", "", " ".join(p.split()))  # a figure reference left empty
+        p = CITATION.sub("", p)  # author-date citations: not part of an exam-style passage
         if p.startswith(("=", "Figure:", "Table:", "Note:", "Link to Learning")):
             continue
         if len(words(p)) >= 12 and p[-1:] in ".!?\"'":
@@ -135,10 +143,34 @@ def simple_wiki(
 # --- OpenStax ----------------------------------------------------------------------------------
 
 
+def page_text(blocks: Sequence[str], low: int, high: int, joined: bool) -> str | None:
+    """A page's passage: whole paragraphs in order, `low` to `high` words.
+
+    `joined`: paragraphs run on across the page's prose sections (IELTS-length passages);
+    otherwise the first section that alone gives enough words (the first bank, 18-19 Nov).
+    """
+    if joined:
+        return trim([p for b in blocks for p in paragraphs(b)], low, high)
+    return next((t for t in (trim(paragraphs(b), low, high) for b in blocks) if t), None)
+
+
 def openstax_texts(
-    checkout: Path, repo: str, collection: str, commit: str, n: int
+    checkout: Path,
+    repo: str,
+    collection: str,
+    commit: str,
+    n: int,
+    *,
+    skip: Collection[str] = (),
+    low: int = LONG_MIN,
+    high: int = LONG_MAX,
+    joined: bool = True,
 ) -> list[dict[str, Any]]:
-    """Up to `n` texts, one per chapter at most: the first prose section of 150-600 words."""
+    """Up to `n` new texts, one per chapter at most, never one whose slug is in `skip`.
+
+    A chapter that already has a text in the bank is passed over, so a new run never rewrites a
+    text whose questions exist (they would turn stale).
+    """
     coll = parse_collection(
         (checkout / "collections" / f"{collection}.collection.xml").read_bytes()
     )
@@ -146,6 +178,7 @@ def openstax_texts(
     for chapter in coll.chapters:
         if len(out) >= n:
             break
+        pages = []
         for module in chapter.modules[1:]:  # the first page of a chapter is its introduction
             path = checkout / "modules" / module / "index.cnxml"
             if not path.exists():
@@ -153,24 +186,22 @@ def openstax_texts(
             uri = f"https://github.com/{repo}/blob/{commit}/modules/{module}/index.cnxml"
             page = parse_module(path.read_bytes(), module=module, chapter_no=chapter.number,
                                 chapter=chapter.title, source_uri=uri)  # fmt: skip
+            slug = f"os-{slugify(collection)[:20]}-{slugify(page.title)}"[:60].strip("-")
+            pages.append((slug, uri, page))
+        if any(slug in skip for slug, _, _ in pages):
+            continue  # this chapter already has a text in the bank
+        for slug, uri, page in pages:
             prose = [
-                b
+                b.text
                 for b in page.blocks
                 if b.kind == "text" and not re.search(r"\d{3,}|\$|=", b.text[:2000])
             ]
-            text = next((t for t in (trim(paragraphs(b.text)) for b in prose) if t), None)
+            text = page_text(prose, low, high, joined)
             if text:
-                slug = f"os-{slugify(collection)[:20]}-{slugify(page.title)}"[:60].strip("-")
                 out.append(
-                    entry(
-                        slug,
-                        f"{page.title} ({coll.title})",
-                        "openstax-reading",
-                        uri,
-                        text,
-                        date.today(),
-                    )
-                )
+                    entry(slug, f"{page.title} ({coll.title})", "openstax-reading", uri, text,
+                          date.today())
+                )  # fmt: skip
                 break
     return out
 
@@ -194,6 +225,10 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - network
     parser.add_argument(
         "--checkouts", type=Path, default=REPO / "data" / "private" / "openstax-checkouts"
     )
+    parser.add_argument(
+        "--bank", type=Path, default=REPO / "data" / "english" / "texts",
+        help="texts already in the bank: their chapters are passed over",
+    )  # fmt: skip
     args = parser.parse_args(argv)
     picks = yaml.safe_load(args.picks.read_text(encoding="utf-8"))
     skipped: list[str] = []
@@ -204,7 +239,10 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - network
         for book in picks["openstax"]:
             dest = args.checkouts / book["repo"].split("/")[1]
             commit = checkout(book["repo"], dest)
-            found = openstax_texts(dest, book["repo"], book["collection"], commit, book["texts"])
+            have = {p.stem for p in args.bank.glob("*.yaml")} if args.bank.is_dir() else set()
+            found = openstax_texts(
+                dest, book["repo"], book["collection"], commit, book["texts"], skip=have
+            )
             if len(found) < book["texts"]:
                 skipped.append(f"{book['collection']}: found {len(found)} of {book['texts']}")
             entries += found

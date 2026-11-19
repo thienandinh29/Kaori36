@@ -1,0 +1,69 @@
+slug: os-astronomy-2e-telescopes
+title: Telescopes (Astronomy 2e)
+source: openstax-reading
+url: https://github.com/openstax/osbooks-astronomy/blob/dff6acf8df597ceda73985308f838ed38417a606/modules/m59803/index.cnxml
+retrieved_on: '2026-11-19'
+text: 'There are three basic components of a modern system for measuring radiation from astronomical sources.
+  First, there is a telescope, which serves as a “bucket” for collecting visible light (or radiation at
+  other wavelengths, as shown in. Just as you can catch more rain with a garbage can than with a coffee
+  cup, large telescopes gather much more light than your eye can. Second, there is an instrument attached
+  to the telescope that sorts the incoming radiation by wavelength. Sometimes the sorting is fairly crude.
+  For example, we might simply want to separate blue light from red light so that we can determine the
+  temperature of a star. But at other times, we want to see individual spectral lines to determine what
+  an object is made of, or to measure its speed (as explained in the Radiation and Spectra chapter). Third,
+  we need some type of detector, a device that senses the radiation in the wavelength regions we have
+  chosen and permanently records the observations.
+
+
+  The history of the development of astronomical telescopes is about how new technologies have been applied
+  to improve the efficiency of these three basic components: the telescopes, the wavelength-sorting device,
+  and the detectors. Let’s first look at the development of the telescope.
+
+
+  Many ancient cultures built special sites for observing the sky. At these ancient observatories, they
+  could measure the positions of celestial objects, mostly to keep track of time and date. Many of these
+  ancient observatories had religious and ritual functions as well. The eye was the only device available
+  to gather light, all of the colors in the light were observed at once, and the only permanent record
+  of the observations was made by human beings writing down or sketching what they saw.
+
+
+  While Hans Lippershey, Zaccharias Janssen, and Jacob Metius are all credited with the invention of the
+  telescope around 1608—applying for patents within weeks of each other—it was Galileo who, in 1610, used
+  this simple tube with lenses (which he called a spyglass) to observe the sky and gather more light than
+  his eyes alone could. Even his small telescope—used over many nights—revolutionized ideas about the
+  nature of the planets and the position of Earth.
+
+
+  Whether or not you wear glasses, you see the world through lenses; they are key elements of your eyes.
+  A lens is a transparent piece of material that bends the rays of light passing through it. If the light
+  rays are parallel as they enter, the lens brings them together in one place to form an image. If the
+  curvatures of the lens surfaces are just right, all parallel rays of light (say, from a star) are bent,
+  or refracted, in such a way that they converge toward a point, called the focus of the lens. At the
+  focus, an image of the light source appears. In the case of parallel light rays, the distance from the
+  lens to the location where the light rays focus, or image, behind the lens is called the focal length
+  of the lens.
+
+
+  As you look at , you may ask why two rays of light from the same star would be parallel to each other.
+  After all, if you draw a picture of star shining in all directions, the rays of light coming from the
+  star don’t look parallel at all. But remember that the stars (and other astronomical objects) are all
+  extremely far away. By the time the few rays of light pointed toward us actually arrive at Earth, they
+  are, for all practical purposes, parallel to each other. Put another way, any rays that were not parallel
+  to the ones pointed at Earth are now heading in some very different direction in the universe.
+
+
+  To view the image formed by the lens in a telescope, we use an additional lens called an eyepiece. The
+  eyepiece focuses the image at a distance that is either directly viewable by a human or at a convenient
+  place for a detector. Using different eyepieces, we can change the magnification (or size) of the image
+  and also redirect the light to a more accessible location. Stars look like points of light, and magnifying
+  them makes little difference, but the image of a planet or a galaxy, which has structure, can often
+  benefit from being magnified.
+
+
+  Many people, when thinking of a telescope, picture a long tube with a large glass lens at one end. This
+  design, which uses a lens as its main optical element to form an image, as we have been discussing,
+  is known as a refractor, and a telescope based on this design is called a refracting telescope. Galileo’s
+  telescopes were refractors, as are today’s binoculars and field glasses. However, there is a limit to
+  the size of a refracting telescope. The largest one ever built was a 49-inch refractor built for the
+  Paris 1900 Exposition, and it was dismantled after the Exposition. Currently, the largest refracting
+  telescope is the 40-inch refractor at Yerkes Observatory in Wisconsin.'

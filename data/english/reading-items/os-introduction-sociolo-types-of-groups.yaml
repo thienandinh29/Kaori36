@@ -1,0 +1,276 @@
+text_slug: os-introduction-sociolo-types-of-groups
+source: openstax-reading
+versions:
+- passage_sha256: e77a031175e3fd4aae9b496e1ac686a5366178d2ae784237e60326d466cac876
+  items:
+  - id: os-introduction-sociolo-types-of-groups-completion-1
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-completion-2
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-completion-3
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-headings-1
+      key:
+        '0': 1
+        '1': 0
+        '2': 5
+        '3': 4
+        '4': 2
+        '5': 7
+      kind: headings
+      text: os-introduction-sociolo-types-of-groups
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - How reference groups shape behaviour and social norms
+      - Reference groups as standards of comparison
+      - The two types of groups and their uses
+      - Choosing groups on a new campus
+      - In-groups, out-groups and campus group rivalry
+      - A natural response to unfamiliar surroundings
+      - The history of sociological research on groups
+      - How to research cyberbullying statistics
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-mcq-1
+      key: 0
+      kind: mcq
+      stem: What is the main point of the second paragraph?
+      text: os-introduction-sociolo-types-of-groups
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - Reference groups can send conflicting messages and shape behaviour and social norms, often without our noticing.
+      - Television and music videos are the most reliable sources of social norms.
+      - People should avoid all reference groups that send competing messages.
+      - Young adults in movies generally hold steady jobs.
+      evidence:
+      - Often, reference groups convey competing messages.
+      - At all ages, we use reference groups to help guide our behavior and establish our social norms.
+      - You may not recognize a reference group, but it still influences the way you act.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-mcq-2
+      key: 0
+      kind: mcq
+      stem: Why does the author mention a student who is a strong athlete and also likes a local punk band?
+      text: os-introduction-sociolo-types-of-groups
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - To show that a person may belong to two quite different reference groups at once.
+      - To argue that athletes should not listen to punk music.
+      - To prove that local bands are more important than sports teams.
+      - To explain why students should avoid joining campus groups.
+      evidence:
+      - Say you are a strong athlete who wants to play intramural sports, and your favorite musicians are a local
+        punk band. You may find yourself engaged with two very different reference groups.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-mcq-3
+      key: 0
+      kind: mcq
+      stem: What does the passage suggest about how students should treat campus groups?
+      text: os-introduction-sociolo-types-of-groups
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - They should choose carefully, because the group they associate with may shape their friendships for years.
+      - They should join as many groups as possible to keep their options open.
+      - They should refuse to join any group that has an in-group and an out-group.
+      - They should let the groups decide which students are worthy without thinking about it.
+      evidence:
+      - This immediate categorization into in-groups and out-groups means that students must choose carefully, since
+        whatever group they associate with might define their friends for several years to come.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-types-of-groups
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - In U.S. society, peer groups are common reference groups.
+      statement: Peer groups are a frequent example of reference groups in American society.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-types-of-groups
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Most people have more than one reference group, so a middle school boy might look not just at his classmates
+        but also at his older brother’s friends and see a different set of norms.
+      statement: The passage states that most people have only one reference group.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-types-of-groups
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - You may not recognize a reference group, but it still influences the way you act.
+      statement: According to the passage, a person can be influenced by a reference group without being aware of
+        it.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-types-of-groups
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - While most campus groups refrain from insulting competing groups, there is a definite sense of an in-group
+        versus an out-group.
+      statement: The passage says that most campus groups openly insult the groups they compete with.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-groups-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-types-of-groups-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-types-of-groups
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The passage reports how many students at U.S. colleges join fraternities or sororities each year.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

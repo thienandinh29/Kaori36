@@ -1,0 +1,317 @@
+text_slug: os-astronomy-2e-dating-planetary-surfaces
+source: openstax-reading
+versions:
+- passage_sha256: 12fb1852578be89386a8fc307d5b8988f16ff687b8d7c79c9527820d66bb1fe3
+  items:
+  - id: os-astronomy-2e-dating-planetary-surfaces-completion-1
+    kind: completion
+    status: verified
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-completion-1
+      kind: completion
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - half-life
+      evidence:
+      - Similarly, if we have a very large number of radioactive atoms of one type (say, uranium), there is a specific
+        time period, called its half-life, during which the chances are fifty-fifty that decay will occur for any
+        of the nuclei.
+      sentence: The time it takes for half of a sample of radioactive nuclei to decay is called its ___.
+      max_words: 1
+    problems: []
+    checker_answer: half-life
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-completion-2
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - answer 'parent elements' is not in the passage
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-completion-3
+    kind: completion
+    status: verified
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-completion-3
+      kind: completion
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - relative
+      evidence:
+      - Counting craters had let us calculate relative ages (for example, the heavily cratered lunar highlands were
+        older than the dark lava plains), but scientists could not measure the actual age in years.
+      sentence: Before the Apollo missions, scientists could only determine the ___ ages of lunar surfaces by counting
+        craters.
+      max_words: 1
+    problems: []
+    checker_answer: relative
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-headings-1
+    kind: headings
+    status: needs_review
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 7
+        '8': 8
+        '9': 10
+        '10': 12
+      kind: headings
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The challenge of dating planetary surfaces
+      - Using rocks to trace a world's history
+      - The nature of radioactive decay
+      - Randomness and half-life
+      - The mathematics of decay
+      - Parent and daughter elements
+      - Radioactive dating as a clock
+      - Determining the Moon's age
+      - Heat from radioactive decay
+      - The formation of the solar system
+      - Techniques for measuring planetary surfaces
+      - The Apollo missions and lunar samples
+      - Sources of internal heat in planets
+    problems: []
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:6, 8:6, 9:7, 10:8
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-mcq-1
+      key: 1
+      kind: mcq
+      stem: According to the passage, what makes it possible to calculate the age of a rock using radioactive decay?
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Measuring the total number of atoms in the rock sample
+      - Comparing the amount of parent element remaining with the amount of daughter products
+      - Counting the number of craters on the rock's surface
+      - Determining the temperature at which the rock formed
+      evidence:
+      - By comparing how much of a radioactive parent element is left in a rock to how much of its daughter products
+        have accumulated, we can learn how long the decay process has been going on and hence how long ago the rock
+        formed.
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-mcq-2
+    kind: mcq
+    status: verified
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-mcq-2
+      key: 1
+      kind: mcq
+      stem: What does the passage mainly discuss?
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - The geological history of the Moon and Earth
+      - How radioactive decay is used to date rocks and surfaces
+      - The dangers of radioactivity in space
+      - The formation of the solar system
+      evidence:
+      - How do we know the age of the surfaces we see on planets and moons?
+      - Scientists measure the age of rocks using the properties of natural radioactivity.
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-mcq-3
+    kind: mcq
+    status: verified
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-mcq-3
+      key: 2
+      kind: mcq
+      stem: What can be inferred about the Moon from the passage?
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - It has active volcanoes.
+      - Its surface is younger than Earth's.
+      - It has not had significant geological activity for a long time.
+      - It formed before Earth.
+      evidence:
+      - Only in 1969, when the first Apollo samples were dated, did we learn that the Moon is an ancient, geologically
+        dead world.
+    problems: []
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - On geologically active objects (including Earth), vast outpourings of molten rock or the erosive effects
+        of water and ice, which we call planet weathering, have erased evidence of earlier epochs and present us
+        with only a relatively young surface for investigation.
+      statement: Planet weathering can remove evidence of a world's earlier geological history.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-tfng-2
+    kind: tfng
+    status: verified
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - A particular nucleus may last a shorter or longer time than its half-life, but in a large sample, almost
+        exactly half of the nuclei will have decayed after a time equal to one half-life.
+      statement: The half-life of a radioactive nucleus is exactly the same for every individual nucleus of that
+        type.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: '2026-11-19T03:36:57.225960+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Only in 1969, when the first Apollo samples were dated, did we learn that the Moon is an ancient, geologically
+        dead world.
+      statement: The first astronaut mission to the Moon brought back samples that allowed scientists to determine
+        the actual age of the lunar surface.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - We should also note that the decay of radioactive nuclei generally releases energy in the form of heat.
+      - Geologists estimate that about half of Earth’s current internal heat budget comes from the decay of radioactive
+        isotopes in its interior.
+      statement: Radioactive decay in a planet's interior can contribute to its internal heat.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The half-life of uranium is the longest of all radioactive elements used for dating rocks.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

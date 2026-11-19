@@ -7,14 +7,12 @@ the key and moves the item's Reading competency by BKT (mastery under `ielts-com
 in `reading_answers`.
 """
 
-import hashlib
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import psycopg
-import yaml  # type: ignore[import-untyped]
 from fastapi import HTTPException
 from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
@@ -25,10 +23,11 @@ from app.engine import bkt
 from app.engine.bkt import DEFAULT_PARAMS
 from app.engine.trace import fmt_p
 from app.reading.items import Item, check, grade, learner_view
+from app.reading.pipeline import sha256 as passage_sha256
 from app.services.backend import learner_uuid, save_trace
 from app.services.competency_evidence import competency_ids
 from app.services.learning import save_mastery
-from app.services.reading_review import key_of
+from app.services.reading_review import key_of, read_texts
 from app.validation.tiers import Label, effective
 
 _ITEM: TypeAdapter[Any] = TypeAdapter(Item)
@@ -44,13 +43,8 @@ KIND_ORDER = ("tfng", "mcq", "completion", "headings")
 
 
 def load_texts(folder: Path) -> dict[str, tuple[str, str]]:
-    """Text slug -> (title, passage), from the verified bank's folder."""
-    out: dict[str, tuple[str, str]] = {}
-    for path in sorted(folder.glob("*.yaml")) if folder.is_dir() else []:
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-        if isinstance(raw, dict) and raw.get("slug") and raw.get("text"):
-            out[str(raw["slug"])] = (str(raw.get("title") or raw["slug"]), str(raw["text"]))
-    return out
+    """Text slug -> (title, passage) from the bank's folder; cached until a file changes."""
+    return read_texts(folder)
 
 
 def key_text(item: Any) -> str:
@@ -77,6 +71,7 @@ class ReadingPractice:
         self.pool = pool
         self.texts_dir = texts_dir
         self.clock = clock
+        self.cmap = load_map()  # once, as TodayService does: parsing it per answer took 35 ms
 
     def _learner(self, conn: psycopg.Connection[Any], learner_id: str) -> Any:
         learner = learner_uuid(learner_id)
@@ -84,23 +79,32 @@ class ReadingPractice:
             raise HTTPException(404, "Không tìm thấy người học.")
         return learner
 
-    def served(self, conn: psycopg.Connection[Any]) -> dict[str, list[tuple[str, Any]]]:
-        """Text slug -> [(item id, item)] that may be served now, in kind order."""
+    def served(
+        self, conn: psycopg.Connection[Any], only: str | None = None
+    ) -> dict[str, list[tuple[str, Any]]]:
+        """Text slug -> [(item id, item)] that may be served now, in kind order.
+
+        `only`: just that item (an answer needs one, not the whole bank).
+        """
         texts = load_texts(self.texts_dir)
+        one = " and id=%(id)s" if only is not None else ""
         rows = conn.execute(
             "select id, text_slug, passage_sha256, item from reading_items "
-            "where status='approved' order by id"
+            f"where status='approved'{one} order by id",
+            {"id": only},
         ).fetchall()
         labels: dict[str, list[Label]] = {}
         for cid, role, value, key in conn.execute(
             "select content_id, role, value, independence from labels "
-            "where content_type='reading_item' and aspect='item_ok' order by id"
+            f"where content_type='reading_item' and aspect='item_ok'"
+            f"{one.replace('id=', 'content_id=')} order by id",
+            {"id": only},
         ).fetchall():
             labels.setdefault(cid, []).append(Label(role, value, key))
         out: dict[str, list[tuple[str, Any]]] = {}
         for item_id, slug, digest, data in rows:
             text = texts.get(slug)
-            if text is None or hashlib.sha256(text[1].encode()).hexdigest() != digest:
+            if text is None or passage_sha256(text[1]) != digest:
                 continue
             e = effective(labels.get(item_id, []))
             if e.tier not in ("silver", "gold") or e.value != "right":
@@ -156,15 +160,13 @@ class ReadingPractice:
         now = self.clock()
         with self.pool().connection() as conn, conn.transaction():
             learner = self._learner(conn, learner_id)
-            found = next(
-                (it for its in self.served(conn).values() for i, it in its if i == item_id), None
-            )
+            found = next((it for its in self.served(conn, item_id).values() for i, it in its), None)
             if found is None:
                 raise HTTPException(404, "Câu hỏi này chưa được dùng cho người học.")
             score = grade(found, answer)
             correct = score >= 1.0
             competency = COMPETENCY[found.skill]
-            cmap = load_map()
+            cmap = self.cmap
             subject, ids = competency_ids(conn, cmap)
             row = conn.execute(
                 "select p_known from mastery where learner_id=%s and concept_id=%s",

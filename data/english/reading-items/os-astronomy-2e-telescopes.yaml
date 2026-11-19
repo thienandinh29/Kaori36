@@ -1,0 +1,322 @@
+text_slug: os-astronomy-2e-telescopes
+source: openstax-reading
+versions:
+- passage_sha256: 9416bb0556899f19ac3fcd1698ef50159d45496d2aeaaee25f22ddaef5873e47
+  items:
+  - id: os-astronomy-2e-telescopes-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-completion-1
+      kind: completion
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - bucket
+      evidence:
+      - First, there is a telescope, which serves as a “bucket” for collecting visible light (or radiation at other
+        wavelengths, as shown in.
+      sentence: A telescope acts as a ___ for collecting light.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-completion-2
+      kind: completion
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - focal length
+      evidence:
+      - In the case of parallel light rays, the distance from the lens to the location where the light rays focus,
+        or image, behind the lens is called the focal length of the lens.
+      sentence: The distance from a lens to the point where parallel rays converge is called the ___ of the lens.
+      max_words: 2
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-completion-3
+      kind: completion
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - refractor
+      evidence:
+      - This design, which uses a lens as its main optical element to form an image, as we have been discussing,
+        is known as a refractor, and a telescope based on this design is called a refracting telescope.
+      sentence: A telescope design that uses a lens as its main optical element to form an image is known as a ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-headings-1
+      key:
+        '0': 1
+        '1': 2
+        '2': 0
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 7
+      kind: headings
+      text: os-astronomy-2e-telescopes
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - Ancient sky-watching before telescopes
+      - The three components of a radiation-measuring system
+      - How new technology improved telescope components
+      - The invention and first astronomical use of the telescope
+      - How a lens forms an image and defines focal length
+      - Why starlight arrives as parallel rays
+      - The role of the eyepiece
+      - Refracting telescopes and their size limit
+      - The religious rituals of ancient observatories
+      - How detectors record observations permanently
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-mcq-1
+      key: 1
+      kind: mcq
+      stem: What is the passage mainly about?
+      text: os-astronomy-2e-telescopes
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - The religious purposes of ancient sky-watching sites
+      - The three parts of an astronomical measuring system and the early development of telescopes
+      - How eyepieces are manufactured for modern observatories
+      - The competition among inventors to patent the first telescope
+      evidence:
+      - There are three basic components of a modern system for measuring radiation from astronomical sources.
+      - 'The history of the development of astronomical telescopes is about how new technologies have been applied
+        to improve the efficiency of these three basic components: the telescopes, the wavelength-sorting device,
+        and the detectors.'
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-mcq-2
+      key: 1
+      kind: mcq
+      stem: Why can light rays from a distant star be treated as parallel when they reach Earth?
+      text: os-astronomy-2e-telescopes
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - Because lenses bend all starlight into a single line
+      - Because the star is so far away that the rays arriving here are effectively parallel
+      - Because Earth's atmosphere straightens the incoming rays
+      - Because only a few rays are produced by the star
+      evidence:
+      - But remember that the stars (and other astronomical objects) are all extremely far away.
+      - By the time the few rays of light pointed toward us actually arrive at Earth, they are, for all practical
+        purposes, parallel to each other.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-mcq-3
+      key: 2
+      kind: mcq
+      stem: According to the passage, what is the function of the eyepiece in a telescope?
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - It collects more light than the human eye can.
+      - It sorts the incoming radiation by wavelength.
+      - It focuses the image where a person can view it or a detector can be placed.
+      - It permanently records the observations.
+      evidence:
+      - To view the image formed by the lens in a telescope, we use an additional lens called an eyepiece.
+      - The eyepiece focuses the image at a distance that is either directly viewable by a human or at a convenient
+        place for a detector.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-tfng-1
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Many of these ancient observatories had religious and ritual functions as well.
+      - At these ancient observatories, they could measure the positions of celestial objects, mostly to keep track
+        of time and date.
+      statement: Ancient observatories were used solely to measure the positions of celestial objects for timekeeping.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-tfng-2
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Galileo applied for a patent for the telescope within weeks of Hans Lippershey.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - The largest one ever built was a 49-inch refractor built for the Paris 1900 Exposition, and it was dismantled
+        after the Exposition.
+      statement: The largest refracting telescope ever built was dismantled after the Paris 1900 Exposition.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - The largest one ever built was a 49-inch refractor built for the Paris 1900 Exposition, and it was dismantled
+        after the Exposition.
+      - Currently, the largest refracting telescope is the 40-inch refractor at Yerkes Observatory in Wisconsin.
+      statement: The Yerkes Observatory refractor is larger than the one built for the Paris 1900 Exposition.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-telescopes-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-telescopes-tfng-5
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-telescopes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Even his small telescope—used over many nights—revolutionized ideas about the nature of the planets and
+        the position of Earth.
+      statement: Galileo used his telescope only for a single night of observation.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
