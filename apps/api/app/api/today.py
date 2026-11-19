@@ -17,4 +17,8 @@ def create_router(service: TodayService) -> APIRouter:
     ) -> dict[str, Any]:
         return service.today(learner_id, minutes)
 
+    @router.get("/maps")
+    def maps(learner_id: str = Query(min_length=1, max_length=200)) -> dict[str, Any]:
+        return service.maps(learner_id)
+
     return router

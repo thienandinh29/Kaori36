@@ -17,6 +17,8 @@ COPY apps/api/app ./app
 COPY supabase/migrations /srv/supabase/migrations
 COPY data /srv/data
 COPY data-sa /srv/data-sa
+# The proposed grammar path: names of foundations not live yet (specs/two-layer-map, M4).
+COPY specs/grammar-lessons/english-ielts-path.yaml /srv/specs/grammar-lessons/english-ielts-path.yaml
 ENV PATH=/srv/apps/api/.venv/bin:$PATH PYTHONUNBUFFERED=1
 USER app
 EXPOSE 8000

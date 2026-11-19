@@ -7,6 +7,7 @@ import {
 } from "@/lib/reading/review";
 import { DataError } from "@/lib/decode";
 import { parseToday, type Today } from "@/lib/english/today";
+import { parseMaps, type Maps } from "@/lib/english/maps";
 import {
   parseRecheck,
   parseRecheckResult,
@@ -354,6 +355,10 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       );
     },
     /** The owner's Reading review queue (specs/listening-reading/step-4.2c.md). */
+    async maps(learnerId: string): Promise<Maps> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseMaps(await request(`maps?${q}`));
+    },
     async today(learnerId: string, minutes = 40): Promise<Today> {
       const q = new URLSearchParams({
         learner_id: learnerId,

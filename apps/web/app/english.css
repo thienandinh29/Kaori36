@@ -2005,3 +2005,47 @@ svg.nt-trail {
   margin: 0.5rem 0;
   padding-left: 1.25rem;
 }
+
+/* The two maps (specs/two-layer-map, M4). */
+.en-mapskill {
+  margin-top: 1.25rem;
+}
+.en-mapcomp {
+  border-top: 1px solid var(--line, #e5ded3);
+  padding: 0.75rem 0;
+}
+.en-mapcomp h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+.en-mapfound {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0;
+  padding-left: 1rem;
+  list-style: none;
+}
+.en-mapbar {
+  display: inline-block;
+  width: 5rem;
+  height: 0.45rem;
+  margin: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--line, #e5ded3);
+  overflow: hidden;
+  vertical-align: middle;
+}
+.en-mapbar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent, #4338ca);
+}
+.en-mapbar.is-unmeasured > span {
+  background: transparent;
+}
+.en-mapbar.is-weak > span {
+  background: #c2410c;
+}
+.en-mapbar.is-known > span {
+  background: #15803d;
+}

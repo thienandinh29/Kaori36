@@ -12,12 +12,21 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
+import yaml  # type: ignore[import-untyped]
+
 from app.competencies.bands import bands
-from app.competencies.check import load_foundations
+from app.competencies.check import PROPOSED_PATH, load_foundations
 from app.competencies.model import VOCAB_BANDS, CompetencyMap, load_map
 from app.curriculum.course import load_course
 from app.engine.graph import UNSEEN_P_KNOWN
-from app.engine.recommend import Activity, Estimate, recommend
+from app.engine.recommend import (
+    KNOWN,
+    MIN_EVIDENCE,
+    ROOT_CAUSE_BELOW,
+    Activity,
+    Estimate,
+    recommend,
+)
 from app.services.competency_evidence import SUBJECT as COMPETENCY_SUBJECT
 from app.services.grammar import GrammarService
 
@@ -52,6 +61,9 @@ class TodayService:
 
     def _names(self) -> dict[str, str]:
         names = dict(BAND_NAMES_VI) | dict(REVIEW_NAMES_VI)
+        if PROPOSED_PATH.is_file():  # names of foundations not live yet (shown, never practised)
+            raw = yaml.safe_load(PROPOSED_PATH.read_text(encoding="utf-8"))
+            names |= {str(c["slug"]): str(c["name_vi"]) for c in raw.get("concepts", [])}
         for course in (self.grammar.bundle(GRAMMAR).course, self.pronunciation):
             for c in course.concepts:
                 names[c.slug] = c.name_vi
@@ -64,19 +76,25 @@ class TodayService:
         if a.kind in ("diagnostic", "practise_competency"):
             skill = next(c.skill for c in self.cmap.competencies if c.slug == a.target)
             return {"writing": "/viet", "reading": "/doc", "listening": "/nghe"}.get(skill, "/")
-        if a.target in VOCAB_BANDS:
+        return self._href_node(a.target)
+
+    def _href_node(self, node: str) -> str:
+        """Where a foundation is practised."""
+        if node in VOCAB_BANDS:
             return "/tu-vung"
-        if a.target in {c.slug for c in self.pronunciation.concepts}:
+        if node in {c.slug for c in self.pronunciation.concepts}:
             return "/phat-am"
         concept = next(
-            (c for c in self.grammar.bundle(GRAMMAR).course.concepts if c.slug == a.target), None
+            (c for c in self.grammar.bundle(GRAMMAR).course.concepts if c.slug == node), None
         )
         if concept is not None and concept.part_of is None:
-            return f"/on-tap/cot-moc/{a.target}"
-        return f"/on-tap/phan/{a.target}"
+            return f"/on-tap/cot-moc/{node}"
+        return f"/on-tap/phan/{node}"
 
-    def today(self, learner_id: str, minutes: int) -> dict[str, Any]:
-        now = self.clock()
+    def _state(
+        self, learner_id: str, now: datetime
+    ) -> tuple[dict[str, Estimate], dict[str, Estimate], dict[str, int]]:
+        """(live foundations, competencies with evidence, due reviews) for a learner."""
         grammar = self.grammar.bundle(GRAMMAR).course
         with self.grammar.pool().connection() as conn:
             learner = self.grammar._learner(conn, learner_id)
@@ -142,14 +160,19 @@ class TodayService:
             "vocab": sum(1 for lst, _, _, at in cards if lst != PHRASES and at <= now),
             "phrases": sum(1 for lst, _, _, at in cards if lst == PHRASES and at <= now),
         }
+        competencies = {
+            slug: Estimate(float(value), int(comp_n.get(slug, 0))) for slug, value in comp_p.items()
+        }
+        return {k: v for k, v in foundations.items() if k in self.live}, competencies, due
+
+    def today(self, learner_id: str, minutes: int) -> dict[str, Any]:
+        now = self.clock()
+        foundations, competencies, due = self._state(learner_id, now)
         names = self._names()
         result = recommend(
             self.cmap,
-            {k: v for k, v in foundations.items() if k in self.live},
-            {
-                slug: Estimate(float(value), int(comp_n.get(slug, 0)))
-                for slug, value in comp_p.items()
-            },
+            foundations,
+            competencies,
             due,
             AVAILABLE_SKILLS,
             now.date(),
@@ -177,3 +200,57 @@ class TodayService:
                 "links_status": self.cmap.status,
             },
         }
+
+    def maps(self, learner_id: str) -> dict[str, Any]:
+        """Both maps for one learner (spec M4): every competency with its foundations underneath,
+        each estimate with the evidence it rests on. Read-only; no band is shown."""
+        foundations, competencies, _ = self._state(learner_id, self.clock())
+        names = self._names()
+        skills: dict[str, list[dict[str, Any]]] = {}
+        for c in self.cmap.competencies:
+            est = competencies.get(c.slug)
+            links = []
+            for link in c.links:
+                f = foundations.get(link.node)
+                links.append(
+                    {
+                        "node": link.node,
+                        "kind": link.kind,
+                        "name_vi": names.get(link.node, link.node),
+                        "live": link.node in self.live,
+                        "href": self._href_node(link.node) if link.node in self.live else None,
+                        **_estimate(f),
+                    }
+                )
+            skills.setdefault(c.skill, []).append(
+                {
+                    "slug": c.slug,
+                    "name_vi": c.name_vi,
+                    "available": c.skill in AVAILABLE_SKILLS,
+                    **_estimate(est, MIN_EVIDENCE),
+                    "links": links,
+                }
+            )
+        return {
+            "skills": [{"skill": k, "competencies": v} for k, v in skills.items()],
+            "known": KNOWN,
+            "root_cause_below": ROOT_CAUSE_BELOW,
+            "min_evidence": MIN_EVIDENCE,
+            "target": {
+                "overall": self.cmap.target.overall,
+                "exam_date": self.cmap.target.exam_date.isoformat(),
+                "links_status": self.cmap.status,
+            },
+        }
+
+
+def _estimate(est: Estimate | None, min_evidence: int = 1) -> dict[str, Any]:
+    """p and evidence, with a status: unmeasured, weak (< 0.8), growing, known (>= 0.9)."""
+    if est is None or est.evidence < min_evidence:
+        return {
+            "p": None if est is None else round(est.p, 3),
+            "evidence": 0 if est is None else est.evidence,
+            "status": "unmeasured",
+        }
+    status = "known" if est.p >= KNOWN else ("growing" if est.p >= ROOT_CAUSE_BELOW else "weak")
+    return {"p": round(est.p, 3), "evidence": est.evidence, "status": status}
