@@ -1,5 +1,9 @@
 """POST /speak {text, pace} -> audio/wav; POST /phonemize {words} -> {ipa}; GET /health.
 
+POST /speak-phonemes {phonemes, pace} -> audio/wav reads exact phonemes (the voice's own
+symbols): the pronunciation benchmark's controlled substitutions and dropped sounds
+(specs/pronunciation/step-3.6b.md). The API does not forward it to learners.
+
     TTS_VOICE=en_GB-cori-high TTS_PATH=en/en_GB/cori/high TTS_REVISION=<commit> \
     TTS_MODEL_SHA256=... TTS_CONFIG_SHA256=... python -m nodetrail_tts.server
 
@@ -14,7 +18,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -42,13 +46,24 @@ class SpeakIn(BaseModel):
         return text
 
 
+class PhonemesIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    phonemes: list[Annotated[str, Field(min_length=1, max_length=4)]] = Field(
+        min_length=1, max_length=200
+    )
+    pace: Pace = "normal"
+
+
 class PhonemizeIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     words: list[Word] = Field(min_length=1, max_length=100)
 
 
 def create_app(
-    pin: Pin, speak: Callable[[str, Pace], bytes], phonemize: Phonemize | None = None
+    pin: Pin,
+    speak: Callable[[str, Pace], bytes],
+    phonemize: Phonemize | None = None,
+    speak_phonemes: Callable[[list[str], Pace], bytes] | None = None,
 ) -> FastAPI:
     app = FastAPI(title="NodeTrail tts", docs_url=None, redoc_url=None)
     slots = threading.BoundedSemaphore(max(1, PARALLEL))
@@ -67,6 +82,17 @@ def create_app(
             headers={"X-Voice": pin.voice},
         )
 
+    @app.post("/speak-phonemes")
+    def speak_exact(body: PhonemesIn) -> Response:
+        if speak_phonemes is None:
+            raise HTTPException(404, "not available")
+        try:
+            with slots:
+                audio = speak_phonemes(body.phonemes, body.pace)
+        except ValueError as exc:  # a symbol the voice does not know
+            raise HTTPException(422, str(exc)) from None
+        return Response(content=audio, media_type="audio/wav", headers={"X-Voice": pin.voice})
+
     @app.post("/phonemize")
     def phonemize_words(body: PhonemizeIn) -> dict[str, object]:
         nonlocal phonemize
@@ -82,7 +108,8 @@ def main() -> None:
 
     pin = Pin.from_env()
     speaker = Speaker(fetch(pin, Path(os.environ.get("TTS_CACHE", "/models"))))
-    uvicorn.run(create_app(pin, speaker), host=os.environ.get("TTS_HOST", "127.0.0.1"),
+    app = create_app(pin, speaker, speak_phonemes=speaker.phonemes)
+    uvicorn.run(app, host=os.environ.get("TTS_HOST", "127.0.0.1"),
                 port=int(os.environ.get("TTS_PORT", "8030")))  # fmt: skip
 
 

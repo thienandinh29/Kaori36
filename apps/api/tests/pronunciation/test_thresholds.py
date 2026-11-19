@@ -134,3 +134,16 @@ def test_three_outcomes_by_truth_and_the_new_ways_to_fail() -> None:
     assert loose["check"]["accepted_wrong_share"] > 0.10 and loose["verdict"] == "fail"
     counted = outcomes([Labelled("a", "g", -1.5, False)], threshold=-2.0, accept=0.0)
     assert counted["said_right"]["inconclusive"] == 1
+
+
+def test_dropped_sounds_count_as_flagged_and_never_as_accepted() -> None:
+    from app.pronunciation.thresholds import choose_accept, counts, outcomes
+
+    gone = Labelled("a", "g", 1.0, True, dropped=True)  # a high score, but the sound was not said
+    right = [Labelled("a", "g", 1.0 + i / 10, False) for i in range(9)]
+    assert counts([gone, *right], threshold=-1.0)[:3] == (1, 0, 1)  # flagged, no false, caught
+    assert choose_accept([gone, *right], threshold=-1.0, max_wrong=0.0) == 1.0
+    assert outcomes([gone], threshold=-1.0, accept=0.0)["said_wrong"]["wrong"] == 1
+    rows = [("r1", {"targets": [{"sound": "s1", "gop": 1.0, "peak": 0.0, "other_peak": 0.0}]},
+             0, "wrong")]  # fmt: skip
+    assert from_rows(rows, {"s1": "g"})[0].dropped is True

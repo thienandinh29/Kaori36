@@ -1,0 +1,5164 @@
+{
+  "what": "synthetic: one native voice (Piper en_GB-cori-high) from exact phonemes, each case said --repeats times (the voice varies between syntheses); sensitivity to controlled errors only, nothing about Vietnamese accents",
+  "basis": {
+    "truth": "construction",
+    "n": 315,
+    "repeats": 5
+  },
+  "kinds": {
+    "dropped": {
+      "n": 65,
+      "gop": {
+        "n": 65,
+        "median": -4.592,
+        "min": -10.955,
+        "max": 4.167
+      },
+      "peak": {
+        "n": 65,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.971
+      },
+      "other_peak": {
+        "n": 65,
+        "median": 0.005,
+        "min": 0.0,
+        "max": 0.894
+      },
+      "gop_negative_with_competitor": 58,
+      "competitor_is_the_swap": 0
+    },
+    "right": {
+      "n": 140,
+      "gop": {
+        "n": 140,
+        "median": 3.617,
+        "min": -5.3,
+        "max": 7.444
+      },
+      "peak": {
+        "n": 140,
+        "median": 0.919,
+        "min": 0.004,
+        "max": 0.993
+      },
+      "other_peak": {
+        "n": 140,
+        "median": 0.025,
+        "min": 0.001,
+        "max": 0.942
+      },
+      "gop_negative_with_competitor": 18,
+      "competitor_is_the_swap": 0
+    },
+    "substituted": {
+      "n": 110,
+      "gop": {
+        "n": 110,
+        "median": -5.13,
+        "min": -8.874,
+        "max": 3.156
+      },
+      "peak": {
+        "n": 110,
+        "median": 0.005,
+        "min": 0.0,
+        "max": 0.903
+      },
+      "other_peak": {
+        "n": 110,
+        "median": 0.908,
+        "min": 0.038,
+        "max": 0.992
+      },
+      "gop_negative_with_competitor": 99,
+      "competitor_is_the_swap": 90
+    }
+  },
+  "dropped_rule_sweep": [
+    {
+      "tau": 0.02,
+      "dropped_rule_on_right": 0,
+      "dropped_rule_on_substituted": 0,
+      "dropped_rule_on_dropped": 40
+    },
+    {
+      "tau": 0.05,
+      "dropped_rule_on_right": 0,
+      "dropped_rule_on_substituted": 0,
+      "dropped_rule_on_dropped": 47
+    },
+    {
+      "tau": 0.1,
+      "dropped_rule_on_right": 0,
+      "dropped_rule_on_substituted": 0,
+      "dropped_rule_on_dropped": 53
+    },
+    {
+      "tau": 0.2,
+      "dropped_rule_on_right": 3,
+      "dropped_rule_on_substituted": 2,
+      "dropped_rule_on_dropped": 57
+    },
+    {
+      "tau": 0.3,
+      "dropped_rule_on_right": 5,
+      "dropped_rule_on_substituted": 5,
+      "dropped_rule_on_dropped": 60
+    },
+    {
+      "tau": 0.5,
+      "dropped_rule_on_right": 12,
+      "dropped_rule_on_substituted": 13,
+      "dropped_rule_on_dropped": 61
+    }
+  ],
+  "noise": {
+    "refused_at_5_db": 140,
+    "accepted_at_30_db": 140,
+    "n_each": 140
+  },
+  "rows": [
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪθɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 2.345,
+        "competitor": null,
+        "peak": 0.787,
+        "other_peak": 0.075
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪθɪŋkəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 2.988,
+        "competitor": null,
+        "peak": 0.829,
+        "other_peak": 0.042
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪθɪŋkəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": 0.094,
+        "competitor": null,
+        "peak": 0.458,
+        "other_peak": 0.417
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪθɪŋkəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": 2.905,
+        "competitor": null,
+        "peak": 0.822,
+        "other_peak": 0.045
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪθɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": 3.115,
+        "competitor": null,
+        "peak": 0.831,
+        "other_peak": 0.037
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -7.314,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.97
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "zeɪtɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -7.369,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.972
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -7.347,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.97
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -6.583,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.963
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtɪŋkəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -6.195,
+        "competitor": "t",
+        "peak": 0.002,
+        "other_peak": 0.921
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsɪŋkɐɡɛn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -5.986,
+        "competitor": "s",
+        "peak": 0.002,
+        "other_peak": 0.983
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsɪŋkɐɡæn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -5.796,
+        "competitor": "s",
+        "peak": 0.002,
+        "other_peak": 0.6
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -5.282,
+        "competitor": "s",
+        "peak": 0.005,
+        "other_peak": 0.976
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsɪŋkəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -5.924,
+        "competitor": "s",
+        "peak": 0.003,
+        "other_peak": 0.982
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -6.084,
+        "competitor": "s",
+        "peak": 0.002,
+        "other_peak": 0.98
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "f",
+      "heard": "seɪfɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -5.694,
+        "competitor": "f",
+        "peak": 0.003,
+        "other_peak": 0.978
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "f",
+      "heard": "seɪfɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -5.908,
+        "competitor": "f",
+        "peak": 0.003,
+        "other_peak": 0.98
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "f",
+      "heard": "saɪfɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -3.149,
+        "competitor": "f",
+        "peak": 0.039,
+        "other_peak": 0.918
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "f",
+      "heard": "seɪfɪŋkɐɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": -5.575,
+        "competitor": "f",
+        "peak": 0.004,
+        "other_peak": 0.975
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "think",
+      "kind": "substituted",
+      "said": "f",
+      "heard": "seɪfɪŋkəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -5.636,
+        "competitor": "f",
+        "peak": 0.003,
+        "other_peak": 0.971
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmʌnθðəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 940,
+        "end_ms": 960,
+        "gop": -1.854,
+        "competitor": "ð",
+        "peak": 0.127,
+        "other_peak": 0.808
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmmʌnθəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 920,
+        "end_ms": 960,
+        "gop": 1.033,
+        "competitor": null,
+        "peak": 0.801,
+        "other_peak": 0.349
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmʌnθəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": 2.28,
+        "competitor": null,
+        "peak": 0.795,
+        "other_peak": 0.081
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmmʌnθəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 3.182,
+        "competitor": null,
+        "peak": 0.844,
+        "other_peak": 0.035
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmmʌnθðəkeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": 0.893,
+        "competitor": null,
+        "peak": 0.508,
+        "other_peak": 0.208
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪmʌntəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 760,
+        "end_ms": 780,
+        "gop": -7.811,
+        "competitor": "t",
+        "peak": 0.0,
+        "other_peak": 0.969
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪmantəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": -7.609,
+        "competitor": "t",
+        "peak": 0.0,
+        "other_peak": 0.973
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪmʌntəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": -6.159,
+        "competitor": "t",
+        "peak": 0.002,
+        "other_peak": 0.958
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪmʌntəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -7.527,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.97
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪmʌntəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 980,
+        "end_ms": 1000,
+        "gop": -7.48,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.969
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪmɑːnəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -10.955,
+        "competitor": "n",
+        "peak": 0.0,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪmʌnəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": -4.1,
+        "competitor": "n",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪmmanəɡeːn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -5.83,
+        "competitor": "n",
+        "peak": 0.0,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪmanəɡeɪn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -7.804,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.144
+      }
+    },
+    {
+      "sound": "th-voiceless",
+      "word": "month",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪmʌnəɡeːn",
+      "score": {
+        "phone": "θ",
+        "start_ms": 800,
+        "end_ms": 820,
+        "gop": -5.85,
+        "competitor": "n",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 5.612,
+        "competitor": null,
+        "peak": 0.98,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsɐɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 2.519,
+        "competitor": null,
+        "peak": 0.887,
+        "other_peak": 0.071
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 5.323,
+        "competitor": null,
+        "peak": 0.973,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsɐɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 4.98,
+        "competitor": null,
+        "peak": 0.974,
+        "other_peak": 0.007
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 5.403,
+        "competitor": null,
+        "peak": 0.978,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪjdɪsəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -4.843,
+        "competitor": "d",
+        "peak": 0.007,
+        "other_peak": 0.94
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪdɪsəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -4.36,
+        "competitor": "d",
+        "peak": 0.012,
+        "other_peak": 0.966
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪdɪsəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -3.574,
+        "competitor": "d",
+        "peak": 0.027,
+        "other_peak": 0.947
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪdɪsəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -1.563,
+        "competitor": "d",
+        "peak": 0.167,
+        "other_peak": 0.796
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪðɪsəɡɛn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": 0.396,
+        "competitor": null,
+        "peak": 0.571,
+        "other_peak": 0.384
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪzɪsɐɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -2.447,
+        "competitor": "z",
+        "peak": 0.069,
+        "other_peak": 0.796
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪðɪsəɡæn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 2.709,
+        "competitor": null,
+        "peak": 0.857,
+        "other_peak": 0.057
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪzɪsəbeːn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -5.776,
+        "competitor": "z",
+        "peak": 0.003,
+        "other_peak": 0.887
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪðɪsɐɡɛn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 3.156,
+        "competitor": null,
+        "peak": 0.9,
+        "other_peak": 0.038
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "this",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪzɪsəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -1.863,
+        "competitor": "z",
+        "peak": 0.114,
+        "other_peak": 0.733
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðʌtəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 5.515,
+        "competitor": null,
+        "peak": 0.98,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪtəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 4.823,
+        "competitor": null,
+        "peak": 0.965,
+        "other_peak": 0.008
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðətəɡɛn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": 5.406,
+        "competitor": null,
+        "peak": 0.981,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðətəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 5.612,
+        "competitor": null,
+        "peak": 0.982,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðʌtəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": 5.454,
+        "competitor": null,
+        "peak": 0.98,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪdɪtəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -4.965,
+        "competitor": "d",
+        "peak": 0.006,
+        "other_peak": 0.895
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪdɪtɐɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -4.574,
+        "competitor": "d",
+        "peak": 0.008,
+        "other_peak": 0.803
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "saɪtɚtəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -6.392,
+        "competitor": "t",
+        "peak": 0.002,
+        "other_peak": 0.9
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "seɪdɪtəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -4.439,
+        "competitor": "d",
+        "peak": 0.011,
+        "other_peak": 0.897
+      }
+    },
+    {
+      "sound": "th-voiced",
+      "word": "that",
+      "kind": "substituted",
+      "said": "d",
+      "heard": "saɪtʌvtəɡeɪn",
+      "score": {
+        "phone": "ð",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -4.926,
+        "competitor": "t",
+        "peak": 0.005,
+        "other_peak": 0.705
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": 5.759,
+        "competitor": null,
+        "peak": 0.976,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 940,
+        "end_ms": 960,
+        "gop": 5.082,
+        "competitor": null,
+        "peak": 0.966,
+        "other_peak": 0.006
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 940,
+        "end_ms": 960,
+        "gop": 5.102,
+        "competitor": null,
+        "peak": 0.964,
+        "other_peak": 0.006
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": 5.603,
+        "competitor": null,
+        "peak": 0.976,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 860,
+        "end_ms": 900,
+        "gop": 4.493,
+        "competitor": null,
+        "peak": 0.858,
+        "other_peak": 0.011
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪlaɪɐɡæn",
+      "score": {
+        "phone": "t",
+        "start_ms": 940,
+        "end_ms": 960,
+        "gop": -5.179,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.08
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪlaɪɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -5.273,
+        "competitor": "j",
+        "peak": 0.001,
+        "other_peak": 0.127
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪlaɪɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": -4.525,
+        "competitor": "j",
+        "peak": 0.001,
+        "other_peak": 0.077
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪlaɪɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": -5.531,
+        "competitor": "j",
+        "peak": 0.001,
+        "other_peak": 0.249
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "light",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪlaɪɡæn",
+      "score": {
+        "phone": "t",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": -2.539,
+        "competitor": "j",
+        "peak": 0.001,
+        "other_peak": 0.014
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛstəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": 5.583,
+        "competitor": null,
+        "peak": 0.985,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛstəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": 5.935,
+        "competitor": null,
+        "peak": 0.988,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛstɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 5.845,
+        "competitor": null,
+        "peak": 0.986,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtstəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": 5.525,
+        "competitor": null,
+        "peak": 0.982,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛstəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 900,
+        "end_ms": 920,
+        "gop": 5.86,
+        "competitor": null,
+        "peak": 0.986,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛsəɡɛn",
+      "score": {
+        "phone": "t",
+        "start_ms": 800,
+        "end_ms": 820,
+        "gop": 2.184,
+        "competitor": null,
+        "peak": 0.002,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛsəɡeːn",
+      "score": {
+        "phone": "t",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 0.217,
+        "competitor": null,
+        "peak": 0.001,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛsəɡɛn",
+      "score": {
+        "phone": "t",
+        "start_ms": 900,
+        "end_ms": 920,
+        "gop": -5.655,
+        "competitor": "ə",
+        "peak": 0.002,
+        "other_peak": 0.072
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛsəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": -0.315,
+        "competitor": "s",
+        "peak": 0.002,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-t",
+      "word": "test",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛsəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": -0.251,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪbuːpʌɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": -3.387,
+        "competitor": "p",
+        "peak": 0.031,
+        "other_peak": 0.915
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪbuːkɐɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": 4.955,
+        "competitor": null,
+        "peak": 0.977,
+        "other_peak": 0.007
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪbukəkæn",
+      "score": {
+        "phone": "k",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": 5.196,
+        "competitor": null,
+        "peak": 0.983,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪbʊkəɡeːn",
+      "score": {
+        "phone": "k",
+        "start_ms": 800,
+        "end_ms": 820,
+        "gop": 4.892,
+        "competitor": null,
+        "peak": 0.973,
+        "other_peak": 0.007
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪbuːkɐɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": 5.269,
+        "competitor": null,
+        "peak": 0.982,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪdbuːʌɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 760,
+        "end_ms": 780,
+        "gop": -4.592,
+        "competitor": "l",
+        "peak": 0.001,
+        "other_peak": 0.141
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪbuːɐɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -4.67,
+        "competitor": "ɹ",
+        "peak": 0.001,
+        "other_peak": 0.055
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪbʊʌɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": -1.314,
+        "competitor": "w",
+        "peak": 0.016,
+        "other_peak": 0.06
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪbʊkaɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": 4.167,
+        "competitor": null,
+        "peak": 0.971,
+        "other_peak": 0.015
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "book",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪbuːləɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 760,
+        "end_ms": 780,
+        "gop": -8.438,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.894
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪdɪskəɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": 0.084,
+        "competitor": null,
+        "peak": 0.502,
+        "other_peak": 0.462
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "right",
+      "said": null,
+      "heard": "zaɪɡɛskəɡeːn",
+      "score": {
+        "phone": "k",
+        "start_ms": 800,
+        "end_ms": 840,
+        "gop": 4.277,
+        "competitor": null,
+        "peak": 0.955,
+        "other_peak": 0.021
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪteːskeːkeːn",
+      "score": {
+        "phone": "k",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": 4.844,
+        "competitor": null,
+        "peak": 0.976,
+        "other_peak": 0.008
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "right",
+      "said": null,
+      "heard": "zaɪdɛskəɡeːn",
+      "score": {
+        "phone": "k",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 4.047,
+        "competitor": null,
+        "peak": 0.969,
+        "other_peak": 0.017
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪdɛskɐɡeɪm",
+      "score": {
+        "phone": "k",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 2.534,
+        "competitor": null,
+        "peak": 0.906,
+        "other_peak": 0.072
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪdeːsədeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -3.829,
+        "competitor": "s",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "dropped",
+      "said": null,
+      "heard": "sɛdeːsədeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -3.621,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪdæsədeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": -3.836,
+        "competitor": "s",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪdɛsɐɡeːn",
+      "score": {
+        "phone": "k",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -8.677,
+        "competitor": "s",
+        "peak": 0.0,
+        "other_peak": 0.016
+      }
+    },
+    {
+      "sound": "final-k",
+      "word": "desk",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪtdɛsəɡeɪn",
+      "score": {
+        "phone": "k",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": -6.772,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.028
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪhɛlpəɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 5.567,
+        "competitor": null,
+        "peak": 0.983,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪhɛlpəɡɛn",
+      "score": {
+        "phone": "p",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": 5.24,
+        "competitor": null,
+        "peak": 0.983,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪhɛlpəɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": 4.503,
+        "competitor": null,
+        "peak": 0.978,
+        "other_peak": 0.011
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪhɛlpɐɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": 4.813,
+        "competitor": null,
+        "peak": 0.981,
+        "other_peak": 0.008
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪhɛlpɐɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 880,
+        "end_ms": 920,
+        "gop": 5.334,
+        "competitor": null,
+        "peak": 0.979,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪhləkeːn",
+      "score": {
+        "phone": "p",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": -9.072,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.01
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪhləɡɛn",
+      "score": {
+        "phone": "p",
+        "start_ms": 800,
+        "end_ms": 820,
+        "gop": -7.874,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪhləɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": -9.261,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪhɛləɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": -5.571,
+        "competitor": "ə",
+        "peak": 0.001,
+        "other_peak": 0.096
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "help",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪhɛləɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 740,
+        "end_ms": 760,
+        "gop": -8.397,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.02
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃɔpəɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 4.998,
+        "competitor": null,
+        "peak": 0.977,
+        "other_peak": 0.007
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃɔpəkeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 5.251,
+        "competitor": null,
+        "peak": 0.981,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃɔpəɡɛn",
+      "score": {
+        "phone": "p",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": 4.822,
+        "competitor": null,
+        "peak": 0.978,
+        "other_peak": 0.008
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃʊpəɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 700,
+        "end_ms": 740,
+        "gop": 2.302,
+        "competitor": null,
+        "peak": 0.732,
+        "other_peak": 0.144
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃɔpəɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 4.87,
+        "competitor": null,
+        "peak": 0.979,
+        "other_peak": 0.008
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪʃɔɐɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": -4.904,
+        "competitor": "h",
+        "peak": 0.0,
+        "other_peak": 0.013
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪʃɔɐɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 1260,
+        "end_ms": 1280,
+        "gop": -1.981,
+        "competitor": "t",
+        "peak": 0.0,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪʃɔɐɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 1040,
+        "end_ms": 1060,
+        "gop": -1.029,
+        "competitor": "t",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪʃɑːəɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 980,
+        "end_ms": 1000,
+        "gop": -3.197,
+        "competitor": "h",
+        "peak": 0.0,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-p",
+      "word": "shop",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪʃɔɐɡeɪn",
+      "score": {
+        "phone": "p",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": -8.127,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.296
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkapsəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": 4.229,
+        "competitor": null,
+        "peak": 0.975,
+        "other_peak": 0.014
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkapsəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 2.912,
+        "competitor": null,
+        "peak": 0.928,
+        "other_peak": 0.05
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkapsəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 1.224,
+        "competitor": null,
+        "peak": 0.738,
+        "other_peak": 0.217
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "right",
+      "said": null,
+      "heard": "zeːkapsəɡeːn",
+      "score": {
+        "phone": "s",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 1.329,
+        "competitor": null,
+        "peak": 0.765,
+        "other_peak": 0.203
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkapsəɡɛn",
+      "score": {
+        "phone": "s",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": 1.788,
+        "competitor": null,
+        "peak": 0.834,
+        "other_peak": 0.14
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "dropped",
+      "said": null,
+      "heard": "sɛkhɑːpəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -5.553,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪkhɑːpəkeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -9.333,
+        "competitor": "p",
+        "peak": 0.0,
+        "other_peak": 0.022
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪkʌpəɡɛn",
+      "score": {
+        "phone": "s",
+        "start_ms": 760,
+        "end_ms": 780,
+        "gop": -7.402,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.251
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪkapəɡɛn",
+      "score": {
+        "phone": "s",
+        "start_ms": 760,
+        "end_ms": 780,
+        "gop": -9.489,
+        "competitor": "p",
+        "peak": 0.0,
+        "other_peak": 0.018
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "cups",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seːjkapəɡɛn",
+      "score": {
+        "phone": "s",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": -5.177,
+        "competitor": "p",
+        "peak": 0.0,
+        "other_peak": 0.002
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪvɪsɐɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 5.656,
+        "competitor": null,
+        "peak": 0.986,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 5.842,
+        "competitor": null,
+        "peak": 0.984,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 6.227,
+        "competitor": null,
+        "peak": 0.989,
+        "other_peak": 0.002
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪðɪsəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": 6.104,
+        "competitor": null,
+        "peak": 0.988,
+        "other_peak": 0.002
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪvðɪsəɡɛn",
+      "score": {
+        "phone": "s",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 4.97,
+        "competitor": null,
+        "peak": 0.978,
+        "other_peak": 0.007
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪðiːɐɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -5.942,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.025
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪðɨəɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 760,
+        "end_ms": 780,
+        "gop": -3.659,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.003
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪðiːɐɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": -5.161,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.041
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪðiːɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": -4.451,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.02
+      }
+    },
+    {
+      "sound": "final-s",
+      "word": "this",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪðiːɐɡeɪn",
+      "score": {
+        "phone": "s",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": -6.149,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.037
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪplzəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": 2.974,
+        "competitor": null,
+        "peak": 0.936,
+        "other_peak": 0.048
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpleɪzəɡɛn",
+      "score": {
+        "phone": "z",
+        "start_ms": 980,
+        "end_ms": 1000,
+        "gop": 3.094,
+        "competitor": null,
+        "peak": 0.941,
+        "other_peak": 0.043
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpleɪzəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": 3.012,
+        "competitor": null,
+        "peak": 0.936,
+        "other_peak": 0.046
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpleɪzɐɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 1120,
+        "end_ms": 1140,
+        "gop": 3.303,
+        "competitor": null,
+        "peak": 0.95,
+        "other_peak": 0.035
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpleɪzəɡɛn",
+      "score": {
+        "phone": "z",
+        "start_ms": 1000,
+        "end_ms": 1020,
+        "gop": 3.233,
+        "competitor": null,
+        "peak": 0.948,
+        "other_peak": 0.037
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪpleɪsəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": -5.445,
+        "competitor": "s",
+        "peak": 0.004,
+        "other_peak": 0.986
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪpleɪsəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 1040,
+        "end_ms": 1060,
+        "gop": -5.733,
+        "competitor": "s",
+        "peak": 0.003,
+        "other_peak": 0.986
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪpleɪsəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 1000,
+        "end_ms": 1020,
+        "gop": -5.454,
+        "competitor": "s",
+        "peak": 0.004,
+        "other_peak": 0.987
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪpleɪsəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 940,
+        "end_ms": 960,
+        "gop": -5.447,
+        "competitor": "s",
+        "peak": 0.004,
+        "other_peak": 0.987
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪpleɪsəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 1040,
+        "end_ms": 1060,
+        "gop": -2.565,
+        "competitor": "s",
+        "peak": 0.069,
+        "other_peak": 0.904
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "dropped",
+      "said": null,
+      "heard": "spleɪəɡɛn",
+      "score": {
+        "phone": "z",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": -4.5,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪpleɪəɡɛheːn",
+      "score": {
+        "phone": "z",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": -5.923,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.142
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪpleɪəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -2.954,
+        "competitor": "ɾ",
+        "peak": 0.0,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪpleɪɐɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 900,
+        "end_ms": 920,
+        "gop": -5.052,
+        "competitor": "j",
+        "peak": 0.0,
+        "other_peak": 0.018
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "plays",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪpleɪɐɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": -2.527,
+        "competitor": "ɾ",
+        "peak": 0.0,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɔksəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 800,
+        "end_ms": 820,
+        "gop": -3.02,
+        "competitor": "s",
+        "peak": 0.046,
+        "other_peak": 0.94
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɔɡzəɡɛn",
+      "score": {
+        "phone": "z",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": 1.988,
+        "competitor": null,
+        "peak": 0.86,
+        "other_peak": 0.118
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪdɔŋksəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -1.686,
+        "competitor": "s",
+        "peak": 0.151,
+        "other_peak": 0.815
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪdɔksəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": -3.06,
+        "competitor": "s",
+        "peak": 0.044,
+        "other_peak": 0.942
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪdɔɡzəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": 1.063,
+        "competitor": null,
+        "peak": 0.716,
+        "other_peak": 0.247
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪtɔksəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -2.759,
+        "competitor": "s",
+        "peak": 0.059,
+        "other_peak": 0.924
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪtɔksəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": -1.336,
+        "competitor": "s",
+        "peak": 0.201,
+        "other_peak": 0.766
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪdɔɡzəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 0.06,
+        "competitor": null,
+        "peak": 0.503,
+        "other_peak": 0.474
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪdɔɡzəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 2.474,
+        "competitor": null,
+        "peak": 0.903,
+        "other_peak": 0.076
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪdɑːɡsəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 900,
+        "end_ms": 920,
+        "gop": -1.708,
+        "competitor": "s",
+        "peak": 0.149,
+        "other_peak": 0.822
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪdɔkɐɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -5.2,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪdɑːkəɡeːn",
+      "score": {
+        "phone": "z",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -3.672,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪdɔkɐɡeːn",
+      "score": {
+        "phone": "z",
+        "start_ms": 780,
+        "end_ms": 800,
+        "gop": -3.849,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɔkɐɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -6.954,
+        "competitor": "ɐ",
+        "peak": 0.001,
+        "other_peak": 0.546
+      }
+    },
+    {
+      "sound": "final-z",
+      "word": "dogs",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪdɔbəɡeɪn",
+      "score": {
+        "phone": "z",
+        "start_ms": 820,
+        "end_ms": 840,
+        "gop": -9.565,
+        "competitor": "b",
+        "peak": 0.0,
+        "other_peak": 0.647
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 3.823,
+        "competitor": null,
+        "peak": 0.918,
+        "other_peak": 0.02
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːəteɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": 4.984,
+        "competitor": null,
+        "peak": 0.942,
+        "other_peak": 0.006
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 3.751,
+        "competitor": null,
+        "peak": 0.909,
+        "other_peak": 0.021
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːɐɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 3.638,
+        "competitor": null,
+        "peak": 0.908,
+        "other_peak": 0.024
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːɐɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 4.05,
+        "competitor": null,
+        "peak": 0.92,
+        "other_peak": 0.016
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -7.492,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.986
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -7.243,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.977
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -7.12,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.98
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːɐɡæn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -6.802,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.981
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "she",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -6.882,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.972
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 4.27,
+        "competitor": null,
+        "peak": 0.935,
+        "other_peak": 0.013
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəɡæn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": 3.693,
+        "competitor": null,
+        "peak": 0.914,
+        "other_peak": 0.023
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəkeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": 3.732,
+        "competitor": null,
+        "peak": 0.912,
+        "other_peak": 0.022
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 520,
+        "end_ms": 540,
+        "gop": 4.437,
+        "competitor": null,
+        "peak": 0.645,
+        "other_peak": 0.008
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 3.817,
+        "competitor": null,
+        "peak": 0.911,
+        "other_peak": 0.02
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːpɡeːn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -6.357,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.593
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːpɪkeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -6.741,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.975
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːpəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -7.084,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.983
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪsiːpəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -6.854,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.959
+      }
+    },
+    {
+      "sound": "sh-s",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "s",
+      "heard": "seɪiːpəɡeɪn",
+      "score": {
+        "phone": "ʃ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -4.409,
+        "competitor": "s",
+        "peak": 0.002,
+        "other_peak": 0.157
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtʃiːpəɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 2.131,
+        "competitor": null,
+        "peak": 0.707,
+        "other_peak": 0.084
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtʃiːpəɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": 3.041,
+        "competitor": null,
+        "peak": 0.765,
+        "other_peak": 0.037
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtʃiːpəɡɛn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 2.357,
+        "competitor": null,
+        "peak": 0.74,
+        "other_peak": 0.07
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtʃiːpəɡɛn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": 2.972,
+        "competitor": null,
+        "peak": 0.764,
+        "other_peak": 0.039
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪttʃiːpəɡæn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 1.206,
+        "competitor": null,
+        "peak": 0.625,
+        "other_peak": 0.187
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "ʃ",
+      "heard": "seɪʃiːpəɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -4.969,
+        "competitor": "ʃ",
+        "peak": 0.007,
+        "other_peak": 0.937
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "ʃ",
+      "heard": "seɪʃiːbəɡæn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -5.18,
+        "competitor": "ʃ",
+        "peak": 0.005,
+        "other_peak": 0.927
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "ʃ",
+      "heard": "seɪʃiːpɪkeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -4.691,
+        "competitor": "ʃ",
+        "peak": 0.008,
+        "other_peak": 0.899
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "ʃ",
+      "heard": "seɪʃiːpɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -5.081,
+        "competitor": "ʃ",
+        "peak": 0.006,
+        "other_peak": 0.927
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "ʃ",
+      "heard": "seɪʃiːpɐɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -4.975,
+        "competitor": "ʃ",
+        "peak": 0.006,
+        "other_peak": 0.915
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtiːpəɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -6.221,
+        "competitor": "t",
+        "peak": 0.002,
+        "other_peak": 0.963
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtiːpəɡɛn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -6.645,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.975
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtiːpəɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -6.916,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.977
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtiːpəɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -7.354,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.98
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "cheap",
+      "kind": "substituted",
+      "said": "t",
+      "heard": "seɪtiːpəɡeɪn",
+      "score": {
+        "phone": "tʃ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -7.109,
+        "competitor": "t",
+        "peak": 0.001,
+        "other_peak": 0.979
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪdʒʊkɪtəɡeɪn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": 0.634,
+        "competitor": null,
+        "peak": 0.531,
+        "other_peak": 0.282
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪiːdʒʊkɪtðəɡɛhhn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 1.526,
+        "competitor": null,
+        "peak": 0.586,
+        "other_peak": 0.127
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪdʒjɚkɪtəɡn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 0.726,
+        "competitor": null,
+        "peak": 0.304,
+        "other_peak": 0.147
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtʃkɪtəɡeɪn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 740,
+        "end_ms": 760,
+        "gop": -1.942,
+        "competitor": "tʃ",
+        "peak": 0.099,
+        "other_peak": 0.693
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪdʒɪkɪtəɡeɪn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": 0.208,
+        "competitor": null,
+        "peak": 0.434,
+        "other_peak": 0.352
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪzəkɪtəɡeɪn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -7.606,
+        "competitor": "z",
+        "peak": 0.0,
+        "other_peak": 0.873
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪzʌkɪtəɡeːn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -7.88,
+        "competitor": "z",
+        "peak": 0.0,
+        "other_peak": 0.927
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪzʌkɪtəɡeɪn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -7.765,
+        "competitor": "z",
+        "peak": 0.0,
+        "other_peak": 0.92
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seːhiːzɐkɪtəɡeɪn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -8.385,
+        "competitor": "z",
+        "peak": 0.0,
+        "other_peak": 0.933
+      }
+    },
+    {
+      "sound": "ch-j",
+      "word": "jacket",
+      "kind": "substituted",
+      "said": "z",
+      "heard": "seɪzəkɪtəɡɛn",
+      "score": {
+        "phone": "dʒ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -8.163,
+        "competitor": "z",
+        "peak": 0.0,
+        "other_peak": 0.934
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪɹoʊdəɡɛn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 640,
+        "end_ms": 680,
+        "gop": 3.531,
+        "competitor": null,
+        "peak": 0.922,
+        "other_peak": 0.047
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪɹoʊdəɡæn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 4.679,
+        "competitor": null,
+        "peak": 0.927,
+        "other_peak": 0.009
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪɹoʊdəɡeɪn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 920,
+        "end_ms": 960,
+        "gop": 4.438,
+        "competitor": null,
+        "peak": 0.944,
+        "other_peak": 0.023
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪvɹoʊtəɡɛn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": 4.242,
+        "competitor": null,
+        "peak": 0.917,
+        "other_peak": 0.013
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪɹoʊtəɡeɪn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": 3.216,
+        "competitor": null,
+        "peak": 0.881,
+        "other_peak": 0.035
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "substituted",
+      "said": "l",
+      "heard": "saɪloʊdəɡeɪn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 540,
+        "end_ms": 560,
+        "gop": -8.377,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.989
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "substituted",
+      "said": "l",
+      "heard": "seɪloʊdəɡeɪn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -8.327,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.988
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "substituted",
+      "said": "l",
+      "heard": "seɪloʊdɡeɪn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -8.874,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.992
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "substituted",
+      "said": "l",
+      "heard": "seɪloʊtəɡeɪn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -8.55,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.989
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "road",
+      "kind": "substituted",
+      "said": "l",
+      "heard": "saɪloʊdəɡɛn",
+      "score": {
+        "phone": "ɹ",
+        "start_ms": 560,
+        "end_ms": 580,
+        "gop": -8.754,
+        "competitor": "l",
+        "peak": 0.0,
+        "other_peak": 0.991
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 6.688,
+        "competitor": null,
+        "peak": 0.991,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪftəɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": 6.89,
+        "competitor": null,
+        "peak": 0.992,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": 6.883,
+        "competitor": null,
+        "peak": 0.992,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": 7.444,
+        "competitor": null,
+        "peak": 0.993,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪlaɪtəɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 620,
+        "end_ms": 660,
+        "gop": 6.819,
+        "competitor": null,
+        "peak": 0.982,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "substituted",
+      "said": "ɹ",
+      "heard": "seɪɹaɪtəɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -6.345,
+        "competitor": "ɹ",
+        "peak": 0.002,
+        "other_peak": 0.927
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "substituted",
+      "said": "ɹ",
+      "heard": "seɪɹaɪtəɡæn",
+      "score": {
+        "phone": "l",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -6.279,
+        "competitor": "ɹ",
+        "peak": 0.002,
+        "other_peak": 0.893
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "substituted",
+      "said": "ɹ",
+      "heard": "seɪɹaɪtɐɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -5.828,
+        "competitor": "ɹ",
+        "peak": 0.003,
+        "other_peak": 0.87
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "substituted",
+      "said": "ɹ",
+      "heard": "seɪɹaɪtəɡeɪn",
+      "score": {
+        "phone": "l",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": -6.597,
+        "competitor": "ɹ",
+        "peak": 0.001,
+        "other_peak": 0.899
+      }
+    },
+    {
+      "sound": "r-l",
+      "word": "light",
+      "kind": "substituted",
+      "said": "ɹ",
+      "heard": "seɪɹaɪtɐɡæn",
+      "score": {
+        "phone": "l",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -6.278,
+        "competitor": "ɹ",
+        "peak": 0.002,
+        "other_peak": 0.912
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪstɹiːtɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 740,
+        "end_ms": 760,
+        "gop": 5.541,
+        "competitor": null,
+        "peak": 0.974,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪstɹiːtɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": 6.743,
+        "competitor": null,
+        "peak": 0.979,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪstɹiːtɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 5.493,
+        "competitor": null,
+        "peak": 0.972,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪstɹiːtɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 6.475,
+        "competitor": null,
+        "peak": 0.982,
+        "other_peak": 0.002
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪstɹiːtɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 6.292,
+        "competitor": null,
+        "peak": 0.972,
+        "other_peak": 0.002
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪsɹiːtɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -0.238,
+        "competitor": "ə",
+        "peak": 0.0,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "dropped",
+      "said": null,
+      "heard": "saɪsɹiːtəɡɛn",
+      "score": {
+        "phone": "t",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 0.863,
+        "competitor": null,
+        "peak": 0.002,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪsɹiːtəkeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 1.093,
+        "competitor": null,
+        "peak": 0.001,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪsɹiːtɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 1.666,
+        "competitor": null,
+        "peak": 0.008,
+        "other_peak": 0.001
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "street",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪsɹiːtɐɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 0.763,
+        "competitor": null,
+        "peak": 0.001,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛkstsəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 1000,
+        "end_ms": 1020,
+        "gop": 5.403,
+        "competitor": null,
+        "peak": 0.98,
+        "other_peak": 0.004
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛkstsəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 980,
+        "end_ms": 1000,
+        "gop": 5.106,
+        "competitor": null,
+        "peak": 0.977,
+        "other_peak": 0.006
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "right",
+      "said": null,
+      "heard": "zeɪtɛkstsəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": 5.207,
+        "competitor": null,
+        "peak": 0.977,
+        "other_peak": 0.005
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛkstsəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": 5.111,
+        "competitor": null,
+        "peak": 0.97,
+        "other_peak": 0.006
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪtɛkstttsəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 900,
+        "end_ms": 940,
+        "gop": 5.732,
+        "competitor": null,
+        "peak": 0.6,
+        "other_peak": 0.002
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛksəɡɛn",
+      "score": {
+        "phone": "t",
+        "start_ms": 940,
+        "end_ms": 960,
+        "gop": -0.296,
+        "competitor": "s",
+        "peak": 0.36,
+        "other_peak": 0.02
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛkssəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 880,
+        "end_ms": 900,
+        "gop": -3.153,
+        "competitor": "s",
+        "peak": 0.009,
+        "other_peak": 0.002
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛkssəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": -1.379,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "dropped",
+      "said": null,
+      "heard": "siːtɛksəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 900,
+        "end_ms": 920,
+        "gop": -3.444,
+        "competitor": "s",
+        "peak": 0.01,
+        "other_peak": 0.008
+      }
+    },
+    {
+      "sound": "clusters",
+      "word": "texts",
+      "kind": "dropped",
+      "said": null,
+      "heard": "seɪtɛksəɡeɪn",
+      "score": {
+        "phone": "t",
+        "start_ms": 900,
+        "end_ms": 920,
+        "gop": -2.232,
+        "competitor": "s",
+        "peak": 0.001,
+        "other_peak": 0.0
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 2.608,
+        "competitor": null,
+        "peak": 0.883,
+        "other_peak": 0.065
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːbɪkeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": 3.132,
+        "competitor": null,
+        "peak": 0.905,
+        "other_peak": 0.039
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": 3.344,
+        "competitor": null,
+        "peak": 0.918,
+        "other_peak": 0.032
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 3.351,
+        "competitor": null,
+        "peak": 0.925,
+        "other_peak": 0.032
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪʃiːpəkeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": 3.299,
+        "competitor": null,
+        "peak": 0.917,
+        "other_peak": 0.034
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "sɛjɨʃɪpəɡæn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -2.36,
+        "competitor": "ɪ",
+        "peak": 0.059,
+        "other_peak": 0.623
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪʃɪpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -3.776,
+        "competitor": "ɪ",
+        "peak": 0.015,
+        "other_peak": 0.646
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪʃɪpbəɡæn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -2.958,
+        "competitor": "ɪ",
+        "peak": 0.033,
+        "other_peak": 0.629
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪʃɪpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -4.272,
+        "competitor": "ɪ",
+        "peak": 0.011,
+        "other_peak": 0.782
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "sheep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪʃɛpədeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 740,
+        "end_ms": 760,
+        "gop": -2.531,
+        "competitor": "ɛ",
+        "peak": 0.016,
+        "other_peak": 0.196
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkiːpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": 3.596,
+        "competitor": null,
+        "peak": 0.924,
+        "other_peak": 0.025
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkiːpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": 3.315,
+        "competitor": null,
+        "peak": 0.913,
+        "other_peak": 0.033
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkiːpəɡɛn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 2.715,
+        "competitor": null,
+        "peak": 0.89,
+        "other_peak": 0.059
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkiːpəɡɛn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": 3.229,
+        "competitor": null,
+        "peak": 0.921,
+        "other_peak": 0.036
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪkiːpəɡeːn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": 4.437,
+        "competitor": null,
+        "peak": 0.933,
+        "other_peak": 0.011
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪjiːkɪpəɡæn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -2.699,
+        "competitor": "ɪ",
+        "peak": 0.029,
+        "other_peak": 0.436
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪkɪpəɡɛn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -2.577,
+        "competitor": "ɪ",
+        "peak": 0.042,
+        "other_peak": 0.557
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪkɪpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -2.446,
+        "competitor": "ɪ",
+        "peak": 0.053,
+        "other_peak": 0.617
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "saɪjkeɪpəkeːn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -2.469,
+        "competitor": "eɪ",
+        "peak": 0.032,
+        "other_peak": 0.378
+      }
+    },
+    {
+      "sound": "long-ee",
+      "word": "keep",
+      "kind": "substituted",
+      "said": "ɪ",
+      "heard": "seɪkɪpəɡeɪn",
+      "score": {
+        "phone": "iː",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": -1.458,
+        "competitor": "ɪ",
+        "peak": 0.132,
+        "other_peak": 0.568
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpuːlɐɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 1.714,
+        "competitor": null,
+        "peak": 0.638,
+        "other_peak": 0.115
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpʊlɐɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": -0.813,
+        "competitor": "ʊ",
+        "peak": 0.204,
+        "other_peak": 0.459
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpuːləɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 860,
+        "end_ms": 880,
+        "gop": 2.258,
+        "competitor": null,
+        "peak": 0.666,
+        "other_peak": 0.07
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpʊlɐɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 1060,
+        "end_ms": 1080,
+        "gop": -0.151,
+        "competitor": "ʊ",
+        "peak": 0.311,
+        "other_peak": 0.361
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpuːləɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 840,
+        "end_ms": 860,
+        "gop": 1.306,
+        "competitor": null,
+        "peak": 0.565,
+        "other_peak": 0.153
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪpoːlɐɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 960,
+        "end_ms": 980,
+        "gop": -1.42,
+        "competitor": "oː",
+        "peak": 0.097,
+        "other_peak": 0.4
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪpuləɡeːn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": -1.89,
+        "competitor": "u",
+        "peak": 0.053,
+        "other_peak": 0.35
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪpʊlɐɡɛn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 920,
+        "end_ms": 940,
+        "gop": -2.828,
+        "competitor": "ʊ",
+        "peak": 0.024,
+        "other_peak": 0.411
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪpollɐɡɛn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 980,
+        "end_ms": 1000,
+        "gop": -1.505,
+        "competitor": "o",
+        "peak": 0.056,
+        "other_peak": 0.253
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "pool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪpoːlɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 900,
+        "end_ms": 920,
+        "gop": -2.501,
+        "competitor": "oː",
+        "peak": 0.034,
+        "other_peak": 0.411
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkuːlðəɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 3.165,
+        "competitor": null,
+        "peak": 0.777,
+        "other_peak": 0.033
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkuːləɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 700,
+        "end_ms": 720,
+        "gop": 2.448,
+        "competitor": null,
+        "peak": 0.649,
+        "other_peak": 0.056
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkuːlðəkeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 760,
+        "end_ms": 780,
+        "gop": 2.256,
+        "competitor": null,
+        "peak": 0.651,
+        "other_peak": 0.068
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪkuːlʌkeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 1.095,
+        "competitor": null,
+        "peak": 0.589,
+        "other_peak": 0.197
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "right",
+      "said": null,
+      "heard": "skuːlɐɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 1360,
+        "end_ms": 1380,
+        "gop": 2.334,
+        "competitor": null,
+        "peak": 0.741,
+        "other_peak": 0.072
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪkuːləɡɛn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 1.975,
+        "competitor": null,
+        "peak": 0.562,
+        "other_peak": 0.078
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪkuːlləɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 800,
+        "end_ms": 820,
+        "gop": 0.608,
+        "competitor": null,
+        "peak": 0.428,
+        "other_peak": 0.233
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "saɪkoːləɡɛn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -0.011,
+        "competitor": "oː",
+        "peak": 0.205,
+        "other_peak": 0.208
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "seɪkuːləɡeɪn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": 0.844,
+        "competitor": null,
+        "peak": 0.343,
+        "other_peak": 0.148
+      }
+    },
+    {
+      "sound": "long-oo",
+      "word": "cool",
+      "kind": "substituted",
+      "said": "ʊ",
+      "heard": "saɪkuːlɐɡɛn",
+      "score": {
+        "phone": "uː",
+        "start_ms": 980,
+        "end_ms": 1000,
+        "gop": 0.317,
+        "competitor": null,
+        "peak": 0.214,
+        "other_peak": 0.156
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpɪtəkeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 600,
+        "end_ms": 620,
+        "gop": -2.959,
+        "competitor": "ɪ",
+        "peak": 0.01,
+        "other_peak": 0.194
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpɪtəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -5.3,
+        "competitor": "ɪ",
+        "peak": 0.004,
+        "other_peak": 0.72
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpʌðəɡeɪm",
+      "score": {
+        "phone": "æ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -1.378,
+        "competitor": "ʌ",
+        "peak": 0.026,
+        "other_peak": 0.104
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "right",
+      "said": null,
+      "heard": "saɪbʌtəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -2.048,
+        "competitor": "ʌ",
+        "peak": 0.022,
+        "other_peak": 0.17
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪpɪdəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": -2.969,
+        "competitor": "ɪ",
+        "peak": 0.015,
+        "other_peak": 0.284
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "seɪbɛtəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -4.02,
+        "competitor": "ɛ",
+        "peak": 0.015,
+        "other_peak": 0.836
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "seɪbɛtmɪɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -1.905,
+        "competitor": "ɛ",
+        "peak": 0.118,
+        "other_peak": 0.79
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "saɪbædəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": 1.726,
+        "competitor": null,
+        "peak": 0.584,
+        "other_peak": 0.104
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "seɪpɛtɐɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -1.955,
+        "competitor": "ɛ",
+        "peak": 0.112,
+        "other_peak": 0.793
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "bad",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "saɪbɛtəɡeːn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 580,
+        "end_ms": 600,
+        "gop": -3.14,
+        "competitor": "ɛ",
+        "peak": 0.037,
+        "other_peak": 0.843
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "right",
+      "said": null,
+      "heard": "sŋmanðəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -2.065,
+        "competitor": "a",
+        "peak": 0.036,
+        "other_peak": 0.282
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmʌnəɡɛn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -3.549,
+        "competitor": "ʌ",
+        "peak": 0.012,
+        "other_peak": 0.433
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmʌnəɡɛn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 640,
+        "end_ms": 660,
+        "gop": -3.694,
+        "competitor": "ʌ",
+        "peak": 0.013,
+        "other_peak": 0.534
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "right",
+      "said": null,
+      "heard": "seːiːmʌndəɡeːn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -3.603,
+        "competitor": "ʌ",
+        "peak": 0.011,
+        "other_peak": 0.409
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "right",
+      "said": null,
+      "heard": "seɪmʌnəɡeːn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 660,
+        "end_ms": 680,
+        "gop": -3.947,
+        "competitor": "ʌ",
+        "peak": 0.013,
+        "other_peak": 0.665
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "saɪmɛndəɡɛn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": -1.475,
+        "competitor": "ɛ",
+        "peak": 0.158,
+        "other_peak": 0.688
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "seɪmɛnəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -2.19,
+        "competitor": "ɛ",
+        "peak": 0.073,
+        "other_peak": 0.651
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "seɪmɛnəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 680,
+        "end_ms": 700,
+        "gop": -3.073,
+        "competitor": "ɛ",
+        "peak": 0.035,
+        "other_peak": 0.748
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "seɪmɛnəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 620,
+        "end_ms": 640,
+        "gop": -0.871,
+        "competitor": "ɛ",
+        "peak": 0.214,
+        "other_peak": 0.512
+      }
+    },
+    {
+      "sound": "ae-e",
+      "word": "man",
+      "kind": "substituted",
+      "said": "ɛ",
+      "heard": "seɪmmænəɡeɪn",
+      "score": {
+        "phone": "æ",
+        "start_ms": 720,
+        "end_ms": 740,
+        "gop": 2.41,
+        "competitor": null,
+        "peak": 0.633,
+        "other_peak": 0.057
+      }
+    }
+  ]
+}

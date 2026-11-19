@@ -180,3 +180,22 @@ def test_synthesis_runs_at_most_parallel_at_once() -> None:
     for t in threads:
         t.join()
     assert 1 <= peak <= PARALLEL
+
+
+def test_exact_phonemes_are_spoken_and_unknown_symbols_refused() -> None:
+    said: list[list[str]] = []
+
+    def fake_phonemes(phonemes: list[str], pace: str) -> bytes:
+        if "Q" in phonemes:
+            raise ValueError("phonemes the voice does not know: ['Q']")
+        said.append(phonemes)
+        return b"RIFF:" + "".join(phonemes).encode()
+
+    c = TestClient(create_app(PIN, fake_wav, speak_phonemes=fake_phonemes))
+    r = c.post("/speak-phonemes", json={"phonemes": ["θ", "ˈɪ", "ŋ"]})  # noqa: RUF001
+    assert r.status_code == 200 and r.content == "RIFF:θˈɪŋ".encode()
+    assert c.post("/speak-phonemes", json={"phonemes": ["Q"]}).status_code == 422
+    assert c.post("/speak-phonemes", json={"phonemes": []}).status_code == 422
+    # Without a phoneme speaker (the default) the route is not there.
+    plain = TestClient(create_app(PIN, fake_wav))
+    assert plain.post("/speak-phonemes", json={"phonemes": ["θ"]}).status_code == 404
