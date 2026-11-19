@@ -54,6 +54,8 @@ Migration `0034_listening_answers.sql` (additive): `listening_answers`, one row 
   - evidence and competencies;
   - 503 without a voice;
   - "Hôm nay".
-- [ ] T4 (PR 2) The web page `/nghe`: play (normal and slow), type, result, strings in `vi`.
+- [x] T4 (PR 2) The web page `/nghe` and `/nghe/{slug}`: play and slow play (3 plays before answering; free after),
+  type, word-by-word result with a legend that does not rely on colour, strings in `vi`; proxy rules; Vitest decoders;
+  Playwright (no voice on the real API, a mocked dictation and gap).
 - [ ] T5 (4.4c) The Part 4 mini-lecture: a whole passage voiced, with its approved Reading questions.
 - [ ] T6 (after the recogniser decision) The audio check of step 4.4a on every sentence before serving.
