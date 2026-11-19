@@ -90,6 +90,8 @@ export interface RecordingDetail {
   labels: Record<number, Label>;
   /** Target indexes marked as probably mispronounced (step 3.4); empty until thresholds pass the gate. */
   marks: number[];
+  /** Target sounds the detector is not sure about (step 3.6a): no evidence either way. */
+  unsure: number[];
 }
 
 function list(value: unknown): unknown[] {
@@ -208,6 +210,7 @@ export function parseRecording(value: unknown): RecordingDetail {
       : [],
     labels: labels(d.labels),
     marks: d.marks === undefined ? [] : list(d.marks).map(num),
+    unsure: d.unsure === undefined ? [] : list(d.unsure).map(num),
   };
 }
 

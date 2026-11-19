@@ -25,6 +25,10 @@ start, so restart both after applying: `docker compose restart api worker`.
 Any other sound is unmarked, which means "not sure", never "right". No total score.
 
 **The observation model.** BKT treats an unmarked sound as a correct observation.
+> **Superseded by `step-3.6a.md` (19 Nov):** these were the detector's error rates, not the learner's slip and guess,
+> and an unmarked sound counted as right. Now three outcomes (right, wrong, inconclusive) and an observation model
+> that combines both layers. Kept below for history.
+
 - **slip = P(marked | said right)**, the false-positive rate on the check half.
 - **guess = P(unmarked | said wrong)**, the miss rate (1 − recall).
 

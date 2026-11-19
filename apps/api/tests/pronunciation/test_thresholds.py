@@ -91,3 +91,46 @@ def test_thresholds_stay_at_or_below_zero_where_a_competitor_is_always_heard() -
     right = [Labelled("a", "g", g, False) for g in (1.0 + i for i in range(30))]
     t = choose(wrong + right)
     assert t is not None and t <= 0
+
+
+def test_accept_is_the_lowest_score_with_few_wrong_sounds_accepted() -> None:
+    from app.pronunciation.thresholds import choose_accept
+
+    items = [Labelled("a", "g", g, w) for g, w in
+             [(-3.0, True), (-0.8, True), (-0.5, False), (-0.4, True), *[(0.1 * i, False)
+              for i in range(10)]]]  # fmt: skip
+    # From -0.5 up: 12 accepted, 1 wrong (8%); from -0.8: 13 accepted, 2 wrong (15%).
+    assert choose_accept(items, threshold=-2.0) == -0.5
+    assert choose_accept(items, threshold=-2.0, max_wrong=0.0) == 0.0
+    assert choose_accept([Labelled("a", "g", 1.0, True)], threshold=-2.0) is None
+
+
+def test_three_outcomes_by_truth_and_the_new_ways_to_fail() -> None:
+    from app.pronunciation.thresholds import outcomes
+
+    tune, check = recordings("tune", 30), recordings("check", 30)
+
+    def sounds(ids: list[str], unsure: int = 0, accepted_wrong: int = 0) -> list[Labelled]:
+        out = []
+        for i, r in enumerate(ids):
+            wrong_gop = 2.0 if i < accepted_wrong else -1.5 if i < unsure else -3.0
+            out.append(Labelled(r, "th", wrong_gop, True))
+            out.append(Labelled(r, "th", -1.5 if i < unsure else 2.0, False))
+        return out
+
+    base = sounds(tune)
+    good = report_group(base + sounds(check))
+    assert good["accept"] == 2.0 and good["verdict"] == "pass"
+    assert good["check"]["outcomes"] == {
+        "said_right": {"right": 30, "wrong": 0, "inconclusive": 0},
+        "said_wrong": {"right": 0, "wrong": 30, "inconclusive": 0},
+    }
+    assert good["check"]["conclusive_share"] == 1.0
+    # Mostly unsure (40 of 60 between the thresholds): rarely wrong, but rarely sure either.
+    unsure = report_group(base + sounds(check, unsure=20))
+    assert unsure["check"]["conclusive_share"] < 0.5 and unsure["verdict"] == "fail"
+    # Accepting wrong sounds as right fails too (a different layer from false alarms).
+    loose = report_group(base + sounds(check, accepted_wrong=8))  # 8 wrong ones scored high
+    assert loose["check"]["accepted_wrong_share"] > 0.10 and loose["verdict"] == "fail"
+    counted = outcomes([Labelled("a", "g", -1.5, False)], threshold=-2.0, accept=0.0)
+    assert counted["said_right"]["inconclusive"] == 1

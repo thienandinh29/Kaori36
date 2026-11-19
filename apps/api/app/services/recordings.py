@@ -22,7 +22,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.engine.milestones import ASSUMED_KNOWN
 from app.pronunciation.canonical import Word, load_canonical, phone_set
 from app.pronunciation.canonical import check as check_canonical
-from app.pronunciation.marks import load_applied, marks
+from app.pronunciation.marks import load_applied, marks, outcomes
 from app.pronunciation.quality import Quality, check
 from app.services.backend import learner_uuid
 
@@ -279,6 +279,14 @@ class Recordings:
             "failed": row[7] is not None,
             "labels": [{"target": t, "label": label} for t, label in labels],
             "marks": marks(row[6]["targets"], self.group_of, self.applied) if row[6] else [],
+            # Step 3.6a: target sounds of an applied group that are neither marked nor accepted.
+            "unsure": [
+                i
+                for i, o in enumerate(outcomes(row[6]["targets"], self.group_of, self.applied))
+                if o == "inconclusive"
+            ]
+            if row[6]
+            else [],
         }
 
     def audio(self, learner_id: str, recording_id: str) -> bytes:

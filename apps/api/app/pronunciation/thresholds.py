@@ -8,6 +8,11 @@ Pure except `main`. Recordings, not phones, are split into a tune half and a che
 sentence is in both. A sound is flagged when its GOP is below the threshold. The threshold is
 chosen on the tune half; the false-alarm share (flagged but labelled right, over flagged) is
 measured on the check half with a Wilson interval. Only a `pass` group may get marks (step 3.4).
+
+Step 3.6a adds a second, higher `accept` threshold: a sound at or above it counts as said right,
+one between the two is inconclusive (no evidence). The check half then reports the outcomes by
+truth, which give the observation model its rates (`evidence.effective`); a group also needs few
+wrongly accepted sounds and at least half of its sounds conclusive.
 """
 
 import argparse
@@ -23,6 +28,9 @@ from app.validation.gate import Truth, basis, measured
 
 MAX_FALSE_SHARE = 0.10
 MIN_FLAGGED = 10
+MAX_ACCEPTED_WRONG = 0.10  # of the sounds counted as right, at most this share labelled wrong
+MIN_ACCEPTED = 10
+MIN_CONCLUSIVE = 0.5  # a detector that is rarely sure is not useful, however rarely wrong
 MIN_RECORDINGS = 50  # the plan: 50-100 labelled sentences
 Half = Literal["tune", "check"]
 
@@ -79,6 +87,30 @@ def choose(items: Sequence[Labelled], max_false: float = MAX_FALSE_SHARE) -> flo
     return None if best is None else best[1]
 
 
+def choose_accept(
+    items: Sequence[Labelled], threshold: float, max_wrong: float = MAX_ACCEPTED_WRONG
+) -> float | None:
+    """The lowest `accept` (at or above `threshold`) with at most `max_wrong` of accepted sounds
+    labelled wrong: as many sounds conclusive as the limit allows. None when nothing qualifies."""
+    for gop in sorted({x.gop for x in items if x.gop >= threshold}):
+        accepted = [x for x in items if x.gop >= gop]
+        if accepted and sum(x.wrong for x in accepted) / len(accepted) <= max_wrong:
+            return round(gop, 3)
+    return None
+
+
+def outcomes(
+    items: Sequence[Labelled], threshold: float, accept: float
+) -> dict[str, dict[str, int]]:
+    """Outcome counts by truth. Thresholds stay at or below 0, where a competitor is always heard,
+    so `GOP < threshold` is the product's `wrong` (`evidence.outcome`)."""
+    out = {t: {"right": 0, "wrong": 0, "inconclusive": 0} for t in ("said_right", "said_wrong")}
+    for x in items:
+        o = "wrong" if x.gop < threshold else "right" if x.gop >= accept else "inconclusive"
+        out["said_wrong" if x.wrong else "said_right"][o] += 1
+    return out
+
+
 def report_group(items: Sequence[Labelled]) -> dict[str, Any]:
     tune = [x for x in items if half(x.recording) == "tune"]
     check = [x for x in items if half(x.recording) == "check"]
@@ -101,10 +133,31 @@ def report_group(items: Sequence[Labelled]) -> dict[str, Any]:
         "recall": round(caught / wrong, 3) if wrong else None,
         "false_positive_rate": round(false / right, 3) if right else None,
     }
-    if flagged < MIN_FLAGGED or share is None:
+    out["accept"] = choose_accept(tune, out["threshold"])
+    if flagged < MIN_FLAGGED or share is None or out["accept"] is None:
         out["verdict"] = "too_few"
+        return out
+    by_truth = outcomes(check, out["threshold"], out["accept"])
+    accepted = by_truth["said_right"]["right"] + by_truth["said_wrong"]["right"]
+    wrongly = by_truth["said_wrong"]["right"]
+    conclusive = len(check) - sum(t["inconclusive"] for t in by_truth.values())
+    out["check"] |= {
+        "outcomes": by_truth,
+        "accepted": accepted,
+        "accepted_wrong_share": round(wrongly / accepted, 3) if accepted else None,
+        "accepted_wrong_share_95": [round(v, 3) for v in wilson(wrongly, accepted)],
+        "conclusive_share": round(conclusive / len(check), 3) if check else None,
+    }
+    if accepted < MIN_ACCEPTED:
+        out["verdict"] = "too_few"
+    elif (
+        share > MAX_FALSE_SHARE
+        or wrongly / accepted > MAX_ACCEPTED_WRONG
+        or conclusive / len(check) < MIN_CONCLUSIVE
+    ):
+        out["verdict"] = "fail"
     else:
-        out["verdict"] = "pass" if share <= MAX_FALSE_SHARE else "fail"
+        out["verdict"] = "pass"
     return out
 
 
@@ -114,9 +167,13 @@ def report(items: Iterable[Labelled]) -> dict[str, Any]:
         groups.setdefault(x.group, []).append(x)
     return {
         "rule": (
-            f"flag when GOP < threshold; threshold chosen on the tune half for the most catches "
-            f"with false-alarm share <= {MAX_FALSE_SHARE}; pass needs share <= {MAX_FALSE_SHARE} "
-            f"and >= {MIN_FLAGGED} flags on the check half"
+            f"wrong when GOP < threshold, right when GOP >= accept, inconclusive between; "
+            f"threshold chosen on the tune half for the most catches with false-alarm share <= "
+            f"{MAX_FALSE_SHARE}, accept the lowest with accepted-but-wrong share <= "
+            f"{MAX_ACCEPTED_WRONG}; pass needs, on the check half, false-alarm share <= "
+            f"{MAX_FALSE_SHARE} with >= {MIN_FLAGGED} flags, accepted-but-wrong share <= "
+            f"{MAX_ACCEPTED_WRONG} with >= {MIN_ACCEPTED} accepted, and conclusive share >= "
+            f"{MIN_CONCLUSIVE}"
         ),
         "groups": {g: report_group(v) for g, v in sorted(groups.items())},
     }
