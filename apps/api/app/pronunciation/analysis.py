@@ -24,7 +24,8 @@ from app.engine import bkt
 from app.engine.graph import UNSEEN_P_KNOWN
 from app.engine.trace import fmt_p
 from app.pronunciation.canonical import Word, flat, targets
-from app.pronunciation.marks import Applied, marks, observations
+from app.pronunciation.evidence import LEARNER_GUESS, LEARNER_SLIP
+from app.pronunciation.marks import Applied, observations
 
 Score = Callable[[bytes, list[str]], dict[str, Any]]
 
@@ -66,8 +67,7 @@ def apply_evidence(
     from app.services.learning import save_mastery
 
     ts = result["targets"]
-    marked = marks(ts, evidence.group_of, evidence.applied)
-    obs = observations(ts, marked, evidence.group_of, evidence.applied)
+    obs = observations(ts, evidence.group_of, evidence.applied)
     if not obs:
         return []
     ids = sync_course(conn, evidence.course)
@@ -83,8 +83,10 @@ def apply_evidence(
     moved = []
     for group, index, correct in obs:
         a = evidence.applied[group]
-        assert a.slip is not None and a.guess is not None
-        params = bkt.BKTParams(p_init=0.2, p_transit=P_TRANSIT, p_slip=a.slip, p_guess=a.guess)
+        model = a.evidence()
+        assert model is not None  # observations() keeps only groups whose outcomes say something
+        slip, guess = model
+        params = bkt.BKTParams(p_init=0.2, p_transit=P_TRANSIT, p_slip=slip, p_guess=guess)
         t = ts[index]
         p = known.get(ids[group], UNSEEN_P_KNOWN)
         p_new, trace = bkt.update_traced(
@@ -92,16 +94,20 @@ def apply_evidence(
             item_id=f"recording:{recording}:{index}",
             misconception=None if correct else f"pronunciation:{t['sound']}",
         )  # fmt: skip
-        verdict = "không bị đánh dấu" if correct else "bị đánh dấu là có thể chưa đúng"
+        verdict = "được nghe là đúng" if correct else "bị đánh dấu là có thể chưa đúng"
+        r = a.rates
         trace = trace.model_copy(
             update={
-                "rule": "pronunciation.mark",
+                "rule": "pronunciation.outcome",
                 "rule_vi": (
                     f"Âm /{t['phone']}/ trong «{t['word']}» {verdict} → khả năng đã nắm vững "
                     f"{'tăng' if p_new >= p else 'giảm'} từ {fmt_p(p)} "
-                    f"{'lên' if p_new >= p else 'xuống'} {fmt_p(p_new)} (máy đánh dấu nhầm "
-                    f"khoảng {fmt_p(a.slip)} số âm đúng và bỏ sót {fmt_p(a.guess)} số âm sai, "
-                    "đo trên bản ghi đã gán nhãn)."
+                    f"{'lên' if p_new >= p else 'xuống'} {fmt_p(p_new)}. Hai loại sai được tính "
+                    f"riêng: người học đã nắm vẫn có lúc nói sai (giả định {fmt_p(LEARNER_SLIP)}) "
+                    f"hay chưa nắm vẫn nói đúng ({fmt_p(LEARNER_GUESS)}), còn máy đánh dấu nhầm "
+                    f"{fmt_p(r.wrong_if_right)} số âm đúng và nghe nhầm thành đúng "
+                    f"{fmt_p(r.right_if_wrong)} số âm sai (đo trên bản ghi đã gán nhãn). Âm máy "
+                    "chưa chắc thì không tính."
                 ),
             }
         )

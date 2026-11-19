@@ -46,7 +46,21 @@ function Marks({
   detail: RecordingDetail;
   sounds: Map<string, Sound>;
 }) {
-  if (detail.marks.length === 0) return <p className="en-muted">{t.noMarks}</p>;
+  const unsure = detail.unsure
+    .map((i) => detail.targets[i]?.word)
+    .filter((w): w is string => Boolean(w));
+  const unsureLine = unsure.length > 0 && (
+    <p className="en-muted" data-testid="recording-unsure">
+      {t.unsure} <span lang="en">{unsure.join(", ")}</span>
+    </p>
+  );
+  if (detail.marks.length === 0)
+    return (
+      <>
+        <p className="en-muted">{t.noMarks}</p>
+        {unsureLine}
+      </>
+    );
   return (
     <div className="nt-pron-marks" data-testid="recording-marks">
       <p className="en-badge draft">{t.marksTitle}</p>
@@ -64,6 +78,7 @@ function Marks({
           );
         })}
       </ul>
+      {unsureLine}
     </div>
   );
 }

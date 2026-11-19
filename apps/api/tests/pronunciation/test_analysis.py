@@ -243,7 +243,8 @@ def test_marks_appear_only_after_thresholds_are_applied(stack, tmp_path: Path) -
     shutil.copytree(FOLDER, folder)
     (folder / "thresholds.json").write_text(
         '{"applied": "2026-12-01", "groups": {"final-consonants": '
-        '{"threshold": -1.0, "slip": 0.05, "guess": 0.5, "labelled": 80}}}'
+        '{"threshold": -1.0, "accept": -0.2, "labelled": 80, "rates": {"right_if_right": 0.7, '
+        '"wrong_if_right": 0.05, "right_if_wrong": 0.1, "wrong_if_wrong": 0.6}}}}'
     )
     app = FastAPI()
     app.include_router(routes.create_router(Recordings(lambda: pool, folder, owner, lambda: NOW)))
@@ -268,6 +269,7 @@ def test_marks_move_the_group_node_once_per_recording_after_the_gate(stack, tmp_
     import shutil
 
     from app.pronunciation.analysis import Evidence
+    from app.pronunciation.evidence import Rates
     from app.pronunciation.marks import Applied
     from app.services.recordings import load_evidence
 
@@ -279,7 +281,7 @@ def test_marks_move_the_group_node_once_per_recording_after_the_gate(stack, tmp_
     gate = Evidence(
         closed.course,
         closed.group_of,
-        {"final-consonants": Applied(-1.0, 0.05, 0.4, 80)},
+        {"final-consonants": Applied(-1.0, -0.2, Rates(0.7, 0.05, 0.1, 0.6), 80)},
     )
 
     def low(a: bytes, p: list[str]) -> dict[str, Any]:
@@ -309,7 +311,8 @@ def test_marks_move_the_group_node_once_per_recording_after_the_gate(stack, tmp_
     assert [r[0] for r in rows] == ["final-consonants"] and rows[0][
         1
     ] < 0.2  # one wrong observation
-    assert len(traces) == 1 and traces[0][0] == "pronunciation.mark" and "giảm" in traces[0][1]
+    assert len(traces) == 1 and traces[0][0] == "pronunciation.outcome" and "giảm" in traces[0][1]
+    assert "chưa chắc thì không tính" in traces[0][1]  # both error layers explained
     q = {"learner_id": owner}
     moved = client.get(f"/recordings/{second}", params=q).json()["analysis"]["evidence"]
     assert len(moved) == 1 and moved[0]["node"] == "final-consonants" and not moved[0]["correct"]

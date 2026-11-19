@@ -872,6 +872,8 @@ export const vi = {
       noMarks:
         "Không có âm nào được đánh dấu. Máy chỉ đánh dấu khi chắc chắn và khi ngưỡng của nhóm âm đã được kiểm chứng trên bản ghi của chủ dự án; không đánh dấu không có nghĩa là đã đúng.",
       heard: "máy nghe giống",
+      unsure:
+        "Máy chưa chắc ở các từ này, nên không tính vào tiến độ (không phải đúng, cũng không phải sai):",
       progressTitle: "Tiến độ phát âm",
       progressNote:
         "Mỗi nhóm âm chỉ được cập nhật khi ngưỡng của nhóm đó đã được kiểm chứng trên bản ghi của chủ dự án.",

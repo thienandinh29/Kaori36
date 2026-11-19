@@ -91,6 +91,12 @@ describe("pronunciation decoders (step 3.3a)", () => {
     ).toThrow();
   });
 
+  it("reads the not-sure sounds, none when absent (step 3.6a)", () => {
+    const base = { ...row, failed: false, analysis: null };
+    expect(parseRecording(base).unsure).toEqual([]);
+    expect(parseRecording({ ...base, unsure: [1, 2] }).unsure).toEqual([1, 2]);
+    expect(() => parseRecording({ ...base, unsure: ["1"] })).toThrow();
+  });
   it("reads marks as target indexes", () => {
     expect(
       parseRecording({ ...row, failed: false, analysis: null, marks: [0, 3] })
