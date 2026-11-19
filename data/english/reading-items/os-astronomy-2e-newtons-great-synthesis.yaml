@@ -1,0 +1,136 @@
+text_slug: os-astronomy-2e-newtons-great-synthesis
+source: openstax-reading
+versions:
+- passage_sha256: 80455ff7e561be6f60e2cf692f767ce5203b653cfa1ef396dee9e876b860a78d
+  items:
+  - id: os-astronomy-2e-newtons-great-synthesis-completion-1
+    kind: completion
+    status: verified
+    item:
+      id: os-astronomy-2e-newtons-great-synthesis-completion-1
+      kind: completion
+      text: os-astronomy-2e-newtons-great-synthesis
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - time
+      evidence:
+      - Newton’s second law expresses force in terms of its ability to change momentum with time.
+      sentence: Newton’s second law expresses force in terms of its ability to change momentum with ___.
+      max_words: 1
+    problems: []
+    checker_answer: time
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-newtons-great-synthesis-headings-1
+    kind: headings
+    status: verified
+    item:
+      id: os-astronomy-2e-newtons-great-synthesis-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+      kind: headings
+      text: os-astronomy-2e-newtons-great-synthesis
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The law of inertia explained
+      - Defining momentum and velocity
+      - Friction and motion in space
+      - Force and change of momentum
+      - Acceleration and mass
+      - The third law and conservation of momentum
+      - The history of Newton’s laws
+      - Applications of momentum in everyday life
+    problems: []
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-newtons-great-synthesis-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-astronomy-2e-newtons-great-synthesis-mcq-1
+      key: 1
+      kind: mcq
+      stem: Based on the passage, what happens to a moving object in an environment with negligible friction?
+      text: os-astronomy-2e-newtons-great-synthesis
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - It gradually slows down due to internal forces.
+      - It continues to move indefinitely.
+      - It immediately stops because no force is acting.
+      - It accelerates without any applied force.
+      evidence:
+      - But in the space between the stars, where there is so little matter that friction is insignificant, objects
+        can in fact continue to move (to coast) indefinitely.
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-newtons-great-synthesis-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-astronomy-2e-newtons-great-synthesis-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-newtons-great-synthesis
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Momentum then can be defined as an object’s mass times its velocity.
+      statement: According to the passage, momentum is calculated as an object's mass multiplied by its velocity.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-newtons-great-synthesis-tfng-2
+    kind: tfng
+    status: needs_review
+    item:
+      id: os-astronomy-2e-newtons-great-synthesis-tfng-2
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-newtons-great-synthesis
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The passage states that Newton's third law applies only to objects that are not isolated from outside
+        influences.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null

@@ -392,3 +392,16 @@ def test_deepseek_long_multibyte_context_is_rejected_before_paid_request(
         )
     assert not error.value.retryable
     post.assert_not_called()
+
+
+def test_env_proxy_is_ignored_unless_asked(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.llm.providers import use_env_proxy
+
+    monkeypatch.delenv("LLM_USE_ENV_PROXY", raising=False)
+    assert use_env_proxy() is False
+    for off in ("", "0", "no"):
+        monkeypatch.setenv("LLM_USE_ENV_PROXY", off)
+        assert use_env_proxy() is False
+    for on in ("1", "true", "YES"):
+        monkeypatch.setenv("LLM_USE_ENV_PROXY", on)
+        assert use_env_proxy() is True

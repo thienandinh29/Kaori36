@@ -136,11 +136,22 @@ def http_failure(response: httpx.Response) -> HTTPProviderError:
     return error
 
 
+def use_env_proxy() -> bool:
+    """Proxy and CA settings from the environment are ignored unless LLM_USE_ENV_PROXY=1.
+
+    Off by default so a stray HTTPS_PROXY never sees provider keys; on where the only way out is a
+    known egress proxy (a cloud sandbox whose proxy adds the keys itself).
+    """
+    return os.environ.get("LLM_USE_ENV_PROXY", "").strip().lower() in ("1", "true", "yes")
+
+
 async def _post(
     url: str, token: str, payload: dict[str, Any], *, api_key: bool = False
 ) -> dict[str, Any]:
     try:
-        async with httpx.AsyncClient(timeout=_diagnostic_timeout.get(), trust_env=False) as client:
+        async with httpx.AsyncClient(
+            timeout=_diagnostic_timeout.get(), trust_env=use_env_proxy()
+        ) as client:
             headers = {"x-goog-api-key": token} if api_key else {"Authorization": f"Bearer {token}"}
             response = await client.post(url, headers=headers, json=payload)
             response.raise_for_status()
@@ -156,7 +167,7 @@ async def _post(
             "exception_type": type(exc).__name__,
             "cause_type": type(exc.__cause__).__name__ if exc.__cause__ else None,
             "timeout_seconds": _diagnostic_timeout.get(),
-            "trust_env": False,
+            "trust_env": use_env_proxy(),
         }
         raise error from None
     except ValueError:

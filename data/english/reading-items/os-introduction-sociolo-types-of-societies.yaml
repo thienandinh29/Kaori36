@@ -1,0 +1,181 @@
+text_slug: os-introduction-sociolo-types-of-societies
+source: openstax-reading
+versions:
+- passage_sha256: 5f9c01691113dc4380f9b355599b0fe45e90615198eac901f403eeb1b0d00277
+  items:
+  - id: os-introduction-sociolo-types-of-societies-completion-1
+    kind: completion
+    status: verified
+    item:
+      id: os-introduction-sociolo-types-of-societies-completion-1
+      kind: completion
+      text: os-introduction-sociolo-types-of-societies
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - transplants
+      evidence:
+      - Many of China’s cities didn’t evolve from ports, transit centers, or river confluences hundreds of years
+        ago, but are newly created urban centers inhabited by recent transplants from other locations.
+      sentence: Many of China's cities are newly created urban centers inhabited by recent ___ from other locations.
+      max_words: 3
+    problems: []
+    checker_answer: transplants
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:50:51.241167+00:00'
+    checked_at: '2026-11-19T02:50:51.241167+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-societies-headings-1
+    kind: headings
+    status: verified
+    item:
+      id: os-introduction-sociolo-types-of-societies-headings-1
+      key:
+        '0': 3
+        '1': 0
+        '2': 2
+        '3': 1
+      kind: headings
+      text: os-introduction-sociolo-types-of-societies
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - Shared features of two large societies
+      - How Lenski ranked societies by technology
+      - Differences between China and the United States
+      - Defining society and its components
+      - The history of American ports and transit centers
+      - Why manufacturing is declining worldwide
+    problems: []
+    checker_answer: 0:3, 1:0, 2:2, 3:1
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:50:51.241167+00:00'
+    checked_at: '2026-11-19T02:50:51.241167+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-societies-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-introduction-sociolo-types-of-societies-mcq-1
+      key: 0
+      kind: mcq
+      stem: What does the second paragraph mainly do?
+      text: os-introduction-sociolo-types-of-societies
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - It lists features that China and America share.
+      - It explains how Lenski classified societies.
+      - It describes how Chinese cities were built.
+      - It compares the political systems of two nations in detail.
+      evidence:
+      - Consider China and the United States. Both are technologically advanced, have dense networks of transportation
+        and communications, rely on foreign trading partners for large portions of their economies, focus on education
+        as a way to advance their citizens, and have large and expensive militaries.
+    problems: []
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:50:51.241167+00:00'
+    checked_at: '2026-11-19T02:50:51.241167+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-societies-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-introduction-sociolo-types-of-societies-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-types-of-societies
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Both are technologically advanced, have dense networks of transportation and communications, rely on foreign
+        trading partners for large portions of their economies, focus on education as a way to advance their citizens,
+        and have large and expensive militaries.
+      statement: Both China and the United States have large and costly armed forces.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:50:51.241167+00:00'
+    checked_at: '2026-11-19T02:50:51.241167+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-societies-tfng-2
+    kind: tfng
+    status: verified
+    item:
+      id: os-introduction-sociolo-types-of-societies-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-types-of-societies
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - In contrast, in China, platforms such as X (formerly Twitter), Facebook, and YouTube are blocked, and news
+        media operate under significant government regulation and oversight.
+      statement: Chinese citizens are legally permitted to use Facebook and YouTube.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:50:51.241167+00:00'
+    checked_at: '2026-11-19T02:50:51.241167+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-societies-tfng-3
+    kind: tfng
+    status: verified
+    item:
+      id: os-introduction-sociolo-types-of-societies-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-types-of-societies
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Sociologist Gerhard Lenski Jr. (1924–2015) defined societies in terms of their technological sophistication.
+      statement: Lenski argued that the level of technological sophistication is the key criterion for defining
+        societies.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:50:51.241167+00:00'
+    checked_at: '2026-11-19T02:50:51.241167+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-types-of-societies-tfng-4
+    kind: tfng
+    status: needs_review
+    item:
+      id: os-introduction-sociolo-types-of-societies-tfng-4
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-types-of-societies
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The United States spends a larger share of its economy on manufacturing than China does.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:50:51.241167+00:00'
+    checked_at: '2026-11-19T02:50:51.241167+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null

@@ -1,0 +1,103 @@
+text_slug: os-astronomy-2e-the-nature-of-astronomy
+source: openstax-reading
+versions:
+- passage_sha256: eeafc47be54a231ad46168a34918f7a4970373d9174f262a775ecdd3a6412304
+  items:
+  - id: os-astronomy-2e-the-nature-of-astronomy-completion-1
+    kind: completion
+    status: needs_review
+    item:
+      id: os-astronomy-2e-the-nature-of-astronomy-completion-1
+      kind: completion
+      text: os-astronomy-2e-the-nature-of-astronomy
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - evolves
+      evidence:
+      - In considering the history of the universe, we will see again and again that the cosmos evolves; it changes
+        in profound ways over long periods of time.
+      sentence: The universe changes in profound ways over long periods of time, a process known as ___.
+      max_words: 1
+    problems: []
+    checker_answer: evolution
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-the-nature-of-astronomy-mcq-1
+    kind: mcq
+    status: verified
+    item:
+      id: os-astronomy-2e-the-nature-of-astronomy-mcq-1
+      key: 1
+      kind: mcq
+      stem: What does the passage say about the universe over time?
+      text: os-astronomy-2e-the-nature-of-astronomy
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - It stays the same.
+      - It changes significantly.
+      - It is getting smaller.
+      - It is only a few thousand years old.
+      evidence:
+      - In considering the history of the universe, we will see again and again that the cosmos evolves; it changes
+        in profound ways over long periods of time.
+    problems: []
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-the-nature-of-astronomy-tfng-1
+    kind: tfng
+    status: verified
+    item:
+      id: os-astronomy-2e-the-nature-of-astronomy-tfng-1
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-the-nature-of-astronomy
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Astronomy is defined as the study of the objects that lie beyond our planet Earth and the processes by which
+        these objects interact with one another.
+      - We will see, though, that it is much more.
+      statement: Astronomy studies only the objects beyond Earth and how they interact.
+    problems: []
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-the-nature-of-astronomy-tfng-2
+    kind: tfng
+    status: needs_review
+    item:
+      id: os-astronomy-2e-the-nature-of-astronomy-tfng-2
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-the-nature-of-astronomy
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The universe was created by the Big Bang.
+    problems: []
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
+    generated_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    reviewed_at: null
+    review_note: null
+    review_was: null
