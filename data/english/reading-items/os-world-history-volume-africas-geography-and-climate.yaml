@@ -1,0 +1,258 @@
+text_slug: os-world-history-volume-africas-geography-and-climate
+source: openstax-reading
+versions:
+- passage_sha256: 899481c3047ddc5b64950154cc2ff74d7b446f0c33dbe6c398eadd36b0ff2322
+  items:
+  - id: os-world-history-volume-africas-geography-and-climate-completion-1
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-completion-2
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-completion-3
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-headings-1
+    kind: headings
+    status: dropped
+    item: {}
+    problems:
+    - two paragraphs share a heading
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-mcq-1
+      key: 0
+      kind: mcq
+      stem: What is the passage mainly concerned with?
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - How Africa's geography and climate shaped early human societies and their beliefs
+      - Why the Baka of Central Africa have more gods than the San people
+      - The techniques used by archaeologists to date prehistoric African tools
+      - How modern African governments manage water and soil resources
+      evidence:
+      - Geography played a vital part in shaping early human societies.
+      - The variety of African climates directly influenced the evolution of human societies there.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-mcq-2
+      key: 2
+      kind: mcq
+      stem: According to the passage, which type of land could NOT be successfully farmed?
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - The northern and southern fringes of the continent
+      - The grassy plains of the savannas
+      - The narrow belts between the savannas and the deserts
+      - The rainforests of Central Africa
+      evidence:
+      - More arid regions, such as the narrow transitional belts separating the savannas from Africa’s deserts,
+        experience less rain and have less fertile soil, producing land that cannot be successfully farmed.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-mcq-3
+      key: 1
+      kind: mcq
+      stem: What can be inferred about Baka women from the passage?
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - They hold higher social status than men because they build the huts.
+      - They carry out tasks such as hut-building, fishing and gathering.
+      - They are the only members of the community who interpret the spirits.
+      - They hunt animals using bows and poison-tipped arrows.
+      evidence:
+      - Baka villages are made up of small single-family huts of branches and leaves, built predominantly by women
+        and usually dismantled after about a week so the Baka can follow the available food supply.
+      - In addition to building the family hut, women also dam small streams to catch fish and carry material gathered
+        while foraging with their husbands.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Here abundant rain, adequate forestation, and a host of wildlife provided conditions that could support
+        ever-growing populations over long periods of time.
+      statement: In fertile, well-watered parts of Africa, settled communities were supported by plentiful rain,
+        forests and wildlife.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Hunter-gatherers do not plant crops or build permanent shelters but rather live nomadic lifestyles guided
+        by the seasons, limited resource availability, conflict with other groups, or a combination of these factors.
+      statement: Hunter-gatherers in prehistoric Africa regularly planted crops to supplement the food they hunted.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Baka villages are made up of small single-family huts of branches and leaves, built predominantly by women
+        and usually dismantled after about a week so the Baka can follow the available food supply.
+      statement: The Baka build their single-family huts mainly by dismantling them after about a week.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Among the gods of the Baka are Kamba, the creator of all things, and Jengi, the spirit of the forest.
+      - The Baka live in and rely on the forest for their survival, so they view Jengi as a parental figure and,
+        perhaps most importantly, the protector of the forest.
+      statement: Jengi is regarded by the Baka as the protector of the forest.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-africas-geography-and-climate-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-africas-geography-and-climate-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-africas-geography-and-climate
+      skill: inference
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The Baka sell hunted game to neighbouring farming communities in exchange for crops.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

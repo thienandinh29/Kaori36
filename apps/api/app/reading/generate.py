@@ -5,12 +5,13 @@ code assigns ids, builds 4.2a items and checks them against the passage. The mod
 decides an id, a status or whether an item is kept.
 """
 
+import re
 from collections.abc import Sequence
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
-from app.reading.items import Completion, Headings, Mcq, Skill, Tfng, check
+from app.reading.items import BLANK, Completion, Headings, Mcq, Skill, Tfng, check
 from app.writing.analysis import paragraphs
 
 ReadingItem = Tfng | Mcq | Completion | Headings
@@ -72,7 +73,8 @@ def prompt(passage: str) -> str:
     n = len(paragraphs(passage))
     headings = (
         f"- `headings`: one item: {n + 2} short headings and, for each of the {n} paragraphs in "
-        "order, the index of its heading (two extra headings fit no paragraph).\n"
+        "order, the index of its heading (two extra headings fit no paragraph). Every paragraph "
+        "gets a different heading: no index appears twice in `key`.\n"
         if n >= 3
         else "- `headings`: null.\n"
     )
@@ -103,17 +105,21 @@ def prompt(passage: str) -> str:
     )
 
 
-def build(
-    slug: str, passage: str, out: Generated
-) -> tuple[list[ReadingItem], list[tuple[str, str, list[str]]]]:
-    """Items that pass every code check, and the dropped ones as (id, kind, problems)."""
+Dropped = tuple[str, str, list[str], dict[str, object]]  # id, kind, problems, what was written
+
+
+def build(slug: str, passage: str, out: Generated) -> tuple[list[ReadingItem], list[Dropped]]:
+    """Items that pass every code check, and the dropped ones with what the model wrote."""
     raw: list[tuple[str, dict[str, object]]] = []
     for i, t in enumerate(out.tfng):
         raw.append(("tfng", {"id": f"{slug}-tfng-{i + 1}", **t.model_dump()}))
     for i, m in enumerate(out.mcq):
         raw.append(("mcq", {"id": f"{slug}-mcq-{i + 1}", **m.model_dump()}))
     for i, c in enumerate(out.completion):
-        raw.append(("completion", {"id": f"{slug}-completion-{i + 1}", **c.model_dump()}))
+        data = c.model_dump()
+        # Models write the gap as "______" as often as "___"; one run of underscores is one gap.
+        data["sentence"] = re.sub(r"_{3,}", BLANK, data["sentence"])
+        raw.append(("completion", {"id": f"{slug}-completion-{i + 1}", **data}))
     if out.headings is not None:
         raw.append(("headings", {
             "id": f"{slug}-headings-1", "skill": "main_idea", "headings": out.headings.headings,
@@ -123,17 +129,17 @@ def build(
         "tfng": Tfng, "mcq": Mcq, "completion": Completion, "headings": Headings,
     }  # fmt: skip
     kept: list[ReadingItem] = []
-    dropped: list[tuple[str, str, list[str]]] = []
+    dropped: list[Dropped] = []
     for kind, data in raw:
         data |= {"text": slug, "origin": "generated", "status": "draft"}
         try:
             item = kinds[kind].model_validate(data)
         except ValidationError as exc:
-            dropped.append((str(data["id"]), kind, [e["msg"] for e in exc.errors()][:5]))
+            dropped.append((str(data["id"]), kind, [e["msg"] for e in exc.errors()][:5], data))
             continue
         problems = check(item, passage)
         if problems:
-            dropped.append((item.id, kind, problems))
+            dropped.append((item.id, kind, problems, data))
         else:
             kept.append(item)
     return kept, dropped

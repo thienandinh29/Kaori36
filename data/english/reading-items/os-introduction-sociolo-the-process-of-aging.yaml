@@ -1,0 +1,278 @@
+text_slug: os-introduction-sociolo-the-process-of-aging
+source: openstax-reading
+versions:
+- passage_sha256: 9909953e33f45af9f7e5b5e145d2ecec39cc72087a82a866d828dd1265048696
+  items:
+  - id: os-introduction-sociolo-the-process-of-aging-completion-1
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-completion-2
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-completion-3
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 7
+      kind: headings
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The life course and its phases
+      - Changing dependence and independence
+      - Aging as a lifelong process and age hierarchy
+      - Nascher’s rejection of dismissive views and his book
+      - Nascher’s hopes for treating the aging poor
+      - Nascher’s disappointment and the field’s progress
+      - Old age affects all aspects of life
+      - Cultural attitudes toward aging
+      - The role of medical technology in aging
+      - How to study sexuality in older adults
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-mcq-1
+      key: 0
+      kind: mcq
+      stem: What is the main idea of the first paragraph?
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - The life course consists of phases with varying responsibilities and expectations.
+      - Children and teenagers have the most difficult life phases.
+      - Old age is universally feared and avoided.
+      - Cultural values have no influence on how people view aging.
+      evidence:
+      - As human beings grow older, they go through different phases or stages of life.
+      - Each phase comes with different responsibilities and expectations, which of course vary by individual and
+        culture.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-mcq-2
+      key: 1
+      kind: mcq
+      stem: According to the passage, what did Nascher want to do for the aging poor?
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Send them to almshouses.
+      - Provide them with medical care.
+      - Help them find work.
+      - Encourage them to live with family.
+      evidence:
+      - He wanted to treat the aging, especially those who were poor and had no one to care for them.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-mcq-3
+      key: 1
+      kind: mcq
+      stem: What can be inferred about almshouses from the passage?
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - They were comfortable places for the elderly.
+      - They were often terrible and the elderly were forgotten there.
+      - They were run by Nascher.
+      - They were only for the wealthy.
+      evidence:
+      - Many of the elderly poor were sent to live in “almshouses,” or public old-age homes.
+      - Conditions were often terrible in these almshouses, where the aging were often sent and just forgotten.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - At birth, newborns are dependent on caregivers for everything.
+      statement: Newborns rely on caregivers for all their needs.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Nascher saw the practice of caring for the elderly as separate from the practice of caring for the young,
+        just as pediatrics (caring for children) is different from caring for grown adults.
+      statement: Nascher believed that caring for the elderly should be part of pediatrics.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - For example, while many children look forward to gaining independence, Packer and Chasteen (2006) suggest
+        that even in children, age prejudice leads to a negative view of aging.
+      statement: Age prejudice is only found in adults, not in children.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - 'In 1914, he published his views in his book Geriatrics: The Diseases of Old Age and Their Treatment.'
+      statement: Nascher published his book on geriatrics in 1914.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-the-process-of-aging-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: inference
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Nascher lived to see geriatrics become a highly respected field.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

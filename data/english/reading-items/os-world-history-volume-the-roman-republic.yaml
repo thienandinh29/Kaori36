@@ -1,0 +1,314 @@
+text_slug: os-world-history-volume-the-roman-republic
+source: openstax-reading
+versions:
+- passage_sha256: 7b6b4a4c466a1e229ae3ed06c48cb78c982a359c2624826ee8a0f93a6ed6f8d0
+  items:
+  - id: os-world-history-volume-the-roman-republic-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-completion-1
+      kind: completion
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - property
+      evidence:
+      - Indeed, to serve as Roman soldiers, men had to own property.
+      sentence: Roman soldiers could serve in the army only if they owned ___ .
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-completion-2
+      kind: completion
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - day
+      evidence:
+      - The island of Delos in the Aegean Sea became a massive human market in the second century BCE, where reportedly
+        ten thousand people were bought and sold every day.
+      sentence: The island of Delos in the Aegean Sea became a huge market where reportedly ten thousand people
+        were bought and sold each ___ .
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-completion-3
+      kind: completion
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - contractors
+      evidence:
+      - The most profitable enterprise for these new Roman entrepreneurs was acting as bankers and public contractors,
+        or publicans.
+      sentence: The most profitable business for new Roman entrepreneurs was working as bankers and public ___ .
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 7
+      kind: headings
+      text: os-world-history-volume-the-roman-republic
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The Greek and Latin roots of Western civilization
+      - Problems caused by Rome’s wars and conquests
+      - The decline of the small family farm and the rise of the proletariat
+      - Corruption and the collapse of the patron-client system
+      - The growth of large plantations and the slave trade
+      - Slave revolts, including the rebellion of Spartacus
+      - The unhappiness of new wealthy classes and the role of publicans
+      - The Gracchi brothers and Tiberius’s land law
+      - The geography of the Italian peninsula
+      - The religious practices of the Roman Republic
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-mcq-1
+      key: 0
+      kind: mcq
+      stem: According to the passage, why are French, Portuguese, Italian and Spanish called “Romance” languages?
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - They developed from the Latin spoken by the Romans.
+      - They were created by the Celtic and Germanic tribes.
+      - They were first spoken in Ancient Greece.
+      - They were used only in the Roman Senate.
+      evidence:
+      - 'They also transmitted their language, which is why French, Portuguese, Italian, and Spanish are known as
+        “Romance” languages: They are descended from the Latin language spoken by the Romans.'
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-mcq-2
+      key: 1
+      kind: mcq
+      stem: What happened to the traditional patron-client system?
+      text: os-world-history-volume-the-roman-republic
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - It was strengthened by the growth of the city.
+      - It broke down because landless Romans no longer needed patrons in property disputes.
+      - It was replaced by the Senate’s control of public land.
+      - It gave publicans more power over the provinces.
+      evidence:
+      - The traditional patron-client system collapsed, since landless Romans didn’t need the assistance of patrons
+        to settle property disputes.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-mcq-3
+      key: 3
+      kind: mcq
+      stem: How did the Romans respond to the revolt led by Spartacus after they defeated it?
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - They gave the rebels land in Thrace.
+      - They sold the rebels to pirates from Cilicia.
+      - They enslaved 150,000 people from Epirus.
+      - They crucified thousands of the rebels along Italy’s major roads.
+      evidence:
+      - The Romans crucified thousands of the rebels along Italy’s major roads to send a warning to enslaved people
+        across Italy.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - When they ultimately did return, many found their property in another’s hands.
+      statement: Roman soldiers who had been away at war sometimes found that their property was in another person's
+        hands when they returned.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - By the first century BCE, the population of the city of Rome may have exceeded one million.
+      statement: The population of the city of Rome had reached exactly one million by the first century BCE.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-the-roman-republic
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - In 133 BCE, as a tribune, he proposed a law to distribute public land to landless Romans.
+      statement: Tiberius Gracchus wanted landless Romans to be given public land.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - The Gracchi, as they are collectively known, were plebeian brothers whose families had been members of the
+        elite for generations (Scipio Africanus was their grandfather).
+      statement: The Gracchi brothers were the first members of their family to belong to the Roman elite.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-roman-republic-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-roman-republic-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-the-roman-republic
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Spartacus came from Thrace.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

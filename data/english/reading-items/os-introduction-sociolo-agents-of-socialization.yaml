@@ -1,0 +1,295 @@
+text_slug: os-introduction-sociolo-agents-of-socialization
+source: openstax-reading
+versions:
+- passage_sha256: cf971e888cc244cd38acde5fd53efa8ace289ea88c8b531636ad717682fcabeb
+  items:
+  - id: os-introduction-sociolo-agents-of-socialization-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-completion-1
+      kind: completion
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - interests
+      evidence:
+      - A peer group is made up of people who are similar in age and social status and who share interests.
+      sentence: Peer groups are made up of people who are similar in age and social status and who share ___ (max
+        2 words).
+      max_words: 2
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-completion-2
+      kind: completion
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - these systems
+      evidence:
+      - Formal institutions—like schools, workplaces, and the government—teach people how to behave in and navigate
+        these systems.
+      sentence: Formal institutions such as schools, workplaces, and the government teach people how to behave in
+        and navigate ___ (max 2 words).
+      max_words: 2
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-completion-3
+      kind: completion
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - eligible
+      evidence:
+      - And sixty-five years old is the start of “old age” since most people become eligible for senior benefits
+        at that point.
+      sentence: Sixty-five years old is the start of “old age” since most people become ___ for senior benefits
+        at that point (max 2 words).
+      max_words: 2
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-headings-1
+    kind: headings
+    status: dropped
+    item: {}
+    problems:
+    - two paragraphs share a heading
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-mcq-1
+      key: 0
+      kind: mcq
+      stem: What is the passage mainly about?
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - How socialization happens through groups and institutions
+      - How companies review their employees online
+      - Why governments raise the age of adulthood
+      - How religious ceremonies are organized
+      evidence:
+      - Socialization helps people learn to function successfully in their social worlds.
+      - Our direct interactions with social groups, like families and peers, teach us how others expect us to behave.
+        Likewise, a society’s formal and informal institutions socialize its population.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-mcq-2
+      key: 1
+      kind: mcq
+      stem: According to the passage, what do peer groups give adolescents?
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - A replacement for school education
+      - Their first major socialization experience outside the family
+      - Legal responsibility for themselves
+      - Senior benefits and discounts
+      evidence:
+      - Peer groups provide adolescents’ first major socialization experience outside the realm of their families.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-mcq-3
+      key: 2
+      kind: mcq
+      stem: What can be inferred about turning eighteen in the United States?
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - It has no connection to government rules
+      - It requires no learning of new behavior
+      - It brings new duties and a need to learn a new role
+      - It ends all socialization from families
+      evidence:
+      - Each time we embark on one of these new categories—senior, adult, taxpayer—we must be socialized into our
+        new role.
+      - When U.S. males turn eighteen, they must register with the Selective Service System within thirty days to
+        be entered into a database for possible military service.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Peer group socialization begins in the earliest years, such as when kids on a playground teach younger children
+        the norms about taking turns, the rules of a game, or how to shoot a basket.
+      statement: Peer group socialization starts when children are very young.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Interestingly, studies have shown that although friendships rank high in adolescents’ priorities, this is
+        balanced by parental influence.
+      statement: Studies show that parental influence outweighs friendships in adolescents' priorities.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - When U.S. males turn eighteen, they must register with the Selective Service System within thirty days to
+        be entered into a database for possible military service.
+      statement: In the United States, men must register with the Selective Service System when they turn twenty-one.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Many religious institutions also uphold gender norms and contribute to their enforcement through socialization.
+      - From ceremonial rites of passage that reinforce the family unit to power dynamics that reinforce gender
+        roles, organized religion fosters a shared set of socialized values that are passed on through society.
+      statement: Religious institutions can help to maintain gender roles.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-agents-of-socialization-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The passage states how much money governments spend on socializing new adults.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

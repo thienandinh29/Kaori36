@@ -1,0 +1,252 @@
+text_slug: os-world-history-volume-the-daily-life-of-a-roman-family
+source: openstax-reading
+versions:
+- passage_sha256: 0ece2ceca525fa646e339a8e323b96890d9e16e8b9a776b44f495705c52d6568
+  items:
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-completion-1
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-completion-2
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-completion-3
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - Value error, the sentence needs exactly one ___
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-headings-1
+    kind: headings
+    status: dropped
+    item: {}
+    problems:
+    - two paragraphs share a heading
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-1
+      key: 0
+      kind: mcq
+      stem: What was the primary goal of the paterfamilias according to the passage?
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - To promote his family’s welfare
+      - To sell his dependents into bondage
+      - To destroy their property
+      - To enforce strict obedience without discussion
+      evidence:
+      - Ultimately, however, the goal of the paterfamilias was to promote his family’s welfare.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-2
+      key: 1
+      kind: mcq
+      stem: At what age did boys in early Rome typically receive the toga virilis?
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Around twelve
+      - Around fifteen
+      - Between fourteen and eighteen
+      - After inheriting property
+      evidence:
+      - Around age fifteen, boys donned the toga virilis (“toga of manhood”), a plain white toga representing their
+        enrollment as citizens and entrance into manhood.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-3
+      key: 1
+      kind: mcq
+      stem: What can be inferred about the legal position of a Roman wife in marriage?
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - She retained full control of her dowry.
+      - She came under the legal control of her husband’s household.
+      - She had equal authority with her husband.
+      - She could easily divorce without consequences.
+      evidence:
+      - In any case, marriage represented a woman’s coming under the legal control of her husband’s household.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - According to tradition, this patriarch had the power of life and death over all his dependents, an authority
+        referred to as patria potestas (“paternal power”).
+      statement: The paterfamilias held the power of life and death over all his dependents according to tradition.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - By contrast, girls commonly married at a young age, usually between fourteen and eighteen years old, and
+        often to a much older man.
+      statement: Roman girls typically married at an older age than boys.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Despite these expectations, there is evidence that many women, particularly non-elite women, held professions
+        outside the home, including in medicine, trade, and agriculture.
+      statement: All women in the Roman Empire were prohibited from working outside the home.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-4
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The passage mentions the name of the volcano that destroyed Pompeii.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-5
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-the-daily-life-of-a-roman-family
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Roman citizenship was highly coveted and was bestowed either at birth to children of citizens or by special
+        decree.
+      statement: Roman citizenship could be granted by special decree.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

@@ -29,6 +29,7 @@ from psycopg_pool import ConnectionPool
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
 from app.reading.items import Item, learner_view
+from app.reading.pipeline import sha256 as passage_sha256
 from app.services.reading_review import key_of as reading_key
 from app.services.reading_review import load_passages
 from app.validation.sampling import Sample
@@ -258,7 +259,7 @@ class ReviewPortal:
             return None
         slug, digest, data = row
         passage = passages.get(slug)
-        if passage is None or hashlib.sha256(passage.encode()).hexdigest() != digest:
+        if passage is None or passage_sha256(passage) != digest:
             return None  # the text is missing or changed: nothing fair to judge
         item = _ITEM.validate_python(data)
         return {

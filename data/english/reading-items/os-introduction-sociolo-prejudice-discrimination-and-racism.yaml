@@ -1,0 +1,321 @@
+text_slug: os-introduction-sociolo-prejudice-discrimination-and-racism
+source: openstax-reading
+versions:
+- passage_sha256: 4c1f727e27eaa2ae9dc3118f38651abbebb42a675916fcf70b3a4e81c018ab9e
+  items:
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-1
+      kind: completion
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - generalizations
+      evidence:
+      - Stereotypes are oversimplified generalizations about groups of people.
+      sentence: Stereotypes are oversimplified ___ about groups of people.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-2
+      kind: completion
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - experience
+      evidence:
+      - A prejudice is not based on personal experience; instead, it is a prejudgment, originating outside actual
+        experience.
+      sentence: Prejudice is a prejudgment that originates outside actual ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-3
+      kind: completion
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - confirmation bias
+      evidence:
+      - This is a type of confirmation bias.
+      sentence: When people interpret new information as confirming their existing prejudice, this is a type of
+        ___.
+      max_words: 2
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 8
+      kind: headings
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The definition and function of stereotypes
+      - The recycling of stereotypes
+      - Prejudice as prejudgment
+      - How confirmation bias maintains prejudice
+      - Prejudice is learned, not instinctive
+      - Discrimination as action
+      - Individual and institutional discrimination
+      - Privilege and its invisibility
+      - White privilege and McIntosh’s contribution
+      - The history of Jim Crow laws
+      - Methods of teaching prejudice
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-1
+      key: 1
+      kind: mcq
+      stem: The passage says that a common source of stereotypes about new immigrant groups is
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - the personal experiences of dominant group members.
+      - stereotypes previously applied to other groups that have assimilated.
+      - government reports about immigration.
+      - scientific studies of immigrant behaviour.
+      evidence:
+      - In fact, new stereotypes are rarely created; rather, they are recycled from subordinate groups that have
+        assimilated into society and are reused to describe newly subordinate groups.
+      - For example, many stereotypes that are currently used to characterize new immigrants were used earlier in
+        American history to characterize Irish and Eastern European immigrants.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-2
+      key: 2
+      kind: mcq
+      stem: Which of the following is given as an example of institutional discrimination?
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Hanging 'No Irish Need Apply' signs.
+      - Redlining in housing.
+      - The U.S. military’s historical nonacceptance of minority sexualities.
+      - Biased hiring systems.
+      evidence:
+      - Institutional discrimination occurs when a societal system has developed with embedded disenfranchisement
+        of a group, such as the U.S. military's historical nonacceptance of minority sexualities (the "don't ask,
+        don't tell" policy reflected this norm).
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-3
+      key: 2
+      kind: mcq
+      stem: What is the main distinction the passage makes between prejudice and discrimination?
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - Prejudice is about actions, while discrimination is about thoughts.
+      - Prejudice is based on personal experience, while discrimination is not.
+      - Prejudice refers to biased thinking, while discrimination consists of actions against a group.
+      - Prejudice is always negative, while discrimination can be positive.
+      evidence:
+      - While prejudice refers to biased thinking, discrimination consists of actions against a group of people.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - In fact, new stereotypes are rarely created; rather, they are recycled from subordinate groups that have
+        assimilated into society and are reused to describe newly subordinate groups.
+      statement: According to the passage, stereotypes are rarely newly created and are often reused for different
+        groups.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - A prejudice is not based on personal experience; instead, it is a prejudgment, originating outside actual
+        experience.
+      statement: Prejudice is always based on a person’s own experiences with members of a group.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Discrimination can be based on race, ethnicity, age, religion, health, and other categories.
+      statement: The passage states that discrimination can only be based on race or ethnicity.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - But until they gain a good degree of self-awareness, few people are willing to acknowledge the benefits
+        they themselves receive by being a part of the dominant group.
+      statement: All people who receive privilege are aware of the benefits they get from being in the dominant
+        group.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-prejudice-discrimination-and-racism
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - As the reference indicates, McIntosh's first major publication about White privilege was released in 1989;
+        many people have only become familiar with the term in recent years.
+      statement: Peggy McIntosh’s first major publication about White privilege was released in 1989.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

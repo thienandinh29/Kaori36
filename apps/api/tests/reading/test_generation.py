@@ -151,3 +151,15 @@ def test_an_ielts_length_passage_gets_an_exams_worth_of_questions() -> None:
     long = prompt(long_passage)
     assert "five statements" in long and "one or two must be `not_given`" in long
     assert "three questions," in long and "three sentences," in long
+
+
+def test_a_long_run_of_underscores_is_one_gap_and_drops_keep_what_was_written() -> None:
+    out = generated()
+    out.completion[0].sentence = out.completion[0].sentence.replace("___", "______")
+    out.mcq[0].evidence = []  # dropped: no evidence sentence
+    kept, dropped = build("bees", PASSAGE, out)
+    assert "bees-completion-1" in [i.id for i in kept]  # "______" was read as one gap
+    (item_id, kind, problems, written) = dropped[0]
+    assert (item_id, kind, problems) == ("bees-mcq-1", "mcq", ["no evidence sentence"])
+    assert written["stem"] == out.mcq[0].stem  # kept for diagnosis
+    assert "no index appears twice" in prompt(PASSAGE)

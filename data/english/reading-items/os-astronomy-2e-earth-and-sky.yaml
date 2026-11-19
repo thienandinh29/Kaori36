@@ -1,0 +1,234 @@
+text_slug: os-astronomy-2e-earth-and-sky
+source: openstax-reading
+versions:
+- passage_sha256: 31e8d536ecc632c6f0259c20bb409b237cffa3dad02472b9da44e32de4fe9987
+  items:
+  - id: os-astronomy-2e-earth-and-sky-completion-1
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - no evidence sentence
+    - the sentence already contains the answer 'center'
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-completion-2
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - no evidence sentence
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-completion-3
+    kind: completion
+    status: dropped
+    item: {}
+    problems:
+    - no evidence sentence
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 7
+      kind: headings
+      text: os-astronomy-2e-earth-and-sky
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The need for a way to identify locations uniquely
+      - Defining directions from Earth's motions
+      - Building a coordinate system on a sphere
+      - Great circles and meridians
+      - Longitude and the Prime Meridian
+      - Why Greenwich was chosen
+      - Latitude measured from the equator
+      - The celestial coordinate system and the Foucault pendulum
+      - The history of the Royal Observatory
+      - How to measure longitude at sea
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-mcq-1
+    kind: mcq
+    status: dropped
+    item: {}
+    problems:
+    - no evidence sentence
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-mcq-2
+    kind: mcq
+    status: dropped
+    item: {}
+    problems:
+    - no evidence sentence
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-mcq-3
+    kind: mcq
+    status: dropped
+    item: {}
+    problems:
+    - no evidence sentence
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - For example, Earth’s equator is a great circle on Earth’s surface, halfway between the North and South Poles.
+      statement: The equator is exactly halfway between Earth's North and South Poles.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - By international agreement (and it took many meetings for the world’s countries to agree), longitude is
+        defined as the number of degrees of arc along the equator between your meridian and the one passing through
+        Greenwich, England, which has been designated as the Prime Meridian.
+      statement: The choice of Greenwich as the Prime Meridian was made without any disagreement among countries.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - The latitude of the South Pole is 90° S, and the latitude of the North Pole is 90° N.
+      statement: The latitude of the South Pole is 90° S.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Latitudes are measured either north or south of the equator from 0° to 90°.
+      statement: Latitudes are measured from 0° to 90° to the east or to the west of the Prime Meridian.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-astronomy-2e-earth-and-sky-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Greenwich was chosen because the old Royal Observatory there was the tallest building in England.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

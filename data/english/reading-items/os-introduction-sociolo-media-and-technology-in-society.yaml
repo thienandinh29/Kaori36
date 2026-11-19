@@ -1,0 +1,290 @@
+text_slug: os-introduction-sociolo-media-and-technology-in-society
+source: openstax-reading
+versions:
+- passage_sha256: fa1f1e6fa3b4a71e3bf4489440728306aa6044ac451e5f0a56f33b3b51d46c7a
+  items:
+  - id: os-introduction-sociolo-media-and-technology-in-society-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-completion-1
+      kind: completion
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - information
+      evidence:
+      - From the time the printing press was created (and even before), technology has influenced how and where
+        information is shared.
+      sentence: From the time the printing press was created, technology has influenced how and where ___ is shared.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-completion-2
+      kind: completion
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - thirty
+      evidence:
+      - Many are not "new" in the sense that they were developed in the past few years (some may be older than you),
+        but they are newer than the media mentioned above, and they rely on types of technologies that were not
+        available until about thirty years ago.
+      sentence: New media rely on types of technologies that were not available until about ___ years ago.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-completion-3
+      kind: completion
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - nylon
+      evidence:
+      - The classic example of planned obsolescence is the nylon stocking.
+      sentence: The classic example of planned obsolescence given in the passage is the ___ stocking.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-headings-1
+    kind: headings
+    status: dropped
+    item: {}
+    problems:
+    - two paragraphs share a heading
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-mcq-1
+      key: 0
+      kind: mcq
+      stem: What does the passage say about files created in a newer version of Windows?
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - The older version of the software is unable to open them.
+      - They can only be opened on a desktop computer from 2000.
+      - They are always smaller than files made with older versions.
+      - They cannot be read by the new version of the software.
+      evidence:
+      - This means that while the new versions can read older files, the old version cannot read the newer ones.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-mcq-2
+      key: 1
+      kind: mcq
+      stem: What is the main point of the paragraph about the nylon stocking?
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - Stockings became an everyday staple of women's lives.
+      - Producing goods that wear out can serve manufacturers' interests.
+      - Rip-proof fabric was too costly to develop at the time.
+      - Consumers generally prefer to buy new stockings each week.
+      evidence:
+      - Not surprisingly, the garment industry did not invest heavily in finding a rip-proof fabric; it was in manufacturers'
+        best interest that their product be regularly replaced.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-mcq-3
+      key: 1
+      kind: mcq
+      stem: What does the passage suggest about people whose devices are a couple of years old?
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - They are usually offered free repairs by manufacturers.
+      - They may find replacement cheaper than repair.
+      - They are legally required to upgrade their appliances.
+      - They can keep using the same model for twenty years.
+      evidence:
+      - Not too quickly, of course, or consumers wouldn't stand for it—but frequently enough that you might find
+        that it costs far more to fix a device than to replace it with a newer model.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-tfng-1
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Today, it is impossible to discuss media and the ways societies communicate without addressing the fast-moving
+        pace of technology change.
+      statement: The passage states that it is possible to discuss media without considering technological change.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-tfng-2
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - These include social networking sites, blogs, podcasts, wikis, and virtual worlds.
+      statement: New media include social networking sites, blogs, podcasts, wikis and virtual worlds.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - This strategy is called planned obsolescence, and it is the business practice of planning for a product
+        to be obsolete or unusable from the time it is created.
+      statement: Planned obsolescence is defined in the passage as the business practice of planning for a product
+        to be obsolete or unusable from the time it is created.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-tfng-4
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The passage says the printing press was invented in Germany.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+  - id: os-introduction-sociolo-media-and-technology-in-society-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-media-and-technology-in-society-tfng-5
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-media-and-technology-in-society
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Not surprisingly, the garment industry did not invest heavily in finding a rip-proof fabric; it was in manufacturers'
+        best interest that their product be regularly replaced.
+      statement: According to the passage, the garment industry invested heavily in developing rip-proof fabric
+        for stockings.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-19T03:36:57.225960+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null

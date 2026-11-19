@@ -26,7 +26,7 @@ from pydantic import TypeAdapter
 
 from app.reading import blind
 from app.reading.calls import CallLog
-from app.reading.generate import SYSTEM, Generated, ReadingItem, build, prompt
+from app.reading.generate import SYSTEM, Dropped, Generated, ReadingItem, build, prompt
 from app.reading.items import Item
 from app.writing.model_calls import Prices
 
@@ -56,7 +56,7 @@ def store(
     slug: str,
     digest: str,
     kept: Sequence[ReadingItem],
-    dropped: Sequence[tuple[str, str, list[str]]],
+    dropped: Sequence[Dropped],
     now: datetime,
 ) -> None:
     for item in kept:
@@ -65,12 +65,14 @@ def store(
             "values (%s,%s,%s,%s,%s,'generated',%s) on conflict (id) do nothing",
             (item.id, slug, digest, item.kind, Jsonb(item.model_dump(mode="json")), now),
         )
-    for item_id, kind, problems in dropped:
+    for item_id, kind, problems, written in dropped:
+        # What the model wrote is kept (never served: dropped items are not read as items), so
+        # a drop can be diagnosed without another model call.
         conn.execute(
             "insert into reading_items(id,text_slug,passage_sha256,kind,item,status,problems,"
-            "generated_at) values (%s,%s,%s,%s,'{}'::jsonb,'dropped',%s,%s) "
+            "generated_at) values (%s,%s,%s,%s,%s,'dropped',%s,%s) "
             "on conflict (id) do nothing",
-            (item_id, slug, digest, kind, Jsonb(problems), now),
+            (item_id, slug, digest, kind, Jsonb(written), Jsonb(problems), now),
         )
 
 
