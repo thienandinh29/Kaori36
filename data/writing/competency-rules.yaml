@@ -1,0 +1,33 @@
+# Writing competency evidence from code checks (specs/two-layer-map/writing-evidence.md). Authored by the agent: DRAFT.
+# Each essay is checked against these rules; a competency PASSES for that essay when more than half of its rules pass,
+# and that is ONE BKT observation for it (rules about one essay are not independent evidence). These are checks a
+# script can make, NOT band descriptors: passing them all does not mean band 7. Labels: Bronze until a teacher or IELTS rater checks a sample of
+# essays against them. While `status: draft`, they count only for the owners (DRAFT_ITEM_LEARNERS).
+status: draft
+observation:  # free writing is noisy evidence: high slip and guess, like the grammar error map
+  slip: 0.25
+  guess: 0.35
+  transit: 0.05
+  init: 0.2
+rules:
+  writing-task1:  # Task 1 essays only
+    long_enough: {}  # at least 150 words
+    overview: {}  # an overview sentence ("Overall, ...")
+    numbers_supported: {min_share: 1.0}  # every number used is one the chart supports (needs at least one number)
+    features_covered: {min_share: 0.5}  # at least half the chart's key features mentioned
+  writing-task2-response:  # Task 2 essays only
+    long_enough: {}  # at least 250 words
+    paragraphs: {min: 4}  # introduction, two body paragraphs, conclusion
+    position_stated: {groups: [opinion, conclusion]}  # an opinion or concluding phrase is used
+  writing-coherence:
+    linking_variety: {min_groups: 3}  # linking words from at least 3 functions (contrast, cause, example, ...)
+    paragraphs: {min: 3}
+    sentence_length: {min_avg: 10, max_avg: 30}  # average words per sentence
+  writing-lexical:
+    beyond_b1: {min_share: 0.10}  # share of words outside the A1-B1 forms of NGSL/NAWL (names, numbers and
+      # misspellings also count, so this is rough). A first real essay (an agent-written Task 2 answer, 18 Nov) had
+      # 5.3%: the bar may be too high; a teacher should calibrate it on rated essays, not the owner or the agent.
+    long_enough: {}
+  writing-grammar:  # needs the grammar check (LanguageTool)
+    error_rate: {max_per_100_words: 3.0}
+    complex_sentences: {min_share: 0.3}  # share of sentences with more than one clause

@@ -221,7 +221,8 @@ def p_known(db: str, learner: str) -> dict[str, float]:
     with psycopg.connect(db) as conn:
         rows = conn.execute(
             "select c.slug, m.p_known from mastery m join concepts c on c.id=m.concept_id "
-            "where m.learner_id=%s",
+            "join subjects s on s.id=c.subject_id "
+            "where m.learner_id=%s and s.slug='english-ielts'",
             (learner,),
         ).fetchall()
     return {r[0]: float(r[1]) for r in rows}
@@ -712,3 +713,46 @@ def test_task_1_essays_cannot_be_rewritten(setup: Setup) -> None:
     with pytest.raises(HTTPException) as err:
         request_rewrite(svc.pool, svc.draft_learners, learner, essay_id, 0)
     assert err.value.status_code == 422
+
+
+def test_essay_checks_become_writing_competency_evidence_once(setup: Setup) -> None:
+    """specs/two-layer-map/writing-evidence.md: draft rules count for the owners only, once."""
+    svc, learner, db = setup
+    essay = own_essay(svc, learner, db, step_for(learner), FIXTURES["sample"]["text"])
+    moved = essay["result"]["competency_evidence"]
+    competencies = {m["competency"] for m in moved}
+    assert "writing-task1" not in competencies  # a Task 2 essay says nothing about Task 1
+    assert {"writing-task2-response", "writing-coherence", "writing-grammar"} <= competencies
+    # One observation per competency per essay, each starting from p_init (rules about one
+    # essay are not independent evidence).
+    assert len(competencies) == len(moved)
+    assert all(m["p_before"] == 0.2 for m in moved)
+    for m in moved:
+        n_pass = sum(c["passed"] for c in m["checks"])
+        assert m["passed"] == (n_pass * 2 > len(m["checks"]))
+        assert (m["p_after"] > m["p_before"]) == m["passed"]
+    with psycopg.connect(db) as conn:
+        rows = conn.execute(
+            "select competency, rule, passed from competency_observations where learner_id=%s",
+            (learner,),
+        ).fetchall()
+        mastery = conn.execute(
+            "select c.slug from mastery m join concepts c on c.id=m.concept_id "
+            "join subjects s on s.id=c.subject_id where m.learner_id=%s "
+            "and s.slug='ielts-competencies'",
+            (learner,),
+        ).fetchall()
+    assert len(rows) == sum(len(m["checks"]) for m in moved)  # every rule logged
+    assert {r[0] for r in mastery} == competencies
+    assert process_next_essay(db, WRITING, step_for(learner)) is False  # nothing twice
+
+
+def test_draft_competency_rules_move_nothing_for_others(setup: Setup) -> None:
+    svc, learner, db = setup
+    essay = own_essay(svc, learner, db, step_for(learner, draft=False), FIXTURES["sample"]["text"])
+    assert "competency_evidence" not in essay["result"]
+    with psycopg.connect(db) as conn:
+        n = conn.execute(
+            "select count(*) from competency_observations where learner_id=%s", (learner,)
+        ).fetchone()
+    assert n == (0,)
