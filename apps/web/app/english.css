@@ -2049,3 +2049,67 @@ svg.nt-trail {
 .en-mapbar.is-known > span {
   background: #15803d;
 }
+
+/* Review by passage (specs/listening-reading/step-4.2f.md): the passage scrolls on its own on wide
+   screens so the question and its buttons stay in view. */
+.nt-review-texts {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.nt-review-texts .en-button {
+  width: 100%;
+  text-align: left;
+}
+.nt-review-by-passage {
+  display: flex;
+  flex-direction: column;
+}
+/* On a phone the question comes first: the passage (its deciding sentence marked) follows. */
+.nt-review-by-passage [data-testid="review-item"] {
+  order: -1;
+}
+.nt-review-by-passage > p:first-child {
+  order: -2;
+}
+.nt-review-by-passage .nt-review-passage p {
+  margin: 0 0 0.75rem;
+}
+.nt-review-by-passage .nt-actions {
+  flex-wrap: wrap;
+}
+.nt-review-by-passage .nt-actions .en-button {
+  white-space: nowrap;
+}
+.nt-review-note input {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+.nt-review-by-passage fieldset {
+  border: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+@media (min-width: 900px) {
+  .nt-review-by-passage {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .nt-review-by-passage > p:first-child {
+    grid-column: 1 / -1;
+  }
+  .nt-review-by-passage .nt-review-passage {
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+  .nt-review-by-passage [data-testid="review-item"] {
+    position: sticky;
+    top: 1rem;
+    order: 0;
+  }
+}

@@ -140,3 +140,43 @@ def test_agreement_and_kappa() -> None:
     assert 0.8 < out["kappa"] < 0.9
     assert out["confusion"]["checker_good__owner_not_good"] == 2
     assert out["reject_reasons"] == {"two_answers": 8, "unclear": 2}
+
+
+def test_review_by_passage_orders_agreed_first_and_times_decisions(stack) -> None:  # type: ignore[no-untyped-def]
+    """Step 4.2f: one passage, its waiting questions, the owner's speed and overturns."""
+    client, owner, other, _, texts = stack
+    params = {"learner_id": owner}
+    listed = client.get("/reading/review/texts", params=params).json()
+    assert listed["texts"] == [{"slug": "bees", "title": "bees", "agreed": 1, "flagged": 4}]
+    assert listed["stats"] == {"decisions": 0, "median_seconds": None, "overturned": 0}
+    text = client.get("/reading/review/texts/bees", params=params).json()
+    assert text["passage"] == PASSAGE
+    ids = [i["id"] for i in text["items"]]
+    # Agreed first, then the flagged in practice order (T/F/NG, MCQ, completion, headings).
+    assert ids == ["bees-tfng-1", "bees-tfng-2", "bees-mcq-1", "bees-completion-1",
+                   "bees-headings-1"]  # fmt: skip
+    assert [i["agreed"] for i in text["items"]] == [True, False, False, False, False]
+    assert all("passage" not in i and "key" in i for i in text["items"])
+    # Decisions carry their seconds; the owner overturned the checker on a flagged one.
+    post = client.post
+    assert post("/reading/review/bees-tfng-1", params=params,
+                json={"decision": "approve", "seconds": 12}).status_code == 200  # fmt: skip
+    assert post("/reading/review/bees-tfng-2", params=params,
+                json={"decision": "approve", "seconds": 30}).status_code == 200  # fmt: skip
+    assert post("/reading/review/bees-mcq-1", params=params,
+                json={"decision": "reject", "reason": "wrong_key"}).status_code == 200  # fmt: skip
+    bad = post("/reading/review/bees-completion-1", params=params,
+               json={"decision": "approve", "seconds": 601})  # fmt: skip
+    assert bad.status_code == 422  # capped at 600
+    listed = client.get("/reading/review/texts", params=params).json()
+    assert listed["texts"][0] == {"slug": "bees", "title": "bees", "agreed": 0, "flagged": 2}
+    assert listed["stats"] == {"decisions": 3, "median_seconds": 21, "overturned": 1}
+    # An edited passage: its questions can no longer be approved, so the text is not listed.
+    (texts / "bees.yaml").write_text(
+        yaml.safe_dump({"slug": "bees", "text": PASSAGE + " Edited."}), "utf-8"
+    )
+    assert client.get("/reading/review/texts", params=params).json()["texts"] == []
+    assert client.get("/reading/review/texts/bees", params=params).json()["items"] == []
+    # Owner only, and unknown texts are 404.
+    assert client.get("/reading/review/texts", params={"learner_id": other}).status_code == 403
+    assert client.get("/reading/review/texts/nope", params=params).status_code == 404

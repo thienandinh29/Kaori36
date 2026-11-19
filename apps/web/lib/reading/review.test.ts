@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { highlight, keyText, parseQueue } from "./review";
+import { DataError } from "@/lib/decode";
+import {
+  highlight,
+  keyText,
+  parsePassageReview,
+  parseQueue,
+  parseReviewTexts,
+  shortcut,
+} from "./review";
 
 const queue = {
   counts: { needs_review: 1, verified: 0, approved: 2, rejected: 0 },
@@ -57,5 +65,73 @@ describe("reading review (step 4.2c)", () => {
     expect(
       keyText({ ...item, kind: "headings", key: { "0": 2, "1": 0 } }),
     ).toBe("0:2, 1:0");
+  });
+});
+
+describe("review by passage (step 4.2f)", () => {
+  const item = {
+    id: "bees-tfng-1",
+    text: "bees",
+    kind: "tfng",
+    skill: "detail",
+    question: { statement: "Bees live alone." },
+    key: "false",
+    evidence: ["Honey bees live in large colonies."],
+    checker_answer: "FALSE",
+    checker_model: "baidu/ernie",
+    note: null,
+    agreed: true,
+  };
+  it("decodes the text list with the owner's stats", () => {
+    expect(
+      parseReviewTexts({
+        texts: [{ slug: "bees", title: "Bees", agreed: 3, flagged: 1 }],
+        stats: { decisions: 4, median_seconds: 21, overturned: 1 },
+      }),
+    ).toEqual({
+      texts: [{ slug: "bees", title: "Bees", agreed: 3, flagged: 1 }],
+      stats: { decisions: 4, medianSeconds: 21, overturned: 1 },
+    });
+    expect(() =>
+      parseReviewTexts({
+        texts: [{ slug: "b", title: "B", agreed: -1, flagged: 0 }],
+        stats: { decisions: 0, median_seconds: null, overturned: 0 },
+      }),
+    ).toThrow(DataError);
+  });
+  it("decodes a passage and its items without a per-item passage", () => {
+    const r = parsePassageReview({
+      slug: "bees",
+      title: "Bees",
+      passage: "Honey bees live in large colonies.",
+      items: [item],
+    });
+    expect(r.items[0]).toMatchObject({ id: "bees-tfng-1", agreed: true });
+    expect("passage" in r.items[0]!).toBe(false);
+    expect(() =>
+      parsePassageReview({
+        slug: "b",
+        title: "B",
+        passage: "x",
+        items: [{ ...item, agreed: "yes" }],
+      }),
+    ).toThrow(DataError);
+  });
+  it("maps keys to actions, with reasons only while rejecting", () => {
+    expect(shortcut("a", false)).toEqual({ type: "approve" });
+    expect(shortcut("A", false)).toEqual({ type: "approve" });
+    expect(shortcut("r", false)).toEqual({ type: "reject" });
+    expect(shortcut("s", false)).toEqual({ type: "skip" });
+    expect(shortcut("ArrowRight", false)).toEqual({ type: "skip" });
+    expect(shortcut("ArrowLeft", false)).toEqual({ type: "back" });
+    expect(shortcut("2", false)).toBeNull();
+    expect(shortcut("2", true)).toEqual({
+      type: "reason",
+      reason: "not_answerable",
+    });
+    expect(shortcut("6", true)).toBeNull();
+    expect(shortcut("a", true)).toBeNull(); // no approving mid-reject
+    expect(shortcut("Enter", true)).toEqual({ type: "confirm" });
+    expect(shortcut("Escape", true)).toEqual({ type: "cancel" });
   });
 });

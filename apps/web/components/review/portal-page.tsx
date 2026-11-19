@@ -21,7 +21,7 @@ import {
 } from "@/lib/review/portal";
 import { vi } from "@/messages/vi";
 import { Problem } from "@/components/english/problem";
-import { Question } from "@/components/reading/review-page";
+import { Question } from "@/components/reading/review-question";
 
 const t = vi.english.reviewPortal;
 

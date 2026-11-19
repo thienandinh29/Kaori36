@@ -8,50 +8,19 @@ import {
   highlight,
   keyText,
   type RejectReason,
-  type ReviewItem,
   type ReviewQueue,
   type ReviewStatus,
 } from "@/lib/reading/review";
 import { vi } from "@/messages/vi";
 import { Problem } from "@/components/english/problem";
 import { useLearner } from "@/components/english/use-learner";
+import { Question } from "@/components/reading/review-question";
+import { ReviewByPassage } from "@/components/reading/review-by-passage";
 
 const t = vi.english.readingReview;
 
-/** The question as the learner sees it, plus its options or headings. */
-export function Question({ item }: { item: Pick<ReviewItem, "question"> }) {
-  const q = item.question;
-  const text =
-    (q.statement as string | undefined) ??
-    (q.stem as string | undefined) ??
-    (q.sentence as string | undefined) ??
-    "";
-  const options = Array.isArray(q.options) ? (q.options as string[]) : null;
-  const headings = Array.isArray(q.headings) ? (q.headings as string[]) : null;
-  return (
-    <div lang="en">
-      {text && <p>{text}</p>}
-      {options && (
-        <ol type="A">
-          {options.map((o, i) => (
-            <li key={i}>{o}</li>
-          ))}
-        </ol>
-      )}
-      {headings && (
-        <ol start={0}>
-          {headings.map((h, i) => (
-            <li key={i}>{h}</li>
-          ))}
-        </ol>
-      )}
-    </div>
-  );
-}
-
 /** The owner's review queue for generated Reading questions (specs/listening-reading/step-4.2c.md). */
-export function ReadingReviewPage() {
-  const { learner, error: learnerError, retry } = useLearner();
+function StatusReview({ learner }: { learner: string }) {
   const [status, setStatus] = useState<ReviewStatus>("needs_review");
   const [queue, setQueue] = useState<ReviewQueue | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -85,17 +54,9 @@ export function ReadingReviewPage() {
     };
   }, [learner, status, version]);
 
-  if (learnerError) return <Problem error={learnerError} onRetry={retry} />;
-  if (forbidden)
-    return (
-      <section className="en-card" data-testid="reading-review">
-        <h1>{t.title}</h1>
-        <p className="en-badge draft">{t.ownerOnly}</p>
-      </section>
-    );
+  if (forbidden) return <p className="en-badge draft">{t.ownerOnly}</p>;
   if (error) return <Problem error={error} />;
-  if (!queue || !learner)
-    return <p className="en-muted">{vi.english.loading}</p>;
+  if (!queue) return <p className="en-muted">{vi.english.loading}</p>;
   const item = queue.items[index];
   const decidable = status === "needs_review" || status === "verified";
 
@@ -104,7 +65,7 @@ export function ReadingReviewPage() {
     setBusy(true);
     setSaved(false);
     try {
-      await englishClient().decideReading(learner!, item.id, {
+      await englishClient().decideReading(learner, item.id, {
         decision,
         ...(decision === "reject" ? { reason } : {}),
         ...(note.trim() ? { note: note.trim() } : {}),
@@ -121,9 +82,7 @@ export function ReadingReviewPage() {
   }
 
   return (
-    <section className="en-card nt-review" data-testid="reading-review">
-      <h1>{t.title}</h1>
-      <p className="en-muted">{t.intro}</p>
+    <div>
       <div className="nt-actions" role="tablist">
         {REVIEW_STATUSES.map((s) => (
           <button
@@ -234,6 +193,38 @@ export function ReadingReviewPage() {
             </button>
           )}
         </article>
+      )}
+    </div>
+  );
+}
+
+/** The owner's review of generated Reading questions: by passage (step 4.2f) or by status (4.2c). */
+export function ReadingReviewPage() {
+  const { learner, error: learnerError, retry } = useLearner();
+  const [mode, setMode] = useState<"passage" | "status">("passage");
+  if (learnerError) return <Problem error={learnerError} onRetry={retry} />;
+  if (!learner) return <p className="en-muted">{vi.english.loading}</p>;
+  return (
+    <section className="en-card nt-review" data-testid="reading-review">
+      <h1>{t.title}</h1>
+      <p className="en-muted">{t.intro}</p>
+      <div className="nt-actions" aria-label={t.title}>
+        {(["passage", "status"] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            aria-pressed={m === mode}
+            className={`en-button ${m === mode ? "" : "ghost"} small`}
+            onClick={() => setMode(m)}
+          >
+            {t.modes[m]}
+          </button>
+        ))}
+      </div>
+      {mode === "passage" ? (
+        <ReviewByPassage learner={learner} />
+      ) : (
+        <StatusReview learner={learner} />
       )}
     </section>
   );

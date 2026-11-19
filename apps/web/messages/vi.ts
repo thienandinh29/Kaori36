@@ -719,6 +719,29 @@ export const vi = {
       } as Record<string, string>,
       next: "Câu tiếp",
       done: "Đã lưu.",
+      modes: { passage: "Theo bài đọc", status: "Theo trạng thái" },
+      textsTitle: "Bài đọc có câu hỏi chờ duyệt",
+      textsEmpty: "Không còn câu hỏi nào chờ duyệt.",
+      agreed: "máy đồng ý",
+      flagged: "máy nghi ngờ",
+      stats: (n: number, median: number | null, overturned: number) =>
+        n === 0
+          ? "Bạn chưa duyệt câu nào."
+          : `Bạn đã duyệt ${n} câu, trung bình ${median ?? "?"} giây một câu; ${overturned} lần khác ý máy kiểm tra.`,
+      statsNote:
+        "Đây là tốc độ và lựa chọn của bạn, không phải thước đo đúng sai: giáo viên mới là người quyết định.",
+      paragraph: "Đoạn",
+      flaggedBadge: "Máy kiểm tra không đồng ý",
+      checkerSays: "Máy kiểm tra trả lời",
+      skip: "Bỏ qua",
+      back: "Câu trước",
+      confirmReject: "Xác nhận loại",
+      cancel: "Huỷ",
+      keysHint:
+        "Phím tắt: A duyệt · R loại (rồi 1–5 chọn lý do, Enter xác nhận, Esc huỷ) · S hoặc → bỏ qua · ← câu trước.",
+      progress: (i: number, n: number) => `Câu ${i}/${n}`,
+      textDone: "Xong bài này. Đang mở bài tiếp theo…",
+      backToTexts: "Danh sách bài đọc",
     },
     reviewPortal: {
       title: "Kiểm tra nội dung NodeTrail",

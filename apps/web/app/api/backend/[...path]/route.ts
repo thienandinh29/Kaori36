@@ -13,7 +13,7 @@ const allowedEnglish = new RegExp(
     `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
-    `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|` +
+    `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|reading/review/texts/${SLUG}|` +
     `rechecks/next|rechecks/${UUID}/answer|today|maps|` +
     `reading/texts|reading/texts/${SLUG}|reading/items/${SLUG}/answer|` +
     `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
