@@ -2,12 +2,15 @@
 import { useEffect, useRef, useState } from "react";
 import { englishClient } from "@/lib/english/client";
 import {
-  closeness,
+  hue,
+  type Guide,
+  type PhoneResult,
   type SayResult,
   type SayStatus,
 } from "@/lib/english/say-word";
 import { toServerWav } from "@/lib/pronunciation/wav";
 import { vi } from "@/messages/vi";
+import { SpeakButton } from "./speak-button";
 import { useLearner } from "./use-learner";
 
 const t = vi.english.sayWord;
@@ -95,7 +98,13 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
             url: URL.createObjectURL(new Blob([wav], { type: "audio/wav" })),
           });
         } catch {
-          setResult({ ok: false, problems: ["format"], phones: [], heard: [] });
+          setResult({
+            ok: false,
+            problems: ["format"],
+            phones: [],
+            heard: [],
+            guide: [],
+          });
         } finally {
           void ctx.close();
         }
@@ -131,6 +140,7 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
         problems: ["not_analysed"],
         phones: [],
         heard: [],
+        guide: [],
       });
     } finally {
       setBusy(false);
@@ -204,22 +214,7 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
       {result && (
         <div role="status" data-testid="say-result">
           {result.ok ? (
-            <>
-              <ul className="nt-phones" lang="en-fonipa">
-                {result.phones.map((p, i) => (
-                  <li key={i} className={p.dropped ? "is-dropped" : ""}>
-                    <strong>{p.phone}</strong>
-                    <span>{p.dropped ? t.dropped : `${closeness(p.gop)}`}</span>
-                    {p.heard && !p.dropped && (
-                      <small>
-                        {t.heard} {p.heard}
-                      </small>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <p className="en-muted">{t.rawNote}</p>
-            </>
+            <SayOutcome result={result} />
           ) : (
             <p className="en-feedback is-wrong">
               {result.problems.map((p) => t.problems[p] ?? p).join(" ")}
@@ -227,6 +222,87 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+/** The word's sounds as one IPA line, each coloured red to green by closeness; tap for details. */
+function SayOutcome({ result }: { result: SayResult }) {
+  const [picked, setPicked] = useState<number | null>(null);
+  const phone: PhoneResult | null =
+    picked === null ? null : (result.phones[picked] ?? null);
+  return (
+    <>
+      <p className="nt-ipa-colour" lang="en-fonipa" aria-label={t.ipaLabel}>
+        /
+        {result.phones.map((p, i) => (
+          <button
+            key={i}
+            type="button"
+            className={`nt-ipa-phone${p.dropped ? " is-dropped" : ""}${picked === i ? " is-picked" : ""}`}
+            style={{
+              color: `hsl(${hue(p.dropped ? 0 : p.closeness)} 75% 34%)`,
+            }}
+            title={`${p.phone}: ${p.dropped ? t.dropped : p.closeness}`}
+            aria-label={`${p.phone}: ${p.dropped ? t.dropped : `${p.closeness}/100`}`}
+            onClick={() => setPicked((x) => (x === i ? null : i))}
+          >
+            {p.phone}
+          </button>
+        ))}
+        /
+      </p>
+      <p className="en-muted nt-ipa-legend">
+        <span className="nt-legend-bar" aria-hidden="true" /> {t.legend}
+      </p>
+      {phone && (
+        <div className="nt-phone-detail" data-testid="phone-detail">
+          <p>
+            <strong lang="en-fonipa">/{phone.phone}/</strong>{" "}
+            {phone.dropped ? t.dropped : `${phone.closeness}/100`}
+            {phone.heard && !phone.dropped && (
+              <>
+                {" "}
+                · {t.heard} <span lang="en-fonipa">/{phone.heard}/</span>
+              </>
+            )}
+          </p>
+          {phone.how && <p>{phone.how}</p>}
+        </div>
+      )}
+      {result.guide.map((g) => (
+        <GuideCard key={g.index} g={g} />
+      ))}
+      <p className="en-muted">{t.rawNote}</p>
+    </>
+  );
+}
+
+/** The same sound low in 2 of the last 3 tries: what to change, and a pair to hear (step 3.7b). */
+function GuideCard({ g }: { g: Guide }) {
+  return (
+    <div className="en-feedback nt-guide" data-testid="say-guide">
+      <p>
+        <strong>
+          {g.dropped
+            ? t.guideDropped(g.phone, g.times, g.of)
+            : t.guideHeard(g.phone, g.heard, g.times, g.of)}
+        </strong>
+      </p>
+      {g.change && <p>{g.change}</p>}
+      {g.how && (
+        <p>
+          {t.howTo(g.phone)} {g.how}
+        </p>
+      )}
+      {g.minimal && (
+        <p lang="en">
+          {t.minimal}: <strong>{g.minimal[0]}</strong>{" "}
+          <SpeakButton text={g.minimal[0]} /> · {g.minimal[1]}{" "}
+          <SpeakButton text={g.minimal[1]} />
+        </p>
+      )}
+      <p className="en-muted">{t.draft}</p>
     </div>
   );
 }

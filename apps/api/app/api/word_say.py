@@ -16,6 +16,10 @@ def create_router(service: WordSay) -> APIRouter:
     def status(learner_id: str = Query(min_length=1, max_length=200)) -> dict[str, Any]:
         return service.status(learner_id)
 
+    @router.get("/vocab/say/focus")
+    def focus(learner_id: str = Query(min_length=1, max_length=200)) -> dict[str, Any]:
+        return service.focus(learner_id)
+
     @router.post("/vocab/say")
     async def say(
         request: Request,

@@ -6,6 +6,8 @@ Pure. Nothing here marks a sound right or wrong: thresholds wait for the pronunc
 learner sees raw scores, "bỏ mất âm" when a phone was not said at all, and what was heard instead.
 """
 
+import math
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from typing import Any
 
@@ -49,8 +51,79 @@ def per_phone(phones: Sequence[str], scored: Mapping[str, Any]) -> list[dict[str
         {
             "phone": p,
             "gop": g["gop"],
+            "closeness": closeness(float(g["gop"])),
             "heard": g["competitor"],
             "dropped": is_dropped(g),
         }
         for p, g in zip(phones, got, strict=True)
     ]
+
+
+# --- Guidance from repeated attempts (specs/pronunciation/step-3.7b.md) ---
+LOW = 70  # closeness under this counts as "not yet" for guidance (a practice hint, not a mark)
+WINDOW, REPEATS = 3, 2  # the same sound low in 2 of the last 3 attempts at a word
+
+
+def closeness(gop: float) -> int:
+    """A rough 0-100 reading of a phone's GOP (0 is the best); the web shows the same number."""
+    return max(0, min(100, round(100 * math.exp(gop / 3))))
+
+
+def low(p: Mapping[str, Any]) -> bool:
+    return bool(p["dropped"]) or closeness(float(p["gop"])) < LOW
+
+
+def repeated(attempts: Sequence[Sequence[Mapping[str, Any]]]) -> list[dict[str, Any]]:
+    """Sounds of one word low in REPEATS of its last WINDOW attempts (newest first), with what
+    was most often heard instead. Attempts with a different phone sequence are not compared."""
+    if not attempts:
+        return []
+    recent = [
+        a for a in attempts[:WINDOW] if [p["phone"] for p in a] == [p["phone"] for p in attempts[0]]
+    ]
+    out: list[dict[str, Any]] = []
+    for i, p in enumerate(attempts[0]):
+        lows = [a[i] for a in recent if low(a[i])]
+        if len(lows) < REPEATS:
+            continue
+        heard = Counter(x["heard"] for x in lows if x["heard"] and not x["dropped"])
+        out.append(
+            {
+                "index": i,
+                "phone": p["phone"],
+                "times": len(lows),
+                "of": len(recent),
+                "heard": heard.most_common(1)[0][0] if heard else None,
+                "dropped": sum(1 for x in lows if x["dropped"]) * 2 > len(lows),
+            }
+        )
+    return out
+
+
+def focus(
+    attempts: Sequence[Sequence[Mapping[str, Any]]], min_seen: int = 3, top: int = 5
+) -> list[dict[str, Any]]:
+    """Across all words: the sounds most often low, seen at least `min_seen` times."""
+    seen: Counter[str] = Counter()
+    lows: Counter[str] = Counter()
+    heard: dict[str, Counter[str]] = {}
+    for a in attempts:
+        for p in a:
+            seen[p["phone"]] += 1
+            if low(p):
+                lows[p["phone"]] += 1
+                if p["heard"] and not p["dropped"]:
+                    heard.setdefault(p["phone"], Counter())[p["heard"]] += 1
+    rows = [
+        {
+            "phone": ph,
+            "low": lows[ph],
+            "seen": n,
+            "share": round(lows[ph] / n, 2),
+            "heard": heard[ph].most_common(1)[0][0] if ph in heard else None,
+        }
+        for ph, n in seen.items()
+        if n >= min_seen and lows[ph] > 0
+    ]
+    rows.sort(key=lambda r: (-float(r["share"] or 0), -int(r["low"] or 0), str(r["phone"])))
+    return rows[:top]

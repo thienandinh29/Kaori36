@@ -22,8 +22,10 @@ import {
   type TextSummary,
 } from "@/lib/reading/practice";
 import {
+  parseFocus,
   parseSayResult,
   parseSayStatus,
+  type Focus,
   type SayResult,
   type SayStatus,
 } from "@/lib/english/say-word";
@@ -445,6 +447,11 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     async sayStatus(learnerId: string): Promise<SayStatus> {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseSayStatus(await request(`vocab/say/status?${q}`));
+    },
+    /** The sounds this learner most often misses across words (step 3.7b). */
+    async sayFocus(learnerId: string): Promise<Focus> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseFocus(await request(`vocab/say/focus?${q}`));
     },
     async sayWord(
       learnerId: string,

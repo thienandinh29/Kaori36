@@ -962,7 +962,19 @@ export const vi = {
       heard: "nghe giống",
       dropped: "bỏ mất âm",
       rawNote:
-        "Số là mức gần với âm chuẩn (0–100), chưa phải điểm đúng sai: ngưỡng chấm chỉ có sau khi giáo viên kiểm tra. Hãy tin xu hướng qua nhiều lần nói hơn một con số.",
+        "Màu và số là mức gần với âm mẫu (0–100), ước lượng của máy, chưa phải điểm đúng sai: ngưỡng chấm chỉ có sau khi giáo viên kiểm tra. Hãy tin xu hướng qua nhiều lần nói hơn một lần.",
+      ipaLabel: "Phiên âm của từ, mỗi âm tô màu theo mức gần âm mẫu",
+      legend:
+        "đỏ: xa âm mẫu · vàng: tạm · xanh: gần âm mẫu. Chạm vào một âm để xem cách nói.",
+      guideHeard: (p: string, heard: string | null, n: number, of: number) =>
+        heard
+          ? `Âm /${p}/ chưa chuẩn ${n}/${of} lần gần đây, máy nghe giống /${heard}/.`
+          : `Âm /${p}/ chưa chuẩn ${n}/${of} lần gần đây.`,
+      guideDropped: (p: string, n: number, of: number) =>
+        `Âm /${p}/ bị bỏ mất ${n}/${of} lần gần đây.`,
+      howTo: (p: string) => `Cách nói /${p}/:`,
+      minimal: "Nghe để phân biệt",
+      draft: "Hướng dẫn là bản nháp, chưa được giáo viên duyệt.",
       problems: {
         too_short: "Bản ghi quá ngắn.",
         too_long: "Bản ghi quá dài.",
@@ -974,6 +986,16 @@ export const vi = {
         no_ipa: "Từ này chưa có phiên âm nên chưa phân tích được.",
         not_analysed: "Chưa phân tích được lần này, hãy thử lại.",
       } as Record<string, string>,
+    },
+    sayFocus: {
+      title: "Âm cần tập trung",
+      intro: (days: number, n: number) =>
+        `Từ ${n} lần bạn nói từ vựng trong ${days} ngày qua: những âm máy thường thấy còn xa âm mẫu. Đây là ước lượng chưa kiểm chứng, dùng để chọn âm luyện tiếp.`,
+      none: "Chưa đủ dữ liệu: hãy nói vài từ ở phần Từ vựng (Lật thẻ → Nói từ này → Phân tích từng âm).",
+      row: (p: string, low: number, seen: number) =>
+        `/${p}/: chưa chuẩn ${low}/${seen} lần`,
+      heard: (h: string) => `thường nghe giống /${h}/`,
+      example: "Ví dụ",
     },
     pronunciation: {
       title: "Luyện phát âm",
