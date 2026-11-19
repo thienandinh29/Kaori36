@@ -223,6 +223,20 @@ def create_app(
     )
     app.include_router(writing_routes.create_router(writing))
     app.include_router(graph_confirmation.create_router())
+    from app.api import word_say as word_say_routes
+    from app.pronunciation.analysis import service_score
+    from app.services.word_say import WordSay
+
+    app.include_router(
+        word_say_routes.create_router(
+            WordSay(
+                settings.vocab_dir / "core-seed.yaml",
+                settings.vocab_imported_dir,
+                settings.draft_item_learners,
+                service_score(settings.pronunciation_url) if settings.pronunciation_url else None,
+            )
+        )
+    )
     from app.api import speech as speech_routes
 
     app.include_router(

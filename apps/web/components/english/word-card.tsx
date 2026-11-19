@@ -1,5 +1,6 @@
 import type { WordCard as Card } from "@/lib/english/types";
 import { originLabels } from "@/lib/english/word-origin";
+import { SayWord } from "./say-word";
 import { SpeakButton } from "./speak-button";
 
 export function WordCard({ card }: { card: Card }) {
@@ -19,6 +20,7 @@ export function WordCard({ card }: { card: Card }) {
           <span>{labels.level}</span>
         </span>
       </div>
+      <SayWord lemma={card.lemma} pos={card.pos} />
       <p lang="en">{card.definition}</p>
       {card.vi && <p className="en-word-vi">{card.vi}</p>}
       <p className="en-muted" lang="en">
