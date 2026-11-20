@@ -89,7 +89,10 @@ test("a learner hears the whole passage, answers, and only then reads it", async
   const box = page.getByTestId("listening-passage");
   await expect(box).not.toContainText("large colonies"); // the passage is not on the page yet
   await box.getByRole("button", { name: "Nghe bài" }).click();
-  await expect.poll(() => parts).toEqual(["0", "1", "2"]); // every part, in order
+  // Every part, in order. Each part after the first is also fetched ahead while the one before
+  // plays; with routing on, Playwright turns the browser cache off, so it is requested again.
+  await expect.poll(() => [...new Set(parts)]).toEqual(["0", "1", "2"]);
+  expect(parts.indexOf("1")).toBeLessThan(parts.indexOf("2"));
   await expect(
     box.getByRole("button", { name: /Nghe lại \(còn 1 lần\)/ }),
   ).toBeVisible();
