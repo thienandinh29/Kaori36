@@ -31,7 +31,7 @@ from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
 from app.services.plans import NAMES_VI, Plans
 from app.services.vocabulary import start_of_day
-from app.writing import competency, feedback, llm_corrections, task1
+from app.writing import competency, feedback, guardrails, llm_corrections, task1
 from app.writing.analysis import analyse, load_linking_words, words
 from app.writing.error_map import ErrorMap, load_error_map
 from app.writing.feedback import FeedbackOut
@@ -81,6 +81,10 @@ BAND_REASONS_VI = {
     "task1": "Chưa ước lượng band cho Task 1.",
     "too_short": "Bài dưới 150 từ: chưa đủ dài để ước lượng band.",
     "not_calibrated": "Chưa ước lượng band: mô hình chưa được hiệu chỉnh với điểm giám khảo.",
+    "padded": (
+        "Chưa ước lượng band: nhiều đoạn trong bài là câu lặp lại hoặc câu mẫu học thuộc, "
+        "không phải lời của bạn (xem phần Kiểm tra bài)."
+    ),
 }
 GRAMMAR_OFF_VI = "Chưa kiểm tra ngữ pháp: máy chủ chưa bật LanguageTool (LANGUAGETOOL_URL)."
 GRAMMAR_DOWN_VI = (
@@ -712,18 +716,28 @@ def process_next_essay(
             task = prompt.task if prompt else 2
             result, grammar = _analyse(text, task, writing_dir, step)
             result["task"] = task
+            # Step 2.7: text that is not the learner's own answer does not count towards a band.
+            guard = guardrails.check(
+                text,
+                prompt.prompt if prompt else None,
+                guardrails.load_templates(writing_dir / "templates.yaml"),
+            )
+            result["guard"] = guard.to_json()
             if prompt is not None and prompt.figure is not None:
                 result["task1"] = task1.check(text, prompt.figure).to_json()
             ai_issues: list[Issue] = []
-            if step is not None:
+            if step is not None and guard.padded and task == 2:
+                result["score"], result["score_unavailable_vi"] = None, BAND_REASONS_VI["padded"]
+            elif step is not None:
                 result["score"], result["score_unavailable_vi"] = band_for(
-                    text, task, result["words"], learner, step
+                    text, task, guard.own_words, learner, step
                 )
                 if result["score"] is None:
                     result["score_preview"] = score_preview(
-                        text, task, result["words"], learner, step,
+                        text, task, guard.own_words, learner, step,
                         _earlier_raw(conn, learner, essay_id),
                     )  # fmt: skip
+            if step is not None:
                 ai_issues = model_features(text, prompt, result, grammar, learner, step)
             with conn.transaction():
                 if grammar is not None and step is not None:

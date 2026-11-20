@@ -1229,6 +1229,13 @@ export const vi = {
       fixOverview:
         "Bài chưa có câu tổng quan (overview): nêu xu hướng hoặc điểm nổi bật nhất trước khi đi vào số liệu.",
       allIssues: "Tất cả lỗi ngữ pháp ({n})",
+      guardOffTopic:
+        "Bài dùng rất ít từ của đề bài: hãy đọc lại đề và chắc rằng bạn trả lời đúng câu hỏi. (Máy chỉ đếm từ, có thể nhầm nếu bạn diễn đạt bằng từ khác.)",
+      guardPadded:
+        "Nhiều đoạn không phải lời của bạn ({r} từ lặp lại, {t} từ câu mẫu học thuộc): phần này không được tính vào độ dài, và chưa ước lượng band cho bài này.",
+      guardTemplate:
+        "Câu mẫu học thuộc: giám khảo không tính những câu này là lời của bạn. Hãy thay bằng một câu nói thẳng ý của bạn.",
+      ownWords: "Từ của bạn (không tính câu lặp và câu mẫu)",
       droppedPoints:
         "Đã bỏ {n} nhận xét vì câu trích không có trong bài của bạn.",
       fromAi: "Gợi ý từ AI",

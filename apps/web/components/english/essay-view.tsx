@@ -45,6 +45,14 @@ function Result({ result }: { result: EssayResult }) {
             {result.words} / {result.min_words}
           </dd>
         </div>
+        {result.guard && result.guard.own_words !== result.words && (
+          <div data-testid="own-words">
+            <dt>{w.ownWords}</dt>
+            <dd>
+              {result.guard.own_words} / {result.min_words}
+            </dd>
+          </div>
+        )}
         <div>
           <dt>{w.sentences}</dt>
           <dd>{result.sentences}</dd>

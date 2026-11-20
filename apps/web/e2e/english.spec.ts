@@ -223,6 +223,29 @@ test("an essay is written, measured by the worker, and deleted", async ({
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
 });
 
+test("repeated and memorised text is named first and not counted (step 2.7)", async ({
+  page,
+}) => {
+  await asLearner(page, LEARNER);
+  await page.goto("/viet/t2-plastic-ban");
+  const part =
+    "In this day and age, plastic bags pollute the rivers near our town every single week.";
+  await page.getByRole("textbox").fill(`${part}\n\n${part}`);
+  await page.getByLabel("Tôi đã đọc và đồng ý").check();
+  await page.getByRole("button", { name: "Gửi bài" }).click();
+  await expect(page.getByRole("heading", { name: "Đã phân tích" })).toBeVisible(
+    { timeout: 30_000 },
+  );
+  const fix = page.getByTestId("fix-first");
+  await expect(fix.locator("li").first()).toContainText(
+    "Nhiều đoạn không phải lời của bạn",
+  );
+  await expect(page.getByTestId("own-words")).toContainText("/ 250");
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Xóa bài viết" }).click();
+  await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
+});
+
 test("a Task 1 report is checked against its chart, with no band", async ({
   page,
 }) => {

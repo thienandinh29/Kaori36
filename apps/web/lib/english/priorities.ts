@@ -14,6 +14,9 @@ const MIN_PATTERNS = 2;
 export const CRITERION_ORDER: readonly Criterion[] = ["tr", "lr", "cc", "gra"];
 
 export type Priority =
+  | { kind: "padded"; repeated: number; templated: number }
+  | { kind: "template"; phrases: string[] }
+  | { kind: "off_topic" }
   | { kind: "number"; text: string }
   | { kind: "overview" }
   | { kind: "feedback"; criterion: Criterion; point: FeedbackPoint }
@@ -64,6 +67,16 @@ function feedbackPoints(result: EssayResult): Priority[] {
 /** "Sửa trước": at most five things to fix first, most important first (step 2.6). */
 export function fixFirst(result: EssayResult): Priority[] {
   const out: Priority[] = [];
+  const g = result.guard; // step 2.7: not the learner's own answer comes first
+  if (g?.off_topic) out.push({ kind: "off_topic" });
+  if (g?.padded)
+    out.push({
+      kind: "padded",
+      repeated: g.repeated_words,
+      templated: g.template_words,
+    });
+  else if (g && g.templates.length)
+    out.push({ kind: "template", phrases: g.templates });
   if (result.task === 1 && result.task1) {
     for (const n of result.task1.numbers)
       if (!n.supported) out.push({ kind: "number", text: n.text });

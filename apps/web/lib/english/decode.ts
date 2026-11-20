@@ -8,6 +8,7 @@ import {
   type BandRange,
   type ChartFigure,
   type Task1Check,
+  type EssayGuard,
   type Complexity,
   type CheckState,
   type CorrectionResult,
@@ -416,6 +417,25 @@ function parseTask1(value: unknown): Task1Check {
   };
 }
 
+function parseGuard(value: unknown): EssayGuard {
+  const d = record(value);
+  return {
+    words: int(d.words),
+    repeated_words: int(d.repeated_words),
+    repeated_sentences: strings(d.repeated_sentences),
+    template_words: int(d.template_words),
+    templates: strings(d.templates),
+    own_words: int(d.own_words),
+    padded: bool(d.padded),
+    prompt_overlap:
+      d.prompt_overlap === null || d.prompt_overlap === undefined
+        ? null
+        : probability(d.prompt_overlap),
+    prompt_words_used: strings(d.prompt_words_used),
+    off_topic: bool(d.off_topic),
+  };
+}
+
 export function parseWritingPrompt(value: unknown): WritingPrompt {
   const d = record(value);
   const status = string(d.status);
@@ -689,6 +709,7 @@ export function parseEssayResult(value: unknown): EssayResult {
     linking_groups_used: int(d.linking_groups_used),
     ...(d.task === 1 || d.task === 2 ? { task: d.task } : {}),
     ...(d.task1 !== undefined && { task1: parseTask1(d.task1) }),
+    ...(d.guard !== undefined && { guard: parseGuard(d.guard) }),
     ...(v2 && {
       grammar:
         d.grammar === null

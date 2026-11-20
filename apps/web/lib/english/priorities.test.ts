@@ -122,4 +122,22 @@ describe("fix first (step 2.6)", () => {
     expect(styleFor("B2")).toBe("indirect");
     expect(styleFor("C1")).toBe("indirect");
   });
+
+  it("puts text that is not the learner's own answer first (step 2.7)", () => {
+    const guard = {
+      words: 300, repeated_words: 120, repeated_sentences: [], template_words: 10,
+      templates: ["in this day and age"], own_words: 170, padded: true,
+      prompt_overlap: 0.1, prompt_words_used: [], off_topic: true,
+    }; // prettier-ignore
+    const out = fixFirst(result({ guard }));
+    expect(out.slice(0, 2).map((p) => p.kind)).toEqual(["off_topic", "padded"]);
+    const some = fixFirst(
+      result({ guard: { ...guard, padded: false, off_topic: false } }),
+    );
+    expect(some[0]).toEqual({
+      kind: "template",
+      phrases: ["in this day and age"],
+    });
+    expect(fixFirst(result())[0]!.kind).toBe("feedback"); // essays analysed before step 2.7
+  });
 });

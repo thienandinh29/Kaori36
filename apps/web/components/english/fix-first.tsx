@@ -70,6 +70,27 @@ function Item({
   style: Style;
 }) {
   switch (p.kind) {
+    case "off_topic":
+      return <p>{w.guardOffTopic}</p>;
+    case "padded":
+      return (
+        <p>
+          {w.guardPadded
+            .replace("{r}", String(p.repeated))
+            .replace("{t}", String(p.templated))}
+        </p>
+      );
+    case "template":
+      return (
+        <>
+          <p>{w.guardTemplate}</p>
+          {p.phrases.map((x) => (
+            <q key={x} lang="en">
+              {x}
+            </q>
+          ))}
+        </>
+      );
     case "number":
       return <p>{w.fixNumber.replace("{n}", p.text)}</p>;
     case "overview":
