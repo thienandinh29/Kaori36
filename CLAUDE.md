@@ -1,79 +1,30 @@
-@MAP.md
+@AGENTS.md
+@PLAN.md
 @SPEC.md
 
-# NodeTrail v2 (projectQ)
+# Claude Code on NodeTrail
 
-An English learning app for Vietnamese learners, aimed at IELTS (A1–C1, all four skills). A level test places the
-learner on a grammar roadmap of CEFR milestones; vocabulary, grammar, writing, pronunciation, reading, listening and
-speaking all run the loop assess → learn → practice → adjust → review on one mastery model. Mascot: **Sena** the
-monkey. NodeTrail began as a tutor for any subject (`context/product-brief.vi.md`); that engine stays in the code as
-the base for other subjects later, but the product and the plan are English now (`SPEC.md`).
+The rules for every agent are in `AGENTS.md` (how we work), `SPEC.md` (what the product does and the rules the code keeps)
+and `PLAN.md` (where we are, what is next); all three load above. `MAP.md` (where each module, page and migration is) is
+not loaded: read it when you need a path, and update it when you add one. This file adds only what is specific to Claude Code. If anything here disagrees with `AGENTS.md`, `AGENTS.md` wins; say so and fix one of them.
 
-This repository continues the NodeTrail contest build (team repo `thienandinh29/SenaEmpire36`, frozen after the
-2026-11-08 competition) as one owner's project. The contest plan is archived in `docs/archive/contest-2026/`;
-read it for history only, its lanes, timeline and freeze rules no longer apply.
+## Skills
+- `/verify`: every lint, type check and test for the API and the web app. Run it before saying anything is done; for a
+  change the learner can see, also rebuild the stack and run Playwright (`AGENTS.md`, "Checks").
+- `/speckit-specify`, `/speckit-plan`, `/speckit-tasks`: a new feature's spec, plan and tasks, one page each, before code.
 
-## Owner & working agreement
-- One owner (student, aspiring ML engineer) working with an AI coding agent.
-- **Current goal:** `docs/v2/plan-english-pack.md`, the master roadmap (principles, research tracks, the roadmap to
-  summer 2027, then the English app in phases with measured gates; update its Status
-  column when work lands), from the owner's proposal `docs/v2/english-pack-proposal.vi.md`. What waits on the owner:
-  `dolater.md` (keep it current when a step adds owner work). Evaluation data that is copyrighted stays in
-  git-ignored `data/private/`; commit only metrics. Background only: the any-subject milestones in
-  `docs/v2/plan-m0-m1.md` (M0 source catalogue → M1 Deep Research), superseded by the English plan. The rule from
-  them holds: each step must run for real before the next starts; no sample data presented as real.
-- **Reply in the owner's language** (Vietnamese in chat is fine); detailed answers with the reasoning behind decisions.
-- **Ask before** pushing, adding dependencies, deleting data, or making architectural changes. Commit small, tested
-  steps on a feature branch; `main` changes through pull requests with green CI. Never force push.
-- **Run tests/lint before saying anything is done** (`/verify`). Report failures honestly with output.
-- Spec Kit before code for new routes, contract fields or modules: `specs/<feature>/` with spec, plan, tasks
-  (one page each). Bug fixes and small changes inside an existing spec are exempt.
+## In a cloud session
+- The repository is `thienandinh29/projectQ` (shown on GitHub as Kaori36), checked out at `/home/user/projectQ`.
+- If Docker is not running, start it with `nohup dockerd >/tmp/dockerd.log 2>&1 &`. When the disk fills, free the build
+  cache with `docker builder prune -af` before anything else.
+- Model calls from the sandbox go through the proxy, which injects the keys: `LLM_USE_ENV_PROXY=1` with placeholder keys
+  (for example `DEEPSEEK_API_KEY=proxy-injected`). Never ask for a key in chat.
+- Wikimedia refuses the sandbox (HTTP 429): Simple English Wikipedia is fetched on the owner's laptop.
+- When the owner says "merge it when CI is green": push, open the pull request, schedule one check about 8–10 minutes later,
+  and squash-merge with the full head SHA as the expected SHA once all 16 checks pass. Do not poll in a loop.
+- A daily scheduled task runs the Reading blind checks (up to 45 questions, US$0.10 cap), exports the item files and merges
+  them through a pull request. It never touches the owner's review decisions.
 
-## Language rules
-- All code, identifiers, comments, commit messages, and dev docs: **English**.
-- Product is for **Vietnamese learners**: all user-facing UI text, Sena's dialogue, tutor responses and sample
-  content default to **Vietnamese**. Keep UI strings in i18n files (`vi` default, `en` secondary).
-- Handle Vietnamese text correctly: UTF-8 everywhere, NFC normalization, diacritic-aware search/tokenization.
-
-## Core architecture principle
-LLM is **not** the decision maker. It sits inside a harness:
-- **Learning Engine** decides what to learn next: Bayesian Knowledge Tracing, rule engine (graph-walk placement,
-  root-cause remediation), FSRS. Pure functions, unit-tested, every decision returns a `DecisionTrace`.
-- **Graders** score work objectively: answer keys now (MCQ); test cases and rubrics later.
-- **LLM + RAG** only explains and generates, always with citations to source chunks. No citation → not a fact.
-- **Verification gate:** a model of a different family answers each generated item blind from the cited chunks;
-  unverified items are never served. The gate reduces errors, it does not remove them: keep human review and
-  measured catch rates on the roadmap.
-- Socratic tutor never hands over the final answer. Sena praises only real mastery, never speed or streaks.
-- **The developer is not the ground truth** (`specs/validation/spec.md`). The owner is learner, developer and tester,
-  not the judge of correct English. Every label and gate records its tier: Gold (an expert or an expert-labelled
-  dataset), Silver (two independent checks agree), Bronze (one source: a model, the owner, extraction). Gates need
-  Gold; learner-facing content needs Silver; nothing is promoted by the owner's approval alone. Never write "the owner
-  labels/confirms" as a gate's truth in a new plan or spec; the owner's judgement is learner feedback or Bronze.
-- Learner data and evaluation data stay apart: NodeTrail never grades its own effect. Experiments live in
-  `research/` (hypothesis first, negative results kept).
-
-## Sources
-- Prefer structured sources whose licence and chapter order are machine-readable (`apps/api/app/sources/`,
-  `data/sources/catalog.yaml`). The HTML crawler (`apps/api/app/research/`) remains a second route.
-- Record the licence of every source; never use NoDerivatives licences; flag NonCommercial ones.
-
-## Stack
-- Web: `apps/web` — Next.js App Router, TypeScript strict, Tailwind, React Flow + `dagre`.
-- API: `apps/api` — Python 3.12, FastAPI, Pydantic v2, uv. Jobs in a Postgres `topic_jobs` queue with a separate
-  worker; never long work inside a request; SSE progress with a heartbeat.
-- Data: Postgres + pgvector (`halfvec(1024)`); migrations in `supabase/migrations/`, additive only.
-- Embeddings: BAAI/bge-m3 (1024 dims) served by TEI behind `Embedder`. Changing the model requires re-indexing.
-- LLM: only through `apps/api/app/llm/gateway.py` with `routing.yaml`; the verifier is always a different model
-  family from the generator. Never call an LLM SDK or HTTP API directly from features.
-
-## Code conventions
-- Python: full type hints, `ruff` (lint + format), `pytest` and `mypy` clean.
-- TypeScript: `strict: true`, no `any`, ESLint + Prettier, Vitest for logic.
-- Small modules, pure functions for algorithms (BKT/FSRS/Elo) so they are testable without DB or LLM.
-- Secrets only in `.env` (never commit, never read it, never paste in chat). Document every variable in
-  `.env.example`.
-
-## Folders
-- `context/` — reference material (brief, research). `docs/v2/` — current plan. `docs/archive/` — contest history.
-- `outputs/` — generated deliverables (reports, exports, diagrams). Not source code.
+## Writing for the owner
+Reply in the owner's language with the reasoning behind each decision. Lead with the outcome, then what to do next. Name
+what was not done or not checked. Never write a model identifier into the repository.

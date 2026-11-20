@@ -1,6 +1,6 @@
 # Do later: the owner's list
 
-Everything that waits on you, the owner, in one place. Last updated 18 Nov 2026. Tick items here as you do them; the
+Everything that waits on you, the owner, in one place (the plan: `PLAN.md`). Last updated 20 Nov 2026. Tick items here as you do them; the
 detail lives in each spec's `tasks.md`. Commands run from `apps/api` unless noted. Private data (recordings, essays,
 labels) stays in git-ignored `data/private/`; only scores and metrics are committed.
 
@@ -25,7 +25,7 @@ a gate's truth.
 | [x] **Validation spec (`specs/validation/spec.md`):** approved 18 Nov; V1 built. When a reviewer agrees: `uv run python -m app.validation.cli add-reviewer --name "…" --role expert_teacher --expertise "…" --consented` (only after they agree to how their labels are used) | 5 min | Their labels count as Gold | `specs/validation/step-v1.md` |
 | [ ] **Two maps (`specs/two-layer-map/spec.md`):** approve or change the design; set your target (band per skill, exam date). The links between competencies and foundations stay Bronze ("đề xuất") until a teacher checks a sample | 30 min | M1–M2, ideally before CP4 | same |
 | [ ] **Phase 4, CP4b (new, 20 Nov), when it is built:** look over the planted test of explanations and confirm each planted fault is really a fault (the faults are planted by construction; your check is that each is unambiguous) | 30 min | CP4b's gate | `specs/listening-reading/spec.md` |
-| [ ] **Research follow-up (new, 20 Nov):** in the next deep research, check in the primary sources the figures we act on: Vietnam's Speaking mean in IELTS's 2024–2025 test-taker data, Elder and O'Loughlin (2003), Kang et al. (2021), and whether IELTS One Skill Retake is offered in Vietnam; and ask whether naming the trap in Reading feedback raises later accuracy | 1 research run | Phase 5's priority; CP4b's claim | `docs/v2/plan-english-pack.md` (Risks) |
+| [ ] **Research follow-up (new, 20 Nov):** in the next deep research, check in the primary sources the figures we act on: Vietnam's Speaking mean in IELTS's 2024–2025 test-taker data, Elder and O'Loughlin (2003), Kang et al. (2021), and whether IELTS One Skill Retake is offered in Vietnam; and ask whether naming the trap in Reading feedback raises later accuracy | 1 research run | Phase 5's priority; CP4b's claim | `PLAN.md` (Goal and order of priority; Risks) |
 
 ## 2. As learner (your own signal, never a correctness label)
 - [ ] Use the app most days. When something is unclear, too hard, or assumes what you were not taught, say so: that is

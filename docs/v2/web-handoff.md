@@ -58,7 +58,7 @@ classes), with Tailwind utilities in some components. There is no shared design 
   as CSS variables or Tailwind theme tokens, then move pages onto it one PR at a time.
 - Do not change API shapes or add routes from the web session; ask the backend session (via the owner) instead.
 - New dependencies (a component library, a font) need the owner's yes first.
-- Avoid editing `MAP.md` and `docs/v2/plan-english-pack.md` while the backend session has a PR open that touches them; if
+- Avoid editing `MAP.md` and `PLAN.md` while the backend session has a PR open that touches them; if
   both must, merge `main` into your branch before opening the PR.
 
 ## Coming soon from the backend
