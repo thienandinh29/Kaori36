@@ -61,6 +61,15 @@ Traces are pure data (no database inside the engine). `bkt.update` and `srs.revi
 the trace.
 
 ## Contract: rules the code enforces
+**Architecture**
+- **The LLM is not the decision maker.** The engine decides what to learn next and the graders score; models only explain
+  and generate, always citing their source text. A model's opinion is never a grade.
+- **Every model call goes through `apps/api/app/llm/gateway.py`** with `routing.yaml` (task × tier → ordered models); no
+  feature calls a model SDK or API directly.
+- **No long work inside a request:** the Postgres `topic_jobs` queue and a separate worker.
+- **The Socratic tutor never hands over the answer;** hints come first. Sena praises real mastery only, never speed or streaks.
+- Engine decisions are pure functions in `apps/api/app/engine/`, unit-tested, each returning a `DecisionTrace`.
+
 **Content and verification**
 - **Verification gate.** A generator writes each item citing its source text; a model of a **different family** answers it
   blind from that text only (no key, no other context); a mismatch or "cannot tell" sends it to review. Routing today:
@@ -100,12 +109,16 @@ the trace.
 - A voice is personal data. Consent (`voice-v1`) before recording; owner only until a privacy review; recordings deleted
   after 24 hours unless kept; said words keep per-sound scores only, one attempt per recording. Only the owner's kept
   recordings may be played to a reviewer the owner chose, through the portal, after an explicit command.
-- Writing sent to a model provider needs the consent notice; private evaluation data stays in `data/private/`.
+- Writing sent to a model provider needs the consent notice. Private evaluation data (copyrighted essays, recordings,
+  labels) stays in git-ignored `data/private/`; only metrics are committed.
 
 ### Who decides what is true
 **The developer is not the ground truth** (`specs/validation/spec.md`). Gold (an expert or an expert-labelled dataset) for
 gates; Silver (two independent checks agree) for learner-facing content; Bronze (one source) for development only. The owner
 is learner, developer and tester, not the judge of correct English. Every label records its tier in `labels`.
+
+**Sources:** the licence of every source is read from its own page and recorded; never NoDerivatives; NonCommercial and
+ShareAlike flagged; no real exam passages or past papers.
 
 ## Interfaces
 - **Web** (`apps/web`, Next.js, Vietnamese UI): `/`, `/ban-do`, `/kiem-tra`, `/lo-trinh`, `/on-tap/{kind}/{slug}`, `/hoc/{slug}`,

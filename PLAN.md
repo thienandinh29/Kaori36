@@ -123,5 +123,6 @@ classroom layer (slides, whiteboard), Elo item difficulty, mastery hysteresis wi
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-20 | Lighter loading: `CLAUDE.md` no longer loads `MAP.md` (read on demand); the product's rules live only in `SPEC.md` (Contract), and `AGENTS.md` points to them |
 | 2026-11-20 | `PLAN.md` becomes the one plan, with `AGENTS.md` (how we work) and a rewritten `SPEC.md` (what the product does and the rules it keeps), all checked against the code. The target is 7.0 overall (the owner's setting in `data/maps/ielts-competencies.yaml`, 18 Nov); the older plan's 6.5 came from the 14 Nov proposal. Earlier history: `docs/v2/plan-english-pack.md` |
 | 2026-11-20 | Say-word: one attempt per recording (migration 0037). Writing 2.6–2.8, CP5b whole passages, shadowing fixes, OpenStax passages cleaned (106 new questions); CP4b specified |

@@ -9,7 +9,7 @@ Planned entries are marked _(planned)_ until they exist.
 |---|---|
 | `AGENTS.md` | **How we work**, for any coding agent: the working agreement, how a change is made, every check, architecture and validation rules, data and privacy, language and code conventions |
 | `PLAN.md` | **The one plan**: goal and priorities, where we are, the roadmap to summer 2027, phases and their gates with status, phase 4 checkpoints, what is next, research tracks, the owner's decisions, risks, log |
-| `CLAUDE.md` | Claude Code only: loads `AGENTS.md`, `PLAN.md`, `SPEC.md` and `MAP.md`, then skills and cloud-session notes |
+| `CLAUDE.md` | Claude Code only: loads `AGENTS.md`, `PLAN.md` and `SPEC.md` (this file is read on demand), then skills and cloud-session notes |
 | `dolater.md` | **The owner's to-do list**, by role: as developer and tester, as learner, "find a reviewer for…" (correctness), measurements, decisions, routine; with time and commands |
 | `README.md` | Public introduction in Vietnamese: NodeTrail as an English (IELTS) learning app, skills and their status, the plan, honest status, how to run |
 | `SPEC.md` | **What the product does and the rules it keeps** (the contract): features per skill with status, the engine and decision traces, the rules the code enforces (verification, serving, evidence, scores, limits, privacy), web pages, API groups and services, non-goals |

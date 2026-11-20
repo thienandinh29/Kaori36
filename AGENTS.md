@@ -16,7 +16,7 @@ Mascot: **Sena** the monkey.
 1. `PLAN.md`: the current phase, what is next, what waits on the owner.
 2. `SPEC.md`: what the product does and the rules the code keeps (the contract).
 3. The spec of the feature you touch: `specs/<feature>/spec.md`, `plan.md`, `tasks.md`, and its `step-*.md` pages.
-4. `MAP.md` for paths; `dolater.md` for the owner's open work. `docs/archive/contest-2026/` is history only: its lanes,
+4. `MAP.md` for paths (read on demand, not loaded every session); `dolater.md` for the owner's open work. `docs/archive/contest-2026/` is history only: its lanes,
    timeline and freeze rules no longer apply.
 
 ## The working agreement
@@ -77,42 +77,18 @@ CI (`.github/workflows/ci.yml`) also runs the evaluation gates (placement, the E
 engine) against committed baselines in `evals/baselines/`, the sandbox escape tests, the grader self-test, and builds the
 scorer, voice and pronunciation images. A gate that drops below its baseline fails CI; raise a baseline only with the owner. CI does not run Prettier; run `pnpm format:check` yourself.
 
-## Architecture rules (the code keeps these; do not work around them)
-- **The LLM is not the decision maker.** The learning engine decides what to learn next: BKT for mastery, rules over the
-  graphs for placement and remediation, FSRS for review, the recommendation engine for "Hôm nay". These are pure functions
-  in `apps/api/app/engine/`, unit-tested, and every decision returns a `DecisionTrace` (shown as "Vì sao?").
-- **Graders score work objectively:** answer keys, typed answers exact after normalisation, LanguageTool and ERRANT,
-  a pinned band model shown only as a range, phone recognition and GOP. A model's opinion is never a grade.
-- **LLM calls go only through `apps/api/app/llm/gateway.py`** with `routing.yaml` (task × tier → ordered models). Never
-  call a model SDK or HTTP API from a feature. Every call is budgeted and logged in `llm_calls`.
-- **Generated content is verified by a different model family**, answering blind from the cited text only; the gateway
-  refuses a checker of the generator's family. Unverified content is never served. The gate reduces errors; it does not
-  remove them, so catch rates are measured.
-- **No long work inside a request.** Use the Postgres `topic_jobs` queue and the separate worker.
-- **The Socratic tutor never hands over the answer.** Sena praises real mastery only, never speed or streaks.
+## The product's rules
+`SPEC.md`, "Contract", is the one list of the rules the code keeps: the engine decides and the LLM explains, every model call
+goes through the gateway, a different model family verifies generated content, what may be served, what counts as evidence,
+how scores are shown, limits and cost, voice privacy, who decides what is true (Gold, Silver, Bronze), sources and licences.
+Read it before touching any of these; never work around one of them. A change to a rule is the owner's decision, made in
+`SPEC.md` first.
 
-## Who decides what is true (validation)
-**The developer is not the ground truth** (`specs/validation/spec.md`). Every label and gate result records its tier:
-- **Gold:** an expert (English teacher, trained IELTS rater, phonetics expert) or an expert-labelled dataset. Gates need Gold.
-- **Silver:** at least two independent checks agree (a licence-checked source, code checks, a blind checker of another
-  family). Learner-facing content needs Silver.
-- **Bronze:** one source (a model, the owner, an extraction). Development only.
-
-The owner's judgement on correct English is learner feedback or Bronze; **nothing is promoted by the owner's approval
-alone**. Never write "the owner labels/confirms" as a gate's truth in a new spec. NodeTrail never grades its own effect:
-progress is measured by independent tests every 4 weeks (`app/progress/`), kept apart from learner data.
-
-## Data, privacy and sources
+Two rules about how you work, not what the product does:
 - **Secrets only in `.env`.** Never read it, print it, commit it or paste a key in chat. Document every new variable in
-  `.env.example`. In the cloud sandbox, model keys are injected by the proxy (`LLM_USE_ENV_PROXY=1` with placeholder keys).
-- **A voice is personal data.** Recording is owner-only until a privacy review; audio is deleted after analysis unless the
-  owner keeps it; only per-sound scores are stored for said words. Nobody else's voice is ever served.
-- **Private evaluation data** (copyrighted essays, recordings, labels) stays in git-ignored `data/private/`; commit only
-  metrics and reports.
-- **Sources:** record the licence of every source from its own page; never NoDerivatives; flag NonCommercial and
-  ShareAlike. No real exam passages or past papers. Prefer structured sources (`apps/api/app/sources/`).
-- **The owner's decisions in data are never overwritten** by code or by an import (for example Reading review decisions in
-  `data/english/reading-items/`).
+  `.env.example`.
+- **The developer is not the ground truth.** Never write "the owner labels/confirms" as a gate's truth in a spec or a
+  report; the owner's judgement on correct English is learner feedback or Bronze.
 
 ## Database
 Migrations in `supabase/migrations/`, numbered in order (`0037` is the latest), **additive only**. Never edit a migration

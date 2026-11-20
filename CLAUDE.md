@@ -1,13 +1,12 @@
 @AGENTS.md
 @PLAN.md
 @SPEC.md
-@MAP.md
 
 # Claude Code on NodeTrail
 
 The rules for every agent are in `AGENTS.md` (how we work), `SPEC.md` (what the product does and the rules the code keeps)
-and `PLAN.md` (where we are, what is next); all three load above, with `MAP.md`. This file adds only what is specific to
-Claude Code. If anything here disagrees with `AGENTS.md`, `AGENTS.md` wins; say so and fix one of them.
+and `PLAN.md` (where we are, what is next); all three load above. `MAP.md` (where each module, page and migration is) is
+not loaded: read it when you need a path, and update it when you add one. This file adds only what is specific to Claude Code. If anything here disagrees with `AGENTS.md`, `AGENTS.md` wins; say so and fix one of them.
 
 ## Skills
 - `/verify`: every lint, type check and test for the API and the web app. Run it before saying anything is done; for a
