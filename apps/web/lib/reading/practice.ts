@@ -63,7 +63,7 @@ export function parseTexts(value: unknown): TextSummary[] {
   });
 }
 
-function question(value: unknown): Question {
+export function question(value: unknown): Question {
   const r = record(value);
   const base = { id: string(r.id), skill: string(r.skill) };
   switch (r.kind) {

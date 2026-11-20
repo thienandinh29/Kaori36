@@ -946,6 +946,29 @@ export const vi = {
         string
       >,
     },
+    listeningPassage: {
+      listTitle: "Nghe cả bài",
+      listNote:
+        "Máy chủ đọc cả bài đọc, bạn trả lời các câu hỏi đã được kiểm tra hai lần (máy và người duyệt). Bài chỉ hiện ra sau khi bạn nộp.",
+      sentencesTitle: "Nghe từng câu",
+      counts: (n: number) => `${n} câu hỏi`,
+      readBefore: "bạn đã đọc bài này (nghe có thể dễ hơn)",
+      back: "← Luyện nghe",
+      intro:
+        "Đọc câu hỏi trước, rồi bấm nghe. Bạn được nghe tối đa 2 lần (bài thi IELTS chỉ phát 1 lần). Giọng đọc là giọng máy, không phải băng thi thật.",
+      play: "Nghe bài",
+      playAgain: (left: number) => `Nghe lại (còn ${left} lần)`,
+      stop: "Dừng",
+      playing: (n: number, of: number) => `Đang phát đoạn ${n}/${of}`,
+      submit: "Nộp bài",
+      right: "Đúng.",
+      wrong: "Chưa đúng.",
+      yours: "Bạn chọn",
+      key: "Đáp án",
+      score: (right: number, total: number, answered: number) =>
+        `Đúng ${right}/${total} câu (bạn trả lời ${answered} câu; câu bỏ trống tính sai nhưng không được tính là bằng chứng).`,
+      transcript: "Bài vừa nghe",
+    },
     sayWord: {
       say: "Nói từ này",
       stop: "Dừng",

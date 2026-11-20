@@ -24,7 +24,7 @@ import { useLearner } from "@/components/english/use-learner";
 const t = vi.english.readingTest;
 const p = vi.english.readingPractice;
 
-function Prompt({ q }: { q: Question }) {
+export function Prompt({ q }: { q: Question }) {
   if (q.kind === "tfng") return <p lang="en">{q.statement}</p>;
   if (q.kind === "mcq") return <p lang="en">{q.stem}</p>;
   if (q.kind === "completion") return <p lang="en">{q.sentence}</p>;
@@ -32,7 +32,7 @@ function Prompt({ q }: { q: Question }) {
 }
 
 /** A controlled answer input: it records the choice and never grades (nothing shows before submitting). */
-function Input({
+export function Input({
   q,
   value,
   disabled,
@@ -128,7 +128,7 @@ function Input({
   );
 }
 
-function shown(q: Question, a: unknown): string {
+export function shown(q: Question, a: unknown): string {
   if (a === null || a === undefined) return t.blank;
   if (q.kind === "mcq" && typeof a === "number")
     return `${"ABCD"[a]}. ${q.options[a] ?? ""}`;
