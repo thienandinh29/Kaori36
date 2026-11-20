@@ -11,6 +11,7 @@ are kept separately (`outline.json`) because Deep Research matches topics agains
 
 import re
 import xml.etree.ElementTree as ET
+from collections.abc import Collection as Many
 from dataclasses import dataclass, field
 
 from app.sources.licence import licence_from_url
@@ -232,15 +233,34 @@ def _flow(node: ET.Element) -> str:
 
 
 def parse_module(
-    xml: bytes | str, *, module: str, chapter_no: int, chapter: str, source_uri: str
+    xml: bytes | str,
+    *,
+    module: str,
+    chapter_no: int,
+    chapter: str,
+    source_uri: str,
+    drop_classes: Many[str] = (),
 ) -> Page:
-    """One CNXML page -> blocks (one per section, exercises separate) and learning objectives."""
+    """One CNXML page -> blocks (one per section, exercises separate) and learning objectives.
+
+    `drop_classes`: notes and sections whose class has one of these words are left out, with all
+    they contain (Reading passages leave out "Link to Learning" boxes and end-of-chapter
+    sections; other callers keep everything, as before).
+    """
     root = ET.fromstring(xml)
     title = _title(root) or module
     page = Page(module=module, title=title, source_uri=source_uri)
     content = root.find(f"{CNX}content")
     if content is None:
         return page
+    if drop_classes:
+        drop = set(drop_classes)
+        for holder in list(content.iter()):
+            for box in list(holder):
+                if _local(box.tag) in {"note", "section"} and drop & set(
+                    (box.get("class") or "").split()
+                ):
+                    holder.remove(box)
     parents = {child: parent for parent in content.iter() for child in parent}
 
     def section_of(node: ET.Element) -> tuple[str, str | None]:

@@ -1,6 +1,333 @@
 text_slug: os-world-history-volume-from-old-babylon-to-the-medes
 source: openstax-reading
 versions:
+- passage_sha256: 0bb1a5eea9602575ae8d70c1f569a58023f1c2db514a300e493d53b3471bf389
+  items:
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-completion-1
+      kind: completion
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - Egyptian
+      evidence:
+      - The Hittite king Suppiluliumas attempted to marry one of his sons into the Egyptian royal family, which
+        would have united these two regional powers and competitors.
+      sentence: Suppiluliumas tried to arrange a marriage that would have united the Hittites with the ___ royal
+        family.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-completion-2
+      kind: completion
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - taxes
+      evidence:
+      - In ordinary situations, they could expect to be free to leave unharmed when the situation demanded it, to
+        be exempt from certain taxes, and to have their property respected.
+      sentence: In ordinary situations, ambassadors were exempt from certain ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-completion-3
+      kind: completion
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - Indus River
+      - Indus
+      evidence:
+      - As early as the empire of Sargon of Akkad, Mesopotamian traders operating in the Persian Gulf sailed as
+        far as modern-day Pakistan to trade with the people of the Indus River valley.
+      sentence: As early as the empire of Sargon of Akkad, Mesopotamian traders sailed as far as modern-day Pakistan
+        to trade with the people of the ___ valley.
+      max_words: 2
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-headings-1
+      key:
+        '0': 1
+        '1': 0
+        '2': 3
+        '3': 5
+        '4': 6
+        '5': 4
+        '6': 7
+      kind: headings
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - Marriage alliances and the pursuit of alliances
+      - The role, protections and risks of ambassadors
+      - Why bronze was the key metal of the period
+      - Gift exchange and its diplomatic meaning
+      - Poor roads and travel conditions
+      - The use of spies and intelligence gathering
+      - Long-distance trade and state support for roads
+      - The scarcity of stone, timber and metal ores
+      - How tribute replaced all other trade
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-mcq-1
+      key: 0
+      kind: mcq
+      stem: According to the passage, what was a possible danger for a spy working in Ancient Mesopotamia?
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - A painful death if discovered
+      - Having to pay custom fees
+      - Being forced to marry abroad
+      - Losing property to ambassadors
+      evidence:
+      - An even greater risk was borne by the spies themselves, who could expect a painful death if caught.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-mcq-2
+      key: 0
+      kind: mcq
+      stem: Why did large empires such as the Assyrians maintain roads and bridges?
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - To encourage trade and move people and soldiers
+      - To give local authorities extra work
+      - To replace the work of ambassadors
+      - To prevent traders from paying duties
+      evidence:
+      - Large empires had an interest in encouraging trade and maintained roads and bridges across the Near East
+        for that purpose.
+      - Roads in the enormous Neo-Assyrian Empire were managed by a central government authority to ensure that
+        the movement of goods and especially of soldiers proceeded unhindered.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-mcq-3
+      key: 0
+      kind: mcq
+      stem: Which goods did Assyrian traders exchange for silver and gold in Anatolia?
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Tin and textiles
+      - Copper and stone
+      - Timber and metal ores
+      - Bronze tools and weapons
+      evidence:
+      - The Assyrians even established merchant colonies in Anatolia where they exchanged tin and textiles for silver
+        and gold.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Kings preferred to avoid war if possible and maintain healthy diplomatic relationships with others instead.
+      statement: Kings in Mesopotamia generally preferred to avoid war when they could.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - But if war broke out between the two kingdoms, an ambassador could get caught in the middle.
+      statement: Ambassadors were never at risk of being caught in the middle if war broke out between the two kingdoms.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Returning empty-handed suggested the foreign king was breaking off diplomatic relations or had even become
+        hostile.
+      statement: A foreign king who sent an ambassador home without a gift was signalling that relations might be
+        breaking down.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Not only did he recruit agents of all types to keep tabs on other kings, but he even established a special
+        intelligence bureau in the palace at Mari to collect, translate, and analyze documents provided by his many
+        spies.
+      statement: Hammurabi established his intelligence bureau in the palace at Mari.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-world-history-volume-from-old-babylon-to-the-medes-v2-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-world-history-volume-from-old-babylon-to-the-medes
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The Neo-Assyrian Empire charged traders a fixed toll of one silver unit for each bridge they crossed.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
 - passage_sha256: 13488a5fb2175d8204090f12e0e1d6863ac222b593f707b82e4a9b2999074b17
   items:
   - id: os-world-history-volume-from-old-babylon-to-the-medes-completion-1

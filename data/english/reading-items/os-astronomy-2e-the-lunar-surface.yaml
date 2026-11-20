@@ -1,6 +1,388 @@
 text_slug: os-astronomy-2e-the-lunar-surface
 source: openstax-reading
 versions:
+- passage_sha256: 6429181705faf90140722dd417500126c0444dbd09cd506fc40ad9029c2e5cff
+  items:
+  - id: os-astronomy-2e-the-lunar-surface-v2-completion-1
+    kind: completion
+    status: dropped
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-completion-1
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - '4.4'
+      evidence:
+      - The solidification ages of the samples ranged from about 3.3 to 4.4 billion years old, substantially older
+        than most of the rocks on Earth.
+      sentence: The solidification ages of the samples returned by Apollo ranged from about 3.3 to ___ billion years
+        old.
+      max_words: 1
+    problems:
+    - answer '4.4' is longer than 1 words
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-completion-2
+      kind: completion
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - anorthosites
+      evidence:
+      - Most of the crust of the Moon (83%) consists of silicate rocks called anorthosites; these regions are known
+        as the lunar highlands.
+      sentence: The lunar highlands are made of silicate rocks called ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-completion-3
+      kind: completion
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - faces
+      evidence:
+      - The maria are much less cratered than the highlands, and cover just 17% of the lunar surface, mostly on
+        the side of the Moon that faces Earth.
+      sentence: The maria cover just 17% of the lunar surface, mostly on the side of the Moon that ___ Earth.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-headings-1
+      key:
+        '0': 1
+        '1': 0
+        '2': 3
+        '3': 2
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 7
+      kind: headings
+      text: os-astronomy-2e-the-lunar-surface
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - Names given to lunar features and the persistence of early terminology
+      - The Moon’s appearance and its most obvious surface markings
+      - Radioactive dating of lunar samples and their great age
+      - How the Moon’s features differ in origin from Earth’s
+      - The composition and early formation of the lunar highlands
+      - Why lunar mountains lack the sharp peaks seen on Earth
+      - The basalt of the maria and the basins they filled
+      - The end of major lunar volcanism and the cooling interior
+      - Terrestrial volcanoes and their lavas compared with the Moon
+      - The history of lunar exploration by robotic probes
+      - Crater counting as a method for dating surfaces
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-mcq-1
+      key: 2
+      kind: mcq
+      stem: According to the passage, what caused the smoother shapes of the lunar highlands compared with Earth’s
+        mountains?
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Wind and water wearing down the rock
+      - Ice carving the rock into cliffs
+      - Gradual wearing away, mainly from impacts
+      - Sharp folds forming in the ranges
+      evidence:
+      - Because there is no atmosphere or water on the Moon, there has been no wind, water, or ice to carve them
+        into cliffs and sharp peaks, the way we have seen them shaped on Earth.
+      - Their smooth features are attributed to gradual erosion, mostly due to impact cratering.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-mcq-2
+      key: 1
+      kind: mcq
+      stem: Why does the passage say the Moon’s geological history is largely unlike Earth’s?
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - It has far more water and air than Earth
+      - It has little internal activity and no air or water
+      - Its rocks are much younger than Earth’s
+      - It has been studied only by astronauts
+      evidence:
+      - The Moon’s relative lack of internal activity, together with the absence of air and water, make most of
+        its geological history unlike anything we know on Earth.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-mcq-3
+      key: 3
+      kind: mcq
+      stem: What are the dark areas of the Moon now known to be made of?
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Anorthosite silicate rock
+      - Low-density slag
+      - Eroded highland material
+      - Dark-coloured volcanic lava
+      evidence:
+      - Today, we know that the maria consist mostly of dark-colored basalt (volcanic lava) laid down in volcanic
+        eruptions billions of years ago.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-mcq-4
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-mcq-4
+      key: 1
+      kind: mcq
+      stem: When did the release of lava in the Moon’s main mare volcanism come to an end?
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - About 4.4 billion years ago
+      - About 3.3 billion years ago
+      - Between 4.5 and 4.6 billion years ago
+      - Between 4.1 and 4.4 billion years ago
+      evidence:
+      - What we do know is that the major mare volcanism, which involved the release of lava from hundreds of kilometers
+        below the surface, ended about 3.3 billion years ago.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Their names, Mare Nubium (Sea of Clouds), Mare Tranquillitatis (Sea of Tranquility), and so on, are still
+        in use today.
+      statement: Early lunar observers used names for the dark areas of the Moon that are still used today.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Unlike the mountains on Earth, the Moon’s highlands do not have any sharp folds in their ranges.
+      statement: The lunar highlands have sharp folds running along their mountain ranges.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-the-lunar-surface
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Most of the crust of the Moon (83%) consists of silicate rocks called anorthosites; these regions are known
+        as the lunar highlands.
+      - The maria are much less cratered than the highlands, and cover just 17% of the lunar surface, mostly on
+        the side of the Moon that faces Earth.
+      statement: The maria cover a larger proportion of the lunar surface than the highlands do.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Even when they look somewhat similar, the origins of lunar features such as craters and mountains are very
+        different from their terrestrial counterparts.
+      statement: The Moon’s surface features have the same origins as similar-looking features on Earth.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-the-lunar-surface
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The Apollo astronauts collected rock samples from the lunar highlands.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-the-lunar-surface-v2-tfng-6
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-the-lunar-surface-v2-tfng-6
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-the-lunar-surface
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - The youngest of the lunar impact basins is Mare Orientale, shown in .
+      statement: Mare Orientale is the youngest of the Moon’s impact basins.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
 - passage_sha256: d800b1a06efd19b6a121f46c1db5b11128d39b472462fc4f3e7a5ae983f1312f
   items:
   - id: os-astronomy-2e-the-lunar-surface-completion-1

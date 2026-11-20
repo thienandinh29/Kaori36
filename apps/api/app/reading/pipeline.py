@@ -86,7 +86,14 @@ async def generate_text(
     out = await gen(SYSTEM, prompt(passage))
     if out is None:
         return None
-    kept, dropped = build(slug, passage, out)
+    older = conn.execute(
+        "select count(distinct passage_sha256) from reading_items "
+        "where text_slug=%s and passage_sha256<>%s",
+        (slug, digest),
+    ).fetchone()
+    n = int(older[0]) if older else 0
+    # A changed passage (e.g. cleaned, 20 Nov 2026): new ids, so its items are really stored.
+    kept, dropped = build(slug, passage, out, slug if n == 0 else f"{slug}-v{n + 1}")
     store(conn, slug, digest, kept, dropped, now)
     return len(kept), len(dropped)
 

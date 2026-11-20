@@ -244,3 +244,321 @@ versions:
     review_note: null
     review_was: null
     check_view: shuffled
+- passage_sha256: 586952e282fca2c0948f5a90df05bb868f7cef737cc44f2a613285edd2835243
+  items:
+  - id: os-astronomy-2e-earth-and-sky-v2-completion-1
+    kind: completion
+    status: dropped
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-completion-1
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - center
+      evidence:
+      - A great circle is any circle on the surface of a sphere whose center is at the center of the sphere.
+      sentence: A great circle is any circle on the surface of a sphere whose center is at the ___ of the sphere.
+      max_words: 1
+    problems:
+    - the sentence already contains the answer 'center'
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-completion-2
+      kind: completion
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - 0°
+      evidence:
+      - The longitude of the Prime Meridian is defined as 0°.
+      sentence: The longitude of the Prime Meridian is defined as ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-completion-3
+      kind: completion
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - 90°
+      evidence:
+      - Latitudes are measured either north or south of the equator from 0° to 90°.
+      sentence: Latitudes are measured either north or south of the equator from 0° to ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+      kind: headings
+      text: os-astronomy-2e-earth-and-sky
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The need for unique location identifiers
+      - Defining directions on Earth
+      - Coordinates on a sphere
+      - Great circles and meridians
+      - Longitude and the Prime Meridian
+      - Why Greenwich was chosen
+      - Measuring latitude
+      - The history of mapmaking
+      - Astronomical coordinate systems
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-mcq-1
+      key: 2
+      kind: mcq
+      stem: What is the name for a circle on the surface of a sphere whose center is at the center of the sphere?
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - meridian
+      - equator
+      - great circle
+      - longitude
+      evidence:
+      - A great circle is any circle on the surface of a sphere whose center is at the center of the sphere.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-mcq-2
+      key: 1
+      kind: mcq
+      stem: According to the passage, why was Greenwich chosen as the site of the Prime Meridian?
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - It was the location of the old Royal Observatory.
+      - It was between continental Europe and the United States.
+      - It was the capital of England.
+      - It was where the first map was made.
+      evidence:
+      - Greenwich, the site of the old Royal Observatory, was selected because it was between continental Europe
+        and the United States, and because it was the site for much of the development of the method to measure
+        longitude at sea.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-mcq-3
+      key: 0
+      kind: mcq
+      stem: How is longitude defined?
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - The number of degrees of arc along the equator between your meridian and the Prime Meridian.
+      - The number of degrees of arc you are away from the equator along your meridian.
+      - The circle passing through both the North and South Poles.
+      - The direction toward which Earth rotates.
+      evidence:
+      - By international agreement (and it took many meetings for the world’s countries to agree), longitude is
+        defined as the number of degrees of arc along the equator between your meridian and the one passing through
+        Greenwich, England, which has been designated as the Prime Meridian.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - For example, Earth’s equator is a great circle on Earth’s surface, halfway between the North and South Poles.
+      statement: The equator is a great circle on Earth's surface.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Longitudes are measured either to the east or to the west of the Greenwich meridian from 0° to 180°.
+      statement: Longitude is measured only to the east of the Prime Meridian.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-tfng-3
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - (The latitude of the equator is 0°.)
+      statement: The latitude of the equator is 0°.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-tfng-4
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The Prime Meridian passes through the Royal Observatory in Greenwich, England.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-earth-and-sky-v2-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-earth-and-sky-v2-tfng-5
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-earth-and-sky
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - As an example, the longitude of the clock-house benchmark of the U.S. Naval Observatory in Washington, DC,
+        is 77.066° W.
+      statement: The longitude of the U.S. Naval Observatory benchmark is 77.066° E.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
