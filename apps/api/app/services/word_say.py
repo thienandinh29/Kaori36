@@ -14,6 +14,7 @@ from collections.abc import Callable
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 import yaml  # type: ignore[import-untyped]
 from fastapi import HTTPException
@@ -104,7 +105,9 @@ class WordSay:
         owner = learner_uuid(learner_id) in self.owners
         return {"analysis": owner and self.score is not None, "owner": owner, "consent": CONSENT}
 
-    async def say(self, learner_id: str, word: str, consent: str, audio: bytes) -> dict[str, Any]:
+    async def say(
+        self, learner_id: str, word: str, consent: str, audio: bytes, take: UUID | None = None
+    ) -> dict[str, Any]:
         if learner_uuid(learner_id) not in self.owners:
             raise HTTPException(403, "Phân tích giọng nói hiện chỉ mở cho chủ dự án.")
         if consent != CONSENT:
@@ -142,9 +145,12 @@ class WordSay:
                 {k: p[k] for k in ("phone", "gop", "closeness", "heard", "dropped")} for p in result
             ]
             with self.pool().connection() as conn:
+                # One attempt per recording: analysing the same take again replaces it.
                 conn.execute(
-                    "insert into say_attempts(learner_id, word, phones) values (%s,%s,%s)",
-                    (learner_uuid(learner_id), word, Jsonb(scores)),
+                    "insert into say_attempts(learner_id, word, phones, take_id) "
+                    "values (%s,%s,%s,%s) on conflict (learner_id, word, take_id) "
+                    "where take_id is not null do update set phones=excluded.phones",
+                    (learner_uuid(learner_id), word, Jsonb(scores), take),
                 )
                 recent = conn.execute(
                     "select phones from say_attempts where learner_id=%s and word=%s "

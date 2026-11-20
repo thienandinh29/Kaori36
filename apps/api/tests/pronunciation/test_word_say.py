@@ -272,3 +272,46 @@ def test_attempts_are_kept_without_audio_and_guide_the_next_try(database_url: st
     with pool.connection() as conn:
         conn.execute("delete from say_attempts")
     pool.close()
+
+
+def test_analysing_the_same_recording_again_is_one_attempt(database_url: str) -> None:
+    """20 Nov 2026: "Phân tích lại" on the same take, or a retry after a lost reply, added an
+    attempt, so one recording counted twice ("2/2 lần gần đây")."""
+    from uuid import uuid4
+
+    from psycopg_pool import ConnectionPool
+
+    pool = ConnectionPool(database_url, open=True)
+    with pool.connection() as conn:
+        row = conn.execute("insert into learners(display_name) values ('T') returning id::text")
+        learner = row.fetchone()
+        assert learner is not None
+
+    def score(audio: bytes, phones: list[str]) -> dict[str, Any]:
+        return {
+            "recognised": [],
+            "phones": [
+                {
+                    "phone": p,
+                    "gop": -1.5 if p == "oː" else -0.1,
+                    "competitor": "aː" if p == "oː" else None,
+                    "peak": 0.8,
+                    "other_peak": 0.1,
+                }
+                for p in phones
+            ],
+        }  # fmt: skip  (/ɔː/ low every time)
+
+    s = WordSay(VOCAB, IMPORTED, learner[0], score, lambda: pool, TIPS)
+    take = uuid4()
+    first = asyncio.run(s.say(learner[0], "important:adjective", "voice-v1", speech(), take))
+    again = asyncio.run(s.say(learner[0], "important:adjective", "voice-v1", speech(), take))
+    assert first["guide"] == [] and again["guide"] == []  # still one attempt, not "2 of 2"
+    with pool.connection() as conn:
+        n = conn.execute("select count(*) from say_attempts where learner_id=%s", (learner[0],))
+        assert n.fetchone() == (1,)
+    new = asyncio.run(s.say(learner[0], "important:adjective", "voice-v1", speech(), uuid4()))
+    assert new["guide"] and new["guide"][0]["times"] == 2  # a new recording is a new attempt
+    with pool.connection() as conn:
+        conn.execute("delete from say_attempts where learner_id=%s", (learner[0],))
+    pool.close()

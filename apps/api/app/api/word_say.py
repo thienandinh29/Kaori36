@@ -1,6 +1,7 @@
 """Routes for saying a vocabulary word (specs/pronunciation/step-3.7.md)."""
 
-from typing import Any
+from typing import Annotated, Any
+from uuid import UUID
 
 from fastapi import APIRouter, Query, Request
 
@@ -26,10 +27,11 @@ def create_router(service: WordSay) -> APIRouter:
         learner_id: str = Query(min_length=1, max_length=200),
         word: str = Query(min_length=1, max_length=120),
         consent: str = Query(min_length=1, max_length=40),
+        take: Annotated[UUID | None, Query()] = None,  # the browser's id for this recording
     ) -> dict[str, Any]:
         audio = await request.body()
         if len(audio) > MAX_BYTES:
             return {"ok": False, "problems": ["too_long"], "phones": []}
-        return await service.say(learner_id, word, consent, audio)
+        return await service.say(learner_id, word, consent, audio, take)
 
     return router

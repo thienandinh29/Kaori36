@@ -35,6 +35,7 @@ const forwardedParams = [
   "topic",
   "prompt_id",
   "consent",
+  "take",
   "keep",
   "status",
   "minutes",

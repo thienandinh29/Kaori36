@@ -36,9 +36,12 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
   // Read once on first render; it only matters after a take exists (never in the server's HTML).
   const [agreed, setAgreed] = useState(consented);
   const [recording, setRecording] = useState(false);
-  const [take, setTake] = useState<{ url: string; wav: ArrayBuffer } | null>(
-    null,
-  );
+  // `id` names this recording: analysing it again replaces its attempt instead of adding one.
+  const [take, setTake] = useState<{
+    url: string;
+    wav: ArrayBuffer;
+    id: string;
+  } | null>(null);
   const [result, setResult] = useState<SayResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [noMic, setNoMic] = useState(false);
@@ -98,11 +101,13 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
             (_, i) => audio.getChannelData(i),
           );
           const wav = toServerWav(channels, audio.sampleRate);
+          const id = crypto.randomUUID();
           setTake({
             wav,
+            id,
             url: URL.createObjectURL(new Blob([wav], { type: "audio/wav" })),
           });
-          if (auto.current) void analyse(wav);
+          if (auto.current) void analyse(wav, id);
         } catch {
           setResult({
             ok: false,
@@ -128,8 +133,11 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
     if (timer.current) window.clearTimeout(timer.current);
     if (recorder.current?.state === "recording") recorder.current.stop();
   }
-  async function analyse(wav: ArrayBuffer | undefined = take?.wav) {
-    if (!wav || !learner || !status) return;
+  async function analyse(
+    wav: ArrayBuffer | undefined = take?.wav,
+    id: string | undefined = take?.id,
+  ) {
+    if (!wav || !id || !learner || !status) return;
     setBusy(true);
     try {
       setResult(
@@ -138,6 +146,7 @@ export function SayWord({ lemma, pos }: { lemma: string; pos: string }) {
           `${lemma}:${pos}`,
           status.consent,
           wav,
+          id,
         ),
       );
     } catch {
