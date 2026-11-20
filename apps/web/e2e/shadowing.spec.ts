@@ -115,6 +115,7 @@ test("a YouTube link opens the official player with loop and speed", async ({
         let t = 3;
         window.YT = { Player: function (el, o) {
           window.ytCalls.push(["new", o.host, o.videoId]);
+          setTimeout(() => o.events.onReady(), 50); // as YouTube does: ready a little later
           return {
             getCurrentTime: () => (t += 4),
             seekTo: (s) => window.ytCalls.push(["seek", s]),
@@ -140,6 +141,8 @@ test("a YouTube link opens the official player with loop and speed", async ({
   await v.getByLabel("Link YouTube:").fill("https://youtu.be/dQw4w9WgXcQ?si=x");
   await v.getByRole("button", { name: "Mở video" }).click();
   await expect(page.getByTestId("shadowing-player")).toBeVisible();
+  // The controls wait for the player (before, a tap could come too early and set nothing).
+  await expect(v.getByRole("button", { name: "Đặt điểm A" })).toBeEnabled();
   await v.getByRole("button", { name: "Đặt điểm A" }).click();
   await v.getByRole("button", { name: "Đặt điểm B" }).click();
   await expect(v).toContainText("Đoạn lặp: 0:07 – 0:11");
