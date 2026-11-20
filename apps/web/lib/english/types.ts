@@ -206,6 +206,23 @@ export interface Task1Check {
   overview: boolean;
 }
 
+/** Step 2.7: text that is not the learner's own answer, found by code before any band. */
+export interface EssayGuard {
+  words: number;
+  repeated_words: number;
+  repeated_sentences: string[];
+  template_words: number;
+  templates: string[];
+  /** words minus repeated and templated ones: what counts towards the length a band needs */
+  own_words: number;
+  /** too much of the essay is repeated or templated: no band */
+  padded: boolean;
+  prompt_overlap: number | null;
+  prompt_words_used: string[];
+  /** few of the prompt's words used: a warning, never a judgement */
+  off_topic: boolean;
+}
+
 export interface EssaySummary {
   id: string;
   prompt_id: string;
@@ -343,6 +360,8 @@ export interface EssayResult {
   /** which task this essay answered; absent on essays analysed before step 2.5 */
   task?: 1 | 2;
   task1?: Task1Check;
+  /** step 2.7 on; absent on essays analysed before */
+  guard?: EssayGuard;
   /** step 2.3 on; null when no band is shown (then `scoreUnavailableVi` says why) */
   score?: BandRange | null;
   scoreUnavailableVi?: string | null;

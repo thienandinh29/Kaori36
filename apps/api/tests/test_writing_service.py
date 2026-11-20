@@ -385,11 +385,39 @@ def test_feedback_is_hidden_from_other_learners_and_stops_at_the_budget(setup: S
     assert "DEEPSEEK_API_KEY" in r["feedback_unavailable_vi"]
 
 
+_WORDS = (
+    "Hanoi rivers Hue parks Danang streets Saigon beaches Cantho markets Haiphong schools "
+    "Vinh lakes Dalat canals Nhatrang farms Quynhon forests Pleiku ports Camau roads"
+)
+_PAIRS = list(zip(_WORDS.split()[::2], _WORDS.split()[1::2], strict=True))
+# Distinct sentences (no run of eight words repeats): step 2.7 counts every word as the learner's.
+LONG_ESSAY = " ".join(
+    f"In {p} plastic bags still block the {t} every week, and {k} people clean them."
+    for k, (p, t) in enumerate(_PAIRS, start=2)
+)
+
+
+def test_a_padded_essay_gets_no_band_and_says_why(setup: Setup) -> None:
+    from tests.writing.test_band import CALIBRATED, FakeScorer
+
+    svc, learner, db = setup
+    step = replace(step_for(learner), model=None, scorer=FakeScorer(4.0),
+                   scorer_config=CALIBRATED, client=None)  # fmt: skip
+    r = own_essay(svc, learner, db, step, LONG_ESSAY)["result"]
+    assert r["guard"]["padded"] is False and r["guard"]["own_words"] == r["words"]
+    assert r["score"] is not None
+    tomorrow = NOW + timedelta(days=1)  # the fixture allows 2 essays a day
+    doubled = own_essay(svc, learner, db, step, LONG_ESSAY + "\n\n" + LONG_ESSAY, now=tomorrow)
+    r = doubled["result"]
+    assert r["guard"]["padded"] and r["guard"]["own_words"] == r["words"] // 2
+    assert r["score"] is None and "câu lặp lại" in r["score_unavailable_vi"]
+
+
 def test_a_model_far_from_the_scorer_makes_the_band_uncertain(setup: Setup) -> None:
     from tests.writing.test_band import CALIBRATED, FakeScorer
 
     svc, learner, db = setup
-    long_text = (FIXTURES["clean"]["text"] + " ") * 12  # over 150 words, so a band is computed
+    long_text = LONG_ESSAY  # over 150 of the learner's own words, so a band is computed
     step = replace(
         step_for(learner),
         model=writing_model(db, FakeDeepSeek(feedback_bands=8.5)),
@@ -406,7 +434,7 @@ def test_the_owners_preview_compares_with_their_earlier_essays(setup: Setup) -> 
     from tests.writing.test_band import CONFIG, FakeScorer
 
     svc, learner, db = setup
-    long_text = (FIXTURES["clean"]["text"] + " ") * 12  # over 150 words
+    long_text = LONG_ESSAY  # over 150 of the learner's own words
     first = replace(step_for(learner), model=None, scorer=FakeScorer(3.4), scorer_config=CONFIG,
                     client=None)  # fmt: skip
     r = own_essay(svc, learner, db, first, long_text)["result"]

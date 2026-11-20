@@ -165,9 +165,9 @@ test("an essay is written, measured by the worker, and deleted", async ({
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
   await page.locator('a[href="/viet/t2-plastic-ban"]').click();
   const essay =
-    "Plastic bags is cheap. However, they pollute rivers.\n\nIn conclusion, a ban is sensible.";
+    "Plastic bags is cheap. However, they pollute rivers. Paper bags is expensive.\n\nIn conclusion, a ban is sensible.";
   await page.getByRole("textbox").fill(essay);
-  await expect(page.getByTestId("word-count")).toContainText("14 từ");
+  await expect(page.getByTestId("word-count")).toContainText("18 từ");
   await expect(page.getByTestId("word-count")).toContainText("cần ít nhất 250");
   const send = page.getByRole("button", { name: "Gửi bài" });
   await expect(send).toBeDisabled(); // the notice comes first
@@ -179,27 +179,68 @@ test("an essay is written, measured by the worker, and deleted", async ({
     },
   );
   const result = page.getByTestId("essay-result");
-  await expect(result).toContainText("14 / 250");
+  await expect(result).toContainText("18 / 250");
   await expect(result).toContainText("không phải điểm IELTS");
   await expect(result).toContainText("Đối lập");
   await expect(result).toContainText("Kết luận");
   if (process.env.LANGUAGETOOL_URL) {
     // the grammar check (specs/writing/step-2.2.md): this learner may see the draft error map
+    // "Sửa trước" (step 2.6): the repeated error is one item; the style can be switched.
+    const fix = page.getByTestId("fix-first");
+    await expect(fix.locator('[data-kind="pattern"]')).toContainText(
+      "lặp 2 lần",
+    );
+    await fix.getByRole("button", { name: "Tôi tự sửa" }).click();
+    await expect(fix.locator('[data-kind="pattern"]')).not.toContainText(
+      "Gợi ý sửa",
+    );
+    await fix.getByRole("button", { name: "Xem cách sửa" }).click();
+    await expect(fix.locator('[data-kind="pattern"]')).toContainText("are");
+    await fix.getByRole("button", { name: "Xem luôn cách sửa" }).click();
+    // the full list is folded until the learner opens it
     const grammar = page.getByTestId("essay-grammar");
+    await expect(grammar.locator("ul.en-issues")).toBeHidden();
+    await grammar.getByText(/Tất cả lỗi ngữ pháp \(\d+\)/).click();
     await expect(
-      grammar.locator('[data-errant-type="R:VERB:SVA"]'),
+      grammar.locator('[data-errant-type="R:VERB:SVA"]').first(),
     ).toContainText("are");
     await expect(
-      grammar.getByRole("link", { name: /Đã ghi vào lộ trình/ }),
+      grammar.getByRole("link", { name: /Đã ghi vào lộ trình/ }).first(),
     ).toBeVisible();
     // hint first: the learner fixes the sentence themselves (step 2.4)
-    await grammar.getByRole("button", { name: "Tự sửa câu này" }).click();
+    await grammar
+      .getByRole("button", { name: "Tự sửa câu này" })
+      .first()
+      .click();
     await page.getByLabel("Câu bạn sửa").fill("Plastic bags are cheap.");
     await page.getByRole("button", { name: "Kiểm tra" }).click();
     await expect(
       page.getByText("Đúng rồi! Bạn đã tự sửa được lỗi này."),
     ).toBeVisible();
   }
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Xóa bài viết" }).click();
+  await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
+});
+
+test("repeated and memorised text is named first and not counted (step 2.7)", async ({
+  page,
+}) => {
+  await asLearner(page, LEARNER);
+  await page.goto("/viet/t2-plastic-ban");
+  const part =
+    "In this day and age, plastic bags pollute the rivers near our town every single week.";
+  await page.getByRole("textbox").fill(`${part}\n\n${part}`);
+  await page.getByLabel("Tôi đã đọc và đồng ý").check();
+  await page.getByRole("button", { name: "Gửi bài" }).click();
+  await expect(page.getByRole("heading", { name: "Đã phân tích" })).toBeVisible(
+    { timeout: 30_000 },
+  );
+  const fix = page.getByTestId("fix-first");
+  await expect(fix.locator("li").first()).toContainText(
+    "Nhiều đoạn không phải lời của bạn",
+  );
+  await expect(page.getByTestId("own-words")).toContainText("/ 250");
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Xóa bài viết" }).click();
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
@@ -227,6 +268,10 @@ test("a Task 1 report is checked against its chart, with no band", async ({
   const checks = page.getByTestId("task1-checks");
   await expect(checks.getByTestId("unsupported-number")).toHaveCount(1);
   await expect(checks.getByTestId("unsupported-number")).toContainText("90%");
+  // the number not in the chart comes first in "Sửa trước" (step 2.6)
+  await expect(
+    page.getByTestId("fix-first").locator("li").first(),
+  ).toContainText("90%");
   await expect(page.getByTestId("chart")).toBeVisible(); // the chart stays beside the result
   await expect(page.getByTestId("essay-band")).toHaveCount(0); // Task 1 never gets a band
   await expect(page.getByText("Chưa ước lượng band cho Task 1.")).toBeVisible();
