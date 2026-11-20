@@ -10,6 +10,14 @@ import {
   type ReviewTexts,
 } from "@/lib/reading/review";
 import { DataError } from "@/lib/decode";
+import {
+  parsePassageList,
+  parsePassageResult,
+  parsePassageView,
+  type PassageList,
+  type PassageResult,
+  type PassageView,
+} from "@/lib/listening/passages";
 import { parseToday, type Today } from "@/lib/english/today";
 import { parseMaps, type Maps } from "@/lib/english/maps";
 import {
@@ -489,6 +497,40 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       );
     },
     /** The proxied WAV of one sentence, made by the server voice (never the text itself). */
+    /** Whole passages to listen to (specs/listening-reading/step-4.4c.md). */
+    async listeningPassages(learnerId: string): Promise<PassageList> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePassageList(await request(`listening/passages?${q}`));
+    },
+    async listeningPassage(
+      learnerId: string,
+      slug: string,
+    ): Promise<PassageView> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePassageView(
+        await request(`listening/passages/${encodeURIComponent(slug)}?${q}`),
+      );
+    },
+    passageAudioUrl(
+      slug: string,
+      part: number,
+      pace: "normal" | "slow",
+    ): string {
+      const q = new URLSearchParams({ pace });
+      return `/api/backend/listening/passages/${encodeURIComponent(slug)}/audio/${part}?${q}`;
+    },
+    async submitPassage(
+      learnerId: string,
+      slug: string,
+      answers: Record<string, unknown>,
+    ): Promise<PassageResult> {
+      return parsePassageResult(
+        await post(`listening/passages/${encodeURIComponent(slug)}/submit`, {
+          learner_id: learnerId,
+          answers,
+        }),
+      );
+    },
     listeningAudioUrl(itemId: string, pace: "normal" | "slow"): string {
       const q = new URLSearchParams({ pace });
       return `/api/backend/listening/items/${encodeURIComponent(itemId)}/audio?${q}`;

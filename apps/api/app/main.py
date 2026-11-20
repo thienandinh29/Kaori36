@@ -142,7 +142,11 @@ def create_app(
         settings.reading_texts_dir,
         SpeechClient(settings.tts_url) if settings.tts_url else None,
     )
-    app.include_router(listening_routes.create_router(listening))
+    from app.services.listening_passages import ListeningPassages
+
+    app.include_router(
+        listening_routes.create_router(listening, ListeningPassages(reading, listening.speech))
+    )
     app.include_router(
         today_routes.create_router(TodayService(grammar, reading=reading, listening=listening))
     )

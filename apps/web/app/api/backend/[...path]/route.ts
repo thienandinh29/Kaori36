@@ -16,7 +16,7 @@ const allowedEnglish = new RegExp(
     `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|reading/review/texts/${SLUG}|` +
     `rechecks/next|rechecks/${UUID}/answer|today|maps|` +
     `reading/texts|reading/texts/${SLUG}|reading/texts/${SLUG}/tests|reading/tests/${UUID}/submit|reading/items/${SLUG}/answer|` +
-    `listening/texts|listening/texts/${SLUG}|listening/items/${SLUG}/audio|listening/items/${SLUG}/answer|` +
+    `listening/texts|listening/texts/${SLUG}|listening/passages|listening/passages/${SLUG}|listening/passages/${SLUG}/audio/[0-9]{1,3}|listening/passages/${SLUG}/submit|listening/items/${SLUG}/audio|listening/items/${SLUG}/answer|` +
     `shadowing/texts|shadowing/texts/${SLUG}|vocab/say|vocab/say/status|vocab/say/focus|` +
     `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
     `review/batches/${UUID}/items/${UUID}:[0-9]{1,3}|review/batches/${UUID}/items/${UUID}:[0-9]{1,3}/audio)$`,

@@ -70,6 +70,8 @@ test("a learner hears a sentence, writes it and sees each word marked", async ({
       );
       return route.fulfill({ contentType: "audio/wav", body: silentWav() });
     }
+    if (url.pathname.endsWith("/listening/passages"))
+      return json({ available: true, texts: [] }); // whole passages: step 4.4c
     if (url.pathname.endsWith("/listening/texts"))
       return json({
         available: true,
