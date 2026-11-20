@@ -10,7 +10,7 @@ import re
 import unicodedata
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass, replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from uuid import UUID
@@ -31,7 +31,7 @@ from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
 from app.services.plans import NAMES_VI, Plans
 from app.services.vocabulary import start_of_day
-from app.writing import competency, feedback, guardrails, llm_corrections, task1
+from app.writing import competency, feedback, guardrails, llm_corrections, repair, task1, tracker
 from app.writing.analysis import analyse, load_linking_words, words
 from app.writing.error_map import ErrorMap, load_error_map
 from app.writing.feedback import FeedbackOut
@@ -65,6 +65,11 @@ NOTE_VI = "Điểm ước lượng và nhận xét chi tiết sẽ có ở các 
 ACCEPTED_VI = "Đúng rồi! Bạn đã tự sửa được lỗi này."
 STILL_ERROR_VI = "Câu vẫn còn lỗi ngữ pháp hoặc chính tả. Thử lại nhé."
 NOT_CLOSER_VI = "Câu chưa sửa đúng chỗ lỗi. Đọc lại gợi ý rồi thử lại nhé."
+PATTERN_DAYS = 90
+DELETED_VI = (
+    "Bạn đã xoá phần có lỗi thay vì sửa nó. Giữ ý của câu và chỉ sửa chỗ được đánh dấu nhé."
+)
+UNCHANGED_VI = "Chỗ được đánh dấu vẫn như cũ. Sửa đúng chỗ đó rồi thử lại nhé."
 LAST_TRY_VI = "Chưa đúng. Đây là cách sửa, bạn so sánh với câu của mình nhé."
 SHOWN_VI = "Đây là cách sửa, bạn so sánh với câu của mình nhé."
 FEEDBACK_OFF_VI = "Chưa có nhận xét bằng AI: máy chủ chưa cấu hình mô hình (DEEPSEEK_API_KEY)."
@@ -137,6 +142,23 @@ class WritingService:
             self._course = (error_map, course, row[0], ids)
         return self._course
 
+    def patterns(self, learner_id: str, *, now: datetime | None = None) -> dict[str, Any]:
+        """Errors this learner repeats across essays in the last 90 days (step 2.8)."""
+        since = (now or datetime.now(UTC)) - timedelta(days=PATTERN_DAYS)
+        with self.pool().connection() as conn:
+            learner = self._learner(conn, learner_id)
+            rows = conn.execute(
+                "select result from essays where learner_id=%s and status='done' "
+                "and submitted_at >= %s order by submitted_at desc, id desc",
+                (learner, since),
+            ).fetchall()
+        results = [r[0] or {} for r in rows]
+        return {
+            "essays": len(results),
+            "days": PATTERN_DAYS,
+            "patterns": [p.to_json() for p in tracker.patterns(results)],
+        }
+
     def correct(
         self,
         learner_id: str,
@@ -178,10 +200,19 @@ class WritingService:
             at = issue["start"] - issue["sentence_start"]
             answer = original[:at] + issue["suggestion"] + original[at + len(issue["text"]) :]
             feedback_vi = SHOWN_VI
+            outcome: repair.Outcome = "check"
             if not show_answer:
                 text = unicodedata.normalize("NFC", sentence or "").strip()
                 if not 0 < len(text) <= 1000:
                     raise HTTPException(422, "Câu cần từ 1 đến 1.000 ký tự.")
+                # Step 2.8: removing the error is not repairing it.
+                outcome = repair.judge(original, at, at + len(issue["text"]), text)
+            if not show_answer and outcome != "check":
+                tries += 1
+                accepted = False
+                feedback_vi = DELETED_VI if outcome == "deleted" else UNCHANGED_VI
+                logger.info("self-correction refused", extra={"outcome": outcome})
+            elif not show_answer:
                 if self.languagetool is None:
                     raise HTTPException(503, "Chưa kiểm tra được: máy chủ chưa bật LanguageTool.")
                 try:

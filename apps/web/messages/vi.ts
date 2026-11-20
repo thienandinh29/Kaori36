@@ -1229,6 +1229,14 @@ export const vi = {
       fixOverview:
         "Bài chưa có câu tổng quan (overview): nêu xu hướng hoặc điểm nổi bật nhất trước khi đi vào số liệu.",
       allIssues: "Tất cả lỗi ngữ pháp ({n})",
+      patternsTitle: "Lỗi bạn hay lặp lại",
+      patternsNote:
+        "Từ {n} bài đã phân tích trong {d} ngày qua: lỗi ngữ pháp LanguageTool tìm thấy trong 2 bài trở lên. Một bài chưa đủ để nói bạn đã tiến bộ hay chưa.",
+      patternsNone: "Chưa có lỗi nào lặp lại trong 2 bài trở lên.",
+      patternsCount: "{e} lỗi trong {n} bài",
+      patternsStill: "Vẫn còn trong bài gần nhất.",
+      patternsNotLatest: "Không có trong bài gần nhất.",
+      patternsPractise: "Luyện phần này",
       guardOffTopic:
         "Bài dùng rất ít từ của đề bài: hãy đọc lại đề và chắc rằng bạn trả lời đúng câu hỏi. (Máy chỉ đếm từ, có thể nhầm nếu bạn diễn đạt bằng từ khác.)",
       guardPadded:

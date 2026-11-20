@@ -5,6 +5,7 @@ import { englishClient } from "@/lib/english/client";
 import type { EssaySummary, WritingPrompt } from "@/lib/english/types";
 import { vi } from "@/messages/vi";
 import { Sena } from "@/components/sena/sena";
+import { ErrorPatterns } from "./error-patterns";
 import { Problem } from "./problem";
 import { useLearner } from "./use-learner";
 
@@ -61,6 +62,7 @@ export function WritingHome() {
           </div>
         </div>
       </section>
+      {learner && <ErrorPatterns learner={learner} />}
       <section className="en-card">
         <h2>{w.prompts}</h2>
         {prompts.length === 0 && <p className="en-muted">{w.noPrompts}</p>}
