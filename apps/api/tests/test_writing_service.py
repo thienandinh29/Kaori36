@@ -479,7 +479,8 @@ def test_two_wrong_tries_show_the_answer_and_move_nothing(setup: Setup) -> None:
     before = p_known(db, learner)
     first = fixer.correct(learner, essay_id, issue, "She go to school every day!", now=NOW)
     assert first["accepted"] is False and first["tries"] == 1 and first["answer"] is None
-    assert first["feedback_vi"] == "Câu vẫn còn lỗi ngữ pháp hoặc chính tả. Thử lại nhé."
+    # the marked word is untouched (step 2.8): said before LanguageTool is even asked
+    assert first["feedback_vi"] == "Chỗ được đánh dấu vẫn như cũ. Sửa đúng chỗ đó rồi thử lại nhé."
     # "went" and no "to": LanguageTool is satisfied, but it is further from the correction
     second = fixer.correct(learner, essay_id, issue, "She went school every day.", now=NOW)
     assert second["tries"] == 2 and second["answer"] == "She goes to school every day."
@@ -489,6 +490,35 @@ def test_two_wrong_tries_show_the_answer_and_move_nothing(setup: Setup) -> None:
     assert err.value.status_code == 409
     state = svc.get(learner, essay_id)["corrections"][str(issue)]
     assert state == {"tries": 2, "accepted": False, "answer_shown": True}
+
+
+def test_errors_repeated_across_essays_are_tracked_for_their_writer_only(setup: Setup) -> None:
+    svc, learner, db = setup
+    assert svc.patterns(learner, now=NOW)["patterns"] == []
+    counted_issue(svc, learner, db, NOW)
+    assert svc.patterns(learner, now=NOW)["patterns"] == []  # one essay is not a pattern
+    counted_issue(svc, learner, db, NOW + timedelta(days=1))
+    out = svc.patterns(learner, now=NOW + timedelta(days=1))
+    assert out["essays"] == 2 and out["days"] == 90
+    p = out["patterns"][0]
+    assert (p["node"], p["essays"], p["in_latest"]) == ("present-simple", 2, True)
+    assert p["name_vi"] and "go" in p["example"]
+    with psycopg.connect(db) as conn:
+        row = conn.execute(
+            "insert into learners(display_name) values ('B') returning id"
+        ).fetchone()
+    assert row is not None
+    assert svc.patterns(str(row[0]), now=NOW)["patterns"] == []  # another learner's essays
+    later = svc.patterns(learner, now=NOW + timedelta(days=120))
+    assert later["essays"] == 0  # older than 90 days
+
+
+def test_removing_the_error_is_refused_and_counts_as_a_try(setup: Setup) -> None:
+    svc, learner, db = setup
+    essay_id, issue = counted_issue(svc, learner, db, NOW)
+    out = corrector(svc).correct(learner, essay_id, issue, "She is here.", now=NOW)
+    assert out["accepted"] is False and out["tries"] == 1
+    assert "xoá phần có lỗi" in out["feedback_vi"]
 
 
 def test_a_correct_fix_after_the_hint_is_aided_evidence(setup: Setup) -> None:
@@ -509,6 +539,9 @@ def test_a_correct_fix_after_the_hint_is_aided_evidence(setup: Setup) -> None:
     assert rule and "gợi ý" in rule[0]
 
 
+FIXED = "She goes to school every day."
+
+
 def test_showing_the_answer_and_what_cannot_be_corrected(setup: Setup) -> None:
     svc, learner, db = setup
     essay_id, issue = counted_issue(svc, learner, db, NOW)
@@ -523,7 +556,7 @@ def test_showing_the_answer_and_what_cannot_be_corrected(setup: Setup) -> None:
     other_id, other_issue = counted_issue(svc, learner, db, NOW + timedelta(days=1))
     no_lt = WritingService(svc.pool, WRITING, courses_dir=COURSES)
     cases += [
-        (lambda: no_lt.correct(learner, other_id, other_issue, "She goes.", now=NOW), 503),
+        (lambda: no_lt.correct(learner, other_id, other_issue, FIXED, now=NOW), 503),
         (lambda: fixer.correct(learner, other_id, other_issue, "  ", now=NOW), 422),
     ]
     for call, code in cases:

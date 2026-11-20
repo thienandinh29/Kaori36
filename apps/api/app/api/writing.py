@@ -98,6 +98,11 @@ def create_router(service: WritingService, phrases: PhraseService | None = None)
     def essays(learner_id: str = Learner) -> list[EssaySummary]:
         return [EssaySummary(**e) for e in service.list(learner_id)]
 
+    @router.get("/essays/patterns")
+    def patterns(learner_id: str = Learner) -> dict[str, Any]:
+        """Errors the learner repeats across essays (specs/writing/step-2.8.md)."""
+        return service.patterns(learner_id)
+
     @router.get("/essays/{essay_id}")
     def essay(essay_id: str, learner_id: str = Learner) -> Essay:
         return Essay(**service.get(learner_id, essay_id))

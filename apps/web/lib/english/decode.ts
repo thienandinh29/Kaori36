@@ -9,6 +9,7 @@ import {
   type ChartFigure,
   type Task1Check,
   type EssayGuard,
+  type ErrorPatterns,
   type Complexity,
   type CheckState,
   type CorrectionResult,
@@ -433,6 +434,30 @@ function parseGuard(value: unknown): EssayGuard {
         : probability(d.prompt_overlap),
     prompt_words_used: strings(d.prompt_words_used),
     off_topic: bool(d.off_topic),
+  };
+}
+
+export function parseErrorPatterns(value: unknown): ErrorPatterns {
+  const d = record(value);
+  return {
+    essays: int(d.essays),
+    days: int(d.days),
+    patterns: array(d.patterns).map((x) => {
+      const r = record(x);
+      const p = {
+        key: string(r.key),
+        node: optionalString(r.node),
+        name_vi: optionalString(r.name_vi),
+        essays: int(r.essays),
+        errors: int(r.errors),
+        in_latest: bool(r.in_latest),
+        recent: int(r.recent),
+        example: string(r.example),
+        suggestion: optionalString(r.suggestion),
+      };
+      if (p.essays < 2 || p.errors < p.essays) throw new DataError("contract");
+      return p;
+    }),
   };
 }
 

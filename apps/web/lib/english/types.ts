@@ -223,6 +223,26 @@ export interface EssayGuard {
   off_topic: boolean;
 }
 
+/** An error the learner made in two or more essays (specs/writing/step-2.8.md). */
+export interface ErrorPattern {
+  key: string;
+  node: string | null;
+  name_vi: string | null;
+  essays: number;
+  errors: number;
+  /** in the most recent analysed essay */
+  in_latest: boolean;
+  recent: number;
+  example: string;
+  suggestion: string | null;
+}
+
+export interface ErrorPatterns {
+  essays: number;
+  days: number;
+  patterns: ErrorPattern[];
+}
+
 export interface EssaySummary {
   id: string;
   prompt_id: string;

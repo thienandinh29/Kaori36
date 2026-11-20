@@ -212,6 +212,10 @@ test("an essay is written, measured by the worker, and deleted", async ({
       .getByRole("button", { name: "Tự sửa câu này" })
       .first()
       .click();
+    // removing the error is not fixing it (step 2.8)
+    await page.getByLabel("Câu bạn sửa").fill("Cheap.");
+    await page.getByRole("button", { name: "Kiểm tra" }).click();
+    await expect(page.getByText(/xoá phần có lỗi/)).toBeVisible();
     await page.getByLabel("Câu bạn sửa").fill("Plastic bags are cheap.");
     await page.getByRole("button", { name: "Kiểm tra" }).click();
     await expect(
@@ -221,6 +225,41 @@ test("an essay is written, measured by the worker, and deleted", async ({
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Xóa bài viết" }).click();
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
+});
+
+test("an error made in two essays is shown on the writing page (step 2.8)", async ({
+  page,
+}) => {
+  test.skip(!process.env.LANGUAGETOOL_URL, "needs LanguageTool");
+  await asLearner(page, LEARNER);
+  const made: string[] = [];
+  for (const text of [
+    "Plastic bags is cheap, so shoppers take too many of them every week.",
+    "Paper bags is heavier, yet they break down in rivers within a few months.",
+  ]) {
+    await page.goto("/viet/t2-plastic-ban");
+    await page.getByRole("textbox").fill(text);
+    const consent = page.getByLabel("Tôi đã đọc và đồng ý");
+    if (await consent.count()) await consent.check(); // remembered after the first essay
+    await page.getByRole("button", { name: "Gửi bài" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Đã phân tích" }),
+    ).toBeVisible({ timeout: 30_000 });
+    made.push(page.url());
+  }
+  await page.goto("/viet");
+  const card = page.getByTestId("error-patterns");
+  await expect(card).toContainText("Lỗi bạn hay lặp lại");
+  await expect(card).toContainText("trong 2 bài");
+  await expect(card).toContainText("Vẫn còn trong bài gần nhất.");
+  for (const url of made) {
+    await page.goto(url);
+    page.once("dialog", (dialog) => dialog.accept());
+    await page.getByRole("button", { name: "Xóa bài viết" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Luyện viết" }),
+    ).toBeVisible();
+  }
 });
 
 test("repeated and memorised text is named first and not counted (step 2.7)", async ({

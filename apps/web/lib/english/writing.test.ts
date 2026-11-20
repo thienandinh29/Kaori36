@@ -561,3 +561,24 @@ describe("rewrites and saved phrases (step 2.4b)", () => {
     });
   });
 });
+
+describe("error patterns (step 2.8)", () => {
+  it("decodes the patterns and refuses a pattern from one essay", async () => {
+    const { parseErrorPatterns } = await import("./decode");
+    const p = {
+      key: "sva", node: "sva", name_vi: "Hoà hợp chủ ngữ", essays: 2, errors: 3,
+      in_latest: true, recent: 2, example: "Bags is cheap.", suggestion: "are",
+    }; // prettier-ignore
+    expect(
+      parseErrorPatterns({ essays: 3, days: 90, patterns: [p] }).patterns[0]!
+        .node,
+    ).toBe("sva");
+    expect(() =>
+      parseErrorPatterns({
+        essays: 3,
+        days: 90,
+        patterns: [{ ...p, essays: 1, errors: 1 }],
+      }),
+    ).toThrow();
+  });
+});

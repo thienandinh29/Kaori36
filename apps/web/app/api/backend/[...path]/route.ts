@@ -10,7 +10,7 @@ const SLUG = "[a-z0-9]+(?:-[a-z0-9]+)*";
 const allowedEnglish = new RegExp(
   `^(level-tests|level-tests/${UUID}/answers|roadmap|milestones/${SLUG}/tests|` +
     `nodes/${SLUG}/practice|grammar-runs/${UUID}/answers|vocab/session|vocab/levels|vocab/answers|vocab/checks|` +
-    `writing/prompts|essays|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
+    `writing/prompts|essays|essays/patterns|essays/${UUID}|essays/${UUID}/corrections|essays/${UUID}/rewrites|` +
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
     `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|reading/review/texts/${SLUG}|` +

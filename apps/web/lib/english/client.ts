@@ -62,6 +62,7 @@ import {
   parseCorrection,
   parseEssay,
   parseEssaySummaries,
+  parseErrorPatterns,
   parseLevelResult,
   parseRoadmap,
   parseStep,
@@ -77,6 +78,7 @@ import type {
   PhraseSession,
   Essay,
   EssaySummary,
+  ErrorPatterns,
   Level,
   LevelResult,
   Roadmap,
@@ -289,6 +291,11 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     async essays(learnerId: string): Promise<EssaySummary[]> {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseEssaySummaries(await request(`essays?${q}`));
+    },
+    /** Errors repeated across the learner's essays (specs/writing/step-2.8.md). */
+    async errorPatterns(learnerId: string): Promise<ErrorPatterns> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseErrorPatterns(await request(`essays/patterns?${q}`));
     },
     async essay(learnerId: string, essayId: string): Promise<Essay> {
       const q = new URLSearchParams({ learner_id: learnerId });
