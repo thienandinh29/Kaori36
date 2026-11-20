@@ -2396,3 +2396,19 @@ svg.nt-trail {
 .nt-focus p {
   margin: 2px 0;
 }
+
+/* "Sửa trước" (specs/writing/step-2.6.md) */
+.en-fix-first {
+  display: grid;
+  gap: 0.75rem;
+  padding-left: 1.25rem;
+}
+.en-fix-first li q {
+  display: block;
+  margin-top: 0.25rem;
+}
+details[data-testid="all-issues"] > summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}

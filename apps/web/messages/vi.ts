@@ -1216,6 +1216,19 @@ export const vi = {
       },
       strength: "Điểm mạnh",
       toImprove: "Cần cải thiện",
+      fixTitle: "Sửa trước",
+      fixNote:
+        "Tối đa 5 điều nên sửa trước: đề bài và dùng từ trước, rồi các lỗi bạn lặp lại nhiều lần. Toàn bộ lỗi vẫn ở phần Ngữ pháp bên dưới.",
+      fixStyle: "Cách sửa",
+      fixDirect: "Xem luôn cách sửa",
+      fixIndirect: "Tôi tự sửa",
+      fixShow: "Xem cách sửa",
+      fixRepeated: "lặp {n} lần",
+      fixOtherError: "Lỗi khác",
+      fixNumber: "Số liệu “{n}” không có trong biểu đồ: kiểm tra lại.",
+      fixOverview:
+        "Bài chưa có câu tổng quan (overview): nêu xu hướng hoặc điểm nổi bật nhất trước khi đi vào số liệu.",
+      allIssues: "Tất cả lỗi ngữ pháp ({n})",
       droppedPoints:
         "Đã bỏ {n} nhận xét vì câu trích không có trong bài của bạn.",
       fromAi: "Gợi ý từ AI",

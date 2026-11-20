@@ -16,6 +16,8 @@ import { stillWorking } from "@/lib/english/writing";
 import { vi } from "@/messages/vi";
 import { ChartFigureView } from "./chart-figure";
 import { EssayFeedbackView } from "./essay-feedback";
+import { FixFirst } from "./fix-first";
+import { Marked } from "./marked";
 import { Problem } from "./problem";
 import { pendingRewrite, RewritePanel } from "./rewrite-panel";
 import { SelfCorrect } from "./self-correct";
@@ -182,19 +184,6 @@ export function notCountedReason(
           : w.notRecordedDraft;
 }
 
-/** The sentence with the error's span marked. */
-function Marked({ issue }: { issue: GrammarIssue }) {
-  const from = issue.start - issue.sentence_start;
-  const to = from + issue.end - issue.start;
-  return (
-    <p lang="en" className="en-issue-sentence">
-      {issue.sentence.slice(0, from)}
-      <mark>{issue.sentence.slice(from, to)}</mark>
-      {issue.sentence.slice(to)}
-    </p>
-  );
-}
-
 export function Grammar({
   result,
   essay,
@@ -219,39 +208,48 @@ export function Grammar({
       <h2>{w.grammar}</h2>
       <p className="en-muted">{w.grammarNote}</p>
       {issues.length === 0 && <p>{w.noIssues}</p>}
-      <ul className="en-issues">
-        {issues.map((issue) => (
-          <li key={issue.id} data-errant-type={issue.errant_type ?? ""}>
-            <Marked issue={issue} />
-            {issue.suggestion !== null && (
-              <p>
-                {w.suggestion}: <strong lang="en">{issue.suggestion}</strong>
-              </p>
-            )}
-            {issue.explain_vi && <p>{issue.explain_vi}</p>}
-            {issue.source === "llm" && (
-              <span className="en-badge">{w.fromAi}</span>
-            )}
-            {issue.evidence && issue.node ? (
-              <>
-                <Link className="en-link" href={`/on-tap/phan/${issue.node}`}>
-                  {w.recorded}: {issue.node_vi ?? issue.node}
-                </Link>
-                {essay && learner && issue.suggestion !== null && (
-                  <SelfCorrect
-                    learner={learner}
-                    essayId={essay.id}
-                    issue={issue}
-                    initial={essay.corrections[String(issue.id)]}
-                  />
+      {issues.length > 0 && (
+        <details data-testid="all-issues">
+          <summary>{w.allIssues.replace("{n}", String(issues.length))}</summary>
+          <ul className="en-issues">
+            {issues.map((issue) => (
+              <li key={issue.id} data-errant-type={issue.errant_type ?? ""}>
+                <Marked issue={issue} />
+                {issue.suggestion !== null && (
+                  <p>
+                    {w.suggestion}:{" "}
+                    <strong lang="en">{issue.suggestion}</strong>
+                  </p>
                 )}
-              </>
-            ) : (
-              <p className="en-muted">{why(issue)}</p>
-            )}
-          </li>
-        ))}
-      </ul>
+                {issue.explain_vi && <p>{issue.explain_vi}</p>}
+                {issue.source === "llm" && (
+                  <span className="en-badge">{w.fromAi}</span>
+                )}
+                {issue.evidence && issue.node ? (
+                  <>
+                    <Link
+                      className="en-link"
+                      href={`/on-tap/phan/${issue.node}`}
+                    >
+                      {w.recorded}: {issue.node_vi ?? issue.node}
+                    </Link>
+                    {essay && learner && issue.suggestion !== null && (
+                      <SelfCorrect
+                        learner={learner}
+                        essayId={essay.id}
+                        issue={issue}
+                        initial={essay.corrections[String(issue.id)]}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <p className="en-muted">{why(issue)}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </section>
   );
 }
@@ -346,6 +344,9 @@ export function EssayView({ essayId }: { essayId: string }) {
         )}
       </section>
       {essay.result && <Result result={essay.result} />}
+      {essay.result && (
+        <FixFirst result={essay.result} learner={learner ?? undefined} />
+      )}
       {essay.result && <Task1Checks result={essay.result} />}
       {essay.result && <EssayFeedbackView result={essay.result} />}
       {essay.result && (
