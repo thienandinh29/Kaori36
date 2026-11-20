@@ -15,7 +15,23 @@ quotes from their own words, and a retry. Voice data follows the policy decided 
 - **Thi thử (strict exam):** the real timing (Part 1 about 4–5 minutes, Part 2 one minute to prepare and up to two to speak, Part 3
   about 4–5 minutes), no hint or pop-up while recording, everything shown only after the part ends.
 Two reasons from the report: live hints during speech raise load and anxiety in the studies it cites, and practice that never feels
-like the exam leaves the exam's pressure untrained. Feedback in both separates what the audio shows (pace, pauses) from what the
+like the exam leaves the exam's pressure untrained.
+
+**Inside guided mode (added 20 Nov 2026, owner's decision):**
+- **Idea building for Part 2 and Part 3, never scripts.** Before speaking, the learner gets a way to build an answer, not an answer:
+  a shape (point → reason → example → link back to the question; for Part 3 also compare, give the other side, say why it
+  matters), two or three questions that open the topic up (who, why, what changed, what if), and topic words from the vocabulary
+  list. Then the learner answers in their own words. NodeTrail never writes a model answer to memorise: memorised answers are
+  discounted by examiners, and the memorised-phrase check (writing step 2.7) runs on the transcript here too. Part 3, where
+  Vietnamese candidates are reported to stall on abstract opinions, gets the most of this help.
+- **The same question again, to build fluency.** After an answer and its feedback, the learner can answer the same question again,
+  up to three times, with the time allowed shrinking (for example 2 minutes, then 1.5, then 1; a task-repetition technique from
+  language teaching, Bronze until measured on the owner's own recordings). Each try shows its fluency measures next to the last
+  (speech rate, pauses per minute, longest fluent run), as numbers, never a verdict. Only the first try on a question counts as
+  evidence of fluency; repeats are practice, because a rehearsed answer is not spontaneous speech.
+- **What is measured for these two:** whether answers reach the time asked and run out of ideas less often (answer length against
+  time, long pauses near the end), and whether pauses fall between the first and third try. Reported on the owner's data as an
+  N-of-1 check, not as a claim that the technique works. Feedback in both separates what the audio shows (pace, pauses) from what the
 transcript shows (words, grammar).
 
 **Priority (for the owner):** the report cites IELTS's 2024–2025 test-taker data with Speaking as the lowest Academic skill for
@@ -89,7 +105,7 @@ mode shows nothing while speaking; and NodeTrail is one part of Speaking practic
 | 5.1 | Recording and prompts for the three parts, the recognition service, transcript and timestamps; word error rate on the owner's recordings |
 | 5.2 | Fluency measures and the pause analysis (pauses from the raw audio, before voice activity filtering) |
 | 5.3 | Grammar and vocabulary checks on the transcript; feedback with quotes checked against it |
-| 5.4 | The mock test flow with timing; no band (see "The band") |
+| 5.4 | The mock test flow with timing; guided mode with idea building and repeated answers; no band (see "The band") |
 | 5.5 | Opening to testers: accounts, per-user limits, the daily cost cap, the tester report |
 
 Not in this phase: a native-like or accent score, intonation, an automatic band without ratings.

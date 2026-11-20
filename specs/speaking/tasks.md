@@ -15,5 +15,5 @@
 - [ ] 5.1 recording, prompts, recognition service, transcript, word error rate tool
 - [ ] 5.2 fluency measures
 - [ ] 5.3 transcript checks and feedback with checked quotes
-- [ ] 5.4 mock test flow (no band)
+- [ ] 5.4 mock test flow (no band); guided mode: idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time
 - [ ] 5.5 limits, cost cap, tester report
