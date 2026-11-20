@@ -24,7 +24,7 @@ interface YtNamespace {
       width: string;
       height: string;
       playerVars: Record<string, number>;
-      events: { onError: () => void };
+      events: { onReady: () => void; onError: () => void };
     },
   ) => YtPlayer;
 }
@@ -64,6 +64,8 @@ export function VideoTab() {
   const [looping, setLooping] = useState(false);
   const [speed, setSpeed] = useState<number>(1);
   const [take, setTake] = useState<Take | null>(null);
+  // The player's controls work only after YouTube says it is ready; before, a tap set nothing.
+  const [ready, setReady] = useState(false);
   const box = useRef<HTMLDivElement | null>(null);
   const player = useRef<YtPlayer | null>(null);
 
@@ -81,7 +83,10 @@ export function VideoTab() {
           width: "100%",
           height: "100%",
           playerVars: { playsinline: 1, rel: 0 },
-          events: { onError: () => setFailed(true) },
+          events: {
+            onReady: () => live && setReady(true),
+            onError: () => setFailed(true),
+          },
         });
       })
       .catch(() => live && setFailed(true));
@@ -111,6 +116,7 @@ export function VideoTab() {
     setLooping(false);
     setSpeed(1);
     setTake(null);
+    setReady(false);
     setId(v);
   }
   const now = () => player.current?.getCurrentTime() ?? null;
@@ -153,6 +159,7 @@ export function VideoTab() {
             <button
               type="button"
               className="en-button small ghost"
+              disabled={!ready}
               onClick={() => setA(now())}
             >
               {t.setA}
@@ -160,6 +167,7 @@ export function VideoTab() {
             <button
               type="button"
               className="en-button small ghost"
+              disabled={!ready}
               onClick={() => setB(now())}
             >
               {t.setB}
@@ -167,7 +175,7 @@ export function VideoTab() {
             <button
               type="button"
               className="en-button small"
-              disabled={!span}
+              disabled={!ready || !span}
               onClick={() => {
                 if (!looping && span) {
                   player.current?.seekTo(span.from, true);
@@ -189,6 +197,7 @@ export function VideoTab() {
                 key={s}
                 type="button"
                 aria-pressed={speed === s}
+                disabled={!ready}
                 className={`en-button small ${speed === s ? "" : "ghost"}`}
                 onClick={() => {
                   setSpeed(s);
