@@ -1,6 +1,334 @@
 text_slug: os-introduction-sociolo-the-process-of-aging
 source: openstax-reading
 versions:
+- passage_sha256: 1cedbd42b6ba92a8b8fcb49b39d324c0a0509f1f85fdba56e2217389e9ab8afc
+  items:
+  - id: os-introduction-sociolo-the-process-of-aging-v2-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-completion-1
+      kind: completion
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - physical maturation
+      evidence:
+      - A life course is the period from birth to death, including a sequence of predictable life events such as
+        physical maturation.
+      sentence: A life course is the period from birth to death, including a sequence of predictable life events
+        such as ___.
+      max_words: 3
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-completion-2
+      kind: completion
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - almshouses
+      evidence:
+      - Many of the elderly poor were sent to live in “almshouses,” or public old-age homes.
+      sentence: Many of the elderly poor were sent to live in ___, or public old-age homes.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-completion-3
+      kind: completion
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: inference
+      origin: generated
+      status: draft
+      accepted:
+      - master status
+      evidence:
+      - but in most cultures, age is a master status influencing self-concept, as well as social roles and interactions.
+      sentence: In most cultures, age is a ___ influencing self-concept, as well as social roles and interactions.
+      max_words: 2
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+      kind: headings
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The life course and its phases
+      - Changing levels of dependence and independence
+      - Age as a social hierarchy and the consequences of age prejudice
+      - Nascher's rejection of dismissive views and his book
+      - Nascher's hopes for geriatrics and the plight of the elderly poor
+      - Nascher's disappointment and reflection on progress
+      - The role of culture in shaping aging experiences
+      - Physical and psychological changes in old age
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-mcq-1
+      key: 1
+      kind: mcq
+      stem: What is the main purpose of the first paragraph?
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - To compare aging in different cultures
+      - To outline the stages of the life course and varying attitudes toward them
+      - To explain why some people fear old age
+      - To describe the physical changes that occur with age
+      evidence:
+      - As human beings grow older, they go through different phases or stages of life.
+      - A life course is the period from birth to death, including a sequence of predictable life events such as
+        physical maturation.
+      - But for other people, old age is not a phase that they look forward to.
+      - These differing views on the life course are the result of the cultural values and norms into which people
+        are socialized, but in most cultures, age is a master status influencing self-concept, as well as social
+        roles and interactions.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-mcq-2
+      key: 2
+      kind: mcq
+      stem: What does the passage suggest about the point at which children are considered adults?
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - It is the same for everyone in a given culture.
+      - It is determined solely by biological age.
+      - It varies widely among individuals, families, and cultures.
+      - It is always marked by a specific ceremony.
+      evidence:
+      - Gradually, children come to be considered adults, responsible for their own lives, although the point at
+        which this occurs is widely varied among individuals, families, and cultures.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-mcq-3
+      key: 1
+      kind: mcq
+      stem: What is the writer's attitude toward Nascher's work?
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: writers_view
+      origin: generated
+      status: draft
+      options:
+      - Dismissive
+      - Admiring but aware of its limitations
+      - Indifferent
+      - Strongly critical
+      evidence:
+      - Nascher refused to accept this dismissive view, seeing it as medical neglect.
+      - Nascher had high hopes for his pioneering work.
+      - At the time of his death, in 1944, he was disappointed that the field of geriatrics had not made greater
+        strides.
+      - In what ways are the elderly better off today than they were before Nascher’s ideas gained acceptance?
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-tfng-1
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Each phase comes with different responsibilities and expectations, which of course vary by individual and
+        culture.
+      statement: The responsibilities and expectations of each life phase are identical across all cultures.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-tfng-2
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - For example, while many children look forward to gaining independence, Packer and Chasteen (2006) suggest
+        that even in children, age prejudice leads to a negative view of aging.
+      statement: According to Packer and Chasteen, age prejudice can be found even in children.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-tfng-3
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: Nascher was the first doctor to use the term 'geriatrics' in a published book.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-tfng-4
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Nascher saw the practice of caring for the elderly as separate from the practice of caring for the young,
+        just as pediatrics (caring for children) is different from caring for grown adults.
+      statement: Nascher believed that old age should be treated by the same medical methods as childhood.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-the-process-of-aging-v2-tfng-5
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-the-process-of-aging
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - At the time of his death, in 1944, he was disappointed that the field of geriatrics had not made greater
+        strides.
+      statement: Nascher was dissatisfied with the progress of geriatrics at the time of his death.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
 - passage_sha256: 9909953e33f45af9f7e5b5e145d2ecec39cc72087a82a866d828dd1265048696
   items:
   - id: os-introduction-sociolo-the-process-of-aging-completion-1

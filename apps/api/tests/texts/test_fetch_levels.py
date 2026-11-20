@@ -108,3 +108,57 @@ def test_author_date_citations_are_removed_and_other_brackets_kept() -> None:
         "the (United Nations) and": "the (United Nations) and",
     }
     assert {k: CITATION.sub("", k) for k in cases} == cases
+
+
+# --- 20 Nov 2026: boxes and end matter left out of OpenStax passages (the owner's review) ---
+_LONG = (
+    "Radioactive elements decay at a steady rate, so the amount left in a rock tells us how long "
+    "ago the rock became solid and stopped exchanging material with its surroundings."
+)
+_MODULE = f"""<document xmlns="http://cnx.rice.edu/cnxml"><title>Dating</title><content>
+<para id="p1">{_LONG}</para>
+<note id="n1" class="astronomy link-to-learning"><para id="p2">PBS provides an
+<link url="https://openstax.org/l/x">evolution series excerpt</link> that explains how we use
+radioactive elements to date Earth.</para></note>
+<note id="n2" class="beyond-book"><title>Reading the evidence</title><para id="p3">Careful
+excavation has revealed that the tower likely took more than thirty years to build for the town.
+</para></note>
+<para id="p4">When astronauts first flew to the Moon, one of their most important tasks was to
+bring back lunar rocks for radioactive age-dating in laboratories on Earth.</para>
+<section id="s1" class="summary"><title>Summary</title><para id="p5">{_LONG}</para></section>
+</content></document>"""
+
+
+def test_link_boxes_and_end_matter_are_not_part_of_a_passage() -> None:
+    from app.sources.openstax import parse_module
+    from app.texts.fetch import NOT_PASSAGE, not_passage
+
+    def prose(drop: tuple[str, ...]) -> str:
+        page = parse_module(_MODULE, module="m1", chapter_no=1, chapter="c", source_uri="u",
+                            drop_classes=drop)  # fmt: skip
+        return " ".join(b.text for b in page.blocks if b.kind == "text")
+
+    kept = prose(NOT_PASSAGE)
+    assert "PBS provides" not in kept and "Summary" not in kept
+    assert "Careful excavation" in kept  # a titled feature box is prose and stays
+    assert kept.count("Radioactive elements decay") == 1
+    assert "PBS provides" in prose(())  # other callers keep everything, as before
+    gone = not_passage(_MODULE.encode())
+    assert any(p.startswith("PBS provides") for p in gone)
+
+
+def test_cleaning_a_bank_passage_removes_only_those_paragraphs() -> None:
+    from app.texts.fetch import clean
+
+    first = " ".join(_LONG.split())
+    caption = "PBS provides an evolution series excerpt that explains how we use radioactive " \
+        "elements to date Earth."  # fmt: skip
+    moon = (
+        "When astronauts first flew to the Moon, one of their most important tasks was to "
+        "bring back lunar rocks for radioactive age-dating in laboratories on Earth."
+    )
+    text, removed = clean(f"{first}\n\n{caption}\n\n{moon}", _MODULE.encode())
+    assert removed == [caption] and text == f"{first}\n\n{moon}"
+    # A paragraph the summary repeats from the body stays where the body has it: only the
+    # paragraphs that come from nowhere but a dropped box or section are removed.
+    assert clean(f"{first}\n\n{moon}", _MODULE.encode()) == (f"{first}\n\n{moon}", [])

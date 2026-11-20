@@ -36,3 +36,23 @@ rest are checked over the next days and the item files updated.
 - [x] T3 The simulation; the speed fixes it found; the missing Bronze test.
 - [x] T4 Fetch and generate the 20 texts.
 - [ ] T5 Blind-check the rest in daily batches; export after each.
+
+## Cleaned passages (20 Nov 2026, found in the owner's review)
+The owner rejected a headings question because two OpenStax "Link to Learning" captions ("PBS provides an
+evolution series excerpt…", "This … simulator lets you examine…") had been kept as paragraphs, shifting the
+paragraph numbers. A sweep of every class in the 30 source modules found **9 of 30 passages** carrying text that is
+not part of the passage: link captions (`link-to-learning` notes; "Visit…", "Read the article…") and end-of-section
+matter (summaries that repeat the body, "further research" links).
+- `parse_module(..., drop_classes=...)` leaves out notes and sections by class; only the Reading fetch passes
+  `NOT_PASSAGE` (link-to-learning, summaries, quizzes, questions, further research, references). Titled prose boxes
+  ("Beyond the Book", "Sociology in the Real World") stay. Other callers keep everything, as before.
+- `python -m app.texts.fetch clean [--write]` rereads each bank text's module at its pinned commit and removes only
+  the paragraphs that come from those boxes and sections; nothing else in a passage moves (checked: removals only,
+  in order, metadata unchanged). 9 texts, 2–4 paragraphs each, 15–116 words.
+- **Question ids per passage version.** Ids were `{slug}-{kind}-{n}` with `on conflict do nothing`, so a changed
+  passage's new questions were silently not stored and every run paid to generate them again. A text's first version
+  keeps its ids; a later one is `{slug}-v{n}-{kind}-{n}` (tested).
+- The old versions' questions stay in the files, never served or queued (their passage changed): 16 verified, 76
+  unchecked, 17 dropped, and the owner's 1 rejection. New questions for the 9 cleaned passages: 106 kept, 5 dropped
+  by code, waiting for the daily blind check (US$0.08 for 12 calls: 9 passages, 3 malformed replies retried).
+

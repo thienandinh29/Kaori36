@@ -1,6 +1,334 @@
 text_slug: os-introduction-sociolo-agents-of-socialization
 source: openstax-reading
 versions:
+- passage_sha256: 02e5323d01b229ea49658d16773ca71bf0fd7d4306a02b887df3fac67b13f9a3
+  items:
+  - id: os-introduction-sociolo-agents-of-socialization-v2-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-completion-1
+      kind: completion
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - norms
+      evidence:
+      - Peer group socialization begins in the earliest years, such as when kids on a playground teach younger children
+        the norms about taking turns, the rules of a game, or how to shoot a basket.
+      sentence: Peer group socialization begins in the earliest years, such as when kids on a playground teach younger
+        children the ___ about taking turns.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-completion-2
+      kind: completion
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - thirty
+      evidence:
+      - When U.S. males turn eighteen, they must register with the Selective Service System within thirty days to
+        be entered into a database for possible military service.
+      sentence: When U.S. males turn eighteen, they must register with the Selective Service System within ___ days.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-completion-3
+      kind: completion
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - institutions
+      evidence:
+      - This learning takes place through interaction with various agents of socialization, like peer groups and
+        families, plus both formal and informal social institutions.
+      sentence: The passage states that this learning takes place through interaction with various agents of socialization,
+        like peer groups and families, plus both formal and informal social ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-headings-1
+      key:
+        '0': 6
+        '1': 5
+        '2': 0
+        '3': 1
+        '4': 2
+        '5': 3
+        '6': 4
+      kind: headings
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - The role of peer groups in socialization
+      - The influence of formal institutions
+      - Religion as an agent of socialization
+      - Government and age norms
+      - Socialization into new categories
+      - The importance of family in early socialization
+      - How socialization occurs through various agents
+      - The impact of media on socialization
+      - The definition of material culture
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-mcq-1
+      key: 0
+      kind: mcq
+      stem: What is the main purpose of the passage?
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: main_idea
+      origin: generated
+      status: draft
+      options:
+      - To explain how socialization occurs through various agents and institutions.
+      - To compare the influence of families and peer groups on adolescents.
+      - To describe the role of government in establishing age norms.
+      - To argue that religious institutions are the most important agents of socialization.
+      evidence:
+      - Socialization helps people learn to function successfully in their social worlds.
+      - This learning takes place through interaction with various agents of socialization, like peer groups and
+        families, plus both formal and informal social institutions.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-mcq-2
+      key: 0
+      kind: mcq
+      stem: It can be inferred from the passage that peer groups are important for adolescents because they
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - help them develop an identity separate from their parents.
+      - replace the influence of their families entirely.
+      - teach them how to use material culture more than families do.
+      - are the only source of socialization during adolescence.
+      evidence:
+      - Peer groups are important to adolescents in a new way, as they begin to develop an identity separate from
+        their parents and exert independence.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-mcq-3
+      key: 0
+      kind: mcq
+      stem: According to the passage, what do formal institutions like schools and workplaces do?
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - Teach people how to behave in and navigate these systems.
+      - Provide the first experiences of socialization.
+      - Inundate people with messages about norms and expectations.
+      - Establish age norms for adulthood and old age.
+      evidence:
+      - Formal institutions—like schools, workplaces, and the government—teach people how to behave in and navigate
+        these systems.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-tfng-1
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Peer group socialization begins in the earliest years, such as when kids on a playground teach younger children
+        the norms about taking turns, the rules of a game, or how to shoot a basket.
+      statement: Peer group socialization starts as early as the playground years.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-tfng-2
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Interestingly, studies have shown that although friendships rank high in adolescents’ priorities, this is
+        balanced by parental influence.
+      statement: According to the passage, parental influence is less important than friendships during adolescence.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Like other institutions, these places teach participants how to interact with the religion’s material culture
+        (like a mezuzah, a prayer rug, or a communion wafer).
+      - Many religious institutions also uphold gender norms and contribute to their enforcement through socialization.
+      statement: Religious institutions only teach participants how to use material culture.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - When U.S. males turn eighteen, they must register with the Selective Service System within thirty days to
+        be entered into a database for possible military service.
+      statement: In the United States, males must register with the Selective Service System within thirty days
+        of turning eighteen.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-introduction-sociolo-agents-of-socialization-v2-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-introduction-sociolo-agents-of-socialization
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The passage states that peer groups are more influential than families in teaching material culture.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
 - passage_sha256: cf971e888cc244cd38acde5fd53efa8ace289ea88c8b531636ad717682fcabeb
   items:
   - id: os-introduction-sociolo-agents-of-socialization-completion-1

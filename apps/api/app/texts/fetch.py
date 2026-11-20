@@ -2,6 +2,7 @@
 
     uv run python -m app.texts.fetch simple-wiki [--out DIR]   # on the owner's laptop
     uv run python -m app.texts.fetch openstax [--out DIR]
+    uv run python -m app.texts.fetch clean [--write]           # the bank's OpenStax texts
 
 Picks come from `data/english/text-picks.yaml`. Each text is written as a bank entry
 (`bank.TextEntry`: slug, title, source, url, retrieved_on, text). By default they go to
@@ -9,6 +10,9 @@ Picks come from `data/english/text-picks.yaml`. Each text is written as a bank e
 verified, so nothing is committed before the owner has read the licence. Only prose is kept: whole
 paragraphs, 150 to 600 words, never cut mid-paragraph. Figure captions and empty figure
 references "()" are removed (an adaptation, which both sources' ShareAlike licences allow).
+OpenStax "Link to Learning" boxes (a line pointing to a video or website, with no title) and the
+end-of-section matter (summary, quiz, questions, further research, references) are left out: they
+are not part of the passage (found by the owner's review, 20 Nov 2026).
 """
 
 import argparse
@@ -43,6 +47,14 @@ CITATION = re.compile(
     r" \d{4}[a-z]?(?:, p+\. ?\d+)?[;,]? ?)+\)"
 )
 WIKI_API = "https://simple.wikipedia.org/w/api.php"
+# OpenStax boxes and sections that are not part of a reading passage, by their CNXML class. The
+# other feature boxes ("Beyond the Book", "Sociology in the Real World"...) are titled prose and
+# stay. Every class seen in the bank's 30 source modules was looked at (20 Nov 2026).
+NOT_PASSAGE = (
+    "link-to-learning",
+    "summary", "section-summary", "section-quiz", "short-answer", "review-questions",
+    "check-understanding", "reflection-questions", "further-research", "references",
+)  # fmt: skip
 
 
 def slugify(text: str) -> str:
@@ -185,7 +197,8 @@ def openstax_texts(
                 continue
             uri = f"https://github.com/{repo}/blob/{commit}/modules/{module}/index.cnxml"
             page = parse_module(path.read_bytes(), module=module, chapter_no=chapter.number,
-                                chapter=chapter.title, source_uri=uri)  # fmt: skip
+                                chapter=chapter.title, source_uri=uri,
+                                drop_classes=NOT_PASSAGE)  # fmt: skip
             slug = f"os-{slugify(collection)[:20]}-{slugify(page.title)}"[:60].strip("-")
             pages.append((slug, uri, page))
         if any(slug in skip for slug, _, _ in pages):
@@ -206,6 +219,62 @@ def openstax_texts(
     return out
 
 
+def _prose(xml: bytes, drop: Collection[str]) -> list[str]:
+    page = parse_module(xml, module="", chapter_no=0, chapter="", source_uri="", drop_classes=drop)
+    return [p for b in page.blocks if b.kind == "text" for p in paragraphs(b.text)]
+
+
+def not_passage(xml: bytes) -> set[str]:
+    """The paragraphs of a module that come from boxes or sections in `NOT_PASSAGE`."""
+    return set(_prose(xml, ())) - set(_prose(xml, NOT_PASSAGE))
+
+
+def clean(text: str, xml: bytes) -> tuple[str, list[str]]:
+    """A bank passage without the paragraphs `not_passage` finds, everything else as it was; and
+    the paragraphs removed. Paragraphs are compared as `paragraphs` writes them."""
+    drop = not_passage(xml)
+    kept: list[str] = []
+    removed: list[str] = []
+    for para in text.split("\n\n"):
+        normal = paragraphs(para)
+        (removed if normal and normal[0] in drop else kept).append(para)
+    return "\n\n".join(kept), removed
+
+
+def module_xml(url: str) -> bytes:  # pragma: no cover - network
+    """A text's source module at the commit it was taken from (its recorded GitHub URL)."""
+    m = re.fullmatch(r"https://github.com/([^/]+/[^/]+)/blob/([0-9a-f]{40})/(.+)", url)
+    if m is None:
+        raise ValueError(f"not a pinned GitHub file URL: {url}")
+    raw = f"https://raw.githubusercontent.com/{m.group(1)}/{m.group(2)}/{m.group(3)}"
+    req = urllib.request.Request(raw, headers={"User-Agent": USER_AGENT})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        data: bytes = r.read()
+    return data
+
+
+def clean_bank(bank: Path, write_files: bool) -> int:  # pragma: no cover - network
+    changed = 0
+    for path in sorted(bank.glob("*.yaml")):
+        entry = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if entry.get("source") != "openstax-reading":
+            continue
+        text, removed = clean(entry["text"], module_xml(entry["url"]))
+        time.sleep(0.5)
+        if not removed:
+            continue
+        changed += 1
+        print(f"{entry['slug']}: {len(removed)} paragraph(s) removed, "
+              f"{len(words(entry['text']))} -> {len(words(text))} words")  # fmt: skip
+        for para in removed:
+            print(f"    - {para[:100]}")
+        if write_files:
+            entry["text"] = text
+            write([entry], bank)
+    print(f"{changed} text(s) {'cleaned' if write_files else 'to clean (run with --write)'}")
+    return 0
+
+
 def checkout(repo: str, dest: Path) -> str:  # pragma: no cover - git
     if not (dest / ".git").exists():
         subprocess.run(["git", "clone", "-q", "--depth", "1", "--filter=blob:none", "--no-checkout",
@@ -219,7 +288,8 @@ def checkout(repo: str, dest: Path) -> str:  # pragma: no cover - git
 
 def main(argv: list[str] | None = None) -> int:  # pragma: no cover - network
     parser = argparse.ArgumentParser(prog="python -m app.texts.fetch")
-    parser.add_argument("source", choices=["simple-wiki", "openstax"])
+    parser.add_argument("source", choices=["simple-wiki", "openstax", "clean"])
+    parser.add_argument("--write", action="store_true", help="clean: rewrite the bank's files")
     parser.add_argument("--out", type=Path, default=PRIVATE)
     parser.add_argument("--picks", type=Path, default=PICKS)
     parser.add_argument(
@@ -232,6 +302,8 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - network
     args = parser.parse_args(argv)
     picks = yaml.safe_load(args.picks.read_text(encoding="utf-8"))
     skipped: list[str] = []
+    if args.source == "clean":
+        return clean_bank(args.bank, args.write)
     if args.source == "simple-wiki":
         entries, skipped = simple_wiki(picks["simple_wikipedia"])
     else:

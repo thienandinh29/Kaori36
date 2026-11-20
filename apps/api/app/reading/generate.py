@@ -108,21 +108,28 @@ def prompt(passage: str) -> str:
 Dropped = tuple[str, str, list[str], dict[str, object]]  # id, kind, problems, what was written
 
 
-def build(slug: str, passage: str, out: Generated) -> tuple[list[ReadingItem], list[Dropped]]:
-    """Items that pass every code check, and the dropped ones with what the model wrote."""
+def build(
+    slug: str, passage: str, out: Generated, base: str | None = None
+) -> tuple[list[ReadingItem], list[Dropped]]:
+    """Items that pass every code check, and the dropped ones with what the model wrote.
+
+    `base`: the start of every item id, the slug for a text's first passage version, else
+    `{slug}-v{n}`, so a changed passage's items never collide with the old version's.
+    """
     raw: list[tuple[str, dict[str, object]]] = []
+    stem = base or slug
     for i, t in enumerate(out.tfng):
-        raw.append(("tfng", {"id": f"{slug}-tfng-{i + 1}", **t.model_dump()}))
+        raw.append(("tfng", {"id": f"{stem}-tfng-{i + 1}", **t.model_dump()}))
     for i, m in enumerate(out.mcq):
-        raw.append(("mcq", {"id": f"{slug}-mcq-{i + 1}", **m.model_dump()}))
+        raw.append(("mcq", {"id": f"{stem}-mcq-{i + 1}", **m.model_dump()}))
     for i, c in enumerate(out.completion):
         data = c.model_dump()
         # Models write the gap as "______" as often as "___"; one run of underscores is one gap.
         data["sentence"] = re.sub(r"_{3,}", BLANK, data["sentence"])
-        raw.append(("completion", {"id": f"{slug}-completion-{i + 1}", **data}))
+        raw.append(("completion", {"id": f"{stem}-completion-{i + 1}", **data}))
     if out.headings is not None:
         raw.append(("headings", {
-            "id": f"{slug}-headings-1", "skill": "main_idea", "headings": out.headings.headings,
+            "id": f"{stem}-headings-1", "skill": "main_idea", "headings": out.headings.headings,
             "key": dict(enumerate(out.headings.key)),
         }))  # fmt: skip
     kinds: dict[str, type[ReadingItem]] = {

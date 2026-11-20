@@ -329,3 +329,333 @@ versions:
     review_note: null
     review_was: null
     check_view: shuffled
+- passage_sha256: c98dc8f257e9819cf62f6bda4c6b6c84bcc9ce8287fca8c0ddcba529f0f82633
+  items:
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-1
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-1
+      kind: completion
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - half-life
+      evidence:
+      - Similarly, if we have a very large number of radioactive atoms of one type (say, uranium), there is a specific
+        time period, called its half-life, during which the chances are fifty-fifty that decay will occur for any
+        of the nuclei.
+      sentence: The time it takes for half of the radioactive nuclei in a sample to decay is called its ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-2
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-2
+      kind: completion
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - formed
+      evidence:
+      - By comparing how much of a radioactive parent element is left in a rock to how much of its daughter products
+        have accumulated, we can learn how long the decay process has been going on and hence how long ago the rock
+        formed.
+      sentence: By comparing the amount of parent element left to the amount of daughter products, scientists can
+        determine how long ago a rock ___.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-3
+    kind: completion
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-3
+      kind: completion
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      accepted:
+      - billion
+      evidence:
+      - 'Using such dating techniques, we have been able to determine the ages of both Earth and the Moon: each
+        was formed about 4.5 billion years ago (although, as we shall see, Earth probably formed earlier than the
+        Moon).'
+      sentence: Earth and the Moon are each about 4.5 ___ years old.
+      max_words: 1
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-headings-1
+    kind: headings
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-headings-1
+      key:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        '5': 5
+        '6': 6
+        '7': 7
+      kind: headings
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: main_idea
+      origin: generated
+      status: draft
+      evidence: []
+      headings:
+      - Techniques for dating surfaces
+      - Dating individual rocks
+      - Radioactivity and decay
+      - The randomness of decay
+      - Half-life and decay products
+      - Radioactive clocks
+      - Apollo samples and lunar history
+      - Earth's internal heat
+      - Weathering on Earth
+      - Formation of the solar system
+      - Types of meteorites
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-1
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-1
+      key: 2
+      kind: mcq
+      stem: What does the passage say about the relationship between the age of a surface and the age of the planet?
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - They are always the same.
+      - The surface is always younger.
+      - They are not necessarily the same.
+      - The surface is always older.
+      evidence:
+      - Note that the age of these surfaces is not necessarily the age of the planet as a whole.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-2
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-2
+      key: 1
+      kind: mcq
+      stem: What can be inferred about the Moon from the dating of Apollo samples?
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: inference
+      origin: generated
+      status: draft
+      options:
+      - It has active volcanoes.
+      - It is geologically dead.
+      - It is younger than Earth.
+      - It has a young surface.
+      evidence:
+      - Only in 1969, when the first Apollo samples were dated, did we learn that the Moon is an ancient, geologically
+        dead world.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-3
+    kind: mcq
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-3
+      key: 1
+      kind: mcq
+      stem: According to the passage, how much of Earth's internal heat comes from radioactive decay?
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      options:
+      - All of it.
+      - About half.
+      - A quarter.
+      - None.
+      evidence:
+      - Geologists estimate that about half of Earth’s current internal heat budget comes from the decay of radioactive
+        isotopes in its interior.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-1
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-1
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Note that the age of these surfaces is not necessarily the age of the planet as a whole.
+      statement: The age of a planet's surface is always the same as the age of the planet itself.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-2
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-2
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - For any one radioactive nucleus, it is not possible to predict when the decay process will happen.
+      - 'Such decay is random in nature, like the throw of dice: as gamblers have found all too often, it is impossible
+        to say just when the dice will come up 7 or 11.'
+      statement: Radioactive decay is random for any single nucleus.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-3
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-3
+      key: 'false'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: inference
+      origin: generated
+      status: draft
+      evidence:
+      - Only in 1969, when the first Apollo samples were dated, did we learn that the Moon is an ancient, geologically
+        dead world.
+      statement: The Moon has active geology similar to Earth's.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-4
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-4
+      key: 'true'
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence:
+      - Furthermore, a few samples of material from the Moon, Mars, and the large asteroid Vesta have fallen to
+        Earth as meteorites and can be examined directly (see the chapter on Cosmic Samples and the Origin of the
+        Solar System).
+      statement: Some meteorites from the Moon, Mars, and Vesta have been found on Earth.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null
+  - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-5
+    kind: tfng
+    status: generated
+    item:
+      id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-5
+      key: not_given
+      kind: tfng
+      text: os-astronomy-2e-dating-planetary-surfaces
+      skill: detail
+      origin: generated
+      status: draft
+      evidence: []
+      statement: The first rocks brought back from the Moon were dated in 1972.
+    problems: []
+    checker_answer: null
+    checker_model: null
+    generated_at: '2026-11-20T07:31:42.712253+00:00'
+    checked_at: null
+    reviewed_at: null
+    review_note: null
+    review_was: null
+    check_view: null

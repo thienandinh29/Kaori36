@@ -237,3 +237,27 @@ def test_checks_that_saw_the_stored_order_are_done_again_first(conn) -> None:  #
     assert statuses["bees-tfng-1"] == "verified" and statuses["bees-headings-1"] == "approved"
     nothing_left = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 0, lambda: "m", NOW))
     assert nothing_left == {"verified": 0, "needs_review": 0, "rechecked": 0}
+
+
+def test_a_changed_passage_gets_items_of_its_own(conn) -> None:  # type: ignore[no-untyped-def]
+    """Before 20 Nov 2026 a new version reused the ids, so `on conflict do nothing` kept none of
+    its items and every run paid to generate them again."""
+    calls: list[str] = []
+
+    async def gen(system: str, text: str) -> Generated | None:
+        calls.append(text)
+        return generated()
+
+    assert asyncio.run(generate_text(conn, "bees", PASSAGE, gen, NOW)) == (5, 0)
+    changed = PASSAGE.replace("live in large colonies", "live in very large colonies")
+    assert asyncio.run(generate_text(conn, "bees", changed, gen, NOW)) == (5, 0)
+    assert asyncio.run(generate_text(conn, "bees", changed, gen, NOW)) is None  # stored this time
+    assert len(calls) == 2
+    rows = conn.execute(
+        "select id, passage_sha256 = %s from reading_items where text_slug='bees' order by id",
+        (sha256(changed),),
+    ).fetchall()
+    old = [i for i, new in rows if not new]
+    new = [i for i, is_new in rows if is_new]
+    assert len(old) == len(new) == 5 and all(i.startswith("bees-v2-") for i in new)
+    assert not any(i.startswith("bees-v2-") for i in old)
