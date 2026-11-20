@@ -180,10 +180,16 @@ the classroom layer (slides, whiteboard), Elo item difficulty, mastery hysteresi
 The proposal's risk table applies. Added here: the exam comes first (if the project eats exam preparation, stop at
 the nearest gate); one learner's data cannot support general claims, and reports say so; every score shown to a
 learner is an estimate with a range until measured against examiners.
+**Realistic gains (from the owner's research, 20 Nov 2026; figures to be checked in the papers):** two IELTS-funded studies it
+cites found about +0.5 band after 200–240 hours of instruction (Elder and O'Loughlin, 2003) and +0.30 on average after about 284
+hours over 12 weeks (Kang et al., 2021), with faster gains from bands 4–6 than above 6.5, and no significant link between passive
+contact (TV, social media) and gains. A 7.0 target is a matter of structured hours; the progress study (`specs/validation/step-v4.md`,
+an independent test every 28 days) is how we see it, never NodeTrail's own estimates.
 
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-20 | The owner's research on IELTS platforms read (Bronze): it confirms the two maps, Hôm nay, FSRS with recall, shadowing, band ranges and no streaks. Added from it: CP4b (why the wrong answer tempted you, with a planted-test gate) and CP4c (exam details) in `specs/listening-reading/`, two Speaking modes and the case for starting phase 5 after CP6 in `specs/speaking/spec.md`, realistic gains under Risks. Writing steps 2.6–2.8 built from the owner's first research (prioritised feedback, guardrails before any band, repair check and repeated errors); CP5b (whole passages by ear) built |
 | 2026-11-18 | The owner's idea, specified (design only): two maps (CEFR foundations, IELTS competencies) and one recommendation engine, `specs/two-layer-map/`. Proposed: M1–M2 before phase 4's CP4, M3–M4 after |
 | 2026-11-18 | **NodeTrail is an English learning app** (owner's decision). README, `SPEC.md` and `CLAUDE.md` now describe the English app. The any-subject engine (Deep Research, other courses) stays in the code for other subjects later; `plan-m0-m1.md` is superseded. Phase 3 built through 3.5a, with gates waiting on the owner's recordings. Phase 4 plan approved with six checkpoints; CP1 and CP2a built. `dolater.md` lists everything waiting on the owner |
 | 2026-11-17 | Phase 3 started. The owner's decisions: the strict voice policy, the wav2vec2 recogniser with torchaudio, all target sound groups, one heavy profile at a time; direction: pronounce correctly first, then a simulated IELTS Speaking test (phase 5). Step 3.1 built: `/phat-am` records in the browser (16 kHz mono WAV made there), a quality check (length, quiet, clipping, noise, no speech) gives advice and stores nothing bad, recordings deleted after 24 h unless kept, owner only. No sound is judged yet |

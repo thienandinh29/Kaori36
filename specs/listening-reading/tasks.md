@@ -20,6 +20,9 @@ word list.
 - [ ] 4.1 text bank with licences and level features
 - [ ] 4.2 Reading items, blind verification, review queue, planted-error test
 - [x] 4.3 Reading practice, competency evidence (`step-4.3.md`, built 19 Nov; serves nothing until CP1 texts and Silver questions exist)
+- [ ] 4.3d (CP4b) why the wrong answer tempted you, three PRs (`spec.md`): (1) migration, generation, code checks, planted test,
+      run; (2) learner pages and the flag; (3) "Theo dạng câu hỏi" and the Hôm nay link
+- [ ] CP4c exam details (timer warnings, highlighting, side by side, one-play Listening), when the owner chooses
 - [ ] 4.4 Listening audio and items
 - [ ] 4.5 gate report
 
