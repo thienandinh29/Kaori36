@@ -27,6 +27,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-completion-2
     kind: completion
     status: generated
@@ -52,6 +53,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-completion-3
     kind: completion
     status: generated
@@ -78,6 +80,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-headings-1
     kind: headings
     status: generated
@@ -113,6 +116,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-mcq-1
     kind: mcq
     status: generated
@@ -142,6 +146,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-mcq-2
     kind: mcq
     status: generated
@@ -172,6 +177,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-mcq-3
     kind: mcq
     status: generated
@@ -202,6 +208,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-tfng-1
     kind: tfng
     status: generated
@@ -225,6 +232,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-tfng-2
     kind: tfng
     status: generated
@@ -247,6 +255,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-tfng-3
     kind: tfng
     status: generated
@@ -268,6 +277,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-tfng-4
     kind: tfng
     status: generated
@@ -292,6 +302,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-steppes-tfng-5
     kind: tfng
     status: generated
@@ -316,3 +327,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

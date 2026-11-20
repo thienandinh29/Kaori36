@@ -16,6 +16,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-elements-of-culture-headings-1
     kind: headings
     status: verified
@@ -43,10 +44,11 @@ versions:
     checker_answer: 0:1, 1:5, 2:4, 3:0
     checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-18T06:06:03.474754+00:00'
-    checked_at: '2026-11-18T06:06:03.474754+00:00'
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-introduction-sociolo-elements-of-culture-mcq-1
     kind: mcq
     status: verified
@@ -73,10 +75,11 @@ versions:
     checker_answer: B
     checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-18T06:06:03.474754+00:00'
-    checked_at: '2026-11-18T06:06:03.474754+00:00'
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-introduction-sociolo-elements-of-culture-tfng-1
     kind: tfng
     status: verified
@@ -101,6 +104,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-elements-of-culture-tfng-2
     kind: tfng
     status: needs_review
@@ -122,3 +126,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

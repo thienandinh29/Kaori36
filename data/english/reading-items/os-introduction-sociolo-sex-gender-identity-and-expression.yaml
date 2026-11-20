@@ -29,6 +29,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-completion-2
     kind: completion
     status: generated
@@ -53,6 +54,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-completion-3
     kind: completion
     status: generated
@@ -79,6 +81,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-headings-1
     kind: headings
     status: dropped
@@ -92,6 +95,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-mcq-1
     kind: mcq
     status: generated
@@ -123,6 +127,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-mcq-2
     kind: mcq
     status: generated
@@ -154,6 +159,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-mcq-3
     kind: mcq
     status: generated
@@ -182,6 +188,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-tfng-1
     kind: tfng
     status: generated
@@ -205,6 +212,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-tfng-2
     kind: tfng
     status: generated
@@ -227,6 +235,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-tfng-3
     kind: tfng
     status: generated
@@ -250,6 +259,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-tfng-4
     kind: tfng
     status: generated
@@ -274,6 +284,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-tfng-5
     kind: tfng
     status: generated
@@ -296,3 +307,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

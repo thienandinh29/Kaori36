@@ -27,6 +27,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-completion-2
     kind: completion
     status: generated
@@ -51,6 +52,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-completion-3
     kind: completion
     status: generated
@@ -76,6 +78,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-headings-1
     kind: headings
     status: generated
@@ -113,6 +116,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-mcq-1
     kind: mcq
     status: generated
@@ -142,6 +146,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-mcq-2
     kind: mcq
     status: generated
@@ -172,6 +177,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-mcq-3
     kind: mcq
     status: generated
@@ -200,6 +206,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-tfng-1
     kind: tfng
     status: generated
@@ -223,6 +230,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-tfng-2
     kind: tfng
     status: generated
@@ -247,6 +255,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-tfng-3
     kind: tfng
     status: generated
@@ -270,6 +279,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-tfng-4
     kind: tfng
     status: generated
@@ -293,6 +303,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-deviance-and-control-tfng-5
     kind: tfng
     status: generated
@@ -314,3 +325,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

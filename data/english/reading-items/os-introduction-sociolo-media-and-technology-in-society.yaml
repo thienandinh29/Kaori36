@@ -28,6 +28,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-completion-2
     kind: completion
     status: generated
@@ -54,6 +55,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-completion-3
     kind: completion
     status: generated
@@ -78,6 +80,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-headings-1
     kind: headings
     status: dropped
@@ -91,6 +94,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-mcq-1
     kind: mcq
     status: generated
@@ -118,6 +122,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-mcq-2
     kind: mcq
     status: generated
@@ -146,6 +151,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-mcq-3
     kind: mcq
     status: generated
@@ -174,6 +180,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-1
     kind: tfng
     status: generated
@@ -197,6 +204,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-2
     kind: tfng
     status: generated
@@ -219,6 +227,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-3
     kind: tfng
     status: generated
@@ -243,6 +252,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-4
     kind: tfng
     status: generated
@@ -264,6 +274,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-5
     kind: tfng
     status: generated
@@ -288,3 +299,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
