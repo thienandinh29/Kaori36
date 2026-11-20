@@ -117,12 +117,17 @@ classroom layer (slides, whiteboard), Elo item difficulty, mastery hysteresis wi
   the owner's single most important non-study task.
 - **One learner.** N-of-1 data cannot support general claims; reports say so.
 - **Free checker limits and drift.** Ernie is a free preview model: rerun the planted test before each batch; dots is the backup.
-- **Scores are estimates.** Every score shown is a range until measured against examiners.
+- **Scores are estimates.** Every score shown is a range until measured against examiners. No Speaking band before the exam.
+- **Solo practice has limits.** Speech-recognition feedback helps most with explicit corrections and with peers, least alone and
+  for stress and intonation; one Vietnamese study saw no Speaking band gain. NodeTrail is one part of Speaking practice, next to
+  speaking with a partner or teacher.
 - **Licences.** NonCommercial and ShareAlike sources block a paid tier until replaced.
 
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-20 | Speaking guided mode, owner's decision: idea building for Part 2/3 (a way to build an answer, never a script) and the same question up to three times with shrinking time for fluency; only first tries count as evidence |
+| 2026-11-20 | The owner's Speaking research read (Bronze): it confirms our recogniser measurements. Added to `specs/speaking/spec.md`: recogniser settings, pauses from the raw audio, checks before feedback, a missing -s/-ed never a grammar error, uncertain words, and **no Speaking band before the exam** (the progress study gives it). Solo-practice limits under Risks |
 | 2026-11-20 | Lighter loading: `CLAUDE.md` no longer loads `MAP.md` (read on demand); the product's rules live only in `SPEC.md` (Contract), and `AGENTS.md` points to them |
 | 2026-11-20 | `PLAN.md` becomes the one plan, with `AGENTS.md` (how we work) and a rewritten `SPEC.md` (what the product does and the rules it keeps), all checked against the code. The target is 7.0 overall (the owner's setting in `data/maps/ielts-competencies.yaml`, 18 Nov); the older plan's 6.5 came from the 14 Nov proposal. Earlier history: `docs/v2/plan-english-pack.md` |
 | 2026-11-20 | Say-word: one attempt per recording (migration 0037). Writing 2.6–2.8, CP5b whole passages, shadowing fixes, OpenStax passages cleaned (106 new questions); CP4b specified |
