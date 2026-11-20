@@ -7,11 +7,13 @@ Planned entries are marked _(planned)_ until they exist.
 
 | Path | Purpose |
 |---|---|
-| `CLAUDE.md` | Rules and working agreement for Claude, one-owner v2 project (auto-loaded; imports `MAP.md` and `SPEC.md`) |
+| `AGENTS.md` | **How we work**, for any coding agent: the working agreement, how a change is made, every check, architecture and validation rules, data and privacy, language and code conventions |
+| `PLAN.md` | **The one plan**: goal and priorities, where we are, the roadmap to summer 2027, phases and their gates with status, phase 4 checkpoints, what is next, research tracks, the owner's decisions, risks, log |
+| `CLAUDE.md` | Claude Code only: loads `AGENTS.md`, `PLAN.md`, `SPEC.md` and `MAP.md`, then skills and cloud-session notes |
 | `dolater.md` | **The owner's to-do list**, by role: as developer and tester, as learner, "find a reviewer for…" (correctness), measurements, decisions, routine; with time and commands |
 | `README.md` | Public introduction in Vietnamese: NodeTrail as an English (IELTS) learning app, skills and their status, the plan, honest status, how to run |
-| `SPEC.md` | What NodeTrail must do: an English learning app for Vietnamese learners (IELTS); features per skill, engine, verification gate, non-goals; other subjects later |
-| `docs/v2/plan-english-pack.md` | **Master roadmap**: one product with three kinds of value, principles (the developer is not the ground truth), research tracks, the roadmap to summer 2027, then the English app in phases with gates and status (where the project is) |
+| `SPEC.md` | **What the product does and the rules it keeps** (the contract): features per skill with status, the engine and decision traces, the rules the code enforces (verification, serving, evidence, scores, limits, privacy), web pages, API groups and services, non-goals |
+| `docs/v2/plan-english-pack.md` | Master roadmap from 18 to 20 Nov 2026, superseded by `PLAN.md`; kept for its history and full log |
 | `research/` | Research tracks: `README.md` (rules: hypothesis first, label tier, separate data, negative results kept; registry), `experiments/` (KT-001 knowledge tracing baselines, planned; FORGET-001 forgetting after a week, collecting; VER-001 pipeline reliability and cost, planned) |
 | `specs/validation/` | The validation system: Gold/Silver/Bronze tiers, a `labels` table, the reviewer portal, which gates change, the owner's roles, steps V1–V5; `step-v1.md` built; `step-v2.md` built (portal); `step-v2b.md` built (sound, grammar, vocabulary queues); `step-v3.md` built (gates read tiers); `step-v4.md` built (progress study); `reviewer-brief.vi.md` = the one-page brief for reviewers in Vietnamese (V5) |
 | `apps/api/app/validation/`; `supabase/migrations/0026_labels.sql` | Step V1: `tiers.py` (pure: a label's own tier from its role, the effective tier of an aspect, independence by model family, the owner never promotes), `store.py` (reviewers, labels, effective tier, summary), CLI `python -m app.validation.cli backfill|summary|add-reviewer|issue-token|revoke-token|make-batch` |

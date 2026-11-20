@@ -1,5 +1,9 @@
 # Master roadmap: NodeTrail (from 18 Nov 2026)
 
+> **Superseded on 20 Nov 2026 by `PLAN.md`** at the repository root, the one plan from now on. This file is kept
+> for its history and its log up to 20 Nov; its Status column is no longer updated. Its target of 6.5 came from the 14 Nov
+> proposal; the owner's current target is 7.0 overall.
+
 **The one plan.** It implements the owner's proposal, `docs/v2/english-pack-proposal.vi.md`, and the strategy agreed on
 18 Nov 2026. It replaces `plan-to-tet-2027.md` and the any-subject `plan-m0-m1.md` (both kept for history). What waits
 on the owner: `dolater.md`. Experiments: `research/`. How truth is established: `specs/validation/spec.md`.

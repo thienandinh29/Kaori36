@@ -1,6 +1,6 @@
 # Research: experiments on NodeTrail
 
-Part of the master roadmap (`docs/v2/plan-english-pack.md`, "Research tracks"). One YAML file per experiment in
+Part of the plan (`PLAN.md`, "Research tracks"). One YAML file per experiment in
 `experiments/`. Results and baselines go in `evals/baselines/`, and reports in `research/reports/` once there is
 something to report. The code lives in the app (`apps/api/app/evalkit/`, `app/engine/`), so an experiment is
 reproducible from the repository and a data version.
