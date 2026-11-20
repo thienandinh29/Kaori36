@@ -30,6 +30,16 @@ quotes checked to be exact substrings of the transcript. The model never hears t
 - **Recognition (candidates, the owner decides):** Whisper through `faster-whisper` (CTranslate2). The Hugging Face cards read on
   15 Nov 2026: `openai/whisper-small` and `openai/whisper-large-v3` list Apache-2.0; `Systran/faster-whisper-small` lists MIT.
   Model size against speed and memory on the owner's machine is a measurement, not a guess (the Docker VM was measured at about 4 GB).
+  Measured candidates and the recommendation (small.en, int8, with a verbatim prompt): `docs/v2/asr-candidates.md`.
+- **Recogniser settings (added 20 Nov from the owner's Speaking research, Bronze; each checked in 5.1):** an English-only model
+  (multilingual models sent accented English into other languages in a cited study); the verbatim prompt; no conditioning on
+  the previous window (`condition_on_previous_text=False`, against repeated loops); voice activity detection so nothing is
+  transcribed over silence; words shorter than 50 ms dropped (looping artefacts). No PyTorch in this service (CTranslate2 only).
+- **Pauses come from the raw audio, before voice activity filtering.** The filter that stops invented text also removes the
+  silences the fluency measures need, so the pause timeline is taken first and the recogniser gets the filtered audio.
+- **Checks before any feedback:** the recording-quality check from phase 3 (quiet, clipping, noise); a minimum answer length
+  (proposed 15 s; shorter answers get measures only, no language feedback); the prompt-word overlap and memorised-phrase
+  checks of writing step 2.7 on the transcript, shown first, as for essays.
 - **Measures by code** from word timestamps: speech rate (words per minute), articulation rate (excluding pauses), the number and
   length of pauses (a pause is a gap above a set length, proposed 0.5 s, and a long pause 2 s), filler words ("um", "uh", "er",
   "you know", "like" as a filler is not detectable by code and is not claimed), the longest fluent run, answer length against
@@ -38,15 +48,24 @@ quotes checked to be exact substrings of the transcript. The model never hears t
   spoken grammar is not written grammar (false alarms), and the recogniser may "correct" the learner's errors or mishear a
   non-native accent (missed and invented errors). The owner types the reference for 20 recordings; report the word error rate
   with an interval, and the rate of grammar flags the owner judges wrong. Until then these flags are hints, shown as such.
+  Grammar flags on speech **never move mastery**. A missing ending (-s, -ed) is the clearest case: Vietnamese speakers often drop
+  final /s/, /z/, /t/, /d/ as a sound, so a missing ending in the transcript may be pronunciation, grammar or the recogniser.
+  It is shown as "có thể thiếu đuôi -s/-ed" with the audio, never as a grammar error.
+- **Uncertain words:** where Whisper and the phone recogniser (phase 3, no language model, so it keeps learner errors better)
+  disagree on a word, the word is marked uncertain and gets no grammar feedback. Built after 5.3 if the 20 typed references
+  show Whisper hiding errors.
 - **Pronunciation:** only on read-aloud prompts, from phase 3. In free speech the intended phones are unknown, so phone-level marks
   would be guesses; free-speech pronunciation is not marked.
 
 ## The band (a decision, with a limit stated up front)
 IELTS Speaking has four criteria (Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, Pronunciation). I know of
 no public set of speaking recordings with examiner bands to calibrate against, and without one a band would be an unvalidated guess.
-Proposal: **no band until the owner has 30 or more recordings rated by a qualified teacher or examiner**; then the same method as
-writing (a held-out split set aside first, QWK with an interval, a range never a point, "không chắc" when wide). If no such ratings
-can be had, the product stays measures and feedback, which is a legitimate product.
+**Decision (20 Nov 2026): NodeTrail shows no Speaking band before the owner's exam.** The owner's research confirms there is no
+open dataset of Vietnamese learners' speech with IELTS ratings, and no consumer Speaking app publishes a validation against
+examiners. A responsible band needs far more than the 30 rated recordings first proposed here: the report's bar is 100–200 full
+tests rated by two trained raters, balanced by level, region and microphone, with held-out QWK ≥ 0.75 and no bias between groups.
+The owner's Speaking band comes from the progress study instead (`specs/validation/step-v4.md`: an independent mock with a
+trained rater every 4 weeks). The product is measures and feedback, which is a legitimate product, and it says why.
 
 ## Limits and privacy
 Cost: the model sees transcripts only (a few hundred words), so the writing budget applies; transcription runs on our machines.
@@ -57,13 +76,20 @@ provider). Children and recording environments: as in phase 3.
 Per-user limits and a daily cost cap working; at least 5 of 10 testers still using it after 2 weeks; old errors falling in later
 essays over 4 weeks (the writing and speaking loop working); the word error rate and grammar-flag measurements above.
 
+## What the research says practice can and cannot do (Bronze, citations to check)
+A meta-analysis the report cites (Ngo et al. 2023, *ReCALL*, 15 studies) found a medium effect of speech-recognition
+pronunciation training, larger with explicit corrective feedback and with peers, smaller for solo practice and for stress,
+rhythm and intonation. A Vietnamese university study (HNUE) found no gain in the overall IELTS Speaking band from such practice,
+with a slight fluency drop while learners monitored their grammar. So: corrections stay explicit and short; the strict mock
+mode shows nothing while speaking; and NodeTrail is one part of Speaking practice, next to speaking with a partner or teacher.
+
 ## Steps
 | Step | Work |
 |---|---|
 | 5.1 | Recording and prompts for the three parts, the recognition service, transcript and timestamps; word error rate on the owner's recordings |
-| 5.2 | Fluency measures and the pause analysis |
+| 5.2 | Fluency measures and the pause analysis (pauses from the raw audio, before voice activity filtering) |
 | 5.3 | Grammar and vocabulary checks on the transcript; feedback with quotes checked against it |
-| 5.4 | The mock test flow with timing; the band decision once ratings exist |
+| 5.4 | The mock test flow with timing; no band (see "The band") |
 | 5.5 | Opening to testers: accounts, per-user limits, the daily cost cap, the tester report |
 
 Not in this phase: a native-like or accent score, intonation, an automatic band without ratings.
