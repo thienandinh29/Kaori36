@@ -16,6 +16,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-completion-2
     kind: completion
     status: dropped
@@ -29,6 +30,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-completion-3
     kind: completion
     status: dropped
@@ -42,6 +44,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-headings-1
     kind: headings
     status: generated
@@ -81,6 +84,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-mcq-1
     kind: mcq
     status: generated
@@ -110,6 +114,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-mcq-2
     kind: mcq
     status: generated
@@ -137,6 +142,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-mcq-3
     kind: mcq
     status: generated
@@ -165,6 +171,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-1
     kind: tfng
     status: generated
@@ -187,6 +194,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-2
     kind: tfng
     status: generated
@@ -210,6 +218,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-3
     kind: tfng
     status: generated
@@ -233,6 +242,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-4
     kind: tfng
     status: generated
@@ -255,6 +265,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-5
     kind: tfng
     status: generated
@@ -276,3 +287,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

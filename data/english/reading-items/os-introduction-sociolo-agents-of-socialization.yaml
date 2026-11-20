@@ -28,6 +28,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-completion-2
     kind: completion
     status: generated
@@ -54,6 +55,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-completion-3
     kind: completion
     status: generated
@@ -80,6 +82,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-headings-1
     kind: headings
     status: dropped
@@ -93,6 +96,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-mcq-1
     kind: mcq
     status: generated
@@ -122,6 +126,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-mcq-2
     kind: mcq
     status: generated
@@ -149,6 +154,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-mcq-3
     kind: mcq
     status: generated
@@ -179,6 +185,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-1
     kind: tfng
     status: generated
@@ -202,6 +209,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-2
     kind: tfng
     status: generated
@@ -225,6 +233,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-3
     kind: tfng
     status: generated
@@ -248,6 +257,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-4
     kind: tfng
     status: generated
@@ -272,6 +282,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-5
     kind: tfng
     status: generated
@@ -293,3 +304,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

@@ -29,6 +29,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-2
     kind: completion
     status: generated
@@ -54,6 +55,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-completion-3
     kind: completion
     status: generated
@@ -79,6 +81,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-headings-1
     kind: headings
     status: generated
@@ -116,6 +119,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-1
     kind: mcq
     status: generated
@@ -146,6 +150,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-2
     kind: mcq
     status: generated
@@ -176,6 +181,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-mcq-3
     kind: mcq
     status: generated
@@ -203,6 +209,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-1
     kind: tfng
     status: generated
@@ -226,6 +233,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-2
     kind: tfng
     status: generated
@@ -249,6 +257,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-3
     kind: tfng
     status: generated
@@ -272,6 +281,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-4
     kind: tfng
     status: generated
@@ -293,6 +303,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-the-age-of-empires-in-the-americas-tfng-5
     kind: tfng
     status: generated
@@ -315,3 +326,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

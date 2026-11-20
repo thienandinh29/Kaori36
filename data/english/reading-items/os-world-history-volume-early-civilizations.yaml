@@ -28,9 +28,10 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-early-civilizations-headings-1
     kind: headings
-    status: needs_review
+    status: rejected
     item:
       id: os-world-history-volume-early-civilizations-headings-1
       key:
@@ -54,9 +55,12 @@ versions:
     checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-19T02:51:38.417915+00:00'
     checked_at: '2026-11-19T02:51:38.417915+00:00'
-    reviewed_at: null
-    review_note: null
-    review_was: null
+    reviewed_at: '2026-11-20T05:27:59.478735+00:00'
+    review_note: '[unclear] Đoạn 3 khớp cả heading 2 (câu chủ đề “system of exchange created hierarchies”) lẫn heading
+      4 (“social stratification”, “passed wealth to next generation”). Đề có 2 đáp án, cần sửa một heading thành
+      distractor rõ ràng hơn.'
+    review_was: needs_review
+    check_view: null
   - id: os-world-history-volume-early-civilizations-mcq-1
     kind: mcq
     status: verified
@@ -88,6 +92,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-early-civilizations-tfng-1
     kind: tfng
     status: verified
@@ -111,9 +116,10 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-early-civilizations-tfng-2
     kind: tfng
-    status: needs_review
+    status: rejected
     item:
       id: os-world-history-volume-early-civilizations-tfng-2
       key: not_given
@@ -129,6 +135,9 @@ versions:
     checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-19T02:51:38.417915+00:00'
     checked_at: '2026-11-19T02:51:38.417915+00:00'
-    reviewed_at: null
-    review_note: null
-    review_was: null
+    reviewed_at: '2026-11-20T05:28:38.175389+00:00'
+    review_note: '[unclear] Đoạn 1: “relied primarily on consensus”. Consensus khác formal vote, câu hỏi thay phương
+      thức → nghiêng FALSE. Có thể cãi NOT GIVEN vì bài không nhắc “vote” và có chữ “primarily”. Nên sửa đề cho
+      dứt khoát.'
+    review_was: needs_review
+    check_view: null

@@ -16,6 +16,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-sky-above-headings-1
     kind: headings
     status: verified
@@ -47,6 +48,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-sky-above-mcq-1
     kind: mcq
     status: verified
@@ -77,6 +79,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-sky-above-tfng-1
     kind: tfng
     status: verified
@@ -100,6 +103,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-sky-above-tfng-2
     kind: tfng
     status: verified
@@ -121,3 +125,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

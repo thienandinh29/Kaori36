@@ -28,6 +28,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-types-of-societies-headings-1
     kind: headings
     status: verified
@@ -59,6 +60,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-types-of-societies-mcq-1
     kind: mcq
     status: verified
@@ -88,6 +90,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-types-of-societies-tfng-1
     kind: tfng
     status: verified
@@ -112,6 +115,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-types-of-societies-tfng-2
     kind: tfng
     status: verified
@@ -135,6 +139,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-types-of-societies-tfng-3
     kind: tfng
     status: verified
@@ -158,9 +163,10 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-introduction-sociolo-types-of-societies-tfng-4
     kind: tfng
-    status: needs_review
+    status: approved
     item:
       id: os-introduction-sociolo-types-of-societies-tfng-4
       key: not_given
@@ -176,6 +182,11 @@ versions:
     checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T02:50:51.241167+00:00'
     checked_at: '2026-11-19T02:50:51.241167+00:00'
-    reviewed_at: null
-    review_note: null
-    review_was: null
+    reviewed_at: '2026-11-20T05:23:52.703624+00:00'
+    review_note: 'Câu liên quan trong bài: “In China, a far greater percentage of people may be involved in manufacturing
+      than America.”  Câu này nói về tỷ lệ người làm việc trong ngành sản xuất (lao động). Câu hỏi lại nói về tỷ
+      trọng nền kinh tế dành cho sản xuất (share of economy spent on manufacturing). Hai chỉ số này khác nhau. Một
+      nước có thể nhiều người làm sản xuất hơn mà sản xuất vẫn không chiếm phần lớn hơn trong kinh tế, và ngược
+      lại. Bài không hề nhắc đến chi tiêu hay tỷ trọng kinh tế, nên không đủ thô'
+    review_was: needs_review
+    check_view: null

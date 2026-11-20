@@ -29,6 +29,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-completion-2
     kind: completion
     status: dropped
@@ -42,6 +43,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-completion-3
     kind: completion
     status: verified
@@ -68,9 +70,10 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-headings-1
     kind: headings
-    status: needs_review
+    status: rejected
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-headings-1
       key:
@@ -110,9 +113,12 @@ versions:
     checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
     checked_at: '2026-11-19T03:36:57.225960+00:00'
-    reviewed_at: null
-    review_note: null
-    review_was: null
+    reviewed_at: '2026-11-20T05:29:41.569409+00:00'
+    review_note: '[unclear] Bài có 2 đoạn chú thích link (PBS, simulator) bị copy theo từ OpenStax, làm đáp án lệch
+      2 vị trí. Đoạn 9 nên là 7, đoạn 10 nên là 5 (máy đúng). Đề xuất xóa 2 đoạn chú thích, đáp án: 0:12, 1:6, 2:11,
+      3:4, 4:1, 5:9, 6:8, 7:7, 8:5. Lưu ý heading 0 và 7, 3 và 5 khá sát nhau.'
+    review_was: needs_review
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-mcq-1
     kind: mcq
     status: verified
@@ -142,6 +148,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-mcq-2
     kind: mcq
     status: verified
@@ -170,6 +177,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-mcq-3
     kind: mcq
     status: verified
@@ -198,6 +206,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-tfng-1
     kind: tfng
     status: verified
@@ -222,6 +231,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-tfng-2
     kind: tfng
     status: verified
@@ -246,6 +256,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-tfng-3
     kind: tfng
     status: generated
@@ -270,6 +281,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-tfng-4
     kind: tfng
     status: generated
@@ -294,6 +306,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-tfng-5
     kind: tfng
     status: generated
@@ -315,3 +328,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

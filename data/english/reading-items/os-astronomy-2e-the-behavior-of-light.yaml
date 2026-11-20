@@ -28,6 +28,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-completion-2
     kind: completion
     status: generated
@@ -54,6 +55,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-completion-3
     kind: completion
     status: generated
@@ -79,6 +81,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-headings-1
     kind: headings
     status: generated
@@ -124,6 +127,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-mcq-1
     kind: mcq
     status: generated
@@ -152,6 +156,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-mcq-2
     kind: mcq
     status: generated
@@ -181,6 +186,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-mcq-3
     kind: mcq
     status: generated
@@ -209,6 +215,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-1
     kind: tfng
     status: generated
@@ -233,6 +240,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-2
     kind: tfng
     status: generated
@@ -256,6 +264,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-3
     kind: tfng
     status: generated
@@ -279,6 +288,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-4
     kind: tfng
     status: generated
@@ -303,6 +313,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-5
     kind: tfng
     status: generated
@@ -324,3 +335,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
