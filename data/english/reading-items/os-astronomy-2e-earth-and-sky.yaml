@@ -17,6 +17,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-earth-and-sky-completion-2
     kind: completion
     status: dropped
@@ -30,6 +31,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-earth-and-sky-completion-3
     kind: completion
     status: dropped
@@ -43,9 +45,10 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-earth-and-sky-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-headings-1
       key:
@@ -75,13 +78,14 @@ versions:
       - The history of the Royal Observatory
       - How to measure longitude at sea
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-earth-and-sky-mcq-1
     kind: mcq
     status: dropped
@@ -95,6 +99,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-earth-and-sky-mcq-2
     kind: mcq
     status: dropped
@@ -108,6 +113,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-earth-and-sky-mcq-3
     kind: mcq
     status: dropped
@@ -121,9 +127,10 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-earth-and-sky-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-tfng-1
       key: 'true'
@@ -136,16 +143,17 @@ versions:
       - For example, Earth’s equator is a great circle on Earth’s surface, halfway between the North and South Poles.
       statement: The equator is exactly halfway between Earth's North and South Poles.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-earth-and-sky-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-tfng-2
       key: 'false'
@@ -160,16 +168,17 @@ versions:
         Greenwich, England, which has been designated as the Prime Meridian.
       statement: The choice of Greenwich as the Prime Meridian was made without any disagreement among countries.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-earth-and-sky-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-tfng-3
       key: 'true'
@@ -182,16 +191,17 @@ versions:
       - The latitude of the South Pole is 90° S, and the latitude of the North Pole is 90° N.
       statement: The latitude of the South Pole is 90° S.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-earth-and-sky-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-tfng-4
       key: 'false'
@@ -204,16 +214,17 @@ versions:
       - Latitudes are measured either north or south of the equator from 0° to 90°.
       statement: Latitudes are measured from 0° to 90° to the east or to the west of the Prime Meridian.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-earth-and-sky-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-tfng-5
       key: not_given
@@ -225,10 +236,11 @@ versions:
       evidence: []
       statement: Greenwich was chosen because the old Royal Observatory there was the tallest building in England.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled

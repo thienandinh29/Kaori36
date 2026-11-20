@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-astronomy-2e-the-behavior-of-light-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-completion-1
       kind: completion
@@ -21,16 +21,17 @@ versions:
       sentence: In this book, radiation is defined as a general term for waves that radiate ___ from a source.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: outward
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-completion-2
       kind: completion
@@ -47,16 +48,17 @@ versions:
         ___ equations.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: elegant
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-completion-3
       kind: completion
@@ -72,16 +74,17 @@ versions:
       sentence: Protons are found in the ___ of an atom.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: nucleus
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-headings-1
     kind: headings
-    status: generated
+    status: needs_review
     item:
       id: os-astronomy-2e-the-behavior-of-light-headings-1
       key:
@@ -117,13 +120,14 @@ versions:
       - The speed of light
       - Applications of magnetism in industry
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-mcq-1
     kind: mcq
     status: generated
@@ -152,6 +156,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-mcq-2
     kind: mcq
     status: generated
@@ -181,6 +186,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-mcq-3
     kind: mcq
     status: generated
@@ -209,6 +215,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-1
     kind: tfng
     status: generated
@@ -233,6 +240,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-2
     kind: tfng
     status: generated
@@ -256,6 +264,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-3
     kind: tfng
     status: generated
@@ -279,6 +288,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-4
     kind: tfng
     status: generated
@@ -303,6 +313,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-astronomy-2e-the-behavior-of-light-tfng-5
     kind: tfng
     status: generated
@@ -324,3 +335,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

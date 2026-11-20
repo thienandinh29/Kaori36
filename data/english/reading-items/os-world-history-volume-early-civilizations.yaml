@@ -28,6 +28,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-early-civilizations-headings-1
     kind: headings
     status: needs_review
@@ -51,12 +52,13 @@ versions:
       - Surplus, specialization and the growth of cities
     problems: []
     checker_answer: 0:2, 1:4, 2:1
-    checker_model: dots-studio/dots-3-note-preview:free
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T02:51:38.417915+00:00'
-    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-world-history-volume-early-civilizations-mcq-1
     kind: mcq
     status: verified
@@ -84,10 +86,11 @@ versions:
     checker_answer: B
     checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T02:51:38.417915+00:00'
-    checked_at: '2026-11-19T02:51:38.417915+00:00'
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-world-history-volume-early-civilizations-tfng-1
     kind: tfng
     status: verified
@@ -111,6 +114,7 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null
   - id: os-world-history-volume-early-civilizations-tfng-2
     kind: tfng
     status: needs_review
@@ -132,3 +136,4 @@ versions:
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: null

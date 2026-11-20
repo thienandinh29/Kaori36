@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-astronomy-2e-telescopes-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-completion-1
       kind: completion
@@ -21,16 +21,17 @@ versions:
       sentence: A telescope acts as a ___ for collecting light.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: bucket
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-completion-2
       kind: completion
@@ -46,16 +47,17 @@ versions:
       sentence: The distance from a lens to the point where parallel rays converge is called the ___ of the lens.
       max_words: 2
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: focal length
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-completion-3
       kind: completion
@@ -71,16 +73,17 @@ versions:
       sentence: A telescope design that uses a lens as its main optical element to form an image is known as a ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: refractor
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-headings-1
       key:
@@ -110,16 +113,17 @@ versions:
       - The religious rituals of ancient observatories
       - How detectors record observations permanently
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:1, 1:2, 2:0, 3:3, 4:4, 5:5, 6:6, 7:7
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-mcq-1
       key: 1
@@ -140,16 +144,17 @@ versions:
         to improve the efficiency of these three basic components: the telescopes, the wavelength-sorting device,
         and the detectors.'
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-mcq-2
       key: 1
@@ -169,16 +174,17 @@ versions:
       - By the time the few rays of light pointed toward us actually arrive at Earth, they are, for all practical
         purposes, parallel to each other.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-mcq-3
       key: 2
@@ -198,16 +204,17 @@ versions:
       - The eyepiece focuses the image at a distance that is either directly viewable by a human or at a convenient
         place for a detector.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-tfng-1
       key: 'false'
@@ -222,16 +229,17 @@ versions:
         of time and date.
       statement: Ancient observatories were used solely to measure the positions of celestial objects for timekeeping.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-tfng-2
     kind: tfng
-    status: generated
+    status: needs_review
     item:
       id: os-astronomy-2e-telescopes-tfng-2
       key: not_given
@@ -243,16 +251,17 @@ versions:
       evidence: []
       statement: Galileo applied for a patent for the telescope within weeks of Hans Lippershey.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-tfng-3
       key: 'true'
@@ -266,16 +275,17 @@ versions:
         after the Exposition.
       statement: The largest refracting telescope ever built was dismantled after the Paris 1900 Exposition.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-tfng-4
       key: 'false'
@@ -290,16 +300,17 @@ versions:
       - Currently, the largest refracting telescope is the 40-inch refractor at Yerkes Observatory in Wisconsin.
       statement: The Yerkes Observatory refractor is larger than the one built for the Paris 1900 Exposition.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
   - id: os-astronomy-2e-telescopes-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-telescopes-tfng-5
       key: 'false'
@@ -313,10 +324,11 @@ versions:
         the position of Earth.
       statement: Galileo used his telescope only for a single night of observation.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-20T03:17:01.147502+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
+    check_view: shuffled
