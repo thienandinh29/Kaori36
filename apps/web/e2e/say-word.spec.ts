@@ -20,6 +20,7 @@ test("a learner says a word, hears it back, and the owner sees each sound", asyn
     localStorage.removeItem("nodetrail_say_consent");
   });
   const sent: string[] = [];
+  const takes: string[] = [];
   await page.route("**/api/backend/vocab/say/status*", (route) =>
     route.fulfill({
       contentType: "application/json",
@@ -35,6 +36,7 @@ test("a learner says a word, hears it back, and the owner sees each sound", asyn
     sent.push(
       `${url.searchParams.get("word")}|${url.searchParams.get("consent")}`,
     );
+    takes.push(url.searchParams.get("take") ?? "");
     expect(route.request().headers()["content-type"]).toBe("audio/wav");
     return route.fulfill({
       contentType: "application/json",
@@ -120,9 +122,14 @@ test("a learner says a word, hears it back, and the owner sees each sound", asyn
   await say.getByRole("button", { name: "Dừng" }).click();
   await expect(say.getByTestId("say-result")).toBeVisible();
   await expect.poll(() => sent.length).toBe(2);
-  await expect(
-    say.getByRole("button", { name: "Phân tích lại" }),
-  ).toBeVisible();
+  // Each recording has its own id; analysing it again sends the same one, so the
+  // server counts one attempt per recording, not one per tap (step 3.7b).
+  expect(takes[0]).toMatch(/^[0-9a-f-]{36}$/);
+  expect(takes[1]).toMatch(/^[0-9a-f-]{36}$/);
+  expect(takes[1]).not.toBe(takes[0]);
+  await say.getByRole("button", { name: "Phân tích lại" }).click();
+  await expect.poll(() => sent.length).toBe(3);
+  expect(takes[2]).toBe(takes[1]);
 });
 
 test("without the analysis, saying a word is compared by ear only", async ({

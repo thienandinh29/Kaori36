@@ -54,3 +54,11 @@ Builds on step 3.7. The owner's requests (19 Nov 2026):
   - Vitest;
   - Playwright: coloured IPA, tap detail, guide.
 - [ ] T4 A teacher reviews `phone-tips.yaml` (with the `tip_vi` work already on `dolater.md`).
+
+## Fix (20 Nov): one attempt per recording
+The owner analysed the same recording twice and the guide counted it as two attempts ("2/2"), and a reply lost on
+the way back and retried would count twice too. Each recording now gets a random id in the browser (`take`), sent with
+every analysis of it; `say_attempts.take_id` (migration `0037`) is unique per learner, word and take, so analysing
+the same recording again replaces its row instead of adding one. Requests without a take (older clients) still add a
+row each. Tests: `test_analysing_the_same_recording_again_is_one_attempt`; Playwright checks a new id per recording
+and the same id on "Phân tích lại".

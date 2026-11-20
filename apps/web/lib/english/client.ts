@@ -475,8 +475,15 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       word: string,
       consent: string,
       wav: ArrayBuffer,
+      take: string,
     ): Promise<SayResult> {
-      const q = new URLSearchParams({ learner_id: learnerId, word, consent });
+      // `take`: one id per recording, so analysing it again is the same attempt.
+      const q = new URLSearchParams({
+        learner_id: learnerId,
+        word,
+        consent,
+        take,
+      });
       return parseSayResult(
         await request(`vocab/say?${q}`, {
           method: "POST",
