@@ -7,8 +7,82 @@ The pack's principle holds: the LLM writes and explains, code and a second model
 ## What the learner sees
 Reading: a text (levelled), then questions of one type at a time. Listening: audio (played once or twice, as chosen), then the
 questions. After each answer: right or wrong from the answer key (never from a model), the passage sentence that decides it
-highlighted, and a Vietnamese explanation drawn from that sentence. Everything generated is labelled "Bản nháp tự động" until the
+highlighted, and a Vietnamese explanation drawn from that sentence (CP4b below: why the key is right and why the chosen
+answer was tempting). Everything generated is labelled "Bản nháp tự động" until the
 owner has reviewed it.
+
+## Why the wrong answer tempted you (CP4b; specified 20 Nov 2026, not built)
+From the owner's research on IELTS platforms (20 Nov 2026, Bronze: a report with citations to check). Learners rate a bare key
+("Correct: C") as the weakest feedback and ask for the trap to be named: NOT GIVEN against FALSE, a word copied from the passage, a
+paraphrase missed. Whether naming the trap raises *later* accuracy, rather than satisfaction, is not shown by any trial the report
+cites, so it is a hypothesis we record, never a promise.
+
+**What the learner sees**, after answering (practice, a timed test's results, "Nghe cả bài" results):
+- **Wrong:** the trap their choice fell into, by its Vietnamese name; one or two Vietnamese sentences on why it is wrong, quoting
+  the passage words it rests on; then why the key is right, quoting the deciding sentence.
+- **Right:** why the key is right, in a sentence; the other options' explanations one tap away ("Vì sao các lựa chọn khác sai?").
+- Labelled "Giải thích tự động, đã kiểm tra chéo bằng máy; chưa được giáo viên duyệt". "Giải thích này sai?" hides it for the
+  learner and records a flag (Bronze feedback; a flag can hide an explanation, never promote one).
+- **No explanation passed its checks:** the question is still served, with the deciding sentence only (as today).
+
+**The traps** (a closed list; code refuses any other):
+
+| Kind | Trap | Vietnamese name | Who names it |
+|---|---|---|---|
+| T/F/NG | the pair chosen/key, e.g. FALSE chosen, NOT GIVEN key | "Nhầm SAI với KHÔNG CÓ THÔNG TIN" (and the other five pairs) | code, from the answer and the key |
+| Multiple choice | `word_match` | Lặp từ trong bài nhưng sai nghĩa | the generator, checked |
+| | `partly_true` | Đúng một phần | |
+| | `wrong_part` | Đúng ở chỗ khác trong bài, không trả lời câu này | |
+| | `opposite` | Ngược với bài | |
+| | `not_stated` | Bài không nói điều này | |
+| | `outside_knowledge` | Đúng ngoài đời nhưng bài không nói | |
+| | `extreme` | Quá tuyệt đối (all, never, only…) | |
+| Completion | `too_many_words`, `wrong_form`, `spelling`, `other` | Quá số từ cho phép, Sai dạng từ, Sai chính tả, Khác | code, from the typed answer (word count; a shared stem with the key; edit distance ≤ 2) |
+| Headings | `detail_not_main`, `word_match`, `wrong_part` | Chỉ là một chi tiết, không phải ý chính… | the generator, checked |
+
+**Generation** (offline, a worker CLI like 4.2b; never in a request): one DeepSeek call per **approved** question through the
+gateway (a new task `reading_explain`), given the passage, the question in the stored order, the key and its evidence. It returns,
+for the key, `why_vi` and `quotes`; for each wrong option (multiple choice) or paragraph (headings), `trap`, `why_vi` and `quotes`;
+for T/F/NG and completion only the key's part (code names the trap). Every call in `llm_calls`, capped by `--max-cost`. An
+explanation stores the passage's and the question's fingerprints: if either changes, it is dropped.
+
+**Code checks:** every quote is in the passage (the same normalisation as question evidence); the key's quote is, or overlaps, the
+question's evidence (for a NOT GIVEN key there is no deciding sentence: the closest related sentence is quoted, and the text must
+say what the passage does *not* state); the trap is on the list and allowed for the kind; the key is never given a trap; `why_vi`
+is 20–400 characters and in Vietnamese apart from quotes.
+
+**Check by another family** (free Ernie, task `reading_check`, like the questions): one request per question. The checker gets the
+passage and the explanations as numbered claims, is not told the key, and marks each claim *supported* or *not supported* by the
+passage alone. A wrong option's claim not supported drops that explanation; the key's not supported drops them all. Code checks plus
+this check agreeing is Silver, enough to show with the label above. Whether Ernie can judge Vietnamese explanations is the first
+thing measured (the gate below); if it cannot, this stops and comes back to the owner with options (an English claim checked
+instead, or the dots model).
+
+**The gate before anything is shown:** a planted test from real generated explanations: 20 with a planted fault (a claim the passage
+contradicts, a quote from another paragraph, a trap that does not fit, a key explanation that argues for a wrong option) and 20
+good ones. Bar: the checker catches ≥ 18/20 with ≤ 2/20 false alarms (the bar the lesson checker met), exact intervals
+(`evalkit/stats.py`). The faults are planted by construction; the owner only confirms each one is really a fault. Later, a
+teacher's sample of 30 shown explanations (Gold, the portal) gives the escape rate with its upper bound (`validation/gate.py`).
+
+**Question types and traps over time:**
+- `reading_answers` and `listening_answers` gain a nullable `trap` (the trap of the chosen wrong answer, by code from the stored
+  explanation or the rules above). Additive migration with the new `reading_explanations` table.
+- "Theo dạng câu hỏi" on `/doc`: per type (T/F/NG, multiple choice, completion, headings), last 30 days: answers, right, the share
+  with an exact 95% interval, and the most frequent trap ("Bạn hay nhầm SAI với KHÔNG CÓ THÔNG TIN: 5 trong 8 lần sai"). From 5
+  answers per type; fewer is "chưa đủ dữ liệu".
+- **Hôm nay:** the engine's choice of skill is unchanged (the engine and its simulation gate are not touched). The Reading
+  activity's link opens the text with the most unanswered questions of the learner's weakest type (lowest share, at least 8
+  answers, at least 15 points below their other types), and "Vì sao?" says so.
+
+**Not claimed:** that the explanations improve later accuracy. The trap rate on later questions of the same type is recorded;
+with one learner it is learner feedback (Bronze), not a result. A real test of it goes to `research/` with a hypothesis first.
+
+**Cost:** about one DeepSeek call per approved question (passage-sized prompts; estimated under US$0.50 per 100 questions, capped)
+and one free Ernie request per question, sharing the 50-a-day limit with the questions' blind checks, so it runs after those
+finish (182 left on 20 Nov, about four daily batches) or on alternate days.
+
+**Steps, one PR each:** (1) migration, generation, code checks, the planted-test tooling, run on the approved questions;
+(2) explanations on the learner pages and the flag; (3) "Theo dạng câu hỏi" and the Hôm nay link.
 
 ## Question types (start with what code can grade)
 True / False / Not Given; multiple choice; sentence and short-answer completion (typed, graded exactly after normalisation, as in

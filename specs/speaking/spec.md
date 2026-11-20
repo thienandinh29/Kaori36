@@ -9,6 +9,20 @@ A part of the test (Part 1 short questions; Part 2 a cue card with one minute to
 discussion), a timer, a record button. Then: the transcript, how they spoke (speech rate, pauses, fillers), what to improve with
 quotes from their own words, and a retry. Voice data follows the policy decided in phase 3.
 
+## Two modes (added 20 Nov 2026 from the owner's research, Bronze)
+- **Luyện có hướng dẫn (guided):** one question at a time; after the turn, hints and words to use, then a retry; shadowing a model
+  answer on read-aloud prompts.
+- **Thi thử (strict exam):** the real timing (Part 1 about 4–5 minutes, Part 2 one minute to prepare and up to two to speak, Part 3
+  about 4–5 minutes), no hint or pop-up while recording, everything shown only after the part ends.
+Two reasons from the report: live hints during speech raise load and anxiety in the studies it cites, and practice that never feels
+like the exam leaves the exam's pressure untrained. Feedback in both separates what the audio shows (pace, pauses) from what the
+transcript shows (words, grammar).
+
+**Priority (for the owner):** the report cites IELTS's 2024–2025 test-taker data with Speaking as the lowest Academic skill for
+Vietnamese candidates (mean 5.61; to be checked on IELTS's own test-taker performance page). Since the overall band is the mean of
+the four skills rounded to the nearest half, the weakest skill caps it, which argues for starting phase 5 right after phase 4's
+CP6 report rather than after exam-format Listening.
+
 ## Pipeline (worker or a service; never in a request)
 browser audio (16 kHz mono WAV, as in phase 3) → quality gate → **speech recognition with word timestamps** → measures by code →
 grammar and vocabulary checks on the transcript (the writing tools) → feedback by a model that sees only the transcript →

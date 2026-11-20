@@ -24,6 +24,8 @@ a gate's truth.
 | [ ] **Phase 3, after the reviewer's labels:** `uv run python -m app.pronunciation.thresholds --out ../../evals/baselines/pronunciation-thresholds.json --apply ../../data/pronunciation/thresholds.json`, then `docker compose restart api worker`. **`--apply` is refused** unless the report rests on the reviewer's Gold labels from at least 50 recordings (V3); your own labels give a Bronze check of the pipeline only | 10 min | Marks on sounds, mastery on the pronunciation nodes | `specs/pronunciation/step-3.4.md` |
 | [x] **Validation spec (`specs/validation/spec.md`):** approved 18 Nov; V1 built. When a reviewer agrees: `uv run python -m app.validation.cli add-reviewer --name "…" --role expert_teacher --expertise "…" --consented` (only after they agree to how their labels are used) | 5 min | Their labels count as Gold | `specs/validation/step-v1.md` |
 | [ ] **Two maps (`specs/two-layer-map/spec.md`):** approve or change the design; set your target (band per skill, exam date). The links between competencies and foundations stay Bronze ("đề xuất") until a teacher checks a sample | 30 min | M1–M2, ideally before CP4 | same |
+| [ ] **Phase 4, CP4b (new, 20 Nov), when it is built:** look over the planted test of explanations and confirm each planted fault is really a fault (the faults are planted by construction; your check is that each is unambiguous) | 30 min | CP4b's gate | `specs/listening-reading/spec.md` |
+| [ ] **Research follow-up (new, 20 Nov):** in the next deep research, check in the primary sources the figures we act on: Vietnam's Speaking mean in IELTS's 2024–2025 test-taker data, Elder and O'Loughlin (2003), Kang et al. (2021), and whether IELTS One Skill Retake is offered in Vietnam; and ask whether naming the trap in Reading feedback raises later accuracy | 1 research run | Phase 5's priority; CP4b's claim | `docs/v2/plan-english-pack.md` (Risks) |
 
 ## 2. As learner (your own signal, never a correctness label)
 - [ ] Use the app most days. When something is unclear, too hard, or assumes what you were not taught, say so: that is
@@ -107,6 +109,8 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Phase 3.5b:** fine-tuning the recogniser on a GPU notebook. Only worth it if the reviewer's labels show the
   frozen model is the limit (it needs GPU time, and replaces the pinned model).
 - [ ] **Phase 5, Speaking:** the recognition model; the transcript consent wording; accounts for testers.
+- [ ] **Order of the next builds (new, 20 Nov):** CP4b (why the wrong answer tempted you) before or after the CP6 report; CP4c
+  (exam details) now or later; phase 5 Speaking right after CP6 (the research says Speaking is Vietnam's lowest skill, to check).
 
 ## 6. Routine (keep doing)
 - [ ] Before each batch of new lessons or Reading questions, rerun the checker's planted test, because Ernie is a
