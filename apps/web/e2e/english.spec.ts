@@ -164,6 +164,8 @@ test("an essay is written, measured by the worker, and deleted", async ({
   await page.goto("/viet");
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
   await page.locator('a[href="/viet/t2-plastic-ban"]').click();
+  // /viet has a textbox of its own (the own-question box, step 2.10): wait for the editor
+  await expect(page).toHaveURL(/\/viet\/t2-plastic-ban$/);
   const essay =
     "Plastic bags is cheap. However, they pollute rivers. Paper bags is expensive.\n\nIn conclusion, a ban is sensible.";
   await page.getByRole("textbox").fill(essay);
@@ -286,6 +288,70 @@ test("repeated and memorised text is named first and not counted (step 2.7)", as
     "Nhiều đoạn không phải lời của bạn",
   );
   await expect(page.getByTestId("own-words")).toContainText("/ 250");
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Xóa bài viết" }).click();
+  await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
+});
+
+test("a learner writes on their own Task 2 question (step 2.10)", async ({
+  page,
+}) => {
+  await asLearner(page, LEARNER);
+  await page.goto("/viet");
+  const own = page.getByTestId("own-prompt");
+  // a Task 1 question is refused with a reason
+  await own
+    .getByRole("textbox")
+    .fill(
+      "The chart below shows how many people used public transport in three cities. Summarise the information.",
+    );
+  await own.getByRole("button", { name: "Viết bài" }).click();
+  await expect(own.getByRole("alert")).toContainText("Task 1");
+  const question =
+    "Some people think that young people should work for a year before university. Do you agree or disagree?";
+  await own.getByRole("textbox").fill(question);
+  await own.getByRole("button", { name: "Viết bài" }).click();
+  await expect(page).toHaveURL(/\/viet\/de-cua-ban$/);
+  await expect(page.locator(".en-prompt")).toHaveText(question);
+  await page
+    .getByRole("textbox")
+    .fill(
+      "Young people who work first learn about money. However, some lose the habit of study.\n\nIn conclusion, a year of work helps most students.",
+    );
+  await page.getByLabel("Tôi đã đọc và đồng ý").check();
+  await page.getByRole("button", { name: "Gửi bài" }).click();
+  await expect(page.getByRole("heading", { name: "Đã phân tích" })).toBeVisible(
+    { timeout: 30_000 },
+  );
+  await expect(page.locator(".en-prompt")).toHaveText(question);
+  await expect(page.getByText("Đề của bạn").first()).toBeVisible();
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Xóa bài viết" }).click();
+  await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();
+});
+
+test("an exam on an authored prompt keeps the server's 40-minute clock (step 2.10)", async ({
+  page,
+}) => {
+  await asLearner(page, LEARNER);
+  await page.goto("/viet");
+  await page.locator('a[href="/viet/t2-plastic-ban?thi=1"]').click();
+  await expect(page).toHaveURL(/\/viet\/t2-plastic-ban\?thi=1$/);
+  const clockLine = page.getByTestId("exam-clock");
+  await expect(clockLine).toContainText(/Còn lại (40:00|39:5\d)/);
+  await page
+    .getByRole("textbox")
+    .fill(
+      "Plastic bags pollute rivers. However, they are cheap.\n\nIn conclusion, a ban is sensible.",
+    );
+  await page.getByLabel("Tôi đã đọc và đồng ý").check();
+  await page.getByRole("button", { name: "Gửi bài" }).click();
+  await expect(page.getByRole("heading", { name: "Đã phân tích" })).toBeVisible(
+    { timeout: 30_000 },
+  );
+  await expect(page.getByTestId("exam-result")).toContainText(
+    "Thi thử: nộp sau 0:",
+  );
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Xóa bài viết" }).click();
   await expect(page.getByRole("heading", { name: "Luyện viết" })).toBeVisible();

@@ -4,7 +4,17 @@ import { useEffect, useState } from "react";
 import { DataError } from "@/lib/decode";
 import { englishClient } from "@/lib/english/client";
 import { browserStore } from "@/lib/english/learner";
-import type { WritingPrompt } from "@/lib/english/types";
+import {
+  OWN_ID,
+  clearTest,
+  ownPrompt,
+  promptIdFor,
+  savedTest,
+  saveTest,
+} from "@/lib/english/own-prompt";
+import { sessionStore } from "@/lib/english/session-store";
+import type { WritingPrompt, WritingTest } from "@/lib/english/types";
+import { clock, remaining } from "@/lib/reading/test";
 import {
   MAX_CHARS,
   TASK_MIN_WORDS,
@@ -31,11 +41,24 @@ export function submitProblem(error: unknown): string {
   return problemText(error);
 }
 
-/** The editor: live word count, the consent notice before the first submission. */
-export function EssayEditor({ promptId }: { promptId: string }) {
+/**
+ * The editor: live word count, the consent notice before the first submission. `promptId` is the
+ * page slug (`de-cua-ban` for the learner's own question); `exam` runs the 40-minute test (2.10).
+ */
+export function EssayEditor({
+  promptId: slug,
+  exam = false,
+}: {
+  promptId: string;
+  exam?: boolean;
+}) {
+  const promptId = promptIdFor(slug);
   const router = useRouter();
   const { learner, error: learnerError, retry } = useLearner();
   const [prompt, setPrompt] = useState<WritingPrompt | null | undefined>();
+  const [own, setOwn] = useState<string | null>(null);
+  const [test, setTest] = useState<WritingTest | null>(null);
+  const [nowMs, setNowMs] = useState(() => Date.now());
   const [loadError, setLoadError] = useState<unknown>(null);
   const [version, setVersion] = useState(0);
   const [text, setText] = useState("");
@@ -48,18 +71,45 @@ export function EssayEditor({ promptId }: { promptId: string }) {
   useEffect(() => {
     if (!learner) return;
     let live = true;
-    englishClient()
-      .writingPrompts(learner)
-      .then((ps) => {
+    const client = englishClient();
+    const store = sessionStore();
+    const question = promptId === OWN_ID ? ownPrompt(store) : null;
+    const load: Promise<WritingPrompt | null> =
+      promptId === OWN_ID
+        ? question === null
+          ? Promise.resolve(null)
+          : client.checkOwnPrompt(learner, question).then((c) => c.prompt)
+        : client
+            .writingPrompts(learner)
+            .then((ps) => ps.find((p) => p.id === promptId) ?? null);
+    load
+      .then(async (p) => {
         if (!live) return;
-        setPrompt(ps.find((p) => p.id === promptId) ?? null);
+        setOwn(question);
+        if (p && exam && p.task === 2) {
+          // A reload continues the same test; the server's start time stays the truth.
+          const t =
+            savedTest(store, promptId, question) ??
+            (await client.startWritingTest(learner, promptId, question));
+          if (!live) return;
+          saveTest(store, t, question);
+          setTest(t);
+        }
+        setPrompt(p);
         setLoadError(null);
       })
       .catch((e: unknown) => live && setLoadError(e));
     return () => {
       live = false;
     };
-  }, [learner, promptId, version]);
+  }, [learner, promptId, exam, version]);
+
+  // The exam clock ticks once a second; it never submits on its own (late is marked, not lost).
+  useEffect(() => {
+    if (!test) return;
+    const id = window.setInterval(() => setNowMs(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [test]);
 
   if (learnerError) return <Problem error={learnerError} onRetry={retry} />;
   if (loadError)
@@ -68,7 +118,17 @@ export function EssayEditor({ promptId }: { promptId: string }) {
     );
   if (!learner || prompt === undefined)
     return <p className="en-muted">{t.loading}</p>;
-  if (prompt === null) return <p className="en-problem">{w.badPrompt}</p>;
+  if (prompt === null)
+    return (
+      <p className="en-problem">
+        {promptId === OWN_ID ? w.ownMissing : w.badPrompt}
+      </p>
+    );
+  if (exam && prompt.task === 2 && !test)
+    return <p className="en-muted">{w.examStarting}</p>;
+  const left = test
+    ? remaining(Date.parse(test.started_at), test.time_limit_s, nowMs)
+    : null;
 
   const words = countWords(text);
   const min = TASK_MIN_WORDS[prompt.task];
@@ -80,7 +140,11 @@ export function EssayEditor({ promptId }: { promptId: string }) {
     setError(null);
     try {
       rememberConsent(browserStore());
-      const id = await englishClient().submitEssay(learner, prompt.id, text);
+      const id = await englishClient().submitEssay(learner, promptId, text, {
+        own,
+        testId: test?.id ?? null,
+      });
+      if (test) clearTest(sessionStore());
       router.push(`/bai-viet/${id}`);
     } catch (e: unknown) {
       setError(e);
@@ -95,10 +159,26 @@ export function EssayEditor({ promptId }: { promptId: string }) {
           {w.task} {prompt.task} · {prompt.level}
         </span>
         <span className="en-muted">{promptTypeLabel(prompt.type)}</span>
-        {prompt.status === "draft" && (
+        {prompt.status === "draft" && promptId !== OWN_ID && (
           <span className="en-badge">{t.draft}</span>
         )}
+        {promptId === OWN_ID && <span className="en-badge">{w.ownBadge}</span>}
+        {test && <span className="en-badge next">{w.examBadge}</span>}
       </div>
+      {test && left !== null && (
+        <>
+          <p className="en-muted">{w.examNote}</p>
+          <p className="nt-test-clock" role="timer" data-testid="exam-clock">
+            {left > 0 ? (
+              <>
+                {w.examLeft} <strong>{clock(left)}</strong>
+              </>
+            ) : (
+              <strong>{w.examOver}</strong>
+            )}
+          </p>
+        </>
+      )}
       <p lang="en" className="en-prompt">
         {prompt.prompt}
       </p>

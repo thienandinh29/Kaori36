@@ -13,6 +13,8 @@ import {
   type ScorePreview,
 } from "@/lib/english/types";
 import { groupByKind } from "@/lib/english/issue-kinds";
+import { OWN_ID } from "@/lib/english/own-prompt";
+import { clock } from "@/lib/reading/test";
 import { stillWorking } from "@/lib/english/writing";
 import { vi } from "@/messages/vi";
 import { ChartFigureView } from "./chart-figure";
@@ -360,9 +362,28 @@ export function EssayView({ essayId }: { essayId: string }) {
     <>
       <section className="en-card">
         <h1>{w.status[essay.status]}</h1>
+        {(essay.prompt?.id === OWN_ID || essay.test) && (
+          <p className="en-actions">
+            {essay.prompt?.id === OWN_ID && (
+              <span className="en-badge">{w.ownBadge}</span>
+            )}
+            {essay.test && <span className="en-badge">{w.examBadge}</span>}
+          </p>
+        )}
         {essay.prompt && (
           <p lang="en" className="en-prompt">
             {essay.prompt.prompt}
+          </p>
+        )}
+        {essay.test && (
+          <p
+            className={essay.test.over_time ? "en-problem" : "en-muted"}
+            data-testid="exam-result"
+          >
+            {(essay.test.over_time ? w.examLate : w.examTook).replace(
+              "{t}",
+              clock(essay.test.seconds),
+            )}
           </p>
         )}
         {essay.prompt?.figure && (

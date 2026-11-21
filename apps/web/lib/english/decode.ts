@@ -26,6 +26,8 @@ import {
   type EssaySummary,
   type LinkingGroup,
   type WritingPrompt,
+  type WritingTest,
+  type OwnPromptCheck,
   type WordOrigin,
   type Feedback,
   type HiddenNode,
@@ -494,8 +496,36 @@ export function parseEssaySummaries(value: unknown): EssaySummary[] {
       status: essayStatus(d.status),
       words: d.words === null ? null : int(d.words),
       submitted_at: timestamp(d.submitted_at),
+      own_prompt:
+        d.own_prompt === undefined ? null : optionalString(d.own_prompt),
+      timed: d.timed === true,
     };
   });
+}
+
+export function parseWritingTest(
+  value: unknown,
+  promptId: string,
+): WritingTest {
+  const d = record(value);
+  return {
+    id: string(d.id),
+    prompt_id: promptId,
+    prompt: parseWritingPrompt(d.prompt),
+    started_at: timestamp(d.started_at),
+    time_limit_s: int(d.time_limit_s),
+  };
+}
+
+export function parseOwnPromptCheck(value: unknown): OwnPromptCheck {
+  const d = record(value);
+  if (typeof d.ok !== "boolean") throw new DataError("contract");
+  const prompt =
+    d.prompt === null || d.prompt === undefined
+      ? null
+      : parseWritingPrompt(d.prompt);
+  if (d.ok !== (prompt !== null)) throw new DataError("contract");
+  return { ok: d.ok, reason_vi: optionalString(d.reason_vi), prompt };
 }
 
 function parseLinking(value: unknown): EssayResult["linking"] {
@@ -779,5 +809,17 @@ export function parseEssay(value: unknown): Essay {
     corrections: parseCorrections(d.corrections),
     rewrites:
       d.rewrites === undefined ? [] : array(d.rewrites).map(parseRewrite),
+    test:
+      d.test === undefined || d.test === null
+        ? null
+        : (() => {
+            const t = record(d.test);
+            return {
+              started_at: timestamp(t.started_at),
+              time_limit_s: int(t.time_limit_s),
+              over_time: t.over_time === true,
+              seconds: int(t.seconds),
+            };
+          })(),
   };
 }

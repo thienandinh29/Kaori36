@@ -79,6 +79,8 @@ import {
   parseVocabLevels,
   parseVocabSession,
   parseWritingPrompts,
+  parseWritingTest,
+  parseOwnPromptCheck,
 } from "./decode";
 import type {
   CorrectionResult,
@@ -96,6 +98,8 @@ import type {
   VocabLevels,
   VocabSession,
   WritingPrompt,
+  WritingTest,
+  OwnPromptCheck,
 } from "./types";
 import { CONSENT } from "./writing";
 import {
@@ -312,16 +316,43 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       );
     },
     /** Sends the essay with the accepted notice version; the API queues it for the worker. */
+    /** Whether a typed Task 2 question can be written on (step 2.10). */
+    async checkOwnPrompt(
+      learnerId: string,
+      text: string,
+    ): Promise<OwnPromptCheck> {
+      return parseOwnPromptCheck(
+        await post("writing/prompts/check", { learner_id: learnerId, text }),
+      );
+    },
+    /** Start a timed Task 2 exam; the server keeps the clock (step 2.10). */
+    async startWritingTest(
+      learnerId: string,
+      promptId: string,
+      own: string | null,
+    ): Promise<WritingTest> {
+      return parseWritingTest(
+        await post("writing/tests", {
+          learner_id: learnerId,
+          prompt_id: promptId,
+          ...(own === null ? {} : { own_prompt: own }),
+        }),
+        promptId,
+      );
+    },
     async submitEssay(
       learnerId: string,
       promptId: string,
       text: string,
+      extra: { own?: string | null; testId?: string | null } = {},
     ): Promise<string> {
       const d = (await post("essays", {
         learner_id: learnerId,
         prompt_id: promptId,
         text,
         consent: CONSENT,
+        ...(extra.own ? { own_prompt: extra.own } : {}),
+        ...(extra.testId ? { test_id: extra.testId } : {}),
       })) as { essay_id?: unknown };
       if (typeof d?.essay_id !== "string") throw new DataError("contract");
       return d.essay_id;

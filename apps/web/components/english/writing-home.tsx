@@ -1,12 +1,15 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { englishClient } from "@/lib/english/client";
+import { OWN_SLUG, saveOwnPrompt } from "@/lib/english/own-prompt";
+import { sessionStore } from "@/lib/english/session-store";
 import type { EssaySummary, WritingPrompt } from "@/lib/english/types";
 import { vi } from "@/messages/vi";
 import { Sena } from "@/components/sena/sena";
 import { ErrorPatterns } from "./error-patterns";
-import { Problem } from "./problem";
+import { Problem, problemText } from "./problem";
 import { useLearner } from "./use-learner";
 
 const t = vi.english;
@@ -14,6 +17,74 @@ const w = t.writing;
 
 export function promptTypeLabel(type: string): string {
   return w.types[type] ?? type;
+}
+
+/** Type a Task 2 question, checked by the server, then write on it or sit it as an exam (2.10). */
+function OwnPrompt({ learner }: { learner: string }) {
+  const router = useRouter();
+  const [text, setText] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [why, setWhy] = useState<string | null>(null);
+
+  async function go(exam: boolean) {
+    if (busy) return;
+    setBusy(true);
+    setWhy(null);
+    try {
+      const check = await englishClient().checkOwnPrompt(learner, text);
+      if (!check.ok || !check.prompt) {
+        setWhy(check.reason_vi);
+        setBusy(false);
+        return;
+      }
+      saveOwnPrompt(sessionStore(), check.prompt.prompt);
+      router.push(`/viet/${OWN_SLUG}${exam ? "?thi=1" : ""}`);
+    } catch (e: unknown) {
+      setWhy(problemText(e));
+      setBusy(false);
+    }
+  }
+
+  const ready = text.trim().length > 0 && !busy;
+  return (
+    <section className="en-card" data-testid="own-prompt">
+      <h2>{w.ownTitle}</h2>
+      <p className="en-muted">{w.ownNote}</p>
+      <label className="en-essay">
+        <span>{w.ownLabel}</span>
+        <textarea
+          lang="en"
+          rows={3}
+          value={text}
+          placeholder={w.ownPlaceholder}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </label>
+      {why && (
+        <p className="en-problem" role="alert">
+          {why}
+        </p>
+      )}
+      <div className="en-actions">
+        <button
+          type="button"
+          className="en-button"
+          disabled={!ready}
+          onClick={() => go(false)}
+        >
+          {busy ? w.ownChecking : w.ownWrite}
+        </button>
+        <button
+          type="button"
+          className="en-button secondary"
+          disabled={!ready}
+          onClick={() => go(true)}
+        >
+          {w.exam}
+        </button>
+      </div>
+    </section>
+  );
 }
 
 /** Prompts to write on, and the learner's essays (specs/writing/step-2.1.md). */
@@ -63,6 +134,7 @@ export function WritingHome() {
         </div>
       </section>
       {learner && <ErrorPatterns learner={learner} />}
+      {learner && <OwnPrompt learner={learner} />}
       <section className="en-card">
         <h2>{w.prompts}</h2>
         {prompts.length === 0 && <p className="en-muted">{w.noPrompts}</p>}
@@ -79,9 +151,16 @@ export function WritingHome() {
                 )}
               </div>
               <p lang="en">{p.prompt}</p>
-              <Link className="en-button" href={`/viet/${p.id}`}>
-                {w.write}
-              </Link>
+              <div className="en-actions">
+                <Link className="en-button" href={`/viet/${p.id}`}>
+                  {w.write}
+                </Link>
+                {p.task === 2 && (
+                  <Link className="en-link" href={`/viet/${p.id}?thi=1`}>
+                    {w.exam}
+                  </Link>
+                )}
+              </div>
             </li>
           ))}
         </ul>
@@ -93,8 +172,16 @@ export function WritingHome() {
           {essays.map((e) => (
             <li key={e.id} data-essay-id={e.id}>
               <p lang="en" className="en-clamp">
-                {promptText.get(e.prompt_id) ?? e.prompt_id}
+                {e.own_prompt ?? promptText.get(e.prompt_id) ?? e.prompt_id}
               </p>
+              {(e.own_prompt || e.timed) && (
+                <p className="en-actions">
+                  {e.own_prompt && (
+                    <span className="en-badge">{w.ownBadge}</span>
+                  )}
+                  {e.timed && <span className="en-badge">{w.examBadge}</span>}
+                </p>
+              )}
               <p className="en-muted">
                 <span className={`nt-state is-${e.status}`}>
                   {w.status[e.status]}
