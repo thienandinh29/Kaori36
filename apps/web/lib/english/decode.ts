@@ -582,6 +582,7 @@ function parseRewrite(value: unknown): Rewrite {
         languagetool: checkState(c.languagetool),
         scorer: checkState(c.scorer),
         cefr: checkState(c.cefr),
+        ...(c.meaning === undefined ? {} : { meaning: checkState(c.meaning) }),
       },
     };
   }

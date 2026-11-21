@@ -3,6 +3,11 @@
 The model rewrites and gives reasons; the code decides what changed (its own word-level diff) and
 shows a reason only next to a change that really exists. Length must stay close to the original:
 a rewrite, not a new paragraph. LanguageTool and the scorer checks run in the worker.
+
+Meaning checks (step 2.9, pure, Bronze thresholds): a rewrite is refused when it brings in facts
+the learner did not write (a number, a year, a percentage, a name), flips a negation, or keeps too
+few of the paragraph's content words to still be the learner's argument. A model of another family
+judging claim by claim is specified for later; these checks catch the clear cases only.
 """
 
 import difflib
@@ -40,8 +45,10 @@ SYSTEM = (
     "You help a Vietnamese learner improve one paragraph of an IELTS Writing Task 2 essay. Rewrite "
     "the paragraph at the target band: keep the learner's ideas, opinion and examples, keep about "
     "the same length, and change only what raises the level (grammar, word choice, linking, "
-    "sentence variety). Write the paragraph in English. Then list each change with the exact "
-    "original words, the exact revised words, and why, in Vietnamese, simply. Return JSON only."
+    "sentence variety). Never add a new example, statistic, number, date, name or claim, and "
+    "never turn a statement into its opposite. Write the paragraph in English. Then list each "
+    "change with the exact original words, the exact revised words, and why, in Vietnamese, "
+    "simply. Return JSON only."
 )
 
 
@@ -144,6 +151,72 @@ def attach_reasons(
         out.append(Change(c.original, c.revised, m.why_vi.strip() if k not in emitted else None))
         emitted.add(k)
     return out, len(claimed) - len(emitted)
+
+
+MIN_CONTENT_KEPT = 0.4  # share of the original's content words the rewrite keeps (Bronze, step 2.9)
+_NUMBER = re.compile(r"\d+(?:[.,]\d+)*%?")
+_NUMBER_TEXT = (
+    "one two three four five six seven eight nine ten eleven twelve twenty thirty forty fifty "
+    "hundred thousand million billion half quarter percent dozen"
+)
+_NUMBER_WORDS = frozenset(_NUMBER_TEXT.split())
+_NEGATION_TEXT = "not no never nobody nothing none nor neither cannot without"
+_NEGATIONS = frozenset(_NEGATION_TEXT.split())
+_FUNCTION_TEXT = (
+    "a an the and or but if so of to in on at by for with from as is are was were be been being am "
+    "this that these those it its they them their there here what which who whom whose when where "
+    "why how do does did have has had will would can could should may might must not no very also "
+    "i me my we our us you your he she his her him one some any each every all both more most many "
+    "much other such than too just only even then however therefore moreover furthermore addition "
+    "firstly secondly finally conclusion example instance because while although though whereas "
+    "into about over under after before between through during"
+)
+_FUNCTION = frozenset(_FUNCTION_TEXT.split())
+
+
+def _stem(word: str) -> str:
+    w = word.lower().replace("'", "").replace(_CURLY, "")
+    for suffix in ("ing", "ed", "es", "s", "ly"):
+        if len(w) > len(suffix) + 3 and w.endswith(suffix):
+            return w[: -len(suffix)]
+    return w
+
+
+def _negations(text: str) -> int:
+    toks = [t.lower() for t in _TOKEN.findall(unicodedata.normalize("NFC", text))]
+    return sum(t in _NEGATIONS or t.endswith(("n't", "n" + _CURLY + "t")) for t in toks)
+
+
+def _names(text: str) -> set[str]:
+    """Capitalised words not at the start of a sentence (names, places, organisations)."""
+    out: set[str] = set()
+    for sentence in re.split(r"(?<=[.!?])\s+", text.strip()):
+        toks = [t for t in _TOKEN.findall(sentence) if t[0].isalnum()]
+        out |= {t.lower() for t in toks[1:] if t[0].isupper() and t.lower() != "i"}
+    return out
+
+
+def meaning_problems(original: str, rewrite: str) -> list[str]:
+    """Why the rewrite may no longer be the learner's paragraph; empty when none is found.
+
+    `new_facts`: a number, number word, or name the original does not have. `negation`: the count
+    of negations changed (a statement may have been turned around). `content`: fewer than
+    MIN_CONTENT_KEPT of the original's content words (crudely stemmed) are still there.
+    """
+    a, b = unicodedata.normalize("NFC", original), unicodedata.normalize("NFC", rewrite)
+    problems = []
+    nums_a = set(_NUMBER.findall(a)) | {w.lower() for w in words(a)} & _NUMBER_WORDS
+    nums_b = set(_NUMBER.findall(b)) | {w.lower() for w in words(b)} & _NUMBER_WORDS
+    if nums_b - nums_a or _names(b) - _names(a) - {w.lower() for w in words(a)}:
+        problems.append("new_facts")
+    if _negations(a) != _negations(b):
+        problems.append("negation")
+    content = {_stem(w) for w in words(a) if w.lower() not in _FUNCTION and len(w) > 2}
+    if content:
+        kept = content & {_stem(w) for w in words(b)}
+        if len(kept) / len(content) < MIN_CONTENT_KEPT:
+            problems.append("content")
+    return problems
 
 
 def length_ok(original: str, rewrite: str) -> bool:

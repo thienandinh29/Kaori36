@@ -1,5 +1,6 @@
 """The rewrite's pure rules (specs/writing/step-2.4.md, point 4)."""
 
+from app.writing import rewrite as rw
 from app.writing.rewrite import (
     Change,
     ChangeOut,
@@ -100,3 +101,46 @@ def test_a_combined_change_must_really_be_in_both_texts() -> None:
     this = attach_reasons([Change("is", "are")], [ChangeOut(
         original="this", revised="are", why_vi="Không liên quan.")])[0]  # fmt: skip
     assert this == [Change("is", "are")]
+
+
+# Step 2.9: the rewrite must still be the learner's argument.
+PARA = (
+    "Some people think that university should be free for everyone. I agree with this because "
+    "many students from poor families cannot pay the fees, so they lose the chance to study."
+)
+
+
+def test_a_paraphrase_that_keeps_the_argument_passes() -> None:
+    better = (
+        "Some people believe that university education should be free for all. I support this "
+        "view, since many students from low-income families cannot afford the fees and therefore "
+        "lose the opportunity to study."
+    )
+    assert rw.meaning_problems(PARA, better) == []
+
+
+def test_new_numbers_names_or_evidence_are_refused() -> None:
+    stat = PARA.replace("many students", "around 40% of students")
+    assert "new_facts" in rw.meaning_problems(PARA, stat)
+    named = PARA + " For example, Harvard offers free places to some students."
+    assert "new_facts" in rw.meaning_problems(PARA, named)
+    word = PARA.replace("many students", "two million students")
+    assert "new_facts" in rw.meaning_problems(PARA, word)
+    # A number the learner already wrote may stay.
+    with_number = PARA.replace("many students", "40% of students")
+    assert "new_facts" not in rw.meaning_problems(with_number, with_number.replace("so", "and so"))
+
+
+def test_a_flipped_statement_is_refused() -> None:
+    flipped = PARA.replace("I agree with this", "I do not agree with this")
+    assert "negation" in rw.meaning_problems(PARA, flipped)
+    contracted = PARA.replace("cannot pay", "can pay")
+    assert "negation" in rw.meaning_problems(PARA, contracted)
+
+
+def test_a_different_paragraph_is_refused() -> None:
+    other = (
+        "Online learning has become popular in recent years. Learners enjoy flexible timetables "
+        "and choose their own pace, which suits adults with jobs."
+    )
+    assert "content" in rw.meaning_problems(PARA, other)

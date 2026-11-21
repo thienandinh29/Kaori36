@@ -12,6 +12,7 @@ import {
   type GrammarIssue,
   type ScorePreview,
 } from "@/lib/english/types";
+import { groupByKind } from "@/lib/english/issue-kinds";
 import { stillWorking } from "@/lib/english/writing";
 import { vi } from "@/messages/vi";
 import { ChartFigureView } from "./chart-figure";
@@ -74,11 +75,18 @@ function Result({ result }: { result: EssayResult }) {
           </dd>
         </div>
       </dl>
-      <p>
+      <p data-testid="length-check">
         {result.long_enough
           ? w.enough
-          : `${w.short} ${result.min_words} ${w.words}.`}
+          : w.short
+              .replace("{n}", String(result.words))
+              .replace("{min}", String(result.min_words))
+              .replace(
+                "{gap}",
+                String(Math.max(result.min_words - result.words, 0)),
+              )}
       </p>
+      <p className="en-muted">{w.lengthNote}</p>
       <h3>
         {w.linking} ({result.linking_groups_used} {w.groupsUsed})
       </h3>
@@ -104,6 +112,7 @@ function Result({ result }: { result: EssayResult }) {
             {Math.round(result.complexity.complex_sentence_share * 100)}%{" "}
             {w.complexShare}
           </p>
+          <p className="en-muted">{w.complexityNote}</p>
         </>
       )}
     </section>
@@ -210,6 +219,7 @@ export function Grammar({
       </section>
     );
   const { issues } = result.grammar;
+  const groups = groupByKind(issues);
   const why = notCountedReason(issues);
   return (
     <section className="en-card" data-testid="essay-grammar">
@@ -218,44 +228,60 @@ export function Grammar({
       {issues.length === 0 && <p>{w.noIssues}</p>}
       {issues.length > 0 && (
         <details data-testid="all-issues">
-          <summary>{w.allIssues.replace("{n}", String(issues.length))}</summary>
-          <ul className="en-issues">
-            {issues.map((issue) => (
-              <li key={issue.id} data-errant-type={issue.errant_type ?? ""}>
-                <Marked issue={issue} />
-                {issue.suggestion !== null && (
-                  <p>
-                    {w.suggestion}:{" "}
-                    <strong lang="en">{issue.suggestion}</strong>
-                  </p>
-                )}
-                {issue.explain_vi && <p>{issue.explain_vi}</p>}
-                {issue.source === "llm" && (
-                  <span className="en-badge">{w.fromAi}</span>
-                )}
-                {issue.evidence && issue.node ? (
-                  <>
-                    <Link
-                      className="en-link"
-                      href={`/on-tap/phan/${issue.node}`}
-                    >
-                      {w.recorded}: {issue.node_vi ?? issue.node}
-                    </Link>
-                    {essay && learner && issue.suggestion !== null && (
-                      <SelfCorrect
-                        learner={learner}
-                        essayId={essay.id}
-                        issue={issue}
-                        initial={essay.corrections[String(issue.id)]}
-                      />
+          <summary>
+            {w.allIssues
+              .replace("{n}", String(issues.length))
+              .replace(
+                "{kinds}",
+                groups
+                  .map((g) => `${w.issueKinds[g.kind]} ${g.issues.length}`)
+                  .join(", "),
+              )}
+          </summary>
+          {groups.map((g) => (
+            <div key={g.kind} data-testid={`issues-${g.kind}`}>
+              <h4>
+                {w.issueKindTitles[g.kind]} ({g.issues.length})
+              </h4>
+              <ul className="en-issues">
+                {g.issues.map((issue) => (
+                  <li key={issue.id} data-errant-type={issue.errant_type ?? ""}>
+                    <Marked issue={issue} />
+                    {issue.suggestion !== null && (
+                      <p>
+                        {w.suggestion}:{" "}
+                        <strong lang="en">{issue.suggestion}</strong>
+                      </p>
                     )}
-                  </>
-                ) : (
-                  <p className="en-muted">{why(issue)}</p>
-                )}
-              </li>
-            ))}
-          </ul>
+                    {issue.explain_vi && <p>{issue.explain_vi}</p>}
+                    {issue.source === "llm" && (
+                      <span className="en-badge">{w.fromAi}</span>
+                    )}
+                    {issue.evidence && issue.node ? (
+                      <>
+                        <Link
+                          className="en-link"
+                          href={`/on-tap/phan/${issue.node}`}
+                        >
+                          {w.recorded}: {issue.node_vi ?? issue.node}
+                        </Link>
+                        {essay && learner && issue.suggestion !== null && (
+                          <SelfCorrect
+                            learner={learner}
+                            essayId={essay.id}
+                            issue={issue}
+                            initial={essay.corrections[String(issue.id)]}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <p className="en-muted">{why(issue)}</p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </details>
       )}
     </section>
