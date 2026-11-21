@@ -6,7 +6,9 @@
 Generation runs where model calls are possible, review runs on the owner's laptop, and a sandbox's
 database is thrown away; so questions travel as one YAML file per text. Import adds missing rows,
 and brings a newer blind check into a row still undecided here (step 4.3c: before, a question
-imported while waiting for its check never received it). A decided row is never overwritten.
+imported while waiting for its check never received it). A decided row keeps its decision, but a
+newer check of it (a re-check in the shown order, made elsewhere) is brought in too, so the next
+export does not write the older check back over it (fixed 21 Nov 2026).
 """
 
 import argparse
@@ -70,11 +72,18 @@ _NEWER_CHECK = (
     "and (checked_at is null or checked_at < %s)"
 )
 
+# A newer check of a row the owner has decided here: the checker's fields only, never the decision.
+_NEWER_CHECK_DECIDED = (
+    "update reading_items set checker_answer=%s, checker_model=%s, checked_at=%s, check_view=%s "
+    "where id=%s and passage_sha256=%s and status in ('approved','rejected') "
+    "and (checked_at is null or checked_at < %s)"
+)
+
 
 def import_(
     conn: psycopg.Connection[Any], folder: Path, passages: Mapping[str, str]
 ) -> dict[str, int]:
-    """Add missing rows and newer checks of undecided rows; never touch a decided row.
+    """Add missing rows and newer checks; a decided row keeps its status and review fields.
 
     `passages` (slug -> current text) finds stale versions.
     """
@@ -110,6 +119,12 @@ def import_(
                         (got["status"], got["checker_answer"], got["checker_model"],
                          got["checked_at"], got["check_view"], got["id"], digest,
                          got["checked_at"]),
+                    ).rowcount  # fmt: skip
+                if not updated and got["checked_at"]:
+                    updated = conn.execute(
+                        _NEWER_CHECK_DECIDED,
+                        (got["checker_answer"], got["checker_model"], got["checked_at"],
+                         got["check_view"], got["id"], digest, got["checked_at"]),
                     ).rowcount  # fmt: skip
                 counts["updated" if updated == 1 else "kept"] += 1
     return counts

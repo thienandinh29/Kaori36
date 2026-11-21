@@ -25,3 +25,10 @@ exported.
 - [x] T2 Tests on the database: a round trip keeps every field; import never overwrites a reviewed row; a changed
   passage is reported; labels are backfilled.
 - [x] T3 Export the first 49 questions (10 OpenStax texts, 19 Nov) and commit them.
+
+## Fix (21 Nov 2026): newer checks of decided questions
+On the owner's laptop, import left decided questions completely alone, so a re-check made elsewhere after the decision
+(step 4.3c re-checks in the shown order) never arrived; the next export wrote the older check back over `main`'s. Import
+now brings a newer check into a decided row as well: only the checker's fields (`checker_answer`, `checker_model`,
+`checked_at`, `check_view`), never `status` or the review fields, and never an older check over a newer one. Test:
+`test_a_newer_check_of_a_decided_row_comes_in_without_touching_the_decision` (an export afterwards reproduces `main`'s file).

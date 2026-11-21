@@ -125,3 +125,61 @@ def test_a_newer_check_reaches_an_undecided_row_but_never_a_decided_one(
         kept = conn.execute("select checker_answer from reading_items where id='bees-mcq-1'")
         assert kept.fetchone() == ("C",)
         conn.rollback()
+
+
+def test_a_newer_check_of_a_decided_row_comes_in_without_touching_the_decision(
+    database_url: str, tmp_path: Path
+) -> None:
+    """21 Nov: a decided row kept its old check, and the laptop's export wrote it back over main."""
+    early = datetime(2026, 11, 19, 3, 0, tzinfo=UTC)
+    later = datetime(2026, 11, 20, 3, 0, tzinfo=UTC)
+    reviewed = datetime(2026, 11, 20, 5, 0, tzinfo=UTC)
+    with psycopg.connect(database_url) as conn:
+
+        async def gen(system: str, text: str):  # type: ignore[no-untyped-def]
+            return generated()
+
+        asyncio.run(generate_text(conn, "bees", PASSAGE, gen, NOW))
+        # main's file: the owner rejected it, then it was re-checked in the shown order.
+        conn.execute(
+            "update reading_items set status='rejected', review_note='two answers', "
+            "review_was='needs_review', reviewed_at=%s, checker_answer='B', "
+            "checker_model='baidu/ernie', checked_at=%s, check_view='shuffled' "
+            "where id='bees-mcq-1'",
+            (reviewed, later),
+        )
+        main = tmp_path / "main"
+        export(conn, {"bees": ("openstax-reading", PASSAGE)}, main)
+        # The laptop has the same decision with the older check.
+        conn.execute(
+            "update reading_items set checker_answer='A', checker_model='dots', "
+            "checked_at=%s, check_view=null where id='bees-mcq-1'",
+            (early,),
+        )
+        assert import_(conn, main, {"bees": PASSAGE})["updated"] == 1
+        row = conn.execute(
+            "select status, review_note, review_was, reviewed_at, checker_answer, checker_model, "
+            "checked_at, check_view from reading_items where id='bees-mcq-1'"
+        ).fetchone()
+        assert row == (
+            "rejected",
+            "two answers",
+            "needs_review",
+            reviewed,
+            "B",
+            "baidu/ernie",
+            later,
+            "shuffled",
+        )
+        # Exporting now reproduces main's file exactly.
+        again = tmp_path / "again"
+        export(conn, {"bees": ("openstax-reading", PASSAGE)}, again)
+        for f in main.glob("*.yaml"):
+            assert (again / f.name).read_text(encoding="utf-8") == f.read_text(encoding="utf-8")
+        # An older check in a file never replaces the newer one on a decided row.
+        conn.execute(
+            "update reading_items set checked_at=%s, checker_answer='C' where id='bees-mcq-1'",
+            (later.replace(day=21),),
+        )
+        assert import_(conn, main, {"bees": PASSAGE})["updated"] == 0
+        conn.rollback()
