@@ -3,6 +3,10 @@
 Keep this file current when adding top-level folders or important modules.
 Planned entries are marked _(planned)_ until they exist.
 
+**Many rows below describe the contest's any-subject engine, which is frozen** (Deep Research, topics, uploads, code
+practice, retrieval, the topic explorer, contest specs and data). Do not build on them: the exact list is in `AGENTS.md`,
+"English only". All new work is on the English app.
+
 ## Repository paths
 
 | Path | Purpose |

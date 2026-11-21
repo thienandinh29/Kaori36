@@ -103,7 +103,8 @@ cd apps/api && uv sync --locked && uv run pytest -q
 
 NodeTrail bắt đầu là gia sư cho mọi môn: Deep Research trên giáo trình mở, khóa Python và thống kê, tải tài liệu
 lên. Bộ máy đó vẫn còn trong mã nguồn (`apps/api/app/research/`, `app/sources/`, `data/courses/`) và là nền cho các
-môn khác về sau. Hiện tại, mọi việc tập trung vào tiếng Anh. Kế hoạch cũ: [`docs/v2/plan-m0-m1.md`](docs/v2/plan-m0-m1.md)
+môn khác về sau. Phần đó hiện **đóng băng**: không phát triển thêm trước kỳ thi của chủ dự án, mọi việc tập trung vào
+tiếng Anh. Kế hoạch cũ: [`docs/v2/plan-m0-m1.md`](docs/v2/plan-m0-m1.md)
 (đã thay thế).
 
 ## Nguồn gốc và ghi công

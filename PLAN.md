@@ -107,9 +107,12 @@ The measurement and analysis are the owner's, not the agent's: the placement cur
 report against a teacher (phase 4); fluency measures and the tester report (phase 5). One decision-log entry a week in
 `docs/v2/decision-log.md`, in the owner's words.
 
-## Parked
-Maths (GDPT 2018; outline in `docs/v2/plan-to-tet-2027.md`), the Python course in the web app, CRAG for Deep Research, the
-classroom layer (slides, whiteboard), Elo item difficulty, mastery hysteresis wired with stored state, login and payment.
+## Frozen and parked
+- **Frozen (21 Nov 2026, owner's decision): everything that is not the English app.** Deep Research, the topic flow, code
+  practice, uploads, other subjects (maths, Python, statistics) and the contest specs stay in the repository and keep passing
+  CI, but nobody builds on them before the exam. The exact paths: `AGENTS.md`, "English only".
+- **Parked English ideas** (later, if they earn their place): Elo item difficulty, mastery hysteresis wired with stored
+  state, the classroom layer (slides, whiteboard), login and payment (login returns with phase 5's testers).
 
 ## Risks
 - **The project eats study time.** Stop at the nearest gate.

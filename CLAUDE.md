@@ -6,7 +6,8 @@
 
 The rules for every agent are in `AGENTS.md` (how we work), `SPEC.md` (what the product does and the rules the code keeps)
 and `PLAN.md` (where we are, what is next); all three load above. `MAP.md` (where each module, page and migration is) is
-not loaded: read it when you need a path, and update it when you add one. This file adds only what is specific to Claude Code. If anything here disagrees with `AGENTS.md`, `AGENTS.md` wins; say so and fix one of them.
+not loaded: read it when you need a path, and update it when you add one. This file adds only what is specific to Claude Code. **Work only on the English app:** the frozen paths are in
+`AGENTS.md`, "English only"; never build on them or propose work on them. If anything here disagrees with `AGENTS.md`, `AGENTS.md` wins; say so and fix one of them.
 
 ## Skills
 - `/verify`: every lint, type check and test for the API and the web app. Run it before saying anything is done; for a
