@@ -1174,8 +1174,11 @@ export const vi = {
       words: "từ",
       atLeast: "cần ít nhất",
       wordCount: "Số từ",
-      short: "Chưa đủ độ dài: Task này cần ít nhất",
-      enough: "Đã đủ độ dài tối thiểu.",
+      short:
+        "Chưa đủ số từ: bài có {n} từ, đề yêu cầu ít nhất {min} (thiếu {gap}).",
+      enough: "Đã đủ số từ tối thiểu.",
+      lengthNote:
+        "Số từ là một yêu cầu riêng của đề, máy đếm chính xác. Trả lời đúng trọng tâm là chuyện khác: xem nhận xét Task Response bên dưới.",
       tooLong: "Bài viết dài hơn 12.000 ký tự.",
       consentTitle: "Trước khi gửi bài đầu tiên",
       consent:
@@ -1212,7 +1215,7 @@ export const vi = {
       previewFirst:
         "Đây là bài đầu tiên có điểm thô; các bài sau sẽ được so với bài này.",
       previewNote:
-        "Chỉ bạn thấy phần này. Chênh lệch dưới 0,25 được coi là tương đương, vì chỉ đổi cách trình bày cũng làm điểm thay đổi khoảng 0,2.",
+        "Chỉ bạn thấy phần này. Chênh lệch dưới 0,25 tạm được coi là tương đương. Đây là giả định ban đầu (chỉ đổi cách trình bày đã làm điểm lệch khoảng 0,2), chưa được đo: ngưỡng sẽ được kiểm tra bằng cách chấm lại cùng một bài với những thay đổi nhỏ không đổi nội dung.",
       bandTruncated: "Bài dài: mô hình chỉ đọc khoảng 380 từ đầu.",
       task1Criterion: "Task Achievement (nêu đúng và đủ số liệu chính)",
       task1Title: "Kiểm tra bài tả biểu đồ",
@@ -1251,7 +1254,25 @@ export const vi = {
       fixNumber: "Số liệu “{n}” không có trong biểu đồ: kiểm tra lại.",
       fixOverview:
         "Bài chưa có câu tổng quan (overview): nêu xu hướng hoặc điểm nổi bật nhất trước khi đi vào số liệu.",
-      allIssues: "Tất cả lỗi ngữ pháp ({n})",
+      allIssues: "Tất cả lỗi máy tìm thấy ({n}): {kinds}",
+      issueKinds: {
+        grammar: "ngữ pháp",
+        word: "dùng nhầm từ",
+        spelling: "chính tả",
+        punctuation: "dấu câu",
+        casing: "viết hoa",
+        other: "khác",
+        ai: "gợi ý từ AI",
+      },
+      issueKindTitles: {
+        grammar: "Ngữ pháp",
+        word: "Dùng nhầm từ",
+        spelling: "Chính tả (không phải lỗi ngữ pháp)",
+        punctuation: "Dấu câu",
+        casing: "Viết hoa",
+        other: "Lỗi khác",
+        ai: "Gợi ý từ AI (chưa được kiểm tra)",
+      },
       patternsTitle: "Lỗi bạn hay lặp lại",
       patternsNote:
         "Từ {n} bài đã phân tích trong {d} ngày qua: lỗi ngữ pháp LanguageTool tìm thấy trong 2 bài trở lên. Một bài chưa đủ để nói bạn đã tiến bộ hay chưa.",
@@ -1282,9 +1303,9 @@ export const vi = {
       answerSeenEarlier: "Bạn đã xem cách sửa lỗi này.",
       checkUnavailable:
         "Chưa kiểm tra được câu: máy chủ chưa bật LanguageTool. Bạn có thể xem đáp án.",
-      rewriteTitle: "Viết lại một đoạn ở band cao hơn",
+      rewriteTitle: "Thử viết lại một đoạn",
       rewriteNote:
-        "AI viết lại một đoạn, giữ ý của bạn. Máy tự tìm các chỗ đã đổi và chỉ nhận bản viết lại khi LanguageTool không thấy lỗi (và mô hình chấm đánh giá cao hơn, khi đã hiệu chỉnh).",
+        "AI viết lại một đoạn và phải giữ lập luận của bạn. Máy chỉ nhận bản viết lại khi độ dài gần bằng, không thêm số liệu, tên hay dẫn chứng mới, không đảo ý nào của bạn thành ý ngược lại, vẫn giữ phần lớn ý của đoạn gốc, và LanguageTool không thấy lỗi. Máy chưa chứng minh được bản viết lại tốt hơn theo tiêu chí IELTS: hãy xem nó là một cách diễn đạt để tham khảo.",
       rewriteThis: "Viết lại đoạn này",
       rewriting: "Đang viết lại và kiểm tra…",
       rewriteFailed: "Chưa viết lại được lần này.",
@@ -1292,6 +1313,7 @@ export const vi = {
         "Viết lại bằng AI đang được thử nghiệm, chưa mở cho mọi người.",
       rewriteLimit: "Mỗi bài viết được viết lại tối đa 3 lần.",
       checksRan: "Đã kiểm tra",
+      checkMeaning: "giữ ý gốc",
       checkScorer: "mô hình chấm",
       checkCefr: "mức từ vựng CEFR",
       checkPassed: "đạt",
@@ -1311,6 +1333,8 @@ export const vi = {
       complexity: "Độ phức tạp của câu",
       clausesPerSentence: "mệnh đề mỗi câu",
       complexShare: "câu có mệnh đề phụ",
+      complexityNote:
+        "Để tham khảo, không phải mục tiêu: nhiều mệnh đề hơn không làm bài hay hơn. Dùng câu phức khi nó giúp ý rõ hơn, và giữ câu đúng.",
       grammar: "Lỗi ngữ pháp và chính tả",
       grammarNote:
         "Do LanguageTool tìm, chạy trên máy chủ của dự án (bài viết không gửi ra ngoài). Công cụ có thể bắt nhầm và bỏ sót lỗi: hãy tự đọc lại cả bài.",

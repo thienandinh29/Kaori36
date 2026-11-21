@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { englishClient } from "@/lib/english/client";
+import { issueKind } from "@/lib/english/issue-kinds";
 import {
   fixFirst,
   styleFor,
@@ -39,7 +40,12 @@ function Pattern({
       <span className="en-badge">
         {w.fixRepeated.replace("{n}", String(count))}
       </span>{" "}
-      <strong>{issue.node_vi ?? w.fixOtherError}</strong>
+      <strong>
+        {issue.node_vi ??
+          (issueKind(issue) === "grammar"
+            ? w.fixOtherError
+            : w.issueKindTitles[issueKind(issue)])}
+      </strong>
       <Marked issue={issue} />
       {issue.explain_vi && <p>{issue.explain_vi}</p>}
       {issue.suggestion !== null &&

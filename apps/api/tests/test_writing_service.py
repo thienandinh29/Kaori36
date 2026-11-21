@@ -622,8 +622,8 @@ def test_an_accepted_rewrite_keeps_reasons_only_on_real_changes(setup: Setup) ->
     r = done["result"]
     assert r["changes"] == [{"original": "go", "revised": "goes",
                              "why_vi": "Chủ ngữ 'She' đi với 'goes'."}]  # fmt: skip
-    assert r["checks"] == {"length": "passed", "languagetool": "passed", "scorer": "not_run",
-                           "cefr": "not_run"}  # fmt: skip
+    assert r["checks"] == {"length": "passed", "meaning": "passed", "languagetool": "passed",
+                           "scorer": "not_run", "cefr": "not_run"}  # fmt: skip
 
 
 def test_a_rewrite_with_errors_is_regenerated_once_then_rejected(setup: Setup) -> None:

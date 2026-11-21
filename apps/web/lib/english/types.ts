@@ -311,7 +311,13 @@ export interface Rewrite {
     original: string;
     rewrite: string;
     changes: RewriteChange[];
-    checks: Record<"length" | "languagetool" | "scorer" | "cefr", CheckState>;
+    checks: Record<
+      "length" | "languagetool" | "scorer" | "cefr",
+      CheckState
+    > & {
+      /** step 2.9; absent on rewrites made before it */
+      meaning?: CheckState;
+    };
   } | null;
   reason_vi: string | null;
 }

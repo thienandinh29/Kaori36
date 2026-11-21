@@ -105,8 +105,10 @@ function RewriteView({ learner, r }: { learner: string; r: Rewrite }) {
         ))}
       </ul>
       <p className="en-muted">
-        {w.checksRan}: LanguageTool {CHECK_TEXT[res.checks.languagetool]};{" "}
-        {w.checkScorer} {CHECK_TEXT[res.checks.scorer]}; {w.checkCefr}{" "}
+        {w.checksRan}: {w.checkMeaning}{" "}
+        {CHECK_TEXT[res.checks.meaning ?? "not_run"]}; LanguageTool{" "}
+        {CHECK_TEXT[res.checks.languagetool]}; {w.checkScorer}{" "}
+        {CHECK_TEXT[res.checks.scorer]}; {w.checkCefr}{" "}
         {CHECK_TEXT[res.checks.cefr]}.
       </p>
     </div>

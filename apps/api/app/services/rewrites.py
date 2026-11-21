@@ -39,6 +39,11 @@ TOO_DIFFERENT_VI = "Bản viết lại dài hoặc ngắn hơn quá nhiều so v
 UNCHANGED_VI = "Bản viết lại không thay đổi gì so với đoạn gốc."
 LT_ERRORS_VI = "LanguageTool vẫn tìm thấy lỗi trong bản viết lại."
 NOT_HIGHER_VI = "Mô hình chấm không đánh giá bản viết lại cao hơn đoạn gốc."
+MEANING_VI = {  # step 2.9: the rewrite must still be the learner's argument
+    "new_facts": "Bản viết lại thêm số liệu, tên hoặc dẫn chứng mà bài của bạn không có.",
+    "negation": "Bản viết lại có thể đã đổi một ý của bạn thành ý ngược lại.",
+    "content": "Bản viết lại giữ quá ít ý của đoạn gốc, nên không còn là lập luận của bạn.",
+}
 
 
 def _uuid(value: str, what: str = "bài viết") -> UUID:
@@ -106,13 +111,17 @@ def _check(
     original_essay: str, paragraph: str, out: rw.RewriteOut, step: GrammarStep
 ) -> tuple[str | None, dict[str, str]]:
     """Why the rewrite is rejected (None when accepted), and which checks ran."""
-    checks = {"length": "passed", "languagetool": "not_run", "scorer": "not_run",
-              "cefr": "not_run"}  # fmt: skip
+    checks = {"length": "passed", "meaning": "not_run", "languagetool": "not_run",
+              "scorer": "not_run", "cefr": "not_run"}  # fmt: skip
     if not rw.length_ok(paragraph, out.paragraph):
         checks["length"] = "failed"
         return TOO_DIFFERENT_VI, checks
     if not rw.diff(paragraph, out.paragraph):
         return UNCHANGED_VI, checks
+    problems = rw.meaning_problems(paragraph, out.paragraph)
+    checks["meaning"] = "failed" if problems else "passed"
+    if problems:
+        return MEANING_VI[problems[0]], checks
     assert step.client is not None
     flagged = [m for m in step.client.matches(out.paragraph)
                if m.category not in NEVER_MAPPED_CATEGORIES]  # fmt: skip

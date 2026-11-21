@@ -62,7 +62,9 @@ SYSTEM = (
     "missing or repeated, quote the place where that is visible, and never quote a sentence "
     "that contradicts the point. Put each error under one criterion only: grammar, verb forms, "
     "agreement, articles and spelling belong to gra; word choice, collocation and range of "
-    "vocabulary belong to lr. Do not repeat the same error in two criteria. "
+    "vocabulary belong to lr. Do not repeat the same error in two criteria. The tools show the "
+    "word count separately: judge tr on whether the essay answers the question, and do not make "
+    "the word count a point. "
     "Also give your band for each criterion (0 to 9 in steps of 0.5). Do not mention any other "
     "score. Return JSON only."
 )
@@ -80,8 +82,9 @@ SYSTEM_TASK1 = (
     "long, character for character. Each quote must itself show exactly what its point says. Put "
     "each error under one criterion only: grammar, verb forms, agreement, articles and spelling "
     "belong to gra; word choice and range of vocabulary belong to lr. Do not repeat the same error "
-    "in two criteria. Also give your band for each criterion (0 to 9 in steps of 0.5). Do not "
-    "mention any other score. Return JSON only."
+    "in two criteria. The tools show the word count separately: do not make it a point. Also give "
+    "your band for each criterion (0 to 9 in steps of 0.5). Do not mention any other score. "
+    "Return JSON only."
 )
 
 

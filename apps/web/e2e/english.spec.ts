@@ -200,9 +200,15 @@ test("an essay is written, measured by the worker, and deleted", async ({
     // the full list is folded until the learner opens it
     const grammar = page.getByTestId("essay-grammar");
     await expect(grammar.locator("ul.en-issues")).toBeHidden();
-    await grammar.getByText(/Tất cả lỗi ngữ pháp \(\d+\)/).click();
+    await grammar
+      .getByText(/Tất cả lỗi máy tìm thấy \(\d+\): ngữ pháp/)
+      .click();
+    // errors are grouped by kind (step 2.9): the agreement error sits under grammar
     await expect(
-      grammar.locator('[data-errant-type="R:VERB:SVA"]').first(),
+      grammar
+        .getByTestId("issues-grammar")
+        .locator('[data-errant-type="R:VERB:SVA"]')
+        .first(),
     ).toContainText("are");
     await expect(
       grammar.getByRole("link", { name: /Đã ghi vào lộ trình/ }).first(),
