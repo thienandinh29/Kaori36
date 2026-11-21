@@ -82,7 +82,9 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Phase 1:** the level-test accuracy curve with intervals; explain one real decision trace in the decision log
   (`specs/level-test/tasks.md`).
 - [ ] **Phase 2, Writing:**
-  - collect 50–100 essays with examiner bands (in `data/private/`); set aside the 30% test split first;
+  - collect 50–100 essays with examiner bands (in `data/private/`); set aside the 30% test split first; **prefer essays that
+    show all four criterion bands** (Task Response, Coherence and Cohesion, Lexical Resource, Grammar), so each criterion's
+    band can be measured too (`specs/writing/spec.md`, point 8b);
   - LanguageTool's misses and the feedback/correction ratings: by the teacher, on 10 essays (`docs/v2/writing-eval.md`
     has every number to fill).
 - [ ] **Phase 3:** write the pronunciation gate report, `docs/v2/pronunciation-eval.md`.
