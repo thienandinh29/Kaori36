@@ -21,9 +21,16 @@ item gets its own short build note here when it starts.
   - per essay: the mean pairwise overlap of the runs' point sets (Jaccard);
   - across essays: the mean of the per-essay shares, with a bootstrap interval over essays; the list of per-essay values is
     in the report, never only the mean.
-- **Decision rule (proposed, Bronze):** if under 60% of issue points appear in two of three runs, the app keeps only issues
-  that recur across 2 of 3 runs (three calls per essay; owner use stays inside the daily limits). Above that, one call.
-- **Report:** `evals/writing/feedback-stability.json` (metrics, essay ids, model and cost; no essay text).
+- **Decision rule, a proposal until the owner has seen a real result (owner, 21 Nov):** if under 60% of issue points appear
+  in two of three runs, the app keeps only issues that recur across 2 of 3 runs (three calls per essay; owner use stays
+  inside the daily limits); above that, one call. The report labels the bar `"status": "proposed"` and its outcome
+  `proposed_decision`; nothing in the app changes until the owner decides.
+- **Report:** `evals/writing/feedback-stability.json`, committed: essay ids and numbers only (runs, failed calls, word
+  count, the stability figures), the model and the cost. No quote, point text, source URL or essay text; a unit test checks
+  that none reaches it.
+- **Pairs to check by eye:** a seeded sample of 10 matched pairs (issues first), each with both runs' points and quotes, in
+  `data/private/writing/stability/matched-pairs.json`, never committed; the command refuses a path outside
+  `data/private/`. The owner reads them to judge whether "same point" really means the same point.
 - **Built 21 Nov 2026:** `app/evalkit/feedback_stability.py` (pure matching and scoring, unit-tested; the runner uses the
   gateway and records every call). **Pipeline check, not a measurement:** two short essays written for the check, 3 runs
   each with deepseek-flash: issues recurring in 2 of 3 runs 77% and 67% (exact intervals 55–92% and 38–88%), strengths

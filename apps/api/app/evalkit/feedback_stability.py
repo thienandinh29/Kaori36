@@ -8,7 +8,9 @@ Each essay goes to the app's feedback prompt `runs` times; every reply passes `f
 in the app. Two points from different runs are the same point when criterion and kind match and
 their quotes overlap. Issues and strengths are scored apart, per essay with exact intervals and
 across essays with a bootstrap interval. Essay texts stay in `data/private/`; the report holds
-metrics, ids, the model and the cost only.
+metrics, ids, the model and the cost only (a test checks that no essay text reaches it). A sample of
+matched pairs, with their quotes, goes to a separate file under `data/private/` for the owner to
+check by eye; it is never committed. The 60% bar is a proposal until the owner has seen a result.
 """
 
 import argparse
@@ -32,7 +34,9 @@ from app.writing.analysis import analyse, load_linking_words
 REPO = Path(__file__).resolve().parents[4]
 KINDS = ("issue", "strength")
 MIN_WORD_OVERLAP = 0.5  # share of the shorter quote's words found in the other quote
-RECUR_BAR = 0.60  # proposed: under this share of issues recurring, keep only recurring issues
+RECUR_BAR = 0.60  # PROPOSED (owner, 21 Nov): stays a proposal until the owner has seen a result
+BAR_STATUS = "proposed"
+PAIR_SAMPLE = 10  # matched pairs written to data/private for checking by eye
 _WORD = re.compile(r"\w+")
 
 
@@ -43,6 +47,7 @@ class Found:
     criterion: str
     kind: str
     quotes: tuple[str, ...]
+    point_vi: str = ""  # shown in the private pair sample only; never used for matching
 
 
 def _norm(text: str) -> str:
@@ -68,7 +73,7 @@ def same_point(a: Found, b: Found) -> bool:
 
 
 def points_of(fb: feedback.Feedback) -> list[Found]:
-    return [Found(c, p.kind, p.quotes) for c, ps in fb.criteria.items() for p in ps]
+    return [Found(c, p.kind, p.quotes, p.point_vi) for c, ps in fb.criteria.items() for p in ps]
 
 
 def _jaccard(a: Sequence[Found], b: Sequence[Found]) -> float | None:
@@ -106,36 +111,6 @@ def essay_stability(runs: Sequence[Sequence[Found]], kind: str) -> dict[str, Any
     }
 
 
-def _bootstrap_mean(values: Sequence[float], seed: int = 0, resamples: int = 2000) -> list[float]:
-    rng = random.Random(seed)
-    means = sorted(sum(rng.choice(values) for _ in values) / len(values) for _ in range(resamples))
-    return [round(means[int(0.025 * resamples)], 3), round(means[int(0.975 * resamples) - 1], 3)]
-
-
-def summarise(per_essay: Sequence[dict[str, Any]]) -> dict[str, Any]:
-    """Across essays, per kind: the mean of per-essay shares with a bootstrap interval."""
-    out: dict[str, Any] = {}
-    for kind in KINDS:
-        shares = [e[kind]["share"] for e in per_essay if e[kind]["share"] is not None]
-        out[kind] = {
-            "essays": len(shares),
-            "mean_share": round(sum(shares) / len(shares), 3) if shares else None,
-            "interval": _bootstrap_mean(shares) if len(shares) >= 2 else None,
-            "min_share": min(shares, default=None),
-            "max_share": max(shares, default=None),
-        }
-    issue = out["issue"]["mean_share"]
-    out["decision"] = (
-        None
-        if issue is None
-        else "keep only issues recurring in 2 of 3 runs"
-        if issue < RECUR_BAR
-        else "one call is stable enough"
-    )
-    out["bar"] = RECUR_BAR
-    return out
-
-
 @dataclass(frozen=True)
 class Essay:
     id: str
@@ -156,6 +131,88 @@ def load_essays(path: Path) -> list[Essay]:
     if len(set(ids)) != len(ids):
         raise ValueError("duplicate essay id")
     return out
+
+
+def _bootstrap_mean(values: Sequence[float], seed: int = 0, resamples: int = 2000) -> list[float]:
+    rng = random.Random(seed)
+    means = sorted(sum(rng.choice(values) for _ in values) / len(values) for _ in range(resamples))
+    return [round(means[int(0.025 * resamples)], 3), round(means[int(0.975 * resamples) - 1], 3)]
+
+
+def summarise(per_essay: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """Across essays, per kind: the mean of per-essay shares with a bootstrap interval."""
+    out: dict[str, Any] = {}
+    for kind in KINDS:
+        shares = [e[kind]["share"] for e in per_essay if e[kind]["share"] is not None]
+        out[kind] = {
+            "essays": len(shares),
+            "mean_share": round(sum(shares) / len(shares), 3) if shares else None,
+            "interval": _bootstrap_mean(shares) if len(shares) >= 2 else None,
+            "min_share": min(shares, default=None),
+            "max_share": max(shares, default=None),
+        }
+    issue = out["issue"]["mean_share"]
+    out["proposed_decision"] = (
+        None
+        if issue is None
+        else "keep only issues recurring in 2 of 3 runs"
+        if issue < RECUR_BAR
+        else "one call is stable enough"
+    )
+    out["bar"] = {"issue_share": RECUR_BAR, "status": BAR_STATUS}
+    return out
+
+
+def matched_pairs(essay_id: str, runs: Sequence[Sequence[Found]]) -> list[dict[str, Any]]:
+    """Every matched pair across runs of one essay, with quotes: for the private sample only."""
+    out = []
+    for (i, a_run), (j, b_run) in combinations(enumerate(runs), 2):
+        for a in a_run:
+            for b in b_run:
+                if same_point(a, b):
+                    out.append({"essay": essay_id, "criterion": a.criterion, "kind": a.kind,
+                                "runs": [i + 1, j + 1], "a": {"point_vi": a.point_vi,
+                                "quotes": list(a.quotes)}, "b": {"point_vi": b.point_vi,
+                                "quotes": list(b.quotes)}})  # fmt: skip
+    return out
+
+
+def pair_sample(pairs: Sequence[dict[str, Any]], n: int = PAIR_SAMPLE, seed: int = 0) -> list[Any]:
+    """A seeded sample of matched pairs, issues first when there are enough of them."""
+    rng = random.Random(seed)
+    issues = [p for p in pairs if p["kind"] == "issue"]
+    strengths = [p for p in pairs if p["kind"] != "issue"]
+    take_i = min(len(issues), max(n - len(strengths), (n + 1) // 2 + 2))
+    picked = rng.sample(issues, take_i) + rng.sample(strengths, min(len(strengths), n - take_i))
+    return picked[:n]
+
+
+def build_report(
+    essays: Sequence[Essay],
+    per_essay: Sequence[dict[str, Any]],
+    runs: int,
+    models: Sequence[str],
+    cost: str,
+    measured_on: str,
+) -> dict[str, Any]:
+    """The committed report: ids and numbers only (no quotes, points, sources or essay text)."""
+    return {
+        "what": "feedback stability, specs/writing/step-2.11.md (2.11a)",
+        "measured_on": measured_on,
+        "model": sorted(set(models)),
+        "runs_per_essay": runs,
+        "essays": len(essays),
+        "summary": summarise([e for e in per_essay if "issue" in e]),
+        "per_essay": [{k: v for k, v in e.items() if k != "pairs"} for e in per_essay],
+        "cost": cost,
+        "limits": [
+            "web sample essays, mostly strong ones: learner essays may behave differently",
+            "a point is matched by its quotes, so two problems in one quoted sentence count as one",
+            "the app also sends LanguageTool's errors to the model; this measurement does not",
+            f"the {RECUR_BAR:.0%} bar is {BAR_STATUS}: the owner decides after seeing this result",
+        ],
+        "pairs_for_review": "a sample of matched pairs is in data/private (never committed)",
+    }
 
 
 Ask = Callable[[str, str], feedback.FeedbackOut | None]
@@ -187,7 +244,8 @@ def measure(
             if not can_spend():
                 break
             continue
-        results.append({"id": e.id, "runs": len(found_runs), "failed": failed, "words": a.words}
+        results.append({"id": e.id, "runs": len(found_runs), "failed": failed, "words": a.words,
+                        "pairs": matched_pairs(e.id, found_runs)}
                        | {k: essay_stability(found_runs, k) for k in KINDS})  # fmt: skip
     return results
 
@@ -206,7 +264,16 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - models and
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--max-cost", type=float, default=0.20, help="US$ for this run")
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--pairs-out", type=Path, default=REPO / "data" / "private" / "writing" / "stability"
+        / "matched-pairs.json", help="private: the matched pairs to check by eye",
+    )  # fmt: skip
     args = parser.parse_args(argv)
+    if REPO / "data" / "private" not in args.pairs_out.resolve().parents:
+        print(
+            "--pairs-out must be under data/private/: the pairs quote the essays", file=sys.stderr
+        )
+        return 2
     essays = load_essays(args.essays)
     settings = get_settings()
     log = CallLog(Prices(settings.llm_price_input_per_mtok, settings.llm_price_output_per_mtok))
@@ -242,21 +309,15 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - models and
         finally:
             log.flush(conn, now)
             conn.commit()
-    report = {
-        "what": "feedback stability, specs/writing/step-2.11.md (2.11a)",
-        "measured_on": now.date().isoformat(),
-        "model": sorted(set(model)),
-        "runs_per_essay": args.runs,
-        "essays": len(essays),
-        "summary": summarise([e for e in per_essay if "issue" in e]),
-        "per_essay": per_essay,
-        "cost": log.summary(),
-        "limits": [
-            "web sample essays, mostly strong ones: learner essays may behave differently",
-            "a point is matched by its quotes, so two problems in one quoted sentence count as one",
-            "the app also sends LanguageTool's errors to the model; this measurement does not",
-        ],
-    }
+    report = build_report(
+        essays, per_essay, args.runs, model, log.summary(), now.date().isoformat()
+    )
+    pairs = [p for e in per_essay for p in e.get("pairs", [])]
+    args.pairs_out.parent.mkdir(parents=True, exist_ok=True)
+    args.pairs_out.write_text(
+        json.dumps({"matched_pairs": len(pairs), "sample": pair_sample(pairs)}, ensure_ascii=False,
+                   indent=2) + "\n", encoding="utf-8",
+    )  # fmt: skip
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report["summary"], ensure_ascii=False, indent=2))

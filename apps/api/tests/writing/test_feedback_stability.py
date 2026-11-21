@@ -1,5 +1,6 @@
 """Feedback stability: matching points across runs and the scores (specs/writing/step-2.11.md)."""
 
+import json
 from typing import Any
 
 from app.evalkit import feedback_stability as fs
@@ -54,7 +55,8 @@ def test_the_summary_keeps_kinds_apart_and_states_the_decision() -> None:
     assert s["strength"]["essays"] == 2
     lo, hi = s["issue"]["interval"]
     assert lo <= 0.5 <= hi
-    assert s["decision"] == "keep only issues recurring in 2 of 3 runs"
+    assert s["proposed_decision"] == "keep only issues recurring in 2 of 3 runs"
+    assert s["bar"] == {"issue_share": 0.6, "status": "proposed"}  # the owner decides later
 
 
 def reply(quote: str) -> FeedbackOut:
@@ -83,3 +85,34 @@ def test_measure_uses_the_apps_prompt_and_verify_and_stops_at_the_cap() -> None:
     assert first["issue"]["points_per_run"] == [3, 0, 3]
     assert out[1]["skipped"] == "0 usable runs"
     assert len(out) == 2
+
+
+def test_the_report_holds_ids_and_numbers_only_and_pairs_stay_private() -> None:
+    essays = [fs.Essay("web-01", "Should cities ban cars?", ESSAY, "https://example.org/essay")]
+    point = PointOut(kind="issue", point_vi="Động từ chưa chia theo chủ ngữ.",
+                     quotes=["She go to school"])  # fmt: skip
+    strong = PointOut(kind="strength", point_vi="Quan điểm rõ ràng ngay mở bài.",
+                      quotes=["In my opinion this is a good idea"])  # fmt: skip
+    crit = CriterionOut(band=6.0, points=[point, strong])
+    out = FeedbackOut(tr=crit, cc=crit, lr=crit, gra=crit)
+    per_essay = fs.measure(essays, lambda s, u: out, {}, 3, lambda: True)
+    report = fs.build_report(essays, per_essay, 3, ["deepseek-flash"], "US$0.01", "2026-11-21")
+    text = json.dumps(report, ensure_ascii=False)
+    for secret in ("She go to school", "In my opinion", "Động từ", "Quan điểm", "example.org",
+                   "Should cities ban cars", "every day"):  # fmt: skip
+        assert secret not in text, secret
+    assert report["per_essay"][0]["id"] == "web-01" and "pairs" not in report["per_essay"][0]
+    assert report["summary"]["bar"]["status"] == "proposed"
+    # the private sample does carry the quotes and points, for checking by eye
+    pairs = [p for e in per_essay for p in e["pairs"]]
+    sample = fs.pair_sample(pairs)
+    assert len(sample) == 10 and all(p["essay"] == "web-01" for p in sample)
+    assert sum(p["kind"] == "issue" for p in sample) >= 5
+    assert sample[0]["a"]["quotes"] and sample[0]["a"]["point_vi"]
+    assert fs.pair_sample(pairs) == sample  # seeded
+
+
+def test_matched_pairs_lists_each_pair_of_runs() -> None:
+    a = found("gra", "issue", "She go to school")
+    pairs = fs.matched_pairs("e1", [[a], [a], [found("tr", "issue", "the air is cleaner")]])
+    assert [p["runs"] for p in pairs] == [[1, 2]]
