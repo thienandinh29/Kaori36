@@ -9,15 +9,46 @@ NodeTrail is an English (IELTS) learning app for Vietnamese learners, A1–C1, a
 ML engineer) builds it with an AI coding agent. The owner is also the first learner: IELTS in summer 2027, target 7.0 overall.
 It is one codebase with three kinds of value, in this order: the owner improves with it; the improvement is measured
 independently; the data improves the algorithms; the research becomes a portfolio. NodeTrail began as a contest build for any
-subject (team repo `thienandinh29/SenaEmpire36`, frozen after 8 Nov 2026); that engine stays in the code for other subjects later.
+subject (team repo `thienandinh29/SenaEmpire36`, frozen after 8 Nov 2026); that engine stays in the code but is frozen
+(see "English only" below).
 Mascot: **Sena** the monkey.
 
 ## Read first, in this order
 1. `PLAN.md`: the current phase, what is next, what waits on the owner.
 2. `SPEC.md`: what the product does and the rules the code keeps (the contract).
 3. The spec of the feature you touch: `specs/<feature>/spec.md`, `plan.md`, `tasks.md`, and its `step-*.md` pages.
-4. `MAP.md` for paths (read on demand, not loaded every session); `dolater.md` for the owner's open work. `docs/archive/contest-2026/` is history only: its lanes,
-   timeline and freeze rules no longer apply.
+4. `MAP.md` for paths (read on demand, not loaded every session); `dolater.md` for the owner's open work. Many `MAP.md`
+   rows describe frozen contest code: check the list below before using one.
+
+## English only: what is frozen (owner's decision, 21 Nov 2026)
+All work is on the English (IELTS) app. The contest's any-subject engine stays in the repository and keeps passing CI, but
+it is **frozen**: do not build on it, extend it, refactor it, read it for ideas, propose work on it, or wire English features
+into it. If an English task seems to need something frozen, stop and ask the owner; do not quietly reuse it.
+
+**Frozen** (touch only to keep CI green after a change elsewhere, with the smallest fix):
+- **Deep Research and the topic flow:** `apps/api/app/research/`, `app/uploads/`, `app/content/`, `app/tutor/`, `app/rag/`,
+  `app/guardrails/`; services `topics.py`, `topic_readiness.py`, `indexing.py`, `graph_confirmation.py`,
+  `learner_sessions.py`; routes `/topics`, `/graph`, `/placement`, `/next-item`, `/reviews/due`, `/exam-plan`, `/ask`,
+  `/uploads`, `/tutor/hint`; the `tei` compose profile and embeddings.
+- **Code practice:** `runner/`, `apps/api/app/graders/code.py`, `app/services/code_practice.py`, `/code/*`.
+- **The web's topic explorer:** `apps/web/app/kham-pha/`, `components/workspace.tsx`, `knowledge-map.tsx`, `use-learning.ts`,
+  `source-link.tsx`, `trace-panel.tsx`, `async-state.tsx`; `lib/data-client.ts`, `mock.ts`, `fixtures.ts`,
+  `api.generated.ts`, `layout.ts`.
+- **Other subjects' data:** `data/courses/python-basics.yaml`, `statistics-intro.yaml`, `ielts-academic-writing.yaml` (an
+  old contest course spec; the English writing feature does not use it), `data/golden/`, `data/guardrails/`, `data/eval/`,
+  `data/kg/`, `data/raw/`; the library manifests in `data/sources/` other than `english-candidates.yaml`.
+- **Contest specs:** `specs/code-sandbox/`, `contracts/`, `deep-research-integration/`, `graph-confirmation/`,
+  `graph-confirmation-contract/`, `guardrails/`, `integration/`, `library/`, `model-test/`, `next-item/`,
+  `p2-graph-confirmation/`, `p2-integration/`, `p2-local/`, `p3-integration/`, `retrieval/`, `topic-metrics/`.
+- **History, not instructions:** `docs/archive/contest-2026/`, `docs/v2/plan-m0-m1.md`, `docs/v2/plan-to-tet-2027.md`,
+  `docs/v2/plan-english-pack.md`, `context/product-brief.vi.md` (the any-subject brief). A plan or brief there never
+  overrides `PLAN.md`.
+- **Other subjects:** maths, Python, statistics, uploads for learners. Not planned before the owner's exam.
+
+**Shared, so active, but changed only for English needs:** `apps/api/app/engine/` (BKT, FSRS, the graphs, milestones,
+recommendation), `app/llm/` (the gateway), `app/jobs/` (the worker), `app/sources/` (OpenStax parsing for Reading texts),
+`app/curriculum/` (the English courses), `app/evalkit/`, `app/validation/`, `app/graders/` except `code.py`,
+`apps/web/lib/contracts.ts` and `lib/decode.ts`.
 
 ## The working agreement
 - **The owner decides; the agent proposes.** When a choice is the owner's (scope, order, a dependency, a source, a

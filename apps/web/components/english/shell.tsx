@@ -23,7 +23,6 @@ const LINKS = [
   { href: "/phat-am", label: t.nav.pronunciation },
   { href: "/kiem-tra", label: t.nav.levelTest },
   { href: "/gioi-thieu", label: t.about.nav },
-  { href: "/kham-pha", label: t.nav.explore },
 ] as const;
 type Href = (typeof LINKS)[number]["href"];
 

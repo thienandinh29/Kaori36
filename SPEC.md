@@ -143,10 +143,11 @@ ShareAlike flagged; no real exam passages or past papers.
   (embedding, fine-tuning) runs on free GPU notebooks.
 - Learner data private by default.
 
-## Other subjects (later)
+## Other subjects: frozen
 NodeTrail began as a tutor for any subject: Deep Research on open textbooks, courses for Python and statistics, uploads. That
-engine is still in the code (`apps/api/app/research/`, `app/sources/`, `data/courses/`) and is the base for other subjects
-later; it is not developed further now. Uploads sent to model providers were allowed for the 2026 contest demo only and are not
+engine is still in the code and still passes CI, but it is **frozen** (owner's decision, 21 Nov 2026): no feature, fix beyond
+keeping CI green, or plan touches it before the owner's exam. The exact frozen paths are in `AGENTS.md` ("English only"). Its
+contest routes (listed under Interfaces) are not part of the English product. Uploads sent to model providers were allowed for the 2026 contest demo only and are not
 offered to real learners without a privacy review. History: `docs/archive/contest-2026/`.
 
 ## Non-goals (for now)
