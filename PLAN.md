@@ -78,7 +78,10 @@ target is recorded with the number and the reason, never hidden.
    4 GB), then the recogniser and the transcript consent wording (`docs/v2/asr-candidates.md` recommends Whisper small.en).
 3. **Build, after the owner orders them:** CP4b explanations; CP4c exam details; CP2b planted test once the bank allows; the CP6
    report; then phase 5 Speaking. The owner's research argues for Speaking right after CP6 (Vietnam's lowest skill, to check).
-4. **Ongoing:** the daily Reading blind-check batch; fixes from the owner's use.
+4. **Writing feedback quality (step 2.11):** measure stability on ~20 web essays (the owner collects them), then the TR/CC
+   structure checks, the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
+   errors per opportunity next to sentence complexity, not a band.
+5. **Ongoing:** the daily Reading blind-check batch; fixes from the owner's use.
 
 ## Research tracks (`research/`)
 | Id | Question | Status |
@@ -129,6 +132,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-21 | Writing step 2.11 from an outside review of the feedback (owner's adjustments): stability measurement (tool built; ~20 web essays to collect), TR/CC structure checks with development as a hint, a blind check of claims by Gemini after a planted test, "Sửa trước" to 3 items, and errors per opportunity next to complexity as Writing's main measure |
 | 2026-11-21 | Writing step 2.10, owner's request: write on your own Task 2 question (checked, private to the essay) and a timed 40-minute exam mode on any Task 2 question (server clock, late marked) |
 | 2026-11-21 | Writing step 2.9 from an outside review: errors grouped by kind, word count apart from Task Response, complexity as reference, the 0.25 raw-score threshold labelled an assumption, rewrites checked for kept meaning (new facts, flipped negations, dropped argument) |
 | 2026-11-21 | Writing: a band per criterion (TR, CC, LR, GRA) specified, owner's request (`specs/writing/spec.md` 8b): shown as a range only where that criterion reaches QWK ≥ 0.7 on held-out examiner-banded essays, never without the overall band. Import of item files now brings newer checks into decided questions (#131) |
