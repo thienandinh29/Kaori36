@@ -53,7 +53,7 @@ target is recorded with the number and the reason, never hidden.
 |---|---|---|---|
 | 0 | Foundations: code sandbox, one-command start, CI runs the whole stack | Escape tests; code practice through the API; start confirmed on the owner's laptop | done |
 | 1 | Roadmap, level test, vocabulary, grammar (`specs/level-test/`, `vocabulary/`, `web-english/`, `grammar-lessons/`) | Placement accuracy ≥ 90% with ≤ 20 questions (simulated now: 85% single-gap, 92% any state, the recorded baseline); verifier catch rate on 50 planted-error items; the owner studies daily for 2 weeks | built; gate pending (daily use, planted items, teacher review) |
-| 2 | Writing, Task 2 then Task 1 (`specs/writing/`, steps 2.1–2.9) | Error → node mapping ≥ 90% on 100 errors checked by a teacher; QWK ≥ 0.7 against examiner bands on 50–100 private essays; band stability | built; gate waits on examiner-banded essays and a teacher |
+| 2 | Writing, Task 2 then Task 1 (`specs/writing/`, steps 2.1–2.10) | Error → node mapping ≥ 90% on 100 errors checked by a teacher; QWK ≥ 0.7 against examiner bands on 50–100 private essays; band stability | built; gate waits on examiner-banded essays and a teacher |
 | 3 | Pronunciation (`specs/pronunciation/`, steps 3.1–3.7c) | False alarms ≤ 10% on 50–100 of the owner's kept recordings labelled by a phonetics-trained reviewer (Gold), before any red mark; speechocean762 baseline recorded (sentence r 0.59, phone AUC 0.86) | built; gate waits on the reviewer's labels; 3.6b part 2 waits on the L2-ARCTIC licence check |
 | 4 | Reading and Listening (`specs/listening-reading/plan.md`, checkpoints CP0–CP6) | Every question verified blind and reviewed before it enters the bank; an expert's labels against the checker on 50 items (agreement, kappa) | in progress (table below) |
 | 5 | Speaking Part 1–3, then opening to testers (`specs/speaking/`) | Per-user limits and a daily cost cap working; ≥ 5 of 10 testers still using it after 2 weeks; old errors falling over 4 weeks; word error rate and grammar-flag accuracy measured | specified; waits on the owner's decisions |
@@ -129,6 +129,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-21 | Writing step 2.10, owner's request: write on your own Task 2 question (checked, private to the essay) and a timed 40-minute exam mode on any Task 2 question (server clock, late marked) |
 | 2026-11-21 | Writing step 2.9 from an outside review: errors grouped by kind, word count apart from Task Response, complexity as reference, the 0.25 raw-score threshold labelled an assumption, rewrites checked for kept meaning (new facts, flipped negations, dropped argument) |
 | 2026-11-21 | Writing: a band per criterion (TR, CC, LR, GRA) specified, owner's request (`specs/writing/spec.md` 8b): shown as a range only where that criterion reaches QWK ≥ 0.7 on held-out examiner-banded essays, never without the overall band. Import of item files now brings newer checks into decided questions (#131) |
 | 2026-11-20 | Speaking guided mode, owner's decision: idea building for Part 2/3 (a way to build an answer, never a script) and the same question up to three times with shrinking time for fluency; only first tries count as evidence |

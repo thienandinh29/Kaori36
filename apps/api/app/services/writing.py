@@ -31,7 +31,16 @@ from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
 from app.services.plans import NAMES_VI, Plans
 from app.services.vocabulary import start_of_day
-from app.writing import competency, feedback, guardrails, llm_corrections, repair, task1, tracker
+from app.writing import (
+    competency,
+    feedback,
+    guardrails,
+    llm_corrections,
+    own_prompt,
+    repair,
+    task1,
+    tracker,
+)
 from app.writing.analysis import analyse, load_linking_words, words
 from app.writing.error_map import ErrorMap, load_error_map
 from app.writing.feedback import FeedbackOut
@@ -61,6 +70,25 @@ CONSENT = (
     "writing-v1"  # the version of the notice the learner accepts (messages/vi.ts, writing.consent)
 )
 MAX_CHARS = 12_000
+TEST_SECONDS = 40 * 60  # Task 2 in the exam (step 2.10)
+TEST_GRACE_SECONDS = 30  # network and a last click; later is analysed but marked over time
+
+
+def _test_view(
+    submitted: datetime, over: bool | None, started: datetime, limit: int
+) -> dict[str, Any]:
+    seconds = int((submitted - started).total_seconds())
+    return {"started_at": started, "time_limit_s": limit, "over_time": bool(over),
+            "seconds": seconds}  # fmt: skip
+
+
+def prompt_for(bank: PromptBank, prompt_id: str, own: str | None) -> Prompt | None:
+    """An essay's prompt: from the bank, or the learner's own Task 2 question (step 2.10)."""
+    if prompt_id == own_prompt.OWN_ID:
+        return own_prompt.as_prompt(own) if own else None
+    return bank.get(prompt_id)
+
+
 NOTE_VI = "Điểm ước lượng và nhận xét chi tiết sẽ có ở các bước sau."
 ACCEPTED_VI = "Đúng rồi! Bạn đã tự sửa được lỗi này."
 STILL_ERROR_VI = "Câu vẫn còn lỗi ngữ pháp hoặc chính tả. Thử lại nhé."
@@ -292,6 +320,45 @@ class WritingService:
     def _visible(self, prompt: Prompt, learner: UUID) -> bool:
         return prompt.status == "reviewed" or learner in self.draft_learners
 
+    def _checked_prompt(self, prompt_id: str, own: str | None, learner: UUID) -> Prompt:
+        """The prompt an essay or test is written on; an own question must pass the check."""
+        if prompt_id == own_prompt.OWN_ID:
+            why = own_prompt.problem(own or "")
+            if why:
+                raise HTTPException(422, why)
+            return own_prompt.as_prompt(own or "")
+        prompt = self.bank().get(prompt_id)
+        if prompt is None or not self._visible(prompt, learner):
+            raise HTTPException(404, "Không tìm thấy đề bài.")
+        return prompt
+
+    def check_own_prompt(self, text: str) -> dict[str, Any]:
+        """Step 2.10: whether a typed question can be written on, and how it is labelled."""
+        why = own_prompt.problem(text)
+        if why:
+            return {"ok": False, "reason_vi": why, "prompt": None}
+        return {"ok": True, "reason_vi": None, "prompt": own_prompt.as_prompt(text).model_dump()}
+
+    def start_test(
+        self, learner_id: str, prompt_id: str, own: str | None, *, now: datetime | None = None
+    ) -> dict[str, Any]:
+        """A timed Task 2 exam: the clock is the server's; the essay is sent with the test id."""
+        now = now or datetime.now(UTC)
+        with self.pool().connection() as conn, conn.transaction():
+            learner = self._learner(conn, learner_id)
+            prompt = self._checked_prompt(prompt_id, own, learner)
+            if prompt.task != 2:
+                raise HTTPException(422, "Thi thử hiện chỉ có cho Task 2.")
+            own_text = prompt.prompt if prompt_id == own_prompt.OWN_ID else None
+            row = conn.execute(
+                "insert into writing_tests(learner_id,prompt_id,own_prompt,time_limit_s,"
+                "started_at) values (%s,%s,%s,%s,%s) returning id",
+                (learner, prompt_id, own_text, TEST_SECONDS, now),
+            ).fetchone()
+        assert row is not None
+        return {"id": str(row[0]), "prompt": prompt.model_dump(), "started_at": now,
+                "time_limit_s": TEST_SECONDS}  # fmt: skip
+
     def prompts(self, learner_id: str) -> list[Prompt]:
         with self.pool().connection() as conn:
             learner = self._learner(conn, learner_id)
@@ -304,6 +371,8 @@ class WritingService:
         text: str,
         consent: str,
         *,
+        own: str | None = None,
+        test_id: str | None = None,
         now: datetime | None = None,
     ) -> str:
         if consent != CONSENT:
@@ -314,9 +383,22 @@ class WritingService:
         now = now or datetime.now(UTC)
         with self.pool().connection() as conn, conn.transaction():
             learner = self._learner(conn, learner_id)
-            prompt = self.bank().get(prompt_id)
-            if prompt is None or not self._visible(prompt, learner):
-                raise HTTPException(404, "Không tìm thấy đề bài.")
+            over: bool | None = None
+            test: UUID | None = None
+            if test_id is not None:
+                test = _uuid(test_id)
+                started = conn.execute(
+                    "select prompt_id, own_prompt, started_at, time_limit_s from writing_tests "
+                    "where id=%s and learner_id=%s for update",
+                    (test, learner),
+                ).fetchone()
+                if started is None:
+                    raise HTTPException(404, "Không tìm thấy bài thi.")
+                if conn.execute("select 1 from essays where test_id=%s", (test,)).fetchone():
+                    raise HTTPException(409, "Bài thi này đã được nộp.")
+                prompt_id, own = started[0], started[1]
+                over = (now - started[2]).total_seconds() > started[3] + TEST_GRACE_SECONDS
+            prompt = self._checked_prompt(prompt_id, own, learner)
             today = conn.execute(
                 "select count(*) from essays where learner_id=%s and submitted_at >= %s",
                 (learner, start_of_day(now)),
@@ -331,10 +413,11 @@ class WritingService:
                 raise HTTPException(
                     429, f"Hôm nay bạn đã gửi {allowed} bài{named}. Hẹn bạn ngày mai nhé."
                 )
+            own_text = prompt.prompt if prompt_id == own_prompt.OWN_ID else None
             row = conn.execute(
-                "insert into essays(learner_id,prompt_id,text,consent,submitted_at) "
-                "values (%s,%s,%s,%s,%s) returning id",
-                (learner, prompt_id, text, consent, now),
+                "insert into essays(learner_id,prompt_id,own_prompt,text,consent,submitted_at,"
+                "test_id,over_time) values (%s,%s,%s,%s,%s,%s,%s,%s) returning id",
+                (learner, prompt_id, own_text, text, consent, now, test, over),
             ).fetchone()
         assert row is not None
         return str(row[0])
@@ -343,13 +426,14 @@ class WritingService:
         with self.pool().connection() as conn:
             learner = self._learner(conn, learner_id)
             rows = conn.execute(
-                "select id,prompt_id,status,result->>'words',submitted_at from essays "
-                "where learner_id=%s order by submitted_at desc",
+                "select id,prompt_id,status,result->>'words',submitted_at,own_prompt,test_id "
+                "from essays where learner_id=%s order by submitted_at desc",
                 (learner,),
             ).fetchall()
         return [
             {"id": str(r[0]), "prompt_id": r[1], "status": r[2],
-             "words": int(r[3]) if r[3] is not None else None, "submitted_at": r[4]}
+             "words": int(r[3]) if r[3] is not None else None, "submitted_at": r[4],
+             "own_prompt": r[5], "timed": r[6] is not None}
             for r in rows
         ]  # fmt: skip
 
@@ -357,13 +441,14 @@ class WritingService:
         with self.pool().connection() as conn:
             learner = self._learner(conn, learner_id)
             row = conn.execute(
-                "select id,prompt_id,text,status,submitted_at,result,failure_vi from essays "
-                "where id=%s and learner_id=%s",
+                "select e.id,e.prompt_id,e.text,e.status,e.submitted_at,e.result,e.failure_vi,"
+                "e.own_prompt,e.over_time,t.started_at,t.time_limit_s from essays e "
+                "left join writing_tests t on t.id = e.test_id where e.id=%s and e.learner_id=%s",
                 (_uuid(essay_id), learner),
             ).fetchone()
         if row is None:
             raise HTTPException(404, "Không tìm thấy bài viết.")
-        prompt = self.bank().get(row[1])
+        prompt = prompt_for(self.bank(), row[1], row[7])
         from app.services.rewrites import rewrites_of
 
         with self.pool().connection() as conn:
@@ -388,6 +473,7 @@ class WritingService:
             if row[5]
             else None,
             "failure_vi": row[6],
+            "test": None if row[9] is None else _test_view(row[4], row[8], row[9], row[10]),
         }
 
     def delete(self, learner_id: str, essay_id: str) -> None:
@@ -735,15 +821,15 @@ def process_next_essay(
     with psycopg.connect(database_url) as conn:
         with conn.transaction():
             row = conn.execute(
-                "select id,learner_id,prompt_id,text from essays where status='queued' "
+                "select id,learner_id,prompt_id,text,own_prompt from essays where status='queued' "
                 "order by submitted_at,id limit 1 for update skip locked"
             ).fetchone()
             if row is None:
                 return False
             conn.execute("update essays set status='analysing' where id=%s", (row[0],))
-        essay_id, learner, prompt_id, text = row
+        essay_id, learner, prompt_id, text, own = row
         try:
-            prompt = load_prompts(writing_dir / "prompts.yaml").get(prompt_id)
+            prompt = prompt_for(load_prompts(writing_dir / "prompts.yaml"), prompt_id, own)
             task = prompt.task if prompt else 2
             result, grammar = _analyse(text, task, writing_dir, step)
             result["task"] = task
