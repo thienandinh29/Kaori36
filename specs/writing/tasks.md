@@ -39,6 +39,7 @@
 - [x] 2.4 feedback with verified quotes, the correction loop, rewrites, phrases to FSRS (spec:
       `specs/writing/step-2.4.md`): 2.4a and 2.4b built (feedback, AI corrections, hint-first loop, budget, rewrites, saved phrases)
 - [x] 2.5 Task 1
+- [ ] 2.11 feedback quality (`step-2.11.md`): 2.11a stability tool built, the measurement waits on ~20 web essays; 2.11b TR/CC structure checks, 2.11c blind check of claims (Gemini, planted test first), 2.11d "Sửa trước" to 3 items, and errors per opportunity in the tracker are specified
 - [x] 2.10 the learner's own Task 2 question and a timed 40-minute exam (`step-2.10.md`); Task 1 on own questions not built (needs chart data)
 - [x] 2.9 honest labels on the result page and meaning checks on rewrites (`step-2.9.md`); the blind claim check by another model family is specified, not built
 - [ ] Gate report
