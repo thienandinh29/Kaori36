@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-introduction-sociolo-media-and-technology-in-society-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-completion-1
       kind: completion
@@ -21,17 +21,17 @@ versions:
       sentence: From the time the printing press was created, technology has influenced how and where ___ is shared.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: information
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-completion-2
       kind: completion
@@ -48,17 +48,17 @@ versions:
       sentence: New media rely on types of technologies that were not available until about ___ years ago.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: thirty
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-completion-3
       kind: completion
@@ -73,14 +73,14 @@ versions:
       sentence: The classic example of planned obsolescence given in the passage is the ___ stocking.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: nylon
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-headings-1
     kind: headings
     status: dropped
@@ -97,7 +97,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-media-and-technology-in-society-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-mcq-1
       key: 0
@@ -115,17 +115,17 @@ versions:
       evidence:
       - This means that while the new versions can read older files, the old version cannot read the newer ones.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-mcq-2
       key: 1
@@ -144,17 +144,17 @@ versions:
       - Not surprisingly, the garment industry did not invest heavily in finding a rip-proof fabric; it was in manufacturers'
         best interest that their product be regularly replaced.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-mcq-3
       key: 1
@@ -173,17 +173,17 @@ versions:
       - Not too quickly, of course, or consumers wouldn't stand for it—but frequently enough that you might find
         that it costs far more to fix a device than to replace it with a newer model.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-tfng-1
       key: 'false'
@@ -197,17 +197,17 @@ versions:
         pace of technology change.
       statement: The passage states that it is possible to discuss media without considering technological change.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-tfng-2
       key: 'true'
@@ -220,17 +220,17 @@ versions:
       - These include social networking sites, blogs, podcasts, wikis, and virtual worlds.
       statement: New media include social networking sites, blogs, podcasts, wikis and virtual worlds.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-tfng-3
       key: 'true'
@@ -245,17 +245,17 @@ versions:
       statement: Planned obsolescence is defined in the passage as the business practice of planning for a product
         to be obsolete or unusable from the time it is created.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-tfng-4
       key: not_given
@@ -267,17 +267,17 @@ versions:
       evidence: []
       statement: The passage says the printing press was invented in Germany.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-media-and-technology-in-society-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-media-and-technology-in-society-tfng-5
       key: 'false'
@@ -292,11 +292,11 @@ versions:
       statement: According to the passage, the garment industry invested heavily in developing rip-proof fabric
         for stockings.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled

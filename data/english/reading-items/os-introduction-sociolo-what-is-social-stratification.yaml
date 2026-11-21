@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-introduction-sociolo-what-is-social-stratification-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-what-is-social-stratification-completion-1
       kind: completion
@@ -21,17 +21,17 @@ versions:
       sentence: In most societies, stratification is an economic system based on wealth and ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: income
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-what-is-social-stratification-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-what-is-social-stratification-completion-2
       kind: completion
@@ -46,14 +46,14 @@ versions:
       sentence: Open systems are based on ___ and allow for movement and interaction between layers and classes.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: achievement
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-what-is-social-stratification-completion-3
     kind: completion
     status: generated

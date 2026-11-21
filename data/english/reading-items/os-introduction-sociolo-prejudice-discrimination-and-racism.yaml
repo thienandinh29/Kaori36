@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-1
       kind: completion
@@ -20,17 +20,17 @@ versions:
       sentence: Stereotypes are oversimplified ___ about groups of people.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: generalizations
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-2
       kind: completion
@@ -46,17 +46,17 @@ versions:
       sentence: Prejudice is a prejudgment that originates outside actual ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: experience
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-completion-3
       kind: completion
@@ -72,17 +72,17 @@ versions:
         ___.
       max_words: 2
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: confirmation bias
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-headings-1
     kind: headings
-    status: generated
+    status: needs_review
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-headings-1
       key:
@@ -113,17 +113,17 @@ versions:
       - The history of Jim Crow laws
       - Methods of teaching prejudice
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-1
       key: 1
@@ -144,17 +144,17 @@ versions:
       - For example, many stereotypes that are currently used to characterize new immigrants were used earlier in
         American history to characterize Irish and Eastern European immigrants.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-2
       key: 2
@@ -174,17 +174,17 @@ versions:
         of a group, such as the U.S. military's historical nonacceptance of minority sexualities (the "don't ask,
         don't tell" policy reflected this norm).
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-mcq-3
       key: 2
@@ -202,17 +202,17 @@ versions:
       evidence:
       - While prejudice refers to biased thinking, discrimination consists of actions against a group of people.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-1
       key: 'true'
@@ -227,17 +227,17 @@ versions:
       statement: According to the passage, stereotypes are rarely newly created and are often reused for different
         groups.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-2
       key: 'false'
@@ -251,17 +251,17 @@ versions:
         experience.
       statement: Prejudice is always based on a person’s own experiences with members of a group.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-3
       key: 'false'
@@ -274,17 +274,17 @@ versions:
       - Discrimination can be based on race, ethnicity, age, religion, health, and other categories.
       statement: The passage states that discrimination can only be based on race or ethnicity.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-4
       key: 'false'
@@ -299,17 +299,17 @@ versions:
       statement: All people who receive privilege are aware of the benefits they get from being in the dominant
         group.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
     kind: tfng
-    status: generated
+    status: needs_review
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
       key: 'true'
@@ -326,8 +326,8 @@ versions:
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled

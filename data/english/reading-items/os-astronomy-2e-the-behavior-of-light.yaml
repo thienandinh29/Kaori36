@@ -130,7 +130,7 @@ versions:
     check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-mcq-1
       key: 2
@@ -149,17 +149,17 @@ versions:
       - In the nucleus (central part) of every atom are protons, which are positively charged; outside the nucleus
         are electrons, which have a negative charge.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-mcq-2
       key: 1
@@ -179,17 +179,17 @@ versions:
         the atomic level—by changes in the way the parts of an atom interact and move.
       - Thus, to appreciate how light is generated, we must explore how atoms work.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-mcq-3
       key: 1
@@ -208,17 +208,17 @@ versions:
       - If charges are in motion, however (as they are inside every atom and in a wire carrying a current), then
         we measure another force called magnetism.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-tfng-1
       key: 'true'
@@ -233,17 +233,17 @@ versions:
       statement: In everyday language, radiation often refers to energetic subatomic particles released by radioactive
         materials.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-tfng-2
       key: 'false'
@@ -257,17 +257,17 @@ versions:
         James Clerk Maxwell, born and educated in Scotland.
       statement: James Clerk Maxwell was born and educated in England.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-tfng-3
       key: 'false'
@@ -281,17 +281,17 @@ versions:
         electric charges also produce magnetic fields.
       statement: Maxwell’s theory states that stationary electric charges produce magnetic fields.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-tfng-4
     kind: tfng
-    status: generated
+    status: needs_review
     item:
       id: os-astronomy-2e-the-behavior-of-light-tfng-4
       key: 'true'
@@ -306,17 +306,17 @@ versions:
         of elegant equations.
       statement: Maxwell based his theory on experiments conducted by other scientists.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-behavior-of-light-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-behavior-of-light-tfng-5
       key: not_given
@@ -328,11 +328,11 @@ versions:
       evidence: []
       statement: The passage provides the exact date when Maxwell published his theory.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-21T03:18:19.897375+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
