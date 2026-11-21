@@ -126,6 +126,7 @@ classroom layer (slides, whiteboard), Elo item difficulty, mastery hysteresis wi
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-21 | Writing: a band per criterion (TR, CC, LR, GRA) specified, owner's request (`specs/writing/spec.md` 8b): shown as a range only where that criterion reaches QWK ≥ 0.7 on held-out examiner-banded essays, never without the overall band. Import of item files now brings newer checks into decided questions (#131) |
 | 2026-11-20 | Speaking guided mode, owner's decision: idea building for Part 2/3 (a way to build an answer, never a script) and the same question up to three times with shrinking time for fluency; only first tries count as evidence |
 | 2026-11-20 | The owner's Speaking research read (Bronze): it confirms our recogniser measurements. Added to `specs/speaking/spec.md`: recogniser settings, pauses from the raw audio, checks before feedback, a missing -s/-ed never a grammar error, uncertain words, and **no Speaking band before the exam** (the progress study gives it). Solo-practice limits under Risks |
 | 2026-11-20 | Lighter loading: `CLAUDE.md` no longer loads `MAP.md` (read on demand); the product's rules live only in `SPEC.md` (Contract), and `AGENTS.md` points to them |

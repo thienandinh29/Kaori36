@@ -32,6 +32,20 @@ explains it with an LLM, feeds the mistakes into the roadmap, and runs a correct
 8. The band is shown as a **range** (e.g. "ước lượng 5.5–6.0") from the scorer's measured error, labelled as an estimate.
    When the scorer and the LLM's criterion judgements disagree by more than 1 band, the result says "không chắc"
    (uncertain) instead of a range.
+8b. **A band per criterion (added 21 Nov 2026, owner's request; not shown yet).** The pinned scorer already outputs five
+   numbers: Task Response (Task Achievement), Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy, and
+   overall; only the overall one is used. Each criterion's band may be shown, as a range like the overall band, only when
+   all of these hold:
+   - the private set has **examiner bands for each criterion** (official sample essays often give all four), and the
+     per-criterion results are measured on the same held-out test split as the overall band (`app.evalkit.writing_score`
+     already reports per-criterion QWK when the set has criteria);
+   - that criterion's **QWK ≥ 0.7** on the test split, with its interval reported, and its range is no wider than 1.5
+     bands; a criterion that misses the bar stays hidden while the others may show;
+   - the overall band is shown (a criterion band never appears without a calibrated overall band);
+   - the guardrails of step 2.7 hold (no band of any kind for a padded essay, none for Task 1).
+   Until then, the four criteria stay as quoted feedback, "Sửa trước" and the five Writing competencies on `/ban-do`.
+   Expected honestly: per-criterion scores from small models are usually less reliable than the overall one, and Coherence
+   and Cohesion is the hardest; some criteria may never pass, and the result is recorded either way.
 
 ## Feedback and the correction loop
 9. The LLM explains the four criteria (Task Response, Coherence and Cohesion, Lexical Resource, Grammatical Range and
@@ -50,7 +64,7 @@ explains it with an LLM, feeds the mistakes into the roadmap, and runs a correct
 
 ## Gate (from the plan)
 13. Error → node mapping **≥ 90% correct** on 100 errors checked by hand; scorer **QWK ≥ 0.7** against examiner bands on
-    50–100 private essays; **stability**: the same essay scored 5 times differs by ≤ 0.5 band. Results are committed
+    50–100 private essays (and per criterion, point 8b, where the essays carry criterion bands); **stability**: the same essay scored 5 times differs by ≤ 0.5 band. Results are committed
     whatever they are; the private essays never are (`data/private/`, git-ignored; only metrics).
 
 ## Not in scope
