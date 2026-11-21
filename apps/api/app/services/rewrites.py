@@ -23,7 +23,7 @@ from psycopg_pool import ConnectionPool
 from app.engine import srs
 from app.graders.typed import grade_typed
 from app.services.backend import learner_uuid, save_trace
-from app.services.writing import FEEDBACK_BUDGET_VI, FEEDBACK_OFF_VI, GrammarStep
+from app.services.writing import FEEDBACK_BUDGET_VI, FEEDBACK_OFF_VI, GrammarStep, prompt_for
 from app.writing import rewrite as rw
 from app.writing.languagetool import NEVER_MAPPED_CATEGORIES
 from app.writing.model_calls import BudgetExceeded
@@ -145,14 +145,14 @@ def process_next_rewrite(database_url: str, step: GrammarStep) -> bool:
     with psycopg.connect(database_url) as conn:
         with conn.transaction():
             row = conn.execute(
-                "select r.id, r.learner_id, r.paragraph, r.target_band, e.text, e.prompt_id "
-                "from essay_rewrites r join essays e on e.id = r.essay_id "
+                "select r.id, r.learner_id, r.paragraph, r.target_band, e.text, e.prompt_id, "
+                "e.own_prompt from essay_rewrites r join essays e on e.id = r.essay_id "
                 "where r.status='queued' order by r.created_at limit 1 for update of r skip locked"
             ).fetchone()
             if row is None:
                 return False
             conn.execute("update essay_rewrites set status='working' where id=%s", (row[0],))
-        rewrite_id, learner, index, target, text, prompt_id = row
+        rewrite_id, learner, index, target, text, prompt_id, own = row
 
         def finish(status: str, result: dict[str, Any] | None, reason: str | None, n: int) -> None:
             with conn.transaction():
@@ -169,7 +169,7 @@ def process_next_rewrite(database_url: str, step: GrammarStep) -> bool:
             finish("failed", None, NO_LANGUAGETOOL_VI, 0)
             return True
         paragraph = rw.split_paragraphs(text)[index]
-        prompt = load_prompts(step_writing_dir(step)).get(prompt_id)
+        prompt = prompt_for(load_prompts(step_writing_dir(step)), prompt_id, own)
         reason: str | None = None
         attempts = 0
         try:

@@ -19,6 +19,34 @@ class EssayIn(BaseModel):
     prompt_id: str = Field(min_length=1, max_length=40)
     text: str = Field(max_length=MAX_CHARS + 2000)  # NFC and trimming may shorten; checked again
     consent: str = Field(max_length=40)
+    own_prompt: str | None = Field(default=None, max_length=2000)  # step 2.10, prompt_id "own"
+    test_id: str | None = Field(default=None, max_length=40)  # step 2.10, a timed exam
+
+
+class OwnPromptIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    learner_id: str = Field(min_length=1, max_length=200)
+    text: str = Field(max_length=2000)
+
+
+class OwnPromptCheck(BaseModel):
+    ok: bool
+    reason_vi: str | None
+    prompt: Prompt | None
+
+
+class TestIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    learner_id: str = Field(min_length=1, max_length=200)
+    prompt_id: str = Field(min_length=1, max_length=40)
+    own_prompt: str | None = Field(default=None, max_length=2000)
+
+
+class TestStarted(BaseModel):
+    id: str
+    prompt: Prompt
+    started_at: datetime
+    time_limit_s: int
 
 
 class CorrectionIn(BaseModel):
@@ -67,6 +95,8 @@ class EssaySummary(BaseModel):
     status: str
     words: int | None
     submitted_at: datetime
+    own_prompt: str | None = None
+    timed: bool = False
 
 
 class Essay(BaseModel):
@@ -79,6 +109,7 @@ class Essay(BaseModel):
     failure_vi: str | None
     corrections: dict[str, dict[str, Any]] = {}  # issue id -> self-correction state
     rewrites: list[dict[str, Any]] = []  # step 2.4b
+    test: dict[str, Any] | None = None  # step 2.10: the timed exam this essay was written in
 
 
 def create_router(service: WritingService, phrases: PhraseService | None = None) -> APIRouter:
@@ -89,9 +120,20 @@ def create_router(service: WritingService, phrases: PhraseService | None = None)
     def prompts(learner_id: str = Learner) -> list[Prompt]:
         return service.prompts(learner_id)
 
+    @router.post("/writing/prompts/check")
+    def check_prompt(body: OwnPromptIn) -> OwnPromptCheck:
+        return OwnPromptCheck(**service.check_own_prompt(body.text))
+
+    @router.post("/writing/tests", status_code=201)
+    def start_test(body: TestIn) -> TestStarted:
+        return TestStarted(**service.start_test(body.learner_id, body.prompt_id, body.own_prompt))
+
     @router.post("/essays", status_code=202)
     def submit(body: EssayIn) -> EssayQueued:
-        essay_id = service.submit(body.learner_id, body.prompt_id, body.text, body.consent)
+        essay_id = service.submit(
+            body.learner_id, body.prompt_id, body.text, body.consent,
+            own=body.own_prompt, test_id=body.test_id,
+        )  # fmt: skip
         return EssayQueued(essay_id=essay_id, status="queued")
 
     @router.get("/essays")

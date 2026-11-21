@@ -1157,6 +1157,26 @@ export const vi = {
       noPrompts:
         "Chưa có đề nào được duyệt cho bạn. Nếu bạn là chủ dự án, thêm mã người học của bạn vào DRAFT_ITEM_LEARNERS để thấy đề bản nháp.",
       write: "Viết bài này",
+      exam: "Thi thử 40 phút",
+      ownTitle: "Đề của bạn (Task 2)",
+      ownNote:
+        "Nhập hoặc dán một đề Task 2 bằng tiếng Anh. Đề chỉ dùng cho bài của bạn, không được chia sẻ và bị xoá cùng bài viết. Task 1 cần số liệu biểu đồ nên chưa hỗ trợ.",
+      ownLabel: "Đề bài (tiếng Anh)",
+      ownPlaceholder:
+        "Some people think that … To what extent do you agree or disagree?",
+      ownWrite: "Viết bài",
+      ownChecking: "Đang kiểm tra đề…",
+      ownBadge: "Đề của bạn",
+      ownMissing:
+        "Chưa có đề nào. Quay lại trang Luyện viết và nhập đề của bạn.",
+      examBadge: "Thi thử",
+      examNote:
+        "Thi thử: 40 phút, giờ do máy chủ tính. Trong lúc viết không có gợi ý; kết quả có sau khi nộp. Nộp sau 40 phút vẫn được chấm nhưng ghi là quá giờ.",
+      examLeft: "Còn lại",
+      examOver: "Đã hết 40 phút. Bạn vẫn nộp được, bài sẽ ghi là quá giờ.",
+      examStarting: "Đang bắt đầu bài thi…",
+      examTook: "Thi thử: nộp sau {t}.",
+      examLate: "Nộp quá giờ (sau {t}).",
       yours: "Bài viết của bạn",
       none: "Bạn chưa gửi bài nào.",
       open: "Xem kết quả",

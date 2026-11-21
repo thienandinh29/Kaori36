@@ -249,6 +249,26 @@ export interface EssaySummary {
   status: EssayStatus;
   words: number | null;
   submitted_at: string;
+  /** the learner's own Task 2 question (step 2.10), when prompt_id is "own" */
+  own_prompt: string | null;
+  /** written in the timed exam mode */
+  timed: boolean;
+}
+
+/** A started Task 2 exam (step 2.10): the server's clock decides what is over time. */
+export interface WritingTest {
+  id: string;
+  prompt_id: string;
+  prompt: WritingPrompt;
+  started_at: string;
+  time_limit_s: number;
+}
+
+/** Whether a typed question can be written on (step 2.10). */
+export interface OwnPromptCheck {
+  ok: boolean;
+  reason_vi: string | null;
+  prompt: WritingPrompt | null;
 }
 
 /** An error LanguageTool found; typed by ERRANT and mapped to a node when it can be (step 2.2). */
@@ -410,6 +430,13 @@ export interface Essay {
   corrections: Record<string, CorrectionState>;
   /** paragraph rewrites, oldest first (step 2.4b) */
   rewrites: Rewrite[];
+  /** the timed exam it was written in (step 2.10) */
+  test: {
+    started_at: string;
+    time_limit_s: number;
+    over_time: boolean;
+    seconds: number;
+  } | null;
 }
 
 /** The model's raw output compared with the learner's earlier essays (not on the IELTS scale). */
