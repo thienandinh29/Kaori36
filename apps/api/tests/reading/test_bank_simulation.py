@@ -172,7 +172,7 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         item = by_question[text]
         shown = presented(item)
         if sum(map(ord, item.id)) % 11 == 0:
-            return None  # an unusable reply, as free models give: flagged with no checker answer
+            return None  # an unusable reply, as free models give: the item stays unchecked
         right = key_text(item)
         if shown.kind == "mcq":
             right = "ABCD"[shown.key]
@@ -188,17 +188,18 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         counts = asyncio.run(
             check_pending(conn, passages, ask, len(keys), lambda: "sim/checker", NOW)
         )
-    assert counts["verified"] + counts["needs_review"] == len(keys)
-    assert counts["needs_review"] > 0
+    assert counts["verified"] + counts["needs_review"] + counts["no_reply"] == len(keys)
+    assert counts["needs_review"] > 0 and counts["no_reply"] > 0
     with pool.connection() as conn:
         unanswered = {
             r[0]
             for r in conn.execute(
-                "select id from reading_items "
-                "where status='needs_review' and checker_answer is null"
+                "select id from reading_items where status='generated' and checked_at is null "
+                "and id = any(%s)",
+                (list(keys),),
             ).fetchall()
         }
-    assert unanswered, "the simulation should include unusable checker replies"
+    assert len(unanswered) == counts["no_reply"], "unusable replies leave items unchecked"
 
     # 4. The item file: export, a fresh database, import; nothing lost or changed.
     with pool.connection() as conn:
@@ -228,7 +229,7 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
         ).fetchall()
     approved_flagged = set()
     for k, (item_id, s) in enumerate(pending):
-        if s == "verified" or k % 2 == 0 or item_id in unanswered:
+        if s == "verified" or k % 2 == 0:
             review.decide(learner, item_id, Decision(decision="approve"))
             if s == "needs_review":
                 approved_flagged.add(item_id)
@@ -266,8 +267,8 @@ def test_the_whole_reading_path_on_the_real_bank(run: dict[str, Any]) -> None:
             if q["kind"] == "headings":
                 assert all(0 <= p < n_paras for p in q["paragraphs"]), q["id"]
     assert not served_ids & approved_flagged, "an approved but doubted item was served"
-    assert unanswered <= approved_flagged  # every one approved by the owner alone ...
-    assert not served_ids & unanswered  # ... and none served: the owner never promotes
+    assert not unanswered & approved_flagged  # never judged: not in the owner's queue at all
+    assert not served_ids & unanswered  # ... and never served
     for item_id in sorted(served_ids):
         item = keys[item_id]
         shown = presented(item)  # a learner answers what is on the screen
