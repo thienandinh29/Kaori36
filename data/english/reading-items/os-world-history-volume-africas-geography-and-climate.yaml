@@ -61,7 +61,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-africas-geography-and-climate-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-mcq-1
       key: 0
@@ -80,17 +80,17 @@ versions:
       - Geography played a vital part in shaping early human societies.
       - The variety of African climates directly influenced the evolution of human societies there.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-africas-geography-and-climate-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-mcq-2
       key: 2
@@ -109,17 +109,17 @@ versions:
       - More arid regions, such as the narrow transitional belts separating the savannas from Africa’s deserts,
         experience less rain and have less fertile soil, producing land that cannot be successfully farmed.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-africas-geography-and-climate-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-mcq-3
       key: 1
@@ -140,17 +140,17 @@ versions:
       - In addition to building the family hut, women also dam small streams to catch fish and carry material gathered
         while foraging with their husbands.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-africas-geography-and-climate-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-tfng-1
       key: 'true'
@@ -165,17 +165,17 @@ versions:
       statement: In fertile, well-watered parts of Africa, settled communities were supported by plentiful rain,
         forests and wildlife.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-africas-geography-and-climate-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-tfng-2
       key: 'false'
@@ -189,17 +189,17 @@ versions:
         by the seasons, limited resource availability, conflict with other groups, or a combination of these factors.
       statement: Hunter-gatherers in prehistoric Africa regularly planted crops to supplement the food they hunted.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-africas-geography-and-climate-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-tfng-3
       key: 'false'
@@ -213,17 +213,17 @@ versions:
         and usually dismantled after about a week so the Baka can follow the available food supply.
       statement: The Baka build their single-family huts mainly by dismantling them after about a week.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-africas-geography-and-climate-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-tfng-4
       key: 'true'
@@ -238,17 +238,17 @@ versions:
         perhaps most importantly, the protector of the forest.
       statement: Jengi is regarded by the Baka as the protector of the forest.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-africas-geography-and-climate-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-africas-geography-and-climate-tfng-5
       key: not_given
@@ -260,11 +260,11 @@ versions:
       evidence: []
       statement: The Baka sell hunted game to neighbouring farming communities in exchange for crops.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
