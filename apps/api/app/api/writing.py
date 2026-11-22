@@ -1,7 +1,7 @@
 """Writing routes (specs/writing/step-2.1.md): prompts, essays, results, deletion."""
 
 from datetime import datetime
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Query, Response
 from pydantic import BaseModel, ConfigDict, Field
@@ -13,6 +13,9 @@ from app.writing.prompts import Prompt
 Learner = Query(min_length=1, max_length=200)
 
 
+PartText = Annotated[str, Field(min_length=1, max_length=200)]
+
+
 class EssayIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     learner_id: str = Field(min_length=1, max_length=200)
@@ -20,6 +23,8 @@ class EssayIn(BaseModel):
     text: str = Field(max_length=MAX_CHARS + 2000)  # NFC and trimming may shorten; checked again
     consent: str = Field(max_length=40)
     own_prompt: str | None = Field(default=None, max_length=2000)  # step 2.10, prompt_id "own"
+    # step 2.11b: the parts of the own question the learner kept (each one the code proposed)
+    own_parts: list[PartText] | None = Field(default=None, max_length=4)
     test_id: str | None = Field(default=None, max_length=40)  # step 2.10, a timed exam
 
 
@@ -40,6 +45,8 @@ class TestIn(BaseModel):
     learner_id: str = Field(min_length=1, max_length=200)
     prompt_id: str = Field(min_length=1, max_length=40)
     own_prompt: str | None = Field(default=None, max_length=2000)
+    # step 2.11b: the parts of the own question the learner kept (each one the code proposed)
+    own_parts: list[PartText] | None = Field(default=None, max_length=4)
 
 
 class TestStarted(BaseModel):
@@ -126,13 +133,14 @@ def create_router(service: WritingService, phrases: PhraseService | None = None)
 
     @router.post("/writing/tests", status_code=201)
     def start_test(body: TestIn) -> TestStarted:
-        return TestStarted(**service.start_test(body.learner_id, body.prompt_id, body.own_prompt))
+        return TestStarted(**service.start_test(body.learner_id, body.prompt_id, body.own_prompt,
+                                                own_parts=body.own_parts))  # fmt: skip
 
     @router.post("/essays", status_code=202)
     def submit(body: EssayIn) -> EssayQueued:
         essay_id = service.submit(
             body.learner_id, body.prompt_id, body.text, body.consent,
-            own=body.own_prompt, test_id=body.test_id,
+            own=body.own_prompt, own_parts=body.own_parts, test_id=body.test_id,
         )  # fmt: skip
         return EssayQueued(essay_id=essay_id, status="queued")
 

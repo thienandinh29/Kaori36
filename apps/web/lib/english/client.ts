@@ -330,12 +330,14 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       learnerId: string,
       promptId: string,
       own: string | null,
+      ownParts: string[] | null = null,
     ): Promise<WritingTest> {
       return parseWritingTest(
         await post("writing/tests", {
           learner_id: learnerId,
           prompt_id: promptId,
           ...(own === null ? {} : { own_prompt: own }),
+          ...(own !== null && ownParts ? { own_parts: ownParts } : {}),
         }),
         promptId,
       );
@@ -344,7 +346,11 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       learnerId: string,
       promptId: string,
       text: string,
-      extra: { own?: string | null; testId?: string | null } = {},
+      extra: {
+        own?: string | null;
+        ownParts?: string[] | null;
+        testId?: string | null;
+      } = {},
     ): Promise<string> {
       const d = (await post("essays", {
         learner_id: learnerId,
@@ -352,6 +358,7 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         text,
         consent: CONSENT,
         ...(extra.own ? { own_prompt: extra.own } : {}),
+        ...(extra.own && extra.ownParts ? { own_parts: extra.ownParts } : {}),
         ...(extra.testId ? { test_id: extra.testId } : {}),
       })) as { essay_id?: unknown };
       if (typeof d?.essay_id !== "string") throw new DataError("contract");

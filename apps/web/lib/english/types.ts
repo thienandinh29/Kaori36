@@ -191,6 +191,51 @@ export interface WritingPrompt {
   prompt: string;
   /** Task 1 only */
   figure: ChartFigure | null;
+  /** Task 2: what the question asks for (step 2.11b); empty on Task 1 */
+  parts: PromptPart[];
+}
+
+/** One part of a Task 2 question; `position` asks for the writer's own view (step 2.11b). */
+export interface PromptPart {
+  text: string;
+  position: boolean;
+}
+
+export type Stance = "first" | "second" | "balanced" | "none";
+export type Development = "example" | "explanation" | "none";
+
+/** A rule's finding on the essay's structure, decided by code (step 2.11b). */
+export interface StructureFinding {
+  kind:
+    | "part_missing"
+    | "position_missing"
+    | "position_changed"
+    | "undeveloped";
+  level: "issue" | "hint";
+  /** 1-based, into `parts` */
+  part: number | null;
+  /** 1-based, into the essay's paragraphs */
+  paragraph: number | null;
+  quotes: string[];
+}
+
+/**
+ * The essay's structure (step 2.11b): described by a model with quotes, each quote checked by
+ * code; `null` stance, `answered` or `development` means the code cannot tell. Never evidence.
+ */
+export interface EssayStructure {
+  parts: (PromptPart & { answered: boolean | null })[];
+  introduction: { stance: Stance | null; quote: string | null };
+  conclusion: { stance: Stance | null; quote: string | null };
+  body: {
+    paragraph: number;
+    main_idea: string;
+    answers: number[];
+    development: Development | null;
+  }[];
+  body_paragraphs: number;
+  dropped: number;
+  findings: StructureFinding[];
 }
 
 /** What the code found when it checked a Task 1 essay against its chart (step 2.5). */
@@ -416,6 +461,9 @@ export interface EssayResult {
   /** step 2.4 on; null when there is none (then `feedbackUnavailableVi` says why) */
   feedback?: EssayFeedback | null;
   feedbackUnavailableVi?: string | null;
+  /** step 2.11b on, Task 2 only; null when there is none (then `structureUnavailableVi` may say why) */
+  structure?: EssayStructure | null;
+  structureUnavailableVi?: string | null;
 }
 
 export interface Essay {

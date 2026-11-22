@@ -8,6 +8,8 @@ import {
   type BandRange,
   type ChartFigure,
   type Task1Check,
+  type PromptPart,
+  type EssayStructure,
   type EssayGuard,
   type ErrorPatterns,
   type Complexity,
@@ -480,6 +482,76 @@ export function parseWritingPrompt(value: unknown): WritingPrompt {
     level: level(d.level),
     status,
     prompt: string(d.prompt),
+    parts:
+      d.parts === undefined ? [] : array(d.parts).map((p) => parsePart(p)),
+  };
+}
+
+function parsePart(value: unknown): PromptPart {
+  const r = record(value);
+  return { text: string(r.text), position: r.position === true };
+}
+
+function oneOf<T extends string>(value: unknown, allowed: readonly T[]): T {
+  if (typeof value !== "string" || !allowed.includes(value as T))
+    throw new DataError("contract");
+  return value as T;
+}
+
+const STANCES = ["first", "second", "balanced", "none"] as const;
+const DEVELOPMENTS = ["example", "explanation", "none"] as const;
+const FINDINGS = [
+  "part_missing",
+  "position_missing",
+  "position_changed",
+  "undeveloped",
+] as const;
+
+function optionalInt(value: unknown): number | null {
+  return value === null || value === undefined ? null : int(value);
+}
+
+function parsePosition(value: unknown): EssayStructure["introduction"] {
+  const r = record(value);
+  return {
+    stance: r.stance === null ? null : oneOf(r.stance, STANCES),
+    quote: optionalString(r.quote),
+  };
+}
+
+export function parseStructure(value: unknown): EssayStructure {
+  const d = record(value);
+  const parts = array(d.parts).map((v) => {
+    const r = record(v);
+    const answered = r.answered === null ? null : bool(r.answered);
+    return { ...parsePart(v), answered };
+  });
+  return {
+    parts,
+    introduction: parsePosition(d.introduction),
+    conclusion: parsePosition(d.conclusion),
+    body: array(d.body).map((v) => {
+      const r = record(v);
+      return {
+        paragraph: int(r.paragraph),
+        main_idea: string(r.main_idea),
+        answers: array(r.answers).map(int),
+        development:
+          r.development === null ? null : oneOf(r.development, DEVELOPMENTS),
+      };
+    }),
+    body_paragraphs: int(d.body_paragraphs),
+    dropped: int(d.dropped),
+    findings: array(d.findings).map((v) => {
+      const r = record(v);
+      return {
+        kind: oneOf(r.kind, FINDINGS),
+        level: oneOf(r.level, ["issue", "hint"] as const),
+        part: optionalInt(r.part),
+        paragraph: optionalInt(r.paragraph),
+        quotes: strings(r.quotes),
+      };
+    }),
   };
 }
 
@@ -787,6 +859,10 @@ export function parseEssayResult(value: unknown): EssayResult {
       ...(d.feedback !== undefined && {
         feedback: d.feedback === null ? null : parseEssayFeedback(d.feedback),
         feedbackUnavailableVi: optionalString(d.feedback_unavailable_vi),
+      }),
+      ...(d.structure !== undefined && {
+        structure: d.structure === null ? null : parseStructure(d.structure),
+        structureUnavailableVi: optionalString(d.structure_unavailable_vi),
       }),
     }),
   };

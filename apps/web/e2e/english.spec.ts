@@ -305,14 +305,27 @@ test("a learner writes on their own Task 2 question (step 2.10)", async ({
     .fill(
       "The chart below shows how many people used public transport in three cities. Summarise the information.",
     );
-  await own.getByRole("button", { name: "Viết bài" }).click();
+  await own.getByRole("button", { name: "Kiểm tra đề" }).click();
   await expect(own.getByRole("alert")).toContainText("Task 1");
   const question =
     "Some people think that young people should work for a year before university. Do you agree or disagree?";
   await own.getByRole("textbox").fill(question);
+  await own.getByRole("button", { name: "Kiểm tra đề" }).click();
+  // step 2.11b: the parts code proposes from the wording, ticked before writing
+  const parts = own.getByTestId("own-parts");
+  const part = parts.getByRole("checkbox", {
+    name: /how far you agree or disagree/,
+  });
+  await expect(part).toBeChecked();
+  await part.uncheck();
+  await expect(own.getByRole("button", { name: "Viết bài" })).toBeDisabled();
+  await part.check();
   await own.getByRole("button", { name: "Viết bài" }).click();
   await expect(page).toHaveURL(/\/viet\/de-cua-ban$/);
   await expect(page.locator(".en-prompt")).toHaveText(question);
+  await expect(page.getByTestId("prompt-parts")).toContainText(
+    "how far you agree or disagree",
+  );
   await page
     .getByRole("textbox")
     .fill(

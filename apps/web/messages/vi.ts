@@ -1165,7 +1165,14 @@ export const vi = {
       ownPlaceholder:
         "Some people think that … To what extent do you agree or disagree?",
       ownWrite: "Viết bài",
+      ownCheck: "Kiểm tra đề",
       ownChecking: "Đang kiểm tra đề…",
+      ownPartsTitle: "Đề này yêu cầu bạn trả lời",
+      ownPartsNote:
+        "Máy đoán các phần này từ câu chữ của đề. Bỏ chọn phần nào không đúng với đề; sau khi nộp, Sena xem bài đã trả lời đủ các phần bạn giữ chưa.",
+      ownPartsNone: "Hãy giữ ít nhất một phần của đề.",
+      partPosition: "(ý kiến của bạn)",
+      promptParts: "Bài cần trả lời",
       ownBadge: "Đề của bạn",
       ownMissing:
         "Chưa có đề nào. Quay lại trang Luyện viết và nhập đề của bạn.",
@@ -1251,6 +1258,43 @@ export const vi = {
       task1OverviewYes: "Bài có câu tổng quan (overall / in general…).",
       task1OverviewNo:
         "Chưa thấy câu tổng quan (ví dụ bắt đầu bằng “Overall, …”). Task 1 cần một câu tổng quan.",
+      structureTitle: "Cấu trúc bài: đã trả lời đủ đề chưa?",
+      structureNote:
+        "AI tách lập trường và ý chính của từng đoạn, kèm câu trích. Máy kiểm tra mỗi câu trích có thật trong đúng đoạn đó, rồi mới so với các phần của đề. Đây là gợi ý để bạn đọc lại, không tính vào điểm hay mức thành thạo.",
+      structureParts: "Các phần của đề",
+      structureAnswered: "có đoạn trả lời",
+      structureMissing: "chưa thấy đoạn thân bài nào trả lời",
+      structureUnsure: "chưa chắc",
+      structurePosition: "Ý kiến của bạn",
+      structureIntro: "Mở bài",
+      structureConclusion: "Kết bài",
+      structureNoPosition: "không nêu ý kiến",
+      structureOutline: "Ý chính từng đoạn thân bài",
+      structureParagraph: "Đoạn {n}",
+      structureAnswers: "trả lời phần {parts}",
+      structureAnswersNone: "chưa gắn với phần nào của đề",
+      development: {
+        example: "có ví dụ",
+        explanation: "có giải thích",
+        none: "chỉ nêu ý, chưa thấy ví dụ hay giải thích",
+        unknown: "chưa chắc đã được phát triển chưa",
+      },
+      findingIssue: "Cần xem lại",
+      findingHint: "Gợi ý",
+      findings: {
+        part_missing:
+          "Chưa thấy đoạn thân bài nào trả lời phần này của đề: {part}",
+        position_missing:
+          "Chưa thấy ý kiến của bạn (đề hỏi: {part}). Hãy nêu rõ ở mở bài và nhắc lại ở kết bài.",
+        position_changed:
+          "Ý kiến ở mở bài và ở kết bài có vẻ ngược nhau. Đọc lại hai câu này:",
+        undeveloped:
+          "Đoạn {n} có thể chưa được phát triển: ý chính chưa có ví dụ hay lời giải thích (lý do, hệ quả, so sánh). Một lời giải thích rõ cũng đủ, không bắt buộc phải có ví dụ.",
+      },
+      structureNoFindings:
+        "Không thấy vấn đề về cấu trúc: mỗi phần của đề đều có đoạn trả lời.",
+      structureDropped:
+        "{n} mô tả của AI bị bỏ vì câu trích không có trong đúng đoạn của bài.",
       feedback: "Nhận xét theo 4 tiêu chí",
       feedbackNote:
         "Do AI viết, dựa trên các câu trích từ bài của bạn (máy đã kiểm tra mỗi câu trích có thật trong bài). Đây là gợi ý, không phải điểm.",
