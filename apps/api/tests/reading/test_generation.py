@@ -146,10 +146,20 @@ def test_pipeline_generates_once_per_passage_version_and_respects_the_check_budg
         return dict(rows.fetchall())
 
     first = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 3, lambda: "m", NOW))
-    assert first == {"verified": 0, "needs_review": 3, "rechecked": 0}  # 3 of 5, in id order
+    assert first == {
+        "verified": 0,
+        "needs_review": 3,
+        "rechecked": 0,
+        "no_reply": 0,
+    }  # 3 of 5, in id order
     assert list(statuses().values()).count("generated") == 2  # wait for the next run
     second = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 10, lambda: "m", NOW))
-    assert second == {"verified": 2, "needs_review": 0, "rechecked": 0}  # the next run continues
+    assert second == {
+        "verified": 2,
+        "needs_review": 0,
+        "rechecked": 0,
+        "no_reply": 0,
+    }  # the next run continues
     views = conn.execute("select distinct check_view from reading_items where text_slug='bees'")
     assert views.fetchall() == [("shuffled",)]  # every check saw the shown order
     assert statuses()["bees-tfng-1"] == statuses()["bees-tfng-2"] == "verified"
@@ -157,8 +167,34 @@ def test_pipeline_generates_once_per_passage_version_and_respects_the_check_budg
     edited = PASSAGE + " Bees also make wax."
     conn.execute("update reading_items set status='generated' where id='bees-mcq-1'")
     stale = asyncio.run(check_pending(conn, {"bees": edited}, ask, 10, lambda: None, NOW))
-    assert stale == {"verified": 0, "needs_review": 0, "rechecked": 0}  # an edited text: unchecked
+    assert stale == {
+        "verified": 0,
+        "needs_review": 0,
+        "rechecked": 0,
+        "no_reply": 0,
+    }  # an edited text: unchecked
     assert sha256(edited) != sha256(PASSAGE)
+
+
+def test_no_usable_reply_leaves_a_new_question_unchecked(conn) -> None:  # type: ignore[no-untyped-def]
+    """22 Nov 2026: a failed call (quota, provider error) flagged a never-judged item."""
+
+    async def gen(system: str, text: str) -> Generated | None:
+        return generated()
+
+    asyncio.run(generate_text(conn, "bees", PASSAGE, gen, NOW))
+
+    async def down(system: str, text: str) -> blind.Reply | None:
+        return None
+
+    counts = asyncio.run(check_pending(conn, {"bees": PASSAGE}, down, 3, lambda: "m", NOW))
+    assert counts == {"verified": 0, "needs_review": 0, "rechecked": 0, "no_reply": 3}
+    rows = conn.execute(
+        "select status, checker_answer, checked_at from reading_items where text_slug='bees'"
+    ).fetchall()
+    assert {r[0] for r in rows} == {"generated"} and all(
+        r[1] is None and r[2] is None for r in rows
+    )
 
 
 def test_one_question_given_as_an_object_is_accepted() -> None:
@@ -227,16 +263,16 @@ def test_checks_that_saw_the_stored_order_are_done_again_first(conn) -> None:  #
 
     # The re-check comes before new items; an unusable reply leaves the earlier check standing.
     once = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 1, lambda: "m", NOW))
-    assert once == {"verified": 0, "needs_review": 0, "rechecked": 0}
+    assert once == {"verified": 0, "needs_review": 0, "rechecked": 0, "no_reply": 1}
     assert row() == ("verified", "B", "old", None)
     again = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 1, lambda: "m", NOW))
-    assert again == {"verified": 0, "needs_review": 1, "rechecked": 1}
+    assert again == {"verified": 0, "needs_review": 1, "rechecked": 1, "no_reply": 0}
     # "B" in the shown order is "Nectar from flowers", stored A: kept in the stored order.
     assert row() == ("needs_review", "A", "m", "shuffled")
     statuses = dict(conn.execute("select id, status from reading_items").fetchall())
     assert statuses["bees-tfng-1"] == "verified" and statuses["bees-headings-1"] == "approved"
     nothing_left = asyncio.run(check_pending(conn, {"bees": PASSAGE}, ask, 0, lambda: "m", NOW))
-    assert nothing_left == {"verified": 0, "needs_review": 0, "rechecked": 0}
+    assert nothing_left == {"verified": 0, "needs_review": 0, "rechecked": 0, "no_reply": 0}
 
 
 def test_a_changed_passage_gets_items_of_its_own(conn) -> None:  # type: ignore[no-untyped-def]

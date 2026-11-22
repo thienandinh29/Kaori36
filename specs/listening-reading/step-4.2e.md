@@ -56,3 +56,11 @@ matter (summaries that repeat the body, "further research" links).
   unchecked, 17 dropped, and the owner's 1 rejection. New questions for the 9 cleaned passages: 106 kept, 5 dropped
   by code, waiting for the daily blind check (US$0.08 for 12 calls: 9 passages, 3 malformed replies retried).
 
+
+## Fix (22 Nov 2026): a failed check call is not a doubt
+When the free checker gave no usable reply (quota, provider error, unreadable output), the pipeline marked a new question
+`needs_review` with no checker answer, so the owner's queue showed never-judged questions as if the checker doubted them
+(1 on 21 Nov, 7 on 22 Nov; the 22 Nov batch reset those 8 to unchecked). Now an unusable reply changes nothing, for new
+questions as already for re-checks: the question stays unchecked and is tried again on the next run, counted as `no_reply`.
+Tests: `test_no_usable_reply_leaves_a_new_question_unchecked`; the bank simulation's unusable replies stay unchecked and
+never reach the owner's queue.

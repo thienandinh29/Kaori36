@@ -112,10 +112,10 @@ async def check_pending(
     """Blind-check up to `limit` stored items whose passage is still the current one.
 
     First, undecided multiple-choice and headings items whose check saw the stored order are
-    checked again in the shown order (step 4.3c); an unusable reply leaves such an item as it
-    was, to be tried again on the next run. Then items not yet checked, oldest first.
+    checked again in the shown order (step 4.3c). Then items not yet checked, oldest first. An
+    unusable reply changes nothing: the item is tried again on the next run.
     """
-    counts = {"verified": 0, "needs_review": 0, "rechecked": 0}
+    counts = {"verified": 0, "needs_review": 0, "rechecked": 0, "no_reply": 0}
     again = conn.execute(
         "select id,text_slug,passage_sha256,item from reading_items where kind = any(%s) "
         "and status in ('verified','needs_review') and check_view is null "
@@ -136,14 +136,16 @@ async def check_pending(
                 continue  # text gone or edited: its items wait (a new version is generated afresh)
             outcome, answer = await blind.check(_ITEM.validate_python(data), passage, ask)
             used += 1
-            if recheck and answer is None:
-                continue  # the earlier check stands until a usable reply replaces it
+            if answer is None:
+                # No usable reply (quota, provider error, unreadable output): nobody judged the
+                # item, so it is not a doubt. A new item stays unchecked and a re-checked one keeps
+                # its earlier check, both tried again on the next run (fixed 22 Nov 2026).
+                counts["no_reply"] += 1
+                continue
             conn.execute(
                 "update reading_items set status=%s, checker_answer=%s, checker_model=%s, "
                 "checked_at=%s, check_view='shuffled' where id=%s",
-                # No usable reply: no checker judged it, so none is named (the label backfill
-                # would otherwise record the last model that answered as doubting this item).
-                (outcome, answer, model() if answer is not None else None, now, item_id),
+                (outcome, answer, model(), now, item_id),
             )
             conn.commit()  # each check is paid for: keep it even if a later one fails
             counts[outcome] += 1
