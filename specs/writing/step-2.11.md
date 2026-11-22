@@ -83,8 +83,15 @@ item gets its own short build note here when it starts.
   development. The parts are also listed under the question in the editor. Nothing here is evidence or enters "Sửa trước".
 - **Not measured, not claimed.** How often the model's descriptions are right (a missed part that was there, a flip that
   was not) is not known; the findings are worded as things to reread. A precision figure needs essays labelled by a
-  teacher, or 2.11c's blind check. The live call on two authored essays (`tests/writing/test_deepseek_live.py`, set
-  `WRITING_LIVE_LLM=1` with a DeepSeek key) has not been run yet.
+  teacher, or 2.11c's blind check.
+- **Live pipeline check, 22 Nov 2026** (`tests/writing/test_deepseek_live.py`, `WRITING_LIVE_LLM=1`, deepseek-flash, 2
+  calls; a check that the pipeline works, not a precision figure): the essay that answers every part got no finding
+  (stances first/first, development explanation and example); the essay without solutions got "part missing" for the
+  solutions and "có thể chưa được phát triển" on its paragraph that only asserts, with nothing dropped.
+- **Known limit (from the review, 22 Nov):** an own question's kept parts are stored as their texts and matched against
+  what `propose_parts` proposes *now*. If those rules change later, an older essay's stored parts may no longer match, and
+  its structure check is then skipped without a message when it is shown again. Storing each part with its `position` flag
+  would remove the dependency; worth doing before `propose_parts` is changed.
 
 ## 2.11c: feedback claims checked blind by another model family
 - For each "issue" point, a model of another family sees only the quote and the point and answers whether the quote shows

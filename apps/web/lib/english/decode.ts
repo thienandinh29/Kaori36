@@ -482,8 +482,7 @@ export function parseWritingPrompt(value: unknown): WritingPrompt {
     level: level(d.level),
     status,
     prompt: string(d.prompt),
-    parts:
-      d.parts === undefined ? [] : array(d.parts).map((p) => parsePart(p)),
+    parts: d.parts === undefined ? [] : array(d.parts).map((p) => parsePart(p)),
   };
 }
 

@@ -207,10 +207,7 @@ export type Development = "example" | "explanation" | "none";
 /** A rule's finding on the essay's structure, decided by code (step 2.11b). */
 export interface StructureFinding {
   kind:
-    | "part_missing"
-    | "position_missing"
-    | "position_changed"
-    | "undeveloped";
+    "part_missing" | "position_missing" | "position_changed" | "undeveloped";
   level: "issue" | "hint";
   /** 1-based, into `parts` */
   part: number | null;
