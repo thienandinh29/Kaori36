@@ -38,10 +38,11 @@ from app.writing import (
     llm_corrections,
     own_prompt,
     repair,
+    structure,
     task1,
     tracker,
 )
-from app.writing.analysis import analyse, load_linking_words, words
+from app.writing.analysis import analyse, load_linking_words, paragraphs, words
 from app.writing.error_map import ErrorMap, load_error_map
 from app.writing.feedback import FeedbackOut
 from app.writing.grammar import (
@@ -82,10 +83,13 @@ def _test_view(
             "seconds": seconds}  # fmt: skip
 
 
-def prompt_for(bank: PromptBank, prompt_id: str, own: str | None) -> Prompt | None:
-    """An essay's prompt: from the bank, or the learner's own Task 2 question (step 2.10)."""
+def prompt_for(
+    bank: PromptBank, prompt_id: str, own: str | None, own_parts: list[str] | None = None
+) -> Prompt | None:
+    """An essay's prompt: from the bank, or the learner's own Task 2 question (step 2.10) with
+    the parts the learner kept (step 2.11b)."""
     if prompt_id == own_prompt.OWN_ID:
-        return own_prompt.as_prompt(own) if own else None
+        return own_prompt.as_prompt(own, own_parts) if own else None
     return bank.get(prompt_id)
 
 
@@ -123,6 +127,13 @@ GRAMMAR_OFF_VI = "Chưa kiểm tra ngữ pháp: máy chủ chưa bật LanguageT
 GRAMMAR_DOWN_VI = (
     "Chưa kiểm tra được ngữ pháp: LanguageTool không phản hồi. Bạn thử gửi lại sau nhé."
 )
+
+
+def _own_columns(prompt_id: str, prompt: Prompt) -> tuple[str | None, Jsonb | None]:
+    """An own question and the parts kept, as stored with the test or essay (2.10, 2.11b)."""
+    if prompt_id != own_prompt.OWN_ID:
+        return None, None
+    return prompt.prompt, Jsonb([p.text for p in prompt.parts])
 
 
 def _uuid(value: str) -> UUID:
@@ -320,13 +331,16 @@ class WritingService:
     def _visible(self, prompt: Prompt, learner: UUID) -> bool:
         return prompt.status == "reviewed" or learner in self.draft_learners
 
-    def _checked_prompt(self, prompt_id: str, own: str | None, learner: UUID) -> Prompt:
-        """The prompt an essay or test is written on; an own question must pass the check."""
+    def _checked_prompt(
+        self, prompt_id: str, own: str | None, learner: UUID, parts: list[str] | None = None
+    ) -> Prompt:
+        """The prompt an essay or test is written on; an own question must pass the check, and
+        its kept parts must be ones the code proposed (step 2.11b)."""
         if prompt_id == own_prompt.OWN_ID:
-            why = own_prompt.problem(own or "")
+            why = own_prompt.problem(own or "") or own_prompt.parts_problem(own or "", parts)
             if why:
                 raise HTTPException(422, why)
-            return own_prompt.as_prompt(own or "")
+            return own_prompt.as_prompt(own or "", parts)
         prompt = self.bank().get(prompt_id)
         if prompt is None or not self._visible(prompt, learner):
             raise HTTPException(404, "Không tìm thấy đề bài.")
@@ -340,20 +354,26 @@ class WritingService:
         return {"ok": True, "reason_vi": None, "prompt": own_prompt.as_prompt(text).model_dump()}
 
     def start_test(
-        self, learner_id: str, prompt_id: str, own: str | None, *, now: datetime | None = None
+        self,
+        learner_id: str,
+        prompt_id: str,
+        own: str | None,
+        *,
+        own_parts: list[str] | None = None,
+        now: datetime | None = None,
     ) -> dict[str, Any]:
         """A timed Task 2 exam: the clock is the server's; the essay is sent with the test id."""
         now = now or datetime.now(UTC)
         with self.pool().connection() as conn, conn.transaction():
             learner = self._learner(conn, learner_id)
-            prompt = self._checked_prompt(prompt_id, own, learner)
+            prompt = self._checked_prompt(prompt_id, own, learner, own_parts)
             if prompt.task != 2:
                 raise HTTPException(422, "Thi thử hiện chỉ có cho Task 2.")
-            own_text = prompt.prompt if prompt_id == own_prompt.OWN_ID else None
+            own_text, kept = _own_columns(prompt_id, prompt)
             row = conn.execute(
-                "insert into writing_tests(learner_id,prompt_id,own_prompt,time_limit_s,"
-                "started_at) values (%s,%s,%s,%s,%s) returning id",
-                (learner, prompt_id, own_text, TEST_SECONDS, now),
+                "insert into writing_tests(learner_id,prompt_id,own_prompt,own_parts,"
+                "time_limit_s,started_at) values (%s,%s,%s,%s,%s,%s) returning id",
+                (learner, prompt_id, own_text, kept, TEST_SECONDS, now),
             ).fetchone()
         assert row is not None
         return {"id": str(row[0]), "prompt": prompt.model_dump(), "started_at": now,
@@ -372,6 +392,7 @@ class WritingService:
         consent: str,
         *,
         own: str | None = None,
+        own_parts: list[str] | None = None,
         test_id: str | None = None,
         now: datetime | None = None,
     ) -> str:
@@ -388,17 +409,17 @@ class WritingService:
             if test_id is not None:
                 test = _uuid(test_id)
                 started = conn.execute(
-                    "select prompt_id, own_prompt, started_at, time_limit_s from writing_tests "
-                    "where id=%s and learner_id=%s for update",
+                    "select prompt_id, own_prompt, started_at, time_limit_s, own_parts "
+                    "from writing_tests where id=%s and learner_id=%s for update",
                     (test, learner),
                 ).fetchone()
                 if started is None:
                     raise HTTPException(404, "Không tìm thấy bài thi.")
                 if conn.execute("select 1 from essays where test_id=%s", (test,)).fetchone():
                     raise HTTPException(409, "Bài thi này đã được nộp.")
-                prompt_id, own = started[0], started[1]
+                prompt_id, own, own_parts = started[0], started[1], started[4]
                 over = (now - started[2]).total_seconds() > started[3] + TEST_GRACE_SECONDS
-            prompt = self._checked_prompt(prompt_id, own, learner)
+            prompt = self._checked_prompt(prompt_id, own, learner, own_parts)
             today = conn.execute(
                 "select count(*) from essays where learner_id=%s and submitted_at >= %s",
                 (learner, start_of_day(now)),
@@ -413,11 +434,11 @@ class WritingService:
                 raise HTTPException(
                     429, f"Hôm nay bạn đã gửi {allowed} bài{named}. Hẹn bạn ngày mai nhé."
                 )
-            own_text = prompt.prompt if prompt_id == own_prompt.OWN_ID else None
+            own_text, kept = _own_columns(prompt_id, prompt)
             row = conn.execute(
-                "insert into essays(learner_id,prompt_id,own_prompt,text,consent,submitted_at,"
-                "test_id,over_time) values (%s,%s,%s,%s,%s,%s,%s,%s) returning id",
-                (learner, prompt_id, own_text, text, consent, now, test, over),
+                "insert into essays(learner_id,prompt_id,own_prompt,own_parts,text,consent,"
+                "submitted_at,test_id,over_time) values (%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id",
+                (learner, prompt_id, own_text, kept, text, consent, now, test, over),
             ).fetchone()
         assert row is not None
         return str(row[0])
@@ -442,13 +463,13 @@ class WritingService:
             learner = self._learner(conn, learner_id)
             row = conn.execute(
                 "select e.id,e.prompt_id,e.text,e.status,e.submitted_at,e.result,e.failure_vi,"
-                "e.own_prompt,e.over_time,t.started_at,t.time_limit_s from essays e "
+                "e.own_prompt,e.over_time,t.started_at,t.time_limit_s,e.own_parts from essays e "
                 "left join writing_tests t on t.id = e.test_id where e.id=%s and e.learner_id=%s",
                 (_uuid(essay_id), learner),
             ).fetchone()
         if row is None:
             raise HTTPException(404, "Không tìm thấy bài viết.")
-        prompt = prompt_for(self.bank(), row[1], row[7])
+        prompt = prompt_for(self.bank(), row[1], row[7], row[11])
         from app.services.rewrites import rewrites_of
 
         with self.pool().connection() as conn:
@@ -612,6 +633,45 @@ def model_features(
         logger.exception("writing model call failed")
         result["feedback_unavailable_vi"] = FEEDBACK_FAILED_VI
     return found
+
+
+STRUCTURE_SHORT_VI = (
+    f"Chưa kiểm tra cấu trúc: bài cần ít nhất {structure.MIN_PARAGRAPHS} đoạn (mở bài, thân bài, "
+    "kết bài), cách nhau bằng một dòng trống."
+)
+STRUCTURE_BUDGET_VI = "Hôm nay đã dùng hết lượt kiểm tra cấu trúc bằng AI."
+STRUCTURE_FAILED_VI = "Chưa kiểm tra được cấu trúc bài lần này."
+
+
+def structure_check(
+    text: str, prompt: Prompt | None, result: dict[str, Any], learner: UUID, step: GrammarStep
+) -> None:
+    """Step 2.11b: the structure of a Task 2 essay, described by the model and checked by code.
+
+    Same gate as the feedback (owners only, a model configured); one budgeted call. The result
+    is shown with its findings and never moves mastery. Without a model or for other learners
+    the section is absent: the feedback's own reason already says why.
+    """
+    if prompt is None or prompt.task != 2 or not prompt.parts:
+        return
+    result["structure"], result["structure_unavailable_vi"] = None, None
+    if step.model is None or learner not in step.draft_learners:
+        return
+    paras = paragraphs(text)
+    if len(paras) < structure.MIN_PARAGRAPHS:
+        result["structure_unavailable_vi"] = STRUCTURE_SHORT_VI
+        return
+    try:
+        out = step.model.complete(learner, "writing_structure", structure.SYSTEM,
+                                  structure.prompt(prompt.prompt, prompt.parts, paras),
+                                  structure.StructureOut)  # fmt: skip
+        found = structure.verify(paras, prompt.parts, out)
+        result["structure"] = found.to_json(step.model.last_model)
+    except BudgetExceeded:
+        result["structure_unavailable_vi"] = STRUCTURE_BUDGET_VI
+    except Exception:
+        logger.exception("writing structure call failed")
+        result["structure_unavailable_vi"] = STRUCTURE_FAILED_VI
 
 
 def band_for(
@@ -821,15 +881,17 @@ def process_next_essay(
     with psycopg.connect(database_url) as conn:
         with conn.transaction():
             row = conn.execute(
-                "select id,learner_id,prompt_id,text,own_prompt from essays where status='queued' "
-                "order by submitted_at,id limit 1 for update skip locked"
+                "select id,learner_id,prompt_id,text,own_prompt,own_parts from essays "
+                "where status='queued' order by submitted_at,id limit 1 for update skip locked"
             ).fetchone()
             if row is None:
                 return False
             conn.execute("update essays set status='analysing' where id=%s", (row[0],))
-        essay_id, learner, prompt_id, text, own = row
+        essay_id, learner, prompt_id, text, own, own_parts = row
         try:
-            prompt = prompt_for(load_prompts(writing_dir / "prompts.yaml"), prompt_id, own)
+            prompt = prompt_for(
+                load_prompts(writing_dir / "prompts.yaml"), prompt_id, own, own_parts
+            )
             task = prompt.task if prompt else 2
             result, grammar = _analyse(text, task, writing_dir, step)
             result["task"] = task
@@ -856,6 +918,7 @@ def process_next_essay(
                     )  # fmt: skip
             if step is not None:
                 ai_issues = model_features(text, prompt, result, grammar, learner, step)
+                structure_check(text, prompt, result, learner, step)
             with conn.transaction():
                 if grammar is not None and step is not None:
                     issues, moved = _apply_evidence(

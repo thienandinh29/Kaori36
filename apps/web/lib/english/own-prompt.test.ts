@@ -4,6 +4,7 @@ import {
   OWN_ID,
   OWN_SLUG,
   clearTest,
+  ownParts,
   ownPrompt,
   promptIdFor,
   savedTest,
@@ -31,6 +32,7 @@ const test: WritingTest = {
     status: "draft",
     prompt: "Q?",
     figure: null,
+    parts: [],
   },
   started_at: "2026-11-21T03:00:00Z",
   time_limit_s: 2400,
@@ -72,7 +74,21 @@ describe("own question and exam storage (step 2.10)", () => {
       },
     };
     expect(ownPrompt(broken)).toBeNull();
+    expect(ownParts(broken)).toBeNull();
     expect(savedTest(broken, OWN_ID, null)).toBeNull();
     expect(() => saveTest(broken, test, null)).not.toThrow();
+  });
+
+  it("keeps the parts the learner ticked, or all of them (step 2.11b)", () => {
+    const s = store();
+    saveOwnPrompt(s, "Q?", ["the advantages"]);
+    expect(ownPrompt(s)).toBe("Q?");
+    expect(ownParts(s)).toEqual(["the advantages"]);
+    saveOwnPrompt(s, "Another question?");
+    expect(ownParts(s)).toBeNull();
+    s.setItem("nodetrail_own_parts", "not json");
+    expect(ownParts(s)).toBeNull();
+    s.setItem("nodetrail_own_parts", "[]");
+    expect(ownParts(s)).toBeNull();
   });
 });

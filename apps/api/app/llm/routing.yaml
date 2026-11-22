@@ -11,6 +11,8 @@ tiers:
     writing_feedback: *free
     writing_correct: *free
     writing_rewrite: *free
+    # Step 2.11b: the essay's structure described with quotes, then checked by code.
+    writing_structure: *free
     # The vocabulary import (specs/vocabulary-import): entries checked by code, marked draft.
     vocab_import: *free
     # Reading questions from open texts (specs/listening-reading/step-4.2b.md), checked by code and blind.

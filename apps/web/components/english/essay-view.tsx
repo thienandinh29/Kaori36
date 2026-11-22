@@ -24,6 +24,7 @@ import { Marked } from "./marked";
 import { Problem } from "./problem";
 import { pendingRewrite, RewritePanel } from "./rewrite-panel";
 import { SelfCorrect } from "./self-correct";
+import { StructureChecks } from "./structure-checks";
 import { Task1Checks } from "./task1-checks";
 import { useLearner } from "./use-learner";
 
@@ -403,6 +404,7 @@ export function EssayView({ essayId }: { essayId: string }) {
         <FixFirst result={essay.result} learner={learner ?? undefined} />
       )}
       {essay.result && <Task1Checks result={essay.result} />}
+      {essay.result && <StructureChecks result={essay.result} />}
       {essay.result && <EssayFeedbackView result={essay.result} />}
       {essay.result && (
         <Grammar result={essay.result} essay={essay} learner={learner} />

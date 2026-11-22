@@ -7,6 +7,7 @@ import { browserStore } from "@/lib/english/learner";
 import {
   OWN_ID,
   clearTest,
+  ownParts,
   ownPrompt,
   promptIdFor,
   savedTest,
@@ -57,6 +58,7 @@ export function EssayEditor({
   const { learner, error: learnerError, retry } = useLearner();
   const [prompt, setPrompt] = useState<WritingPrompt | null | undefined>();
   const [own, setOwn] = useState<string | null>(null);
+  const [kept, setKept] = useState<string[] | null>(null);
   const [test, setTest] = useState<WritingTest | null>(null);
   const [nowMs, setNowMs] = useState(() => Date.now());
   const [loadError, setLoadError] = useState<unknown>(null);
@@ -74,6 +76,8 @@ export function EssayEditor({
     const client = englishClient();
     const store = sessionStore();
     const question = promptId === OWN_ID ? ownPrompt(store) : null;
+    // the parts the learner ticked for an own question (step 2.11b); null keeps them all
+    const keptParts = question === null ? null : ownParts(store);
     const load: Promise<WritingPrompt | null> =
       promptId === OWN_ID
         ? question === null
@@ -83,14 +87,27 @@ export function EssayEditor({
             .writingPrompts(learner)
             .then((ps) => ps.find((p) => p.id === promptId) ?? null);
     load
-      .then(async (p) => {
+      .then(async (found) => {
         if (!live) return;
+        const p =
+          found && keptParts
+            ? {
+                ...found,
+                parts: found.parts.filter((x) => keptParts.includes(x.text)),
+              }
+            : found;
         setOwn(question);
+        setKept(keptParts);
         if (p && exam && p.task === 2) {
           // A reload continues the same test; the server's start time stays the truth.
           const t =
             savedTest(store, promptId, question) ??
-            (await client.startWritingTest(learner, promptId, question));
+            (await client.startWritingTest(
+              learner,
+              promptId,
+              question,
+              keptParts,
+            ));
           if (!live) return;
           saveTest(store, t, question);
           setTest(t);
@@ -142,6 +159,7 @@ export function EssayEditor({
       rememberConsent(browserStore());
       const id = await englishClient().submitEssay(learner, promptId, text, {
         own,
+        ownParts: kept,
         testId: test?.id ?? null,
       });
       if (test) clearTest(sessionStore());
@@ -182,6 +200,19 @@ export function EssayEditor({
       <p lang="en" className="en-prompt">
         {prompt.prompt}
       </p>
+      {prompt.parts.length > 0 && (
+        <div data-testid="prompt-parts">
+          <p className="en-muted">{w.promptParts}</p>
+          <ul>
+            {prompt.parts.map((part) => (
+              <li key={part.text}>
+                <span lang="en">{part.text}</span>
+                {part.position && <span> {w.partPosition}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {prompt.figure && <ChartFigureView chart={prompt.figure} />}
       <label className="en-essay">
         <span>{w.editor}</span>

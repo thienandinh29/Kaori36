@@ -8,17 +8,40 @@ export const OWN_ID = "own";
 
 const OWN_KEY = "nodetrail_own_prompt";
 const TEST_KEY = "nodetrail_writing_test";
+const PARTS_KEY = "nodetrail_own_parts";
 
 /** The prompt id the API expects for a page slug. */
 export function promptIdFor(slug: string): string {
   return slug === OWN_SLUG ? OWN_ID : slug;
 }
 
-export function saveOwnPrompt(store: KeyValueStore | null, text: string): void {
+/**
+ * The question and the parts the learner kept (step 2.11b); `parts` null keeps every part the
+ * server proposes.
+ */
+export function saveOwnPrompt(
+  store: KeyValueStore | null,
+  text: string,
+  parts: string[] | null = null,
+): void {
   try {
     store?.setItem(OWN_KEY, text);
+    store?.setItem(PARTS_KEY, parts === null ? "" : JSON.stringify(parts));
   } catch {
     // the editor then asks for the question again
+  }
+}
+
+/** The parts kept for the saved question, or null for all of them. */
+export function ownParts(store: KeyValueStore | null): string[] | null {
+  try {
+    const raw = store?.getItem(PARTS_KEY);
+    if (!raw) return null;
+    const v: unknown = JSON.parse(raw);
+    if (!Array.isArray(v) || v.length === 0) return null;
+    return v.every((x) => typeof x === "string") ? v : null;
+  } catch {
+    return null;
   }
 }
 

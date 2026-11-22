@@ -2412,3 +2412,29 @@ details[data-testid="all-issues"] > summary {
   font-weight: 600;
   margin: 0.5rem 0;
 }
+
+/* Step 2.11b: the parts of an own question, ticked before writing */
+.en-parts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line, #d8d8d8);
+  border-radius: 12px;
+}
+.en-parts legend {
+  font-weight: 600;
+  padding: 0 4px;
+}
+.en-parts p {
+  margin: 0;
+}
+.en-check {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  min-height: 44px;
+}
+.en-check input {
+  margin-top: 4px;
+}

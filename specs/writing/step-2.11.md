@@ -47,9 +47,51 @@ item gets its own short build note here when it starts.
 - **Development, not "an example":** a body paragraph that only asserts is flagged as **"có thể chưa được phát triển"**, a
   hint, never an error: IELTS rewards ideas that are developed and supported, and a band 7+ paragraph may develop its point
   by explanation alone. Development counts as an example **or** an explanation (a reason, a consequence, a contrast).
-- **The question's parts:** authored prompts store their parts in `prompts.yaml`. For an own question (step 2.10) the model
-  proposes the parts and **the learner confirms them by ticking** before writing; nothing is inferred silently, and no
-  extra Bronze label layer is added.
+- **The question's parts:** authored prompts store their parts in `prompts.yaml`. For an own question (step 2.10) **code**
+  proposes the parts from the question's wording and **the learner confirms them by ticking** before writing; nothing is
+  inferred silently, and no extra Bronze label layer is added. (Owner's decision, 22 Nov 2026: code, not the model, because
+  the question is checked inside a request, where a model call is long work and costs money before anything is written.)
+
+### Build note (22 Nov 2026)
+- **Parts.** `Prompt.parts` (`app/writing/prompts.py`): 1–4 per Task 2 prompt, required in the bank, at most one marked
+  `position` (the writer's own view). The five authored Task 2 prompts have theirs (draft, like the prompts).
+  `own_prompt.propose_parts` guesses them by type: both views and "your own opinion" (the views quoted from "Some people
+  believe… while others think…" when the wording allows), advantages, disadvantages and "whether the advantages outweigh",
+  causes or problems and solutions, "how far you agree or disagree", or each direct question ("Why…, and what…?" is two).
+  `POST /writing/prompts/check` returns them; the learner unticks any that are wrong. `own_parts` on `POST /essays` and
+  `POST /writing/tests` must be a non-empty subset of the proposal (422 otherwise), so only the learner's own question
+  reaches the model, never typed text; stored in `essays.own_parts` and `writing_tests.own_parts` (migration 0039); an essay
+  from before keeps every proposed part.
+- **One more model call, separate from feedback** (owner's decision): task `writing_structure`, same gate as feedback
+  (owners only, a model configured, budgeted, one `llm_calls` row per attempt), Task 2 only, and only with at least 3
+  paragraphs (otherwise the result says why and nothing is called). The feedback prompt is unchanged, so 2.11a still
+  measures the prompt in use. An essay now uses up to 3 calls: the free plan's 6 a day must be revisited before anyone but
+  the owner gets model features.
+- **What the model returns** (`app/writing/structure.py`): for the introduction and the conclusion a stance (`first`,
+  `second`, `balanced`, `none`) with the quote stating it; for each body paragraph its number, the main idea quoted, the
+  part numbers it answers, and its development (`example`, `explanation`, `none`) with a quote. Paragraphs are numbered by
+  code (blank-line split), so each quote is checked **in its own paragraph**, not just somewhere in the essay.
+- **The rules** (code, pure, unit-tested): a description whose quote fails is dropped (main idea) or treated as unknown
+  (stance, development). A part is **missing** only when every body paragraph has a checked description and none answers
+  it; otherwise it shows "chưa chắc". A position part is answered by a stated stance or a body paragraph; **no position** is
+  an issue only when both introduction and conclusion say none. A **flip** is `first` against `second` (balanced against a
+  side is not); both quotes are shown. **"Có thể chưa được phát triển"** is a hint for a body paragraph whose development
+  is `none`; a claimed example or explanation whose quote fails gives no hint. Findings are Task Response; Coherence gets
+  the outline of main ideas per paragraph, no finding yet.
+- **Shown** on `/bai-viet/{id}` ("Cấu trúc bài: đã trả lời đủ đề chưa?") after the Task 1 checks: findings first, then the
+  parts with answered / not seen / unsure, the two position quotes, and each body paragraph's main idea, parts and
+  development. The parts are also listed under the question in the editor. Nothing here is evidence or enters "Sửa trước".
+- **Not measured, not claimed.** How often the model's descriptions are right (a missed part that was there, a flip that
+  was not) is not known; the findings are worded as things to reread. A precision figure needs essays labelled by a
+  teacher, or 2.11c's blind check.
+- **Live pipeline check, 22 Nov 2026** (`tests/writing/test_deepseek_live.py`, `WRITING_LIVE_LLM=1`, deepseek-flash, 2
+  calls; a check that the pipeline works, not a precision figure): the essay that answers every part got no finding
+  (stances first/first, development explanation and example); the essay without solutions got "part missing" for the
+  solutions and "có thể chưa được phát triển" on its paragraph that only asserts, with nothing dropped.
+- **Known limit (from the review, 22 Nov):** an own question's kept parts are stored as their texts and matched against
+  what `propose_parts` proposes *now*. If those rules change later, an older essay's stored parts may no longer match, and
+  its structure check is then skipped without a message when it is shown again. Storing each part with its `position` flag
+  would remove the dependency; worth doing before `propose_parts` is changed.
 
 ## 2.11c: feedback claims checked blind by another model family
 - For each "issue" point, a model of another family sees only the quote and the point and answers whether the quote shows

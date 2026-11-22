@@ -19,30 +19,50 @@ export function promptTypeLabel(type: string): string {
   return w.types[type] ?? type;
 }
 
-/** Type a Task 2 question, checked by the server, then write on it or sit it as an exam (2.10). */
+/**
+ * Type a Task 2 question, checked by the server (2.10); tick the parts it asks for, proposed by
+ * code from its wording (2.11b); then write on it or sit it as an exam.
+ */
 function OwnPrompt({ learner }: { learner: string }) {
   const router = useRouter();
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [why, setWhy] = useState<string | null>(null);
+  const [checked, setChecked] = useState<WritingPrompt | null>(null);
+  const [kept, setKept] = useState<string[]>([]);
 
-  async function go(exam: boolean) {
+  async function check() {
     if (busy) return;
     setBusy(true);
     setWhy(null);
     try {
-      const check = await englishClient().checkOwnPrompt(learner, text);
-      if (!check.ok || !check.prompt) {
-        setWhy(check.reason_vi);
-        setBusy(false);
-        return;
+      const result = await englishClient().checkOwnPrompt(learner, text);
+      if (!result.ok || !result.prompt) {
+        setWhy(result.reason_vi);
+      } else {
+        setChecked(result.prompt);
+        setKept(result.prompt.parts.map((p) => p.text));
       }
-      saveOwnPrompt(sessionStore(), check.prompt.prompt);
-      router.push(`/viet/${OWN_SLUG}${exam ? "?thi=1" : ""}`);
     } catch (e: unknown) {
       setWhy(problemText(e));
-      setBusy(false);
     }
+    setBusy(false);
+  }
+
+  function go(exam: boolean) {
+    if (!checked || kept.length === 0) return;
+    // the order of the question, whatever order the boxes were ticked in
+    const parts = checked.parts
+      .map((p) => p.text)
+      .filter((t) => kept.includes(t));
+    saveOwnPrompt(sessionStore(), checked.prompt, parts);
+    router.push(`/viet/${OWN_SLUG}${exam ? "?thi=1" : ""}`);
+  }
+
+  function toggle(part: string) {
+    setKept((k) =>
+      k.includes(part) ? k.filter((x) => x !== part) : [...k, part],
+    );
   }
 
   const ready = text.trim().length > 0 && !busy;
@@ -57,7 +77,10 @@ function OwnPrompt({ learner }: { learner: string }) {
           rows={3}
           value={text}
           placeholder={w.ownPlaceholder}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => {
+            setText(e.target.value);
+            setChecked(null); // a changed question is checked again
+          }}
         />
       </label>
       {why && (
@@ -65,24 +88,59 @@ function OwnPrompt({ learner }: { learner: string }) {
           {why}
         </p>
       )}
-      <div className="en-actions">
-        <button
-          type="button"
-          className="en-button"
-          disabled={!ready}
-          onClick={() => go(false)}
-        >
-          {busy ? w.ownChecking : w.ownWrite}
-        </button>
-        <button
-          type="button"
-          className="en-button secondary"
-          disabled={!ready}
-          onClick={() => go(true)}
-        >
-          {w.exam}
-        </button>
-      </div>
+      {checked === null ? (
+        <div className="en-actions">
+          <button
+            type="button"
+            className="en-button"
+            disabled={!ready}
+            onClick={check}
+          >
+            {busy ? w.ownChecking : w.ownCheck}
+          </button>
+        </div>
+      ) : (
+        <>
+          <fieldset className="en-parts" data-testid="own-parts">
+            <legend>{w.ownPartsTitle}</legend>
+            <p className="en-muted">{w.ownPartsNote}</p>
+            {checked.parts.map((p) => (
+              <label key={p.text} className="en-check">
+                <input
+                  type="checkbox"
+                  checked={kept.includes(p.text)}
+                  onChange={() => toggle(p.text)}
+                />
+                <span lang="en">{p.text}</span>
+                {p.position && <span> {w.partPosition}</span>}
+              </label>
+            ))}
+            {kept.length === 0 && (
+              <p className="en-problem" role="alert">
+                {w.ownPartsNone}
+              </p>
+            )}
+          </fieldset>
+          <div className="en-actions">
+            <button
+              type="button"
+              className="en-button"
+              disabled={kept.length === 0}
+              onClick={() => go(false)}
+            >
+              {w.ownWrite}
+            </button>
+            <button
+              type="button"
+              className="en-button secondary"
+              disabled={kept.length === 0}
+              onClick={() => go(true)}
+            >
+              {w.exam}
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 }
