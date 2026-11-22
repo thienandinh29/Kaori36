@@ -61,7 +61,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-1
       key: 0
@@ -79,17 +79,17 @@ versions:
       evidence:
       - Ultimately, however, the goal of the paterfamilias was to promote his family’s welfare.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-2
       key: 1
@@ -108,17 +108,17 @@ versions:
       - Around age fifteen, boys donned the toga virilis (“toga of manhood”), a plain white toga representing their
         enrollment as citizens and entrance into manhood.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-mcq-3
       key: 1
@@ -136,17 +136,17 @@ versions:
       evidence:
       - In any case, marriage represented a woman’s coming under the legal control of her husband’s household.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-1
       key: 'true'
@@ -160,17 +160,17 @@ versions:
         referred to as patria potestas (“paternal power”).
       statement: The paterfamilias held the power of life and death over all his dependents according to tradition.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-2
       key: 'false'
@@ -184,17 +184,17 @@ versions:
         often to a much older man.
       statement: Roman girls typically married at an older age than boys.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-3
       key: 'false'
@@ -208,17 +208,17 @@ versions:
         outside the home, including in medicine, trade, and agriculture.
       statement: All women in the Roman Empire were prohibited from working outside the home.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-4
     kind: tfng
-    status: generated
+    status: needs_review
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-4
       key: not_given
@@ -230,14 +230,14 @@ versions:
       evidence: []
       statement: The passage mentions the name of the volcano that destroyed Pompeii.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-5
     kind: tfng
     status: generated

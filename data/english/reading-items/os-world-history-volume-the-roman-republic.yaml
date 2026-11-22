@@ -83,7 +83,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-the-roman-republic-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-headings-1
       key:
@@ -113,14 +113,14 @@ versions:
       - The geography of the Italian peninsula
       - The religious practices of the Roman Republic
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-mcq-1
     kind: mcq
     status: generated
@@ -152,7 +152,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-the-roman-republic-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-mcq-2
       key: 1
@@ -171,14 +171,14 @@ versions:
       - The traditional patron-client system collapsed, since landless Romans didn’t need the assistance of patrons
         to settle property disputes.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-mcq-3
     kind: mcq
     status: generated
@@ -210,7 +210,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-the-roman-republic-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-tfng-1
       key: 'true'
@@ -224,14 +224,14 @@ versions:
       statement: Roman soldiers who had been away at war sometimes found that their property was in another person's
         hands when they returned.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-22T03:17:39.891787+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-tfng-2
     kind: tfng
     status: generated

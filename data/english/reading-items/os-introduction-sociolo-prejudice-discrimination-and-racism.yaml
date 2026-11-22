@@ -309,7 +309,7 @@ versions:
     check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
     kind: tfng
-    status: needs_review
+    status: generated
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
       key: 'true'
@@ -326,8 +326,8 @@ versions:
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: '2026-11-21T03:18:19.897375+00:00'
+    checked_at: null
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: shuffled
+    check_view: null
