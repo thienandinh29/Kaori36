@@ -17,6 +17,10 @@ tiers:
     vocab_import: *free
     # Reading questions from open texts (specs/listening-reading/step-4.2b.md), checked by code and blind.
     reading_items: *free
+    # A Reading test the learner took elsewhere (specs/listening-reading/step-4.3d.md): the questions
+    # read into a list, and each wrong answer explained; both checked by code, owner only for now.
+    reading_own_parse: *free
+    reading_own_explain: *free
     verify: &verify
       - {provider: gemini, model: '${GEMINI_VERIFY_MODEL}', family: gemini}
       - {provider: vertex, model: '${VERTEX_VERIFY_MODEL}', family: gemini}

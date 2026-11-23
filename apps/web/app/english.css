@@ -2438,3 +2438,40 @@ details[data-testid="all-issues"] > summary {
 .en-check input {
   margin-top: 4px;
 }
+
+/* A Reading test taken outside the app (specs/listening-reading/step-4.3d.md). */
+.en-field {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 12px;
+}
+.en-field textarea,
+.en-field input:not([type="checkbox"]),
+.en-field select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  font: inherit;
+}
+.en-field input[type="number"] {
+  max-width: 6rem;
+}
+.en-own-list {
+  display: grid;
+  gap: 16px;
+  padding-left: 0;
+  list-style: none;
+}
+.en-own-list > li {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.en-own-explain blockquote {
+  margin: 4px 0 8px;
+  padding: 6px 10px;
+  border-left: 3px solid var(--forest);
+  background: #f5f2e8;
+}

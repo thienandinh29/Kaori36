@@ -164,6 +164,7 @@ class Gateway:
             "graph": GenerationLimits(16384),
             "items": GenerationLimits(16384),
             "verify": GenerationLimits(8192),
+            "reading_own_parse": GenerationLimits(8192),  # up to 14 questions with options
         }
         self.task_limits.update(task_limits or {})
         if any(

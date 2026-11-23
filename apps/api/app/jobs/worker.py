@@ -208,6 +208,7 @@ def loop(
     pipeline_factory: Callable[[str], TopicPipeline] | None = None,
     processor: Callable[[dict[str, Any]], None] | None = None,
 ) -> None:
+    from app.services.reading_own import process_next_own_test
     from app.services.rewrites import process_next_rewrite
     from app.services.writing import load_grammar_step, process_next_essay
 
@@ -224,6 +225,7 @@ def loop(
     )
     purged_at = 0.0
     analyse = recording_analyser(settings)
+    own_model = writing_model(settings)  # Reading tests taken elsewhere (step 4.3d)
     while True:
         try:
             if time.monotonic() - purged_at > 60:  # voice recordings past their time (step 3.1)
@@ -234,6 +236,8 @@ def loop(
             if process_next_essay(database_url, writing_dir, grammar):
                 continue  # essays are short: drain them before the next topic job
             if process_next_rewrite(database_url, grammar):
+                continue
+            if process_next_own_test(database_url, own_model):
                 continue
             if not run_once(
                 database_url,

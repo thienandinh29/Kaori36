@@ -268,6 +268,19 @@ describe("graph confirmation session proxy", () => {
         .status,
     ).toBe(200);
     expect((await post("reading/tests/not-a-uuid/submit")).status).toBe(404);
+    // Step 4.3d: a Reading test taken elsewhere, pasted, confirmed
+    expect((await post("reading/own-tests")).status).toBe(200);
+    expect((await get("reading/own-tests", `?learner_id=${id}`)).status).toBe(
+      200,
+    );
+    const own = "0b7e3c1e-0000-4000-8000-000000000002";
+    expect(
+      (await get(`reading/own-tests/${own}`, `?learner_id=${id}`)).status,
+    ).toBe(200);
+    expect((await post(`reading/own-tests/${own}/confirm`)).status).toBe(200);
+    expect((await post("reading/own-tests/not-a-uuid/confirm")).status).toBe(
+      404,
+    );
     expect(
       (await get("reading/review/texts", `?learner_id=${id}`)).status,
     ).toBe(200);
@@ -413,9 +426,12 @@ describe("graph confirmation session proxy", () => {
     expect((await del(`phrases/${id}`, "http://localhost:3000")).status).toBe(
       204,
     );
+    expect(
+      (await del(`reading/own-tests/${id}`, "http://localhost:3000")).status,
+    ).toBe(204);
     expect((await del("vocab/answers", "http://localhost:3000")).status).toBe(
       405,
     );
-    expect(fetchMock).toHaveBeenCalledTimes(2); // the essay and the phrase; nothing refused
+    expect(fetchMock).toHaveBeenCalledTimes(3); // the essay, the phrase, the pasted test
   });
 });

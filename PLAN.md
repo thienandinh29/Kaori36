@@ -66,7 +66,7 @@ target is recorded with the number and the reason, never hidden.
 | CP2b | Planted-error test of the checker on Reading items (50 faulty + 50 good) | next (needs the bank; "two defensible answers" faults need a teacher) |
 | CP3 | Owner's review queue (`/duyet-doc`, by passage, keyboard) and the agreement report | built; the owner's review of 52 questions pending |
 | CP4 | Reading practice and timed tests (`/doc`), Silver questions only | built |
-| CP4b | Why the wrong answer tempted you: first on a test taken outside the app (`step-4.3d.md`), then on the bank's questions (planted-test gate) | next (step 4.3d) |
+| CP4b | Why the wrong answer tempted you: first on a test taken outside the app (`step-4.3d.md`), then on the bank's questions (planted-test gate) | in progress: 4.3d part 1 built (paste, check, mark, explain); part 2 next |
 | CP4c | Exam details: time warnings, highlighting, side by side, play-once mode | proposed; order is the owner's call |
 | CP5 | Listening: dictation and gap-fill (5a), whole passages (5b), shadowing; the audio check (4.4a) built ahead | built; the owner decides whether the machine voice is good enough for whole passages |
 | CP6 | Gate report `docs/v2/reading-listening-eval.md` | planned (needs CP2b and the teacher's 50 labels) |
@@ -136,6 +136,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-23 | Reading 4.3d part 1 built (CP4b first): paste a test taken elsewhere on `/doc/bai-cua-ban`, the model lists the questions, code reads the official key and the learner's answers, the learner confirms, code marks, each wrong answer explained with the trap list (code names T/F/NG and completion traps) and labelled "chưa kiểm chứng". Owners only; one BKT observation per answered question, once per test fingerprint. Migration 0040. Real-paste accuracy not measured |
 | 2026-11-22 | Owner's decision: Reading feedback on tests taken outside the app (Cambridge books, official samples) comes next, as CP4b's first step (`step-4.3d.md`): pasted, marked by code against the official key, wrong answers explained with the trap list, vocabulary cards, evidence once per question; the pasted test stays private. The generated bank stays for drills and Listening; its review is optional. Cambridge material never enters the bank |
 | 2026-11-22 | Writing 2.11b built: each Task 2 question's parts (authored; for an own question proposed by code and ticked by the learner, owner's decision), one separate `writing_structure` call describing position and paragraphs with quotes checked in their paragraph, and code's findings (missing part, no position, flipped position, "có thể chưa được phát triển" as a hint). Owners only, never evidence; precision not measured. Migration 0039 |
 | 2026-11-21 | Writing step 2.11 from an outside review of the feedback (owner's adjustments): stability measurement (tool built; ~20 web essays to collect), TR/CC structure checks with development as a hint, a blind check of claims by Gemini after a planted test, "Sửa trước" to 3 items, and errors per opportunity next to complexity as Writing's main measure |

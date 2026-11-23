@@ -64,3 +64,25 @@ confirmation is what makes the list usable. Explanations are unchecked until the
 2. **Vocabulary cards and the summary across tests.**
 3. Later: headings and matching types; the blind check of explanations (Gemini, planted test first); "Hôm nay" drills from the
    weakest type.
+
+## Part 1 built (23 Nov 2026)
+`app/reading/own_test.py` (pure), `app/services/reading_own.py`, `app/api/reading_own.py` (`/reading/own-tests`), migration
+`0040` (`reading_own_tests`, `reading_own_answers`), the worker job, web `/doc/bai-cua-ban` (`components/reading/own-test.tsx`,
+`lib/reading/own.ts`) with a card on `/doc`. Owners only; consent `reading-own-v1`. Model tasks `reading_own_parse` and
+`reading_own_explain` (DeepSeek, through the gateway and the daily limits). Three choices made while building, for the owner to
+confirm or change:
+- **The key is read by code, not by the model.** The model only lists the questions (number, type, wording, options, word
+  limit); code reads the printed key with the same numbered-list reader as the learner's answers and attaches it by number. A
+  key the learner fixes on the check step must appear in the pasted key. Completion keys accept `/` variants and `(optional)`
+  words, as Cambridge keys print them.
+- **Competency per question type** (an assumption until a teacher maps types): T/F/NG, multiple choice and completion move
+  `reading-detail`; Y/N/NG moves `reading-writers-view`. Evidence is guarded by the test's fingerprint (passage and key), so a
+  test pasted again, even after deleting the first copy, gives no second observation. `reading_own_answers` keeps no passage or
+  answer text.
+- **A check step that still finds a problem** keeps the learner's edits and sends them back with the reasons, unmarked, instead
+  of refusing; a blank answer is explained too (why the key is right), with no trap.
+
+Measured: unit and API tests with a scripted model (parse, marks, traps, a dropped explanation, the fingerprint guard,
+budget and no-model failures). **Not measured:** how often the real model reads a real Cambridge paste correctly, or how many
+explanations pass code's checks; the owner's first real tests give that (Bronze). No blind check of explanations yet.
+
