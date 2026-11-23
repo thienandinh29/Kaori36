@@ -240,7 +240,7 @@ versions:
     check_view: shuffled
   - id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-daily-life-of-a-roman-family-tfng-5
       key: 'true'
@@ -254,11 +254,11 @@ versions:
         decree.
       statement: Roman citizenship could be granted by special decree.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled

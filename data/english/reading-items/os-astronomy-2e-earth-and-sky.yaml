@@ -273,7 +273,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-earth-and-sky-v2-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-v2-completion-2
       kind: completion
@@ -288,17 +288,17 @@ versions:
       sentence: The longitude of the Prime Meridian is defined as ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0°
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-earth-and-sky-v2-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-earth-and-sky-v2-completion-3
       kind: completion
@@ -313,14 +313,14 @@ versions:
       sentence: Latitudes are measured either north or south of the equator from 0° to ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 90°
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-earth-and-sky-v2-headings-1
     kind: headings
     status: generated
