@@ -9,7 +9,7 @@ import {
   type PassageReview,
   type ReviewTexts,
 } from "@/lib/reading/review";
-import { DataError } from "@/lib/decode";
+import { DataError, record, string } from "@/lib/decode";
 import {
   parsePassageList,
   parsePassageResult,
@@ -102,6 +102,15 @@ import type {
   OwnPromptCheck,
 } from "./types";
 import { CONSENT } from "./writing";
+import {
+  OWN_CONSENT,
+  confirmBody,
+  parseOwnTest,
+  parseOwnTests,
+  type OwnQuestion,
+  type OwnTest,
+  type OwnTestSummary,
+} from "@/lib/reading/own";
 import {
   parseCheckpointResult,
   parseLesson,
@@ -455,6 +464,58 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     async readingTexts(learnerId: string): Promise<TextSummary[]> {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseTexts(await request(`reading/texts?${q}`));
+    },
+    /** A Reading test taken outside the app (specs/listening-reading/step-4.3d.md). */
+    async submitOwnTest(
+      learnerId: string,
+      paste: {
+        passage: string;
+        questions: string;
+        key: string;
+        answers: string;
+        progressTest: boolean;
+      },
+    ): Promise<string> {
+      const d = record(
+        await post("reading/own-tests", {
+          learner_id: learnerId,
+          consent: OWN_CONSENT,
+          passage: paste.passage,
+          questions: paste.questions,
+          key: paste.key,
+          answers: paste.answers,
+          progress_test: paste.progressTest,
+        }),
+      );
+      return string(d.id);
+    },
+    async ownTests(learnerId: string): Promise<OwnTestSummary[]> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseOwnTests(await request(`reading/own-tests?${q}`));
+    },
+    async ownTest(learnerId: string, id: string): Promise<OwnTest> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseOwnTest(
+        await request(`reading/own-tests/${encodeURIComponent(id)}?${q}`),
+      );
+    },
+    async confirmOwnTest(
+      learnerId: string,
+      id: string,
+      questions: OwnQuestion[],
+    ): Promise<OwnTest> {
+      return parseOwnTest(
+        await post(`reading/own-tests/${encodeURIComponent(id)}/confirm`, {
+          learner_id: learnerId,
+          questions: confirmBody(questions),
+        }),
+      );
+    },
+    async deleteOwnTest(learnerId: string, id: string): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await request(`reading/own-tests/${encodeURIComponent(id)}?${q}`, {
+        method: "DELETE",
+      });
     },
     async readingText(learnerId: string, slug: string): Promise<ReadingText> {
       const q = new URLSearchParams({ learner_id: learnerId });

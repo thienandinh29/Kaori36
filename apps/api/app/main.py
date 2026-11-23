@@ -133,6 +133,14 @@ def create_app(
 
     reading = ReadingPractice(lambda: app.state.pool, settings.reading_texts_dir)
     app.include_router(reading_practice_routes.create_router(reading))
+    from app.api import reading_own as reading_own_routes
+    from app.services.reading_own import OwnTests
+
+    app.include_router(
+        reading_own_routes.create_router(
+            OwnTests(lambda: app.state.pool, settings.draft_item_learners)
+        )
+    )
     from app.api import listening_practice as listening_routes
     from app.api.speech import SpeechClient
     from app.services.listening_practice import ListeningPractice

@@ -29,6 +29,20 @@ export function ReadingList() {
   if (error) return <Problem error={error} />;
   if (!texts) return <p className="en-muted">{vi.english.loading}</p>;
   return (
+    <>
+      <section className="en-card" data-testid="own-test-card">
+        <h2>
+          <Link href="/doc/bai-cua-ban">{vi.english.readingOwn.card}</Link>
+        </h2>
+        <p className="en-muted">{vi.english.readingOwn.cardHint}</p>
+      </section>
+      <ReadingTexts texts={texts} />
+    </>
+  );
+}
+
+function ReadingTexts({ texts }: { texts: TextSummary[] }) {
+  return (
     <section className="en-card" data-testid="reading-list">
       <h1>{t.title}</h1>
       <p className="en-muted">{t.intro}</p>
