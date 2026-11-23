@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-world-history-volume-the-roman-republic-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-completion-1
       kind: completion
@@ -20,17 +20,17 @@ versions:
       sentence: Roman soldiers could serve in the army only if they owned ___ .
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: property
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-completion-2
       kind: completion
@@ -47,17 +47,17 @@ versions:
         were bought and sold each ___ .
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: day
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-completion-3
       kind: completion
@@ -73,14 +73,14 @@ versions:
       sentence: The most profitable business for new Roman entrepreneurs was working as bankers and public ___ .
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: contractors
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-headings-1
     kind: headings
     status: verified
@@ -123,7 +123,7 @@ versions:
     check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-mcq-1
       key: 0
@@ -142,14 +142,14 @@ versions:
       - 'They also transmitted their language, which is why French, Portuguese, Italian, and Spanish are known as
         “Romance” languages: They are descended from the Latin language spoken by the Romans.'
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-mcq-2
     kind: mcq
     status: verified
@@ -181,7 +181,7 @@ versions:
     check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-mcq-3
       key: 3
@@ -200,14 +200,14 @@ versions:
       - The Romans crucified thousands of the rebels along Italy’s major roads to send a warning to enslaved people
         across Italy.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: D
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-tfng-1
     kind: tfng
     status: verified
@@ -234,7 +234,7 @@ versions:
     check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-tfng-2
       key: 'false'
@@ -247,17 +247,17 @@ versions:
       - By the first century BCE, the population of the city of Rome may have exceeded one million.
       statement: The population of the city of Rome had reached exactly one million by the first century BCE.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-tfng-3
       key: 'true'
@@ -270,17 +270,17 @@ versions:
       - In 133 BCE, as a tribune, he proposed a law to distribute public land to landless Romans.
       statement: Tiberius Gracchus wanted landless Romans to be given public land.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-roman-republic-tfng-4
       key: 'false'
@@ -294,17 +294,17 @@ versions:
         elite for generations (Scipio Africanus was their grandfather).
       statement: The Gracchi brothers were the first members of their family to belong to the Roman elite.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-roman-republic-tfng-5
     kind: tfng
-    status: generated
+    status: needs_review
     item:
       id: os-world-history-volume-the-roman-republic-tfng-5
       key: not_given
@@ -316,11 +316,11 @@ versions:
       evidence: []
       statement: Spartacus came from Thrace.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled

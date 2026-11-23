@@ -333,7 +333,7 @@ versions:
   items:
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-1
       kind: completion
@@ -350,17 +350,17 @@ versions:
       sentence: The time it takes for half of the radioactive nuclei in a sample to decay is called its ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: half-life
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-2
       kind: completion
@@ -378,14 +378,14 @@ versions:
         determine how long ago a rock ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: formed
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-3
     kind: completion
     status: generated
@@ -456,7 +456,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-1
       key: 2
@@ -474,17 +474,17 @@ versions:
       evidence:
       - Note that the age of these surfaces is not necessarily the age of the planet as a whole.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-2
       key: 1
@@ -503,17 +503,17 @@ versions:
       - Only in 1969, when the first Apollo samples were dated, did we learn that the Moon is an ancient, geologically
         dead world.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-mcq-3
       key: 1
@@ -532,17 +532,17 @@ versions:
       - Geologists estimate that about half of Earth’s current internal heat budget comes from the decay of radioactive
         isotopes in its interior.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-1
       key: 'false'
@@ -555,17 +555,17 @@ versions:
       - Note that the age of these surfaces is not necessarily the age of the planet as a whole.
       statement: The age of a planet's surface is always the same as the age of the planet itself.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-2
       key: 'true'
@@ -580,17 +580,17 @@ versions:
         to say just when the dice will come up 7 or 11.'
       statement: Radioactive decay is random for any single nucleus.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-3
       key: 'false'
@@ -604,17 +604,17 @@ versions:
         dead world.
       statement: The Moon has active geology similar to Earth's.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-4
       key: 'true'
@@ -629,17 +629,17 @@ versions:
         Solar System).
       statement: Some meteorites from the Moon, Mars, and Vesta have been found on Earth.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-5
     kind: tfng
-    status: generated
+    status: needs_review
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-tfng-5
       key: not_given
@@ -651,11 +651,11 @@ versions:
       evidence: []
       statement: The first rocks brought back from the Moon were dated in 1972.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled

@@ -309,7 +309,7 @@ versions:
     check_view: shuffled
   - id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-prejudice-discrimination-and-racism-tfng-5
       key: 'true'
@@ -323,11 +323,11 @@ versions:
         many people have only become familiar with the term in recent years.
       statement: Peggy McIntosh’s first major publication about White privilege was released in 1989.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-23T03:18:19.069043+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
