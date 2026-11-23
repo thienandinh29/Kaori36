@@ -66,18 +66,22 @@ target is recorded with the number and the reason, never hidden.
 | CP2b | Planted-error test of the checker on Reading items (50 faulty + 50 good) | next (needs the bank; "two defensible answers" faults need a teacher) |
 | CP3 | Owner's review queue (`/duyet-doc`, by passage, keyboard) and the agreement report | built; the owner's review of 52 questions pending |
 | CP4 | Reading practice and timed tests (`/doc`), Silver questions only | built |
-| CP4b | Why the wrong answer tempted you (explanations with a planted-test gate) | specified; order is the owner's call |
+| CP4b | Why the wrong answer tempted you: first on a test taken outside the app (`step-4.3d.md`), then on the bank's questions (planted-test gate) | next (step 4.3d) |
 | CP4c | Exam details: time warnings, highlighting, side by side, play-once mode | proposed; order is the owner's call |
 | CP5 | Listening: dictation and gap-fill (5a), whole passages (5b), shadowing; the audio check (4.4a) built ahead | built; the owner decides whether the machine voice is good enough for whole passages |
 | CP6 | Gate report `docs/v2/reading-listening-eval.md` | planned (needs CP2b and the teacher's 50 labels) |
 
 ## Next, in order (the owner may reorder)
-1. **Owner:** baseline test on four skills; daily use; review the 52 agreed Reading questions; find a teacher (reviewer brief
-   in `specs/validation/reviewer-brief.vi.md`). These unblock more than any build.
+1. **Owner:** baseline test on four skills (a Cambridge book under exam conditions, scores recorded with `app.progress.cli`);
+   daily use; find a teacher (reviewer brief in `specs/validation/reviewer-brief.vi.md`). These unblock more than any build.
+   Reviewing the bank's Reading questions on `/duyet-doc` is optional now (when more drills are wanted).
 2. **Speaking research and decisions:** a deep-research run (including recognisers that fit a CPU-only machine with about
    4 GB), then the recogniser and the transcript consent wording (`docs/v2/asr-candidates.md` recommends Whisper small.en).
-3. **Build, after the owner orders them:** CP4b explanations; CP4c exam details; CP2b planted test once the bank allows; the CP6
-   report; then phase 5 Speaking. The owner's research argues for Speaking right after CP6 (Vietnam's lowest skill, to check).
+3. **Build next: feedback on a Reading test taken outside the app** (`specs/listening-reading/step-4.3d.md`, CP4b first, owner's
+   decision 22 Nov): paste the passage, questions, official key and your answers; code marks against the official key; the model
+   explains each wrong answer with CP4b's trap list (unchecked label); vocabulary cards from the passage. Then CP4b for the bank's
+   own questions, CP4c exam details, CP2b planted test, the CP6 report, then phase 5 Speaking. The bank stays for drills and
+   Listening; reviewing it is optional now, not daily work.
 4. **Writing feedback quality (step 2.11):** measure stability on ~20 web essays (the owner collects them); the TR/CC
    structure checks are built (2.11b); then the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
    errors per opportunity next to sentence complexity, not a band.
@@ -132,6 +136,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-22 | Owner's decision: Reading feedback on tests taken outside the app (Cambridge books, official samples) comes next, as CP4b's first step (`step-4.3d.md`): pasted, marked by code against the official key, wrong answers explained with the trap list, vocabulary cards, evidence once per question; the pasted test stays private. The generated bank stays for drills and Listening; its review is optional. Cambridge material never enters the bank |
 | 2026-11-22 | Writing 2.11b built: each Task 2 question's parts (authored; for an own question proposed by code and ticked by the learner, owner's decision), one separate `writing_structure` call describing position and paragraphs with quotes checked in their paragraph, and code's findings (missing part, no position, flipped position, "có thể chưa được phát triển" as a hint). Owners only, never evidence; precision not measured. Migration 0039 |
 | 2026-11-21 | Writing step 2.11 from an outside review of the feedback (owner's adjustments): stability measurement (tool built; ~20 web essays to collect), TR/CC structure checks with development as a hint, a blind check of claims by Gemini after a planted test, "Sửa trước" to 3 items, and errors per opportunity next to complexity as Writing's main measure |
 | 2026-11-21 | Writing step 2.10, owner's request: write on your own Task 2 question (checked, private to the essay) and a timed 40-minute exam mode on any Task 2 question (server clock, late marked) |
