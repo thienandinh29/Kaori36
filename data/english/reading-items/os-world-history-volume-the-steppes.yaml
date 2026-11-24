@@ -30,7 +30,7 @@ versions:
     check_view: shuffled
   - id: os-world-history-volume-the-steppes-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-steppes-completion-2
       kind: completion
@@ -46,17 +46,17 @@ versions:
       sentence: The balance of power shifted as two Han military expeditions went in search of allies in ___.
       max_words: 2
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: central Asia
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-steppes-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-steppes-completion-3
       kind: completion
@@ -73,17 +73,17 @@ versions:
         and ___.
       max_words: 2
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: resource scarcity
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-steppes-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-steppes-headings-1
       key:
@@ -109,17 +109,17 @@ versions:
       - The role of horses in steppe warfare
       - Environmental challenges of the steppe
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-steppes-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-steppes-mcq-1
       key: 0
@@ -139,17 +139,17 @@ versions:
         in return for trade rights and other rewards such as Chinese brides to establish stronger ties between the
         two cultures.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-steppes-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-steppes-mcq-2
       key: 1
@@ -170,17 +170,17 @@ versions:
       - At other times, the Xiongnu preferred to assert military and cultural dominance by raiding China and inciting
         war as well as constructing defenses such as the many northern fortification walls built by successive dynasties.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-steppes-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-world-history-volume-the-steppes-mcq-3
       key: 3
@@ -201,14 +201,14 @@ versions:
       - Less powerful groups in these wars tended to move toward the frontier of the Chinese empire and try to secure
         Chinese support against their rivals.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: D
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-19T03:36:57.225960+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-world-history-volume-the-steppes-tfng-1
     kind: tfng
     status: verified

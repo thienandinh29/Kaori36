@@ -32,7 +32,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-v2-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-completion-2
       kind: completion
@@ -48,17 +48,17 @@ versions:
       sentence: The lunar highlands are made of silicate rocks called ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: anorthosites
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-completion-3
       kind: completion
@@ -74,17 +74,17 @@ versions:
       sentence: The maria cover just 17% of the lunar surface, mostly on the side of the Moon that ___ Earth.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: faces
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-headings-1
     kind: headings
-    status: generated
+    status: needs_review
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-headings-1
       key:
@@ -115,17 +115,17 @@ versions:
       - The history of lunar exploration by robotic probes
       - Crater counting as a method for dating surfaces
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:1, 1:0, 2:3, 3:2, 4:4, 5:5, 6:6, 7:6
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-mcq-1
       key: 2
@@ -146,17 +146,17 @@ versions:
         into cliffs and sharp peaks, the way we have seen them shaped on Earth.
       - Their smooth features are attributed to gradual erosion, mostly due to impact cratering.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-mcq-2
       key: 1
@@ -175,17 +175,17 @@ versions:
       - The Moon’s relative lack of internal activity, together with the absence of air and water, make most of
         its geological history unlike anything we know on Earth.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: dots-studio/dots-3-note-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-mcq-3
       key: 3
@@ -204,17 +204,17 @@ versions:
       - Today, we know that the maria consist mostly of dark-colored basalt (volcanic lava) laid down in volcanic
         eruptions billions of years ago.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: D
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-mcq-4
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-mcq-4
       key: 1
@@ -233,17 +233,17 @@ versions:
       - What we do know is that the major mare volcanism, which involved the release of lava from hundreds of kilometers
         below the surface, ended about 3.3 billion years ago.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-tfng-1
       key: 'true'
@@ -257,17 +257,17 @@ versions:
         in use today.
       statement: Early lunar observers used names for the dark areas of the Moon that are still used today.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-tfng-2
       key: 'false'
@@ -280,17 +280,17 @@ versions:
       - Unlike the mountains on Earth, the Moon’s highlands do not have any sharp folds in their ranges.
       statement: The lunar highlands have sharp folds running along their mountain ranges.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-tfng-3
       key: 'false'
@@ -306,17 +306,17 @@ versions:
         the side of the Moon that faces Earth.
       statement: The maria cover a larger proportion of the lunar surface than the highlands do.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-tfng-4
       key: 'false'
@@ -330,17 +330,17 @@ versions:
         different from their terrestrial counterparts.
       statement: The Moon’s surface features have the same origins as similar-looking features on Earth.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-tfng-5
       key: not_given
@@ -352,17 +352,17 @@ versions:
       evidence: []
       statement: The Apollo astronauts collected rock samples from the lunar highlands.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-lunar-surface-v2-tfng-6
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-lunar-surface-v2-tfng-6
       key: 'true'
@@ -375,14 +375,14 @@ versions:
       - The youngest of the lunar impact basins is Mare Orientale, shown in .
       statement: Mare Orientale is the youngest of the Moon’s impact basins.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
 - passage_sha256: d800b1a06efd19b6a121f46c1db5b11128d39b472462fc4f3e7a5ae983f1312f
   items:
   - id: os-astronomy-2e-the-lunar-surface-completion-1
