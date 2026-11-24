@@ -302,7 +302,7 @@ versions:
   items:
   - id: os-astronomy-2e-the-global-perspective-v2-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-completion-1
       kind: completion
@@ -317,17 +317,17 @@ versions:
       sentence: The oceanic crust is primarily composed of volcanic rocks called ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: basalt
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-completion-2
       kind: completion
@@ -343,17 +343,17 @@ versions:
       sentence: The outer core is ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: liquid
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-completion-3
       kind: completion
@@ -369,17 +369,17 @@ versions:
       sentence: The process of sorting the major components of a planet by density is called ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: differentiation
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-headings-1
     kind: headings
-    status: generated
+    status: needs_review
     item:
       id: os-astronomy-2e-the-global-perspective-v2-headings-1
       key:
@@ -407,17 +407,17 @@ versions:
       - The thickness of the crust
       - The density of Earth's layers
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:6, 3:2, 4:3, 5:4, 6:5
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-mcq-1
       key: 0
@@ -436,17 +436,17 @@ versions:
       - Oceanic crust covers 55% of Earth’s surface and lies mostly submerged under the oceans. It is typically
         about 6 kilometers thick and is composed of volcanic rocks called basalt.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-mcq-2
       key: 1
@@ -465,17 +465,17 @@ versions:
       - The mantle is more or less solid, but at the temperatures and pressures found there, mantle rock can deform
         and flow slowly.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-mcq-3
       key: 0
@@ -497,17 +497,17 @@ versions:
       - Seismic studies have shown that Earth’s interior consists of several distinct layers with different compositions,
         illustrated in .
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-tfng-1
       key: 'true'
@@ -522,17 +522,17 @@ versions:
       statement: The passage states that scientists have a better understanding of the surfaces of Venus and Mars
         than of Earth's interior just below the surface.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-tfng-2
       key: 'false'
@@ -549,17 +549,17 @@ versions:
         (rocks made of silicon and oxygen) called granite.
       statement: The oceanic crust is thicker than the continental crust.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-tfng-3
       key: 'true'
@@ -573,17 +573,17 @@ versions:
         a depth of 2900 kilometers.
       statement: The mantle extends from the base of the crust to a depth of 2900 kilometers.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-tfng-4
     kind: tfng
-    status: generated
+    status: needs_review
     item:
       id: os-astronomy-2e-the-global-perspective-v2-tfng-4
       key: not_given
@@ -595,17 +595,17 @@ versions:
       evidence: []
       statement: Scientists have directly sampled the entire mantle and core.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-the-global-perspective-v2-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-the-global-perspective-v2-tfng-5
       key: 'false'
@@ -619,11 +619,11 @@ versions:
         solid.
       statement: The inner core is liquid.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled

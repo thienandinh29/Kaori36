@@ -388,7 +388,7 @@ versions:
     check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-astronomy-2e-dating-planetary-surfaces-v2-completion-3
       kind: completion
@@ -405,14 +405,14 @@ versions:
       sentence: Earth and the Moon are each about 4.5 ___ years old.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: billion
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-24T03:18:07.852684+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-astronomy-2e-dating-planetary-surfaces-v2-headings-1
     kind: headings
     status: generated
