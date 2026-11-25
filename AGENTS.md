@@ -14,6 +14,8 @@ subject (team repo `thienandinh29/SenaEmpire36`, frozen after 8 Nov 2026); that 
 Mascot: **Sena** the monkey.
 
 ## Read first, in this order
+0. `HANDOFF.md`: where the work stands right now and the next step; `GOAL.md` (the goal in one page) and `lessons.md` (mistakes
+   not to repeat) once, then when relevant.
 1. `PLAN.md`: the current phase, what is next, what waits on the owner.
 2. `SPEC.md`: what the product does and the rules the code keeps (the contract).
 3. The spec of the feature you touch: `specs/<feature>/spec.md`, `plan.md`, `tasks.md`, and its `step-*.md` pages.
