@@ -85,7 +85,7 @@ versions:
     check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-headings-1
       key:
@@ -113,17 +113,17 @@ versions:
       - The impact of media on socialization
       - The definition of material culture
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:6, 1:5, 2:0, 3:1, 4:2, 5:3, 6:4
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-mcq-1
       key: 0
@@ -143,17 +143,17 @@ versions:
       - This learning takes place through interaction with various agents of socialization, like peer groups and
         families, plus both formal and informal social institutions.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-mcq-2
       key: 0
@@ -172,17 +172,17 @@ versions:
       - Peer groups are important to adolescents in a new way, as they begin to develop an identity separate from
         their parents and exert independence.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-mcq-3
       key: 0
@@ -201,17 +201,17 @@ versions:
       - Formal institutions—like schools, workplaces, and the government—teach people how to behave in and navigate
         these systems.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-tfng-1
       key: 'true'
@@ -225,17 +225,17 @@ versions:
         the norms about taking turns, the rules of a game, or how to shoot a basket.
       statement: Peer group socialization starts as early as the playground years.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-tfng-2
       key: 'false'
@@ -249,17 +249,17 @@ versions:
         balanced by parental influence.
       statement: According to the passage, parental influence is less important than friendships during adolescence.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-tfng-3
       key: 'false'
@@ -274,17 +274,17 @@ versions:
       - Many religious institutions also uphold gender norms and contribute to their enforcement through socialization.
       statement: Religious institutions only teach participants how to use material culture.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-tfng-4
       key: 'true'
@@ -299,17 +299,17 @@ versions:
       statement: In the United States, males must register with the Selective Service System within thirty days
         of turning eighteen.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-agents-of-socialization-v2-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-agents-of-socialization-v2-tfng-5
       key: not_given
@@ -321,14 +321,14 @@ versions:
       evidence: []
       statement: The passage states that peer groups are more influential than families in teaching material culture.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
 - passage_sha256: cf971e888cc244cd38acde5fd53efa8ace289ea88c8b531636ad717682fcabeb
   items:
   - id: os-introduction-sociolo-agents-of-socialization-completion-1

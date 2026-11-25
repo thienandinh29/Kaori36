@@ -82,7 +82,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-v2-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-headings-1
       key:
@@ -108,17 +108,17 @@ versions:
       - The role of culture in shaping aging experiences
       - Physical and psychological changes in old age
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:2, 3:3, 4:4, 5:5
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-mcq-1
       key: 1
@@ -142,17 +142,17 @@ versions:
         are socialized, but in most cultures, age is a master status influencing self-concept, as well as social
         roles and interactions.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-mcq-2
       key: 2
@@ -171,17 +171,17 @@ versions:
       - Gradually, children come to be considered adults, responsible for their own lives, although the point at
         which this occurs is widely varied among individuals, families, and cultures.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-mcq-3
       key: 1
@@ -203,17 +203,17 @@ versions:
         strides.
       - In what ways are the elderly better off today than they were before Nascher’s ideas gained acceptance?
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-tfng-1
       key: 'false'
@@ -227,17 +227,17 @@ versions:
         culture.
       statement: The responsibilities and expectations of each life phase are identical across all cultures.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-tfng-2
       key: 'true'
@@ -251,17 +251,17 @@ versions:
         that even in children, age prejudice leads to a negative view of aging.
       statement: According to Packer and Chasteen, age prejudice can be found even in children.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-tfng-3
       key: not_given
@@ -273,17 +273,17 @@ versions:
       evidence: []
       statement: Nascher was the first doctor to use the term 'geriatrics' in a published book.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-tfng-4
       key: 'false'
@@ -297,17 +297,17 @@ versions:
         just as pediatrics (caring for children) is different from caring for grown adults.
       statement: Nascher believed that old age should be treated by the same medical methods as childhood.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-tfng-5
       key: 'true'
@@ -321,14 +321,14 @@ versions:
         strides.
       statement: Nascher was dissatisfied with the progress of geriatrics at the time of his death.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
 - passage_sha256: 9909953e33f45af9f7e5b5e145d2ecec39cc72087a82a866d828dd1265048696
   items:
   - id: os-introduction-sociolo-the-process-of-aging-completion-1

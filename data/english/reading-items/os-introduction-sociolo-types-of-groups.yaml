@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-introduction-sociolo-types-of-groups-v2-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-completion-1
       kind: completion
@@ -20,17 +20,17 @@ versions:
       sentence: A reference group provides a standard of ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: measurement
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-completion-2
       kind: completion
@@ -45,17 +45,17 @@ versions:
       sentence: In U.S. society, peer groups are common ___ groups.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: reference
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-completion-3
       kind: completion
@@ -70,17 +70,17 @@ versions:
       sentence: At all ages, we use reference groups to help guide our ___ and establish our social norms.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: behavior
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-headings-1
       key:
@@ -102,14 +102,14 @@ versions:
       - The history of sociological research on groups
       - How to avoid peer pressure
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:0, 1:1, 2:2, 3:3
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-mcq-1
     kind: mcq
     status: dropped
@@ -193,7 +193,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-v2-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-tfng-1
       key: 'true'
@@ -207,17 +207,17 @@ versions:
         but also at his older brother’s friends and see a different set of norms.
       statement: A middle school boy may use his older brother’s friends as a reference group.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-tfng-2
       key: 'false'
@@ -231,17 +231,17 @@ versions:
         social lives despite not holding a job.
       statement: Television and movies usually show young adults who have jobs.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-tfng-3
       key: 'true'
@@ -256,17 +256,17 @@ versions:
       statement: After entering college, students have to choose their reference groups carefully because these
         groups may shape their friendships for several years.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-tfng-4
       key: 'false'
@@ -279,17 +279,17 @@ versions:
       - Often, reference groups convey competing messages.
       statement: Reference groups always give consistent messages.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-types-of-groups-v2-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-types-of-groups-v2-tfng-5
       key: not_given
@@ -301,14 +301,14 @@ versions:
       evidence: []
       statement: The passage mentions the exact number of fraternities at a typical college.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-25T03:18:20.167688+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
 - passage_sha256: e77a031175e3fd4aae9b496e1ac686a5366178d2ae784237e60326d466cac876
   items:
   - id: os-introduction-sociolo-types-of-groups-completion-1
