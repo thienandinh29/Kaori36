@@ -30,15 +30,9 @@ not loaded: read it when you need a path, and update it when you add one. This f
 Reply in the owner's language with the reasoning behind each decision. Lead with the outcome, then what to do next. Name
 what was not done or not checked. Never write a model identifier into the repository.
 
-## Start here (handoff, 22 Nov 2026)
-- **Build next:** feedback on a Reading test the learner took outside the app, `specs/listening-reading/step-4.3d.md` (CP4b's
-  first step, the owner's decision). Its two build parts are listed at the end of that page; start with part 1 (paste, parse,
-  confirm, mark against the official key, explain wrong answers), with a spec-sized PR. Defaults the owner accepted: T/F/NG,
-  Y/N/NG, multiple choice and completion first, headings later; each marked answer is one BKT observation, once per question;
-  explanations labelled "chưa kiểm chứng" until a Gemini blind check exists. Cambridge material never enters the shared bank.
-- **Waiting on the owner, not on a build:** the baseline test; ~20 web essays for the feedback stability run
-  (`specs/writing/step-2.11.md`, 2.11a; the 60% bar stays "proposed" until the owner has seen the result); a teacher.
-- **Running on its own:** the daily Reading blind-check batch (a scheduled task, 03:13 UTC); it merges its own data PR.
-- **Already decided, do not reopen:** no Speaking band before the exam; target 7.0; everything outside the English app is frozen
-  (`AGENTS.md`, "English only").
+## Start here
+`HANDOFF.md` (loaded below) says where the work stands and what comes next; update it at the end of every session or merged
+pull request. `GOAL.md` is the goal in one page; `lessons.md` holds the mistakes not to repeat (read it before a pipeline,
+import or evidence change, and add an entry in the change that fixes a mistake).
 
+@HANDOFF.md
