@@ -57,7 +57,7 @@ versions:
     check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-completion-3
       kind: completion
@@ -74,17 +74,17 @@ versions:
         and gender in the ___.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 1950s
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-headings-1
     kind: headings
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-headings-1
       key:
@@ -108,17 +108,17 @@ versions:
       - Variation in gender traits across societies
       - The Supreme Court case that protected LGBTQ workers
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 0:1, 1:5, 2:2, 3:0, 4:6
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-mcq-1
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-mcq-1
       key: 0
@@ -138,17 +138,17 @@ versions:
         between different human societies.
       - Characteristics of gender, on the other hand, may vary greatly between different societies.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: A
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-mcq-2
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-mcq-2
       key: 1
@@ -167,17 +167,17 @@ versions:
       - Fa’afafine, which translates as “the way of the woman,” is a term used to describe individuals who are born
         biologically male but embody both masculine and feminine traits.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: B
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-mcq-3
     kind: mcq
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-mcq-3
       key: 2
@@ -197,17 +197,17 @@ versions:
         her Columbia Law School secretary suggested it to Ginsburg, saying that when “those nine men” (the Supreme
         Court justices), “hear that word and their first association is not the way you want them to be thinking”.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: C
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-1
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-1
       key: 'false'
@@ -220,17 +220,17 @@ versions:
       - However, sociologists and most other social scientists view them as conceptually distinct.
       statement: Sociologists consider sex and gender to be the same concept.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-2
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-2
       key: 'false'
@@ -245,17 +245,17 @@ versions:
       - Characteristics of gender, on the other hand, may vary greatly between different societies.
       statement: Characteristics of sex vary greatly between different human societies.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-3
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-3
       key: 'true'
@@ -268,17 +268,17 @@ versions:
       - However, in many Middle Eastern, Asian, and African cultures, sarongs, robes, or gowns are considered masculine.
       statement: In some Middle Eastern, Asian, and African cultures, robes or gowns are considered masculine.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-4
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-4
       key: 'false'
@@ -292,17 +292,17 @@ versions:
         to certain cultures and is not universal.
       statement: The binary view of gender is accepted in every culture around the world.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'FALSE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-5
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-5
       key: 'true'
@@ -316,17 +316,17 @@ versions:
         in a 1994 briefing
       statement: Justice Antonin Scalia wrote his 1994 briefing while serving on the Supreme Court.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: 'TRUE'
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-6
     kind: tfng
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-sex-gender-identity-and-expression-v2-tfng-6
       key: not_given
@@ -338,14 +338,14 @@ versions:
       evidence: []
       statement: Ruth Bader Ginsburg's Columbia Law School secretary later became a Supreme Court justice.
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: NOT GIVEN
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:32:51.268072+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
 - passage_sha256: bea8d4de11f403531a2c9d60b08088ca1868d348f2c32b4ed67ad8f08059a31f
   items:
   - id: os-introduction-sociolo-sex-gender-identity-and-expression-completion-1

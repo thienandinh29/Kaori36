@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-introduction-sociolo-the-process-of-aging-v2-completion-1
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-completion-1
       kind: completion
@@ -22,17 +22,17 @@ versions:
         such as ___.
       max_words: 3
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: physical maturation
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-completion-2
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-completion-2
       kind: completion
@@ -47,17 +47,17 @@ versions:
       sentence: Many of the elderly poor were sent to live in ___, or public old-age homes.
       max_words: 1
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: almshouses
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-completion-3
     kind: completion
-    status: generated
+    status: verified
     item:
       id: os-introduction-sociolo-the-process-of-aging-v2-completion-3
       kind: completion
@@ -72,14 +72,14 @@ versions:
       sentence: In most cultures, age is a ___ influencing self-concept, as well as social roles and interactions.
       max_words: 2
     problems: []
-    checker_answer: null
-    checker_model: null
+    checker_answer: master status
+    checker_model: baidu/ernie-5.5-flash-preview:free
     generated_at: '2026-11-20T07:31:42.712253+00:00'
-    checked_at: null
+    checked_at: '2026-11-26T03:17:05.631976+00:00'
     reviewed_at: null
     review_note: null
     review_was: null
-    check_view: null
+    check_view: shuffled
   - id: os-introduction-sociolo-the-process-of-aging-v2-headings-1
     kind: headings
     status: verified
