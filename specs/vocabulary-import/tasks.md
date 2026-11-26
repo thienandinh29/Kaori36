@@ -9,3 +9,9 @@
 - [x] T6 `data-sa/` licence, NOTICE, README, API image
 - [x] T7 Run the import; commit the list, report and source hashes
 - [ ] T8 Owner: mark the 50-entry sample (`review-sample.yaml`), then `score`; until then the list stays a draft
+
+## Wiktionary coverage (`step-wiktionary.md`)
+- [x] W1 `wiktionary.py`: filter the kaikki.org dump to the list's headwords, count coverage, cache; tests
+- [x] W2 Run on the owner's laptop (26 Nov); the numbers are in the step page
+- [x] W3a Owner: Wiktionary's licence read (26 Nov): CC BY-SA 4.0 (dual with GFDL)
+- [ ] W3b Owner: decide whether an enrichment step follows
