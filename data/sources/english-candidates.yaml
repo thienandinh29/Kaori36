@@ -35,7 +35,13 @@ candidates:
     url: https://en.wiktionary.org/
     use: definitions, word forms, example sentences, IPA
     believed_licence: CC BY-SA 4.0
-    status: to_check
+    status: verified
+    licence: CC BY-SA 4.0
+    checked_on: 2026-11-26
+    licence_page: https://en.wiktionary.org/wiki/Wiktionary:Copyrights
+    # Read by the owner on Wiktionary's own pages: the text is dual-licensed under CC BY-SA 4.0 (and the GFDL); we use
+    # it under CC BY-SA 4.0, so adapted data goes in data-sa/. Read through the wiktextract dump on kaikki.org
+    # (cite Ylonen, LREC 2022). Recordings on Wikimedia Commons are NOT covered: each file has its own licence.
   - slug: tatoeba
     name: Tatoeba sentences
     url: https://tatoeba.org/en/downloads

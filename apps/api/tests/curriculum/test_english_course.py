@@ -71,12 +71,13 @@ def test_the_candidates_file_is_valid_and_only_owner_checked_sources_are_usable(
     candidates = load_candidates(DATA / "sources" / "english-candidates.yaml")
     assert {"ngsl", "nawl", "tatoeba", "wiktionary"} <= {c.slug for c in candidates.candidates}
     # Read on the source's own page: NGSL and NAWL by the owner (16 Nov 2026), the grammar
-    # sources by the agent at the owner's request (17 Nov 2026), OpenStax by the owner (19 Nov).
+    # sources by the agent at the owner's request (17 Nov 2026), OpenStax by the owner (19 Nov),
+    # Wiktionary by the owner (26 Nov).
     usable = {c.slug: c for c in candidates.usable()}
     assert set(usable) == {
         "ngsl", "nawl", "wikibooks-grammar", "esl-grammar-bissonnette",
         "al-haider-high-intermediate-grammar", "explorations-1", "college-esl-writers-hall-wallace",
-        "beginning-esol-dodson", "openstax-reading",
+        "beginning-esol-dodson", "openstax-reading", "wiktionary",
     }  # fmt: skip
     assert usable["ngsl"].licence == "CC BY-SA 4.0" and not usable["ngsl"].non_commercial
     assert usable["esl-grammar-bissonnette"].non_commercial  # flagged: tag every chunk
@@ -88,6 +89,9 @@ def test_the_candidates_file_is_valid_and_only_owner_checked_sources_are_usable(
     # OpenStax reading texts, read on each book's page by the owner (19 Nov 2026).
     assert usable["openstax-reading"].checked_by == "owner"
     assert usable["openstax-reading"].non_commercial
+    # Wiktionary's text, read by the owner (26 Nov 2026): ShareAlike, not NonCommercial.
+    assert usable["wiktionary"].licence == "CC BY-SA 4.0"
+    assert not usable["wiktionary"].non_commercial
     assert any("Cambridge" in e.name for e in candidates.excluded)
 
 

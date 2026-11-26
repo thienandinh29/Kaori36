@@ -113,6 +113,10 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Phase 3.5b:** fine-tuning the recogniser on a GPU notebook. Only worth it if the reviewer's labels show the
   frozen model is the limit (it needs GPU time, and replaces the pinned model).
 - [ ] **Phase 5, Speaking:** the recognition model; the transcript consent wording; accounts for testers.
+- [ ] **Wiktionary for vocabulary (new, 26 Nov):** licence read by the owner (CC BY-SA 4.0, dual with GFDL); decide whether
+  an enrichment step follows: British IPA for
+  713 words that have none, Wiktionary's Vietnamese next to the model's, recordings later after a per-file licence check.
+  Numbers: `specs/vocabulary-import/step-wiktionary.md`.
 - [ ] **Order of the next builds (new, 20 Nov):** CP4b (why the wrong answer tempted you) before or after the CP6 report; CP4c
   (exam details) now or later; phase 5 Speaking right after CP6 (the research says Speaking is Vietnam's lowest skill, to check).
 
