@@ -23,7 +23,7 @@ Spec: `spec.md`, approved by the owner 18 Nov 2026.
   the foundations most exam skills share; Reading joins the available skills with CP4
 - [x] Writing evidence (`writing-evidence.md`): essays measure the Writing competencies, so the list changes
 - [x] M4 the two-map page `/ban-do` (`GET /maps`, `components/english/two-maps.tsx`): every competency with its foundations, status and the evidence behind each estimate; "Bản đồ kỹ năng" in the nav
-- [x] M5 (`step-m5.md`, owner's request 27 Nov): the day's plan fixed in `today_plans` (migration 0041) with done marks
+- [x] M5 (`step-m5.md`, owner's request 27 Nov): the day's plan fixed in `today_plans` (migration 0042) with done marks
   from today's answers and estimated minutes; `GET /today/week` and the week row on the home page (study days, no streak)
 
 **Owner's hands-on work:**

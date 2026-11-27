@@ -909,7 +909,43 @@ export const vi = {
       evidence: (n: number) =>
         n > 0
           ? `${n} câu trả lời được tính vào kỹ năng Đọc của bạn.`
-          : "Bài này đã được tính trước đây, nên lần này không tính thêm vào kỹ năng Đọc.",
+          : "Không câu nào được tính thêm vào kỹ năng Đọc (câu bỏ trống, câu đánh dấu không kịp, hoặc bài đã được tính trước đây).",
+      positionLabel: "Đây là bài đọc thứ mấy trong đề?",
+      positionHint:
+        "Bài 3 thường khó nhất và làm cuối, nên giúp tách lỗi do thời gian với lỗi kỹ năng.",
+      positions: {
+        "": "Không rõ / không ghi",
+        "1": "Bài 1",
+        "2": "Bài 2",
+        "3": "Bài 3",
+      } as Record<string, string>,
+      markLabel: "Bạn đánh dấu",
+      marks: {
+        "": "Không đánh dấu",
+        guessed: "Đoán",
+        no_time: "Không kịp làm",
+      } as Record<string, string>,
+      markHint:
+        'Câu đánh dấu "Không kịp làm" không được tính vào kỹ năng Đọc, như câu bỏ trống. Câu "Đoán" vẫn được tính, như trong phòng thi.',
+      summaryTitle: "Tổng hợp các bài bạn tự làm",
+      summaryEmpty: "Chưa có bài nào được chấm.",
+      summaryTests: (tests: number, answers: number) =>
+        `${tests} bài, ${answers} câu.`,
+      summaryRight: "Đúng",
+      summaryNotEnough: "chưa đủ dữ liệu (cần ít nhất 5 câu)",
+      summaryTopTrap: (trap: string, count: number, of: number) =>
+        `Bẫy hay gặp nhất: ${trap} (${count} trong ${of} lần sai có tên bẫy)`,
+      summaryInterval:
+        "Khoảng trong ngoặc là khoảng tin cậy 95%: với ít câu, tỉ lệ thật có thể nằm bất cứ đâu trong khoảng đó.",
+      pacingTitle: "Thời gian hay kỹ năng?",
+      pacingNotEnough:
+        "Chưa đủ dữ liệu: cần ít nhất 3 bài, trong đó có một bài 3.",
+      pacingCounts: (lw: number, ln: number, rw: number, rn: number) =>
+        `Câu cuối (bài 3 và một phần ba cuối mỗi bài): sai ${lw}/${ln}. Các câu còn lại: sai ${rw}/${rn}.`,
+      pacingMaybe: (lw: number, ln: number, m: number) =>
+        `Có thể do thời gian, chưa chắc là yếu kỹ năng: ${lw}/${ln} câu cuối sai, ${m} trong số đó bỏ trống hoặc bạn đánh dấu đoán/không kịp.`,
+      pacingAssumption:
+        "Ngưỡng (cao hơn 20 điểm, một nửa được đánh dấu) là giả định, chưa được kiểm chứng. Bài 3 cũng là bài khó nhất, nên câu cuối sai có thể do cả độ khó lẫn thời gian.",
       right: "Đúng",
       wrong: "Sai",
       officialKey: "Đáp án chính thức",

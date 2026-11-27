@@ -112,6 +112,8 @@ import {
   confirmBody,
   parseOwnTest,
   parseOwnTests,
+  parseOwnSummary,
+  type OwnSummary,
   type OwnQuestion,
   type OwnTest,
   type OwnTestSummary,
@@ -508,13 +510,19 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       learnerId: string,
       id: string,
       questions: OwnQuestion[],
+      position: number | null = null,
     ): Promise<OwnTest> {
       return parseOwnTest(
         await post(`reading/own-tests/${encodeURIComponent(id)}/confirm`, {
           learner_id: learnerId,
           questions: confirmBody(questions),
+          position,
         }),
       );
+    },
+    async ownSummary(learnerId: string): Promise<OwnSummary> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseOwnSummary(await request(`reading/own-tests/summary?${q}`));
     },
     async deleteOwnTest(learnerId: string, id: string): Promise<void> {
       const q = new URLSearchParams({ learner_id: learnerId });

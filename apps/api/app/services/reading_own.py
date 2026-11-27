@@ -26,6 +26,7 @@ from app.competencies.model import load_map
 from app.engine import bkt
 from app.engine.bkt import DEFAULT_PARAMS
 from app.engine.trace import fmt_p
+from app.reading import own_summary
 from app.reading import own_test as ot
 from app.services.backend import learner_uuid, save_trace
 from app.services.competency_evidence import competency_ids
@@ -157,6 +158,17 @@ class OwnTests:
             "result": result, "failure_vi": failure, "progress_test": prog, "submitted_at": at,
         }  # fmt: skip
 
+    def summary(self, learner_id: str) -> dict[str, Any]:
+        """Per question type and pacing across the learner's pasted tests (kept after a delete)."""
+        with self.pool().connection() as conn:
+            learner = self._learner(conn, learner_id)
+            rows = conn.execute(
+                "select fingerprint, number, kind, correct, blank, trap, mark, position "
+                "from reading_own_answers where learner_id=%s order by answered_at, number",
+                (learner,),
+            ).fetchall()
+        return own_summary.summary([own_summary.Answer(*r) for r in rows])
+
     def delete(self, learner_id: str, test_id: str) -> None:
         with self.pool().connection() as conn:
             learner = self._learner(conn, learner_id)
@@ -168,12 +180,18 @@ class OwnTests:
             raise HTTPException(404, "Không tìm thấy bài này.")
 
     def confirm(
-        self, learner_id: str, test_id: str, questions: list[dict[str, Any]]
+        self,
+        learner_id: str,
+        test_id: str,
+        questions: list[dict[str, Any]],
+        position: int | None = None,
     ) -> dict[str, Any]:
         """Mark the confirmed list from the key and record the evidence, once per question.
 
         A list that still has a problem is kept as the learner edited it and sent back with its
-        problems, unmarked (status `parsed`), so the page can say what to fix.
+        problems, unmarked (status `parsed`), so the page can say what to fix. `position` is the
+        passage's place in the test (1-3); each question may carry the learner's own `mark`
+        (`guessed` or `no_time`), part 2's pacing.
         """
         now = self.clock()
         with self.pool().connection() as conn, conn.transaction():
@@ -189,7 +207,8 @@ class OwnTests:
             if status != "parsed":
                 raise HTTPException(409, "Bài này không ở bước xác nhận câu hỏi.")
             confirmed = _confirmed(questions)
-            kept = Jsonb([q.to_json() for q in confirmed])
+            self_marks = _self_marks(questions)
+            kept = Jsonb([q.to_json() | {"mark": self_marks.get(q.number)} for q in confirmed])
             marked = [q for q in confirmed if q.kind != "unsupported"]
             if not marked:
                 raise HTTPException(422, "Không còn câu hỏi nào để chấm.")
@@ -200,7 +219,9 @@ class OwnTests:
                 return self._view(conn, learner, test_id)
             answers = ot.numbered(answers_text)
             marks = [ot.mark(q, answers.get(q.number)) for q in marked]
-            moved = self._evidence(conn, learner, _uuid(test_id), digest, marks, now)
+            moved = self._evidence(
+                conn, learner, _uuid(test_id), digest, marks, self_marks, position, now
+            )
             wrong = [m.number for m in marks if not m.correct]
             result = {
                 "correct": sum(m.correct for m in marks),
@@ -209,18 +230,19 @@ class OwnTests:
                 "unsupported": [q.number for q in confirmed if q.kind == "unsupported"],
                 "marks": [
                     {"number": m.number, "kind": m.kind, "answer": m.answer, "correct": m.correct,
-                     "trap": m.trap, "key": ot.key_text(q),
+                     "trap": m.trap, "key": ot.key_text(q), "self_mark": self_marks.get(m.number),
                      "answer_text": ot.answer_text(q, m.answer) if m.answer else None,
                      "explanation": None, "explanation_vi": None}
                     for m, q in zip(marks, marked, strict=True)
                 ],
                 "evidence": moved,
+                "position": position,
                 "explained": not wrong,
             }  # fmt: skip
             conn.execute(
-                "update reading_own_tests set status=%s, questions=%s, result=%s, confirmed_at=%s "
-                "where id=%s",
-                ("marked" if wrong else "done", kept, Jsonb(result), now, _uuid(test_id)),
+                "update reading_own_tests set status=%s, questions=%s, result=%s, confirmed_at=%s, "
+                "position=%s where id=%s",
+                ("marked" if wrong else "done", kept, Jsonb(result), now, position, _uuid(test_id)),
             )
             return self._view(conn, learner, test_id)
 
@@ -231,15 +253,20 @@ class OwnTests:
         test_id: UUID,
         digest: str,
         marks: list[ot.Mark],
+        self_marks: dict[int, own_summary.Mark],
+        position: int | None,
         now: datetime,
     ) -> int:
-        """One BKT observation per answered question, never twice for the same pasted test."""
+        """One BKT observation per answered question, never twice for the same pasted test.
+
+        Every marked question gets a row the first time its test is pasted, so the summary sees
+        blanks and marked answers too; a blank, or an answer the learner marked "không kịp", gives
+        no evidence (p_before and p_after stay null). A guessed answer counts, as in the exam.
+        """
         subject, ids = competency_ids(conn, self.cmap)
         names = {c.slug: c.name_vi for c in self.cmap.competencies}
         moved = 0
         for m in marks:
-            if m.answer is None:
-                continue  # a blank gives no evidence
             competency = ot.COMPETENCY[m.kind]
             seen = conn.execute(
                 "select 1 from reading_own_answers where learner_id=%s and fingerprint=%s "
@@ -247,6 +274,16 @@ class OwnTests:
                 (learner, digest, m.number),
             ).fetchone()
             if seen:
+                continue
+            own = self_marks.get(m.number)
+            if m.answer is None or own == "no_time":
+                conn.execute(
+                    "insert into reading_own_answers(learner_id,test_id,fingerprint,number,kind,"
+                    "competency,correct,trap,blank,mark,position,answered_at) "
+                    "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    (learner, test_id, digest, m.number, m.kind, competency, m.correct, m.trap,
+                     m.answer is None, own, position, now),
+                )  # fmt: skip
                 continue
             got = conn.execute(
                 "select p_known from mastery where learner_id=%s and concept_id=%s",
@@ -271,10 +308,10 @@ class OwnTests:
             save_trace(conn, learner, subject, trace)
             conn.execute(
                 "insert into reading_own_answers(learner_id,test_id,fingerprint,number,kind,"
-                "competency,correct,trap,p_before,p_after,answered_at) "
-                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                "competency,correct,trap,p_before,p_after,mark,position,answered_at) "
+                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                 (learner, test_id, digest, m.number, m.kind, competency, m.correct, m.trap,
-                 before, after, now),
+                 before, after, own, position, now),
             )  # fmt: skip
             moved += 1
         return moved
@@ -295,6 +332,18 @@ def _whole_words_in(part: str, text: str) -> bool:
     """`part` appears in `text` as whole words: a key edited to "A" needs an "A" of its own in the
     pasted key, not the letter inside "species"."""
     return bool(part) and re.search(rf"(?<!\w){re.escape(part)}(?!\w)", text) is not None
+
+
+def _self_marks(questions: list[dict[str, Any]]) -> dict[int, own_summary.Mark]:
+    """The learner's own marks by question number ("đoán", "không kịp"); others are ignored."""
+    out: dict[int, own_summary.Mark] = {}
+    for data in questions:
+        value = data.get("mark")
+        if value in ("guessed", "no_time"):
+            out[int(data["number"])] = value
+        elif value is not None:
+            raise HTTPException(422, "Đánh dấu không hợp lệ.")
+    return out
 
 
 def _confirmed(questions: list[dict[str, Any]]) -> list[ot.Question]:

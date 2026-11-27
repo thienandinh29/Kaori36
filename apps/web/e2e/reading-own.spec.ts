@@ -128,6 +128,39 @@ test("paste, check the questions, see the mark and the explained trap", async ({
       ],
     },
   };
+  const emptySummary = {
+    tests: 0,
+    answers: 0,
+    by_kind: [],
+    pacing: {
+      status: "not_enough",
+      tests: 0,
+      late: { wrong: 0, n: 0 },
+      rest: { wrong: 0, n: 0 },
+      late_wrong_marked: 0,
+    },
+  };
+  const summary = {
+    tests: 3,
+    answers: 30,
+    by_kind: [
+      {
+        kind: "tfng",
+        answers: 10,
+        wrong: 3,
+        enough: true,
+        right: { k: 7, n: 10, low: 0.348, high: 0.933 },
+        top_trap: { trap: "false_for_not_given", count: 2, of: 3 },
+      },
+    ],
+    pacing: {
+      status: "maybe_time",
+      tests: 3,
+      late: { wrong: 6, n: 12 },
+      rest: { wrong: 3, n: 18 },
+      late_wrong_marked: 4,
+    },
+  };
   let polls = 0;
   await page.route(
     "**/api/backend/reading/own-tests**",
@@ -147,6 +180,8 @@ test("paste, check the questions, see the mark and the explained trap", async ({
         return json(done);
       }
       if (url.pathname.endsWith("/own-tests")) return json([]);
+      if (url.pathname.endsWith("/own-tests/summary"))
+        return json(confirmed.length ? summary : emptySummary);
       polls += 1; // the first look finds it still being read
       return json(
         polls === 1 ? { ...parsed, status: "parsing", questions: [] } : parsed,
@@ -159,6 +194,11 @@ test("paste, check the questions, see the mark and the explained trap", async ({
   const check = page.getByTestId("own-confirm");
   await expect(check).toBeVisible();
   await expect(check.getByTestId("own-q-2")).toContainText("Bạn trả lời: A");
+  await expect(page.getByTestId("own-summary")).toContainText(
+    "Chưa có bài nào được chấm.",
+  );
+  await check.getByTestId("own-position").selectOption("3");
+  await check.getByTestId("own-mark-select-2").selectOption("no_time");
   await page.getByRole("button", { name: "Xác nhận và chấm" }).click();
 
   const result = page.getByTestId("own-result");
@@ -171,5 +211,17 @@ test("paste, check the questions, see the mark and the explained trap", async ({
   expect(
     (confirmed[0] as { questions: { number: number; key: string }[] })
       .questions[1],
-  ).toMatchObject({ number: 2, key: "B" });
+  ).toMatchObject({ number: 2, key: "B", mark: "no_time" });
+  expect(confirmed[0]).toMatchObject({ position: 3 });
+
+  const totals = page.getByTestId("own-summary");
+  await expect(totals.getByTestId("own-summary-tfng")).toContainText(
+    "Đúng 7/10 (35–93%)",
+  );
+  await expect(totals.getByTestId("own-summary-tfng")).toContainText(
+    "Nhầm SAI với KHÔNG CÓ THÔNG TIN",
+  );
+  await expect(totals.getByTestId("own-pacing")).toContainText(
+    "Có thể do thời gian, chưa chắc là yếu kỹ năng",
+  );
 });

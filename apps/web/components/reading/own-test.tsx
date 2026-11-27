@@ -12,8 +12,11 @@ import {
   OWN_CONSENT_KEY,
   confirmable,
   pending,
+  shareText,
   trapName,
   type OwnKind,
+  type OwnSummary,
+  type SelfMark,
   type OwnMark,
   type OwnQuestion,
   type OwnTest,
@@ -49,15 +52,21 @@ function forbidden(e: unknown): boolean {
 export function OwnTestPage() {
   const { learner, error: learnerError, retry } = useLearner();
   const [history, setHistory] = useState<OwnTestSummary[] | null>(null);
+  const [summary, setSummary] = useState<OwnSummary | null>(null);
   const [test, setTest] = useState<OwnTest | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
   const refreshHistory = useCallback(
     (id: string) =>
-      englishClient()
-        .ownTests(id)
-        .then(setHistory)
+      Promise.all([
+        englishClient().ownTests(id),
+        englishClient().ownSummary(id),
+      ])
+        .then(([h, s]) => {
+          setHistory(h);
+          setSummary(s);
+        })
         .catch((e: unknown) => setError(e)),
     [],
   );
@@ -135,9 +144,9 @@ export function OwnTestPage() {
           // A new list from the server (its problems after a confirm) starts the edits afresh.
           key={JSON.stringify(test.questions)}
           test={test}
-          onConfirm={(qs) =>
+          onConfirm={(qs, position) =>
             englishClient()
-              .confirmOwnTest(learner, test.id, qs)
+              .confirmOwnTest(learner, test.id, qs, position)
               .then((x) => {
                 setTest(x);
                 void refreshHistory(learner);
@@ -168,6 +177,7 @@ export function OwnTestPage() {
           </button>
         </section>
       )}
+      {summary && <SummaryView s={summary} />}
       <section className="en-card">
         <h2>{t.history}</h2>
         {history.length === 0 ? (
@@ -323,9 +333,10 @@ function ConfirmList({
   onConfirm,
 }: {
   test: OwnTest;
-  onConfirm: (qs: OwnQuestion[]) => Promise<void>;
+  onConfirm: (qs: OwnQuestion[], position: number | null) => Promise<void>;
 }) {
   const [qs, setQs] = useState<OwnQuestion[]>(test.questions);
+  const [position, setPosition] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const edit = (number: number, change: Partial<OwnQuestion>) =>
     // An edit clears code's problems for that question: the server checks it again on confirm.
@@ -339,6 +350,24 @@ function ConfirmList({
     <section className="en-card" data-testid="own-confirm">
       <h2>{t.checkTitle}</h2>
       <p className="en-muted">{t.checkIntro}</p>
+      <label className="en-field">
+        {t.positionLabel}{" "}
+        <select
+          data-testid="own-position"
+          value={position === null ? "" : String(position)}
+          onChange={(e) =>
+            setPosition(e.target.value ? Number(e.target.value) : null)
+          }
+        >
+          {["", "1", "2", "3"].map((v) => (
+            <option key={v} value={v}>
+              {t.positions[v]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <p className="en-muted">{t.positionHint}</p>
+      <p className="en-muted">{t.markHint}</p>
       <ol className="en-own-list">
         {qs.map((q) => (
           <li key={q.number} data-testid={`own-q-${q.number}`}>
@@ -419,6 +448,34 @@ function ConfirmList({
             <p className="en-muted">
               {t.yourAnswer}: <span lang="en">{q.answer ?? t.blank}</span>
             </p>
+            {q.kind !== "unsupported" && (
+              <label className="en-field">
+                {t.markLabel}{" "}
+                <select
+                  data-testid={`own-mark-select-${q.number}`}
+                  value={q.mark ?? ""}
+                  onChange={(e) =>
+                    // A mark is not content: it leaves code's problems as they are.
+                    setQs((all) =>
+                      all.map((x) =>
+                        x.number === q.number
+                          ? {
+                              ...x,
+                              mark: (e.target.value || null) as SelfMark | null,
+                            }
+                          : x,
+                      ),
+                    )
+                  }
+                >
+                  {["", "guessed", "no_time"].map((v) => (
+                    <option key={v} value={v}>
+                      {t.marks[v]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
             {q.problems.length > 0 && (
               <div role="alert">
                 <p>{t.unreadable}</p>
@@ -448,7 +505,7 @@ function ConfirmList({
         disabled={!ok || busy}
         onClick={() => {
           setBusy(true);
-          void onConfirm(qs).finally(() => setBusy(false));
+          void onConfirm(qs, position).finally(() => setBusy(false));
         }}
       >
         {busy ? t.confirming : t.confirm}
@@ -494,6 +551,12 @@ function MarkView({ m, explained }: { m: OwnMark; explained: boolean }) {
         <span lang="en">{m.answerText ?? m.answer ?? t.blank}</span>
         {" · "}
         {t.officialKey}: <span lang="en">{m.key}</span>
+        {m.selfMark && (
+          <>
+            {" · "}
+            {t.markLabel}: {t.marks[m.selfMark]}
+          </>
+        )}
       </p>
       {!m.correct && trap && (
         <p>
@@ -535,5 +598,59 @@ function MarkView({ m, explained }: { m: OwnMark; explained: boolean }) {
         </p>
       )}
     </li>
+  );
+}
+
+function SummaryView({ s }: { s: OwnSummary }) {
+  const p = s.pacing;
+  return (
+    <section className="en-card" data-testid="own-summary">
+      <h2>{t.summaryTitle}</h2>
+      {s.tests === 0 ? (
+        <p className="en-muted">{t.summaryEmpty}</p>
+      ) : (
+        <>
+          <p className="en-muted">{t.summaryTests(s.tests, s.answers)}</p>
+          <ul>
+            {s.byKind.map((k) => {
+              const trap = k.topTrap
+                ? trapName(k.topTrap.trap, t.traps, t.answerNames)
+                : null;
+              return (
+                <li key={k.kind} data-testid={`own-summary-${k.kind}`}>
+                  <strong>{t.kinds[k.kind]}</strong>:{" "}
+                  {k.enough
+                    ? `${t.summaryRight} ${shareText(k.right)}`
+                    : `${k.right.k}/${k.right.n}, ${t.summaryNotEnough}`}
+                  {k.enough && trap && k.topTrap && (
+                    <>
+                      <br />
+                      {t.summaryTopTrap(trap, k.topTrap.count, k.topTrap.of)}
+                    </>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <p className="en-muted">{t.summaryInterval}</p>
+          <h3>{t.pacingTitle}</h3>
+          <p data-testid="own-pacing">
+            {p.status === "not_enough"
+              ? t.pacingNotEnough
+              : p.status === "maybe_time"
+                ? t.pacingMaybe(p.late.wrong, p.late.n, p.lateWrongMarked)
+                : t.pacingCounts(
+                    p.late.wrong,
+                    p.late.n,
+                    p.rest.wrong,
+                    p.rest.n,
+                  )}
+          </p>
+          {p.status !== "not_enough" && (
+            <p className="en-muted">{t.pacingAssumption}</p>
+          )}
+        </>
+      )}
+    </section>
   );
 }

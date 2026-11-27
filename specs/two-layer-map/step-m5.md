@@ -6,7 +6,7 @@ streak; it stays a non-goal (`SPEC.md`). This step shows **days with study as a 
 
 ## What
 1. **Today's plan is fixed for the day.** The first `GET /today` of a learner's day (midnight to midnight, Vietnam time,
-   as for new words) runs the engine as before and stores the list in `today_plans` (migration `0041`, one row per
+   as for new words) runs the engine as before and stores the list in `today_plans` (migration `0042`, one row per
    learner and day). Every later call that day returns the same activities, so the list can be ticked off instead of
    changing under the learner. The next day gets a new list. `minutes` matters only on the first call of the day.
 2. **Done, from today's answers only.** Each activity gets `done: true|false`, computed on every call from what the

@@ -90,6 +90,12 @@ vocabulary); matching headings to paragraphs. Later: summary completion, form an
 map and diagram labelling, matching sentence endings. Skills tagged per question (detail, main idea, inference, writer's view,
 skimming) become the hidden nodes of a Reading and a Listening milestone (the owner's roadmap work).
 
+**Skill tags and time per question** (`step-4.3e.md`, approved 27 Nov 2026): each question also carries 1–3 sub-skill tags from
+a closed list of six (the Q-matrix of cognitive diagnosis), Bronze until a teacher labels 50. They feed the summaries only and
+never BKT, where a question still moves one competency. The timed test records seconds on each question and answer changes,
+shown without judgement. A cognitive diagnosis model is research on a public dataset (`research/experiments/DIAG-001.yaml`), not
+a product feature: one learner cannot calibrate it.
+
 ## Texts and licences
 - Candidates (all marked "to check" in `data/sources/english-candidates.yaml`; the owner reads each licence on its own page, and
   `app/sources/licence.py` refuses NoDerivatives): Simple English Wikipedia and Wikinews, Wikibooks, OpenStax (CC BY), Project

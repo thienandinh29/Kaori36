@@ -59,9 +59,35 @@ Listening's passages; reviewing it becomes optional (when more drills are wanted
 Whether naming the trap raises later accuracy is a hypothesis (CP4b), not a promise. The model's parse can be wrong; the learner's
 confirmation is what makes the list usable. Explanations are unchecked until the blind check exists.
 
+## Position and pacing (part 2; owner's approval, 27 Nov 2026)
+A wrong answer late in a test may mean the learner ran out of time, not that a skill is weak (from the owner's research on
+cognitive diagnosis, Bronze). Code only, no model call:
+- **On the check step**, the learner gives the passage's place in the test (1, 2 or 3) and may mark any question **"đoán"**
+  (guessed) or **"không kịp"** (ran out of time). Both marks are optional. The question's number is already known.
+- **Evidence:** an answer marked "không kịp" gives **no BKT observation**, like a blank (a rule added to `SPEC.md`,
+  "Evidence"). An answer marked "đoán" still counts, because a guess is how the exam is answered too. Its trap is shown, but left
+  out of the trap counts in the summary.
+- **The pacing line in the summary across tests:** from 3 pasted tests with passage 3 among them, code compares the share wrong
+  on passage 3 and on the last third of each passage's questions against the rest. When it is at least 20 points higher **and**
+  at least half of those wrong answers are blank or carry a mark, the summary says "Có thể do thời gian, chưa chắc là yếu kỹ năng (n/N câu
+  cuối sai, m đánh dấu không kịp/đoán)". Otherwise it shows the counts only.
+- **Not claimed:** passage 3 is also the hardest passage in IELTS, so late errors mix difficulty and time. The learner's marks are
+  what separate them, and they are self-report (Bronze). The 20-point and "half marked" thresholds are assumptions, labelled so.
+- `reading_own_answers` gains nullable `position` (the passage's place), `mark` (`guessed` | `no_time`) and `blank` in an additive
+  migration (`0041`).
+- **Built 27 Nov 2026 (pacing and the summary; vocabulary cards still to come):** `app/reading/own_summary.py` (pure: per type,
+  the share right with an exact 95% interval from 5 answers, the top trap; the pacing status `not_enough` | `maybe_time` |
+  `counts_only`), `GET /reading/own-tests/summary`, the position and mark choices on the check step, the summary panel on
+  `/doc/bai-cua-ban`. One choice made while building: **every marked question now gets a row the first time its test is
+  pasted**, blank and "không kịp" ones too (with no evidence), so the summary sees them. A test pasted again therefore counts
+  nothing new, even for a question left blank the first time; the learner saw the key after the first paste, so a second answer
+  is not an unseen one. Measured: unit and API tests, Vitest, a Playwright test with a mocked API. Not measured: whether the
+  thresholds suit real tests (there are none yet).
+
 ## Build order
 1. **Paste, parse, confirm, mark, explain** (API, page, migration, tests; Playwright with a fake model).
-2. **Vocabulary cards and the summary across tests.**
+2. **Vocabulary cards and the summary across tests**, with position and pacing (above), and the per-skill lines once
+   `step-4.3e.md` part 1 has tags.
 3. Later: headings and matching types; the blind check of explanations (Gemini, planted test first); "Hôm nay" drills from the
    weakest type.
 
