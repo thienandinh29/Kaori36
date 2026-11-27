@@ -26,7 +26,8 @@ import {
 } from "./examiner";
 
 const t = vi.english.speakingTest;
-const CONSENT_KEY = "nodetrail_voice_consent"; // shared with /phat-am: the same voice notice
+// The test's own notice (speaking-v1: the voice policy plus the transcript kept with the sitting).
+const CONSENT_KEY = "nodetrail_speaking_consent";
 const MIC_CHECK_SECONDS = 3;
 
 function stored(key: string): string | null {
@@ -332,7 +333,8 @@ export function ExamPage() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [consented, setConsented] = useState(
-    () => typeof window !== "undefined" && stored(CONSENT_KEY) === "voice-v1",
+    () =>
+      typeof window !== "undefined" && stored(CONSENT_KEY) === "speaking-v1",
   );
   const [keep, setKeep] = useState(false);
   const [sitting, setSitting] = useState<Sitting | null>(null);

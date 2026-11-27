@@ -84,8 +84,9 @@ target is recorded with the number and the reason, never hidden.
    own questions, with skill tags on each question in the same call (`step-4.3e.md`: six sub-skills, Bronze, summaries only,
    never BKT) and time per question in the timed test, CP4c exam details, CP2b planted test, the CP6 report, then phase 5 Speaking. The bank stays for drills and
    Listening; reviewing it is optional now, not daily work.
-3b. **Speaking first steps (owner's go, 27 Nov):** the examiner test is built (`/noi/thi`, step 5.4a); next, criterion
-   bands in the progress study (`specs/validation/step-v4.md`, T6). Then 5.1 once the owner chooses the recogniser.
+3b. **Speaking first steps (owner's go, 27 Nov):** the examiner test is built (`/noi/thi`, step 5.4a) and the criterion
+   bands in the progress study (`specs/validation/step-v4.md`, T6), and 5.1 transcripts (Whisper small.en). Next: 5.2 fluency
+   measures from the word timings (pauses from the raw audio, between and inside clauses).
 4. **Writing feedback quality (step 2.11):** measure stability on ~20 web essays (the owner collects them); the TR/CC
    structure checks are built (2.11b); then the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
    errors per opportunity next to sentence complexity, not a band. A band closer to the examiner's (step 2.12: descriptor caps,
@@ -107,7 +108,7 @@ choosing the simple model that fits, and showing why, is the stronger evidence.
 
 ## Decisions waiting on the owner (detail in `dolater.md`)
 - Order of the next builds: CP4b, CP4c, CP6, Speaking.
-- Speaking: the recogniser, the transcript consent wording; a trained rater for the mock test every 4 weeks; the Speak &
+- Speaking: the transcript consent wording for 5.3 (the recogniser is chosen: Whisper small.en, 27 Nov); a trained rater for the mock test every 4 weeks; the Speak &
   Improve Corpus 2025 licence read in full (SPK-001).
 - Whether the machine voice is good enough for whole-passage Listening.
 - Licences to read: L2-ARCTIC (Vietnamese speakers, pronunciation benchmark), Simple English Wikipedia, the male voice's
@@ -146,6 +147,8 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 | Date | Change |
 |---|---|
 | 2026-11-27 | Writing 2.12 part 1 built: the official Task 2 band descriptors read (ielts.org PDF, May 2023; the owner's environment now allows ielts.org); four caps in `data/writing/caps.yaml` with their quoted lines (no paragraphing → CC ≤ 5 by code; part missing → TR ≤ 5, no position → TR ≤ 4, position flips → TR ≤ 6 from 2.11b, notes only); the proposed two-paragraph cap dropped (no descriptor line supports it). Descriptor features per criterion in `descriptor_features.py`. Nothing applied or wired in; nothing a learner sees changes |
+| 2026-11-27 | Speaking 5.1 built, owner's decision Whisper small.en: the recognition service `asr/` (faster-whisper int8, the verbatim prompt, no previous-window conditioning, voice activity detection, words under 50 ms dropped; weights pinned by revision and SHA-256; compose profile `asr`; a ninth CI job, so 18 checks), the worker transcribes each examiner-test answer, the result page shows it labelled "Máy chép lại, có thể sai", the WER tool for the owner's typed references. Consent `speaking-v1` (the transcript outlives the 24-hour audio). Migration 0046. Run here on espeak speech: learner errors and fillers kept, 12 s in 2 s, 0.76 GB; nothing invented over 8 s of noise. Real-voice WER is the owner's |
+| 2026-11-27 | Progress study T6 built: a rated Writing or Speaking sitting stores the rater's four criterion bands (`--criteria fc=7,lr=7,gra=6,p=7`; Writing tr, cc, lr, gra), checked whole bands 0–9 from a rater or self, never with an answer key; the report names the lowest and its change since the last sitting with criteria. The skill's band stays the rater's. Migration 0045 |
 | 2026-11-27 | Speaking 5.4a built (`/noi/thi`): a voice examiner reads authored Part 1–3 questions (five draft tests) with the real timing (Part 2: one minute to prepare, stopped at 2:00), each answer recorded and replayed afterwards, nothing shown while speaking, no score, no model call, no evidence. Owner only; audio cleared after 24 hours unless kept. Migration 0044. Checked with the fake microphone at shortened timing; a real test at real speed is the owner's |
 | 2026-11-27 | From the owner's research on IELTS Speaking scoring and open scoring models (Bronze), the agent's three proposals approved: (A) rated Writing and Speaking mocks store the rater's four criterion bands, the report names the lowest (`step-v4.md` addition; NodeTrail never computes a band from them, the Speaking round-down rule being unpublished); (B) step 5.2 counts pauses between clauses and inside a clause; (C) SPK-001 compares a ready-made scorer and tries speechocean762 pronunciation models and error-free clauses as inputs. Not adopted: an LLM scoring criteria from the band descriptors (no evidence, unstable, against the band rule). Speaking 5.4a specified (`step-5.4a.md`, owner's go): a voice examiner test before transcription. Docs only |
 | 2026-11-27 | Speaking band rule changed, owner's decision: "no Speaking band before the exam" becomes a CEFR level with its IELTS range, labelled an estimate, for a full mock only, from a model trained on human-rated speech (Speak & Improve Corpus 2025, Cambridge, non-commercial licence) that reaches QWK ≥ 0.75 on held-out speakers and agrees with the owner's rated mocks; never from an LLM, as a point or per criterion. Research track SPK-001 added (after 5.1–5.2). Prompted by a Speaking app the owner saw (full mock, then a band with sub-scores): the rest of its result page fits the existing spec. The owner's real band still comes from rated mocks every 4 weeks. Docs only |

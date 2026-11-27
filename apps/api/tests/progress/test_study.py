@@ -6,7 +6,15 @@ from pathlib import Path
 
 import pytest
 
-from app.progress.study import Result, report, schedule, truth_of
+from app.progress.study import (
+    Result,
+    check_criteria,
+    lowest,
+    parse_criteria,
+    report,
+    schedule,
+    truth_of,
+)
 
 APP = Path(__file__).resolve().parents[2] / "app"
 
@@ -72,3 +80,40 @@ def test_only_the_progress_package_touches_progress_tests() -> None:
         and re.search(r"\bprogress_tests\b", p.read_text(encoding="utf-8"))
     ]
     assert offenders == []
+
+
+def test_criteria_are_parsed_and_checked() -> None:
+    assert parse_criteria("FC=7, lr=7,gra=6,p=7") == {"fc": 7, "lr": 7, "gra": 6, "p": 7}
+    for bad in ("fc7", "fc=seven", "fc=6.5", "fc=7,fc=6", ""):
+        with pytest.raises(ValueError):
+            parse_criteria(bad)
+    ok = check_criteria("speaking", "trained_rater", {"p": 7, "gra": 6, "lr": 7, "fc": 7})
+    assert list(ok) == ["fc", "lr", "gra", "p"]  # always in the descriptors' order
+    assert check_criteria("writing", "self", {"tr": 6, "cc": 6, "lr": 7, "gra": 6})
+    for skill, by, crit in (
+        ("reading", "trained_rater", {"fc": 7}),  # no criteria for Reading or Listening
+        ("speaking", "answer_key", {"fc": 7, "lr": 7, "gra": 6, "p": 7}),
+        ("speaking", "trained_rater", {"fc": 7, "lr": 7, "gra": 6}),  # all four
+        ("speaking", "trained_rater", {"tr": 7, "lr": 7, "gra": 6, "p": 7}),  # writing's key
+        ("writing", "trained_rater", {"tr": 10, "cc": 6, "lr": 7, "gra": 6}),
+    ):
+        with pytest.raises(ValueError):
+            check_criteria(skill, by, crit)
+    assert lowest({"fc": 7, "lr": 6, "gra": 6, "p": 7}) == ["lr", "gra"]
+
+
+def test_report_names_the_lowest_criterion_and_its_change_but_never_a_band() -> None:
+    rows = [
+        Result(date(2026, 12, 1), "speaking", "Mock 1", True, "trained_rater", True,
+               band=6.5, criteria={"fc": 7, "lr": 7, "gra": 6, "p": 7}),
+        Result(date(2026, 12, 29), "speaking", "Mock 2", True, "trained_rater", band=6.5),
+        Result(date(2027, 1, 26), "speaking", "Mock 3", True, "trained_rater",
+               band=7.0, criteria={"fc": 7, "lr": 8, "gra": 7, "p": 6}),
+    ]  # fmt: skip
+    sittings = report(rows)["skills"]["speaking"]["sittings"]
+    assert sittings[0]["lowest"] == ["gra"] and "criteria_change" not in sittings[0]
+    assert "criteria" not in sittings[1]  # a sitting without criteria shows none
+    assert sittings[2]["lowest"] == ["p"]
+    # compared with the last sitting that had criteria (Mock 1), not Mock 2
+    assert sittings[2]["criteria_change"] == {"fc": 0, "lr": 1, "gra": 1, "p": -1}
+    assert sittings[2]["band"] == 7.0  # the rater's band, as given

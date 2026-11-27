@@ -192,11 +192,33 @@ describe("decoders", () => {
             problems: ["too_quiet"],
             audio: true,
             delete_after: null,
+            transcript: "done",
+            text: "Um, I goes",
+            words: [{ word: "Um,", start: 0.5, end: 0.9 }],
           },
         },
       ],
     });
     expect(r.questions[1]?.answer?.problems).toEqual(["too_quiet"]);
+    expect(r.questions[1]?.answer?.text).toBe("Um, I goes");
+    // a "done" transcript without text, or text while waiting, is refused
+    const answered = (transcript: string, text: string | null) => ({
+      ...r,
+      questions: [
+        {
+          id: "p1-1-2",
+          part: 1,
+          text: "Q2?",
+          answer: { ...r.questions[1]!.answer!, transcript, text },
+        },
+      ],
+    });
+    expect(() => parseResult(answered("done", null))).toThrow(DataError);
+    expect(() => parseResult(answered("waiting", "x"))).toThrow(DataError);
+    expect(() => parseResult(answered("later", null))).toThrow(DataError);
+    expect(
+      parseResult(answered("waiting", null)).questions[0]?.answer?.transcript,
+    ).toBe("waiting");
     expect(() =>
       parseResult({ ...r, questions: [{ id: "x", part: 1, text: "Q" }] }),
     ).toThrow(DataError);
