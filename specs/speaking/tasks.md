@@ -14,7 +14,7 @@
 - [ ] SPK-001 (after 5.1–5.2 and the licence): fit the models, evaluate on held-out speakers, write the report (negative results kept)
 
 **Build (agent), in order:**
-- [ ] 5.4a the examiner test before transcription (`step-5.4a.md`, owner's go-ahead 27 Nov): voice examiner, real timing, answers recorded, replay; no model call
+- [x] 5.4a the examiner test before transcription (`step-5.4a.md`, owner's go-ahead 27 Nov): voice examiner, real timing, answers recorded, replay; no model call
 - [ ] 5.2 addition: pauses between clauses and inside a clause (27 Nov)
 - [ ] 5.1 recording, prompts, recognition service, transcript, word error rate tool
 - [ ] 5.2 fluency measures

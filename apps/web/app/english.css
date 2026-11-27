@@ -2475,3 +2475,74 @@ details[data-testid="all-issues"] > summary {
   border-left: 3px solid var(--forest);
   background: #f5f2e8;
 }
+
+/* The Speaking examiner test (specs/speaking/step-5.4a.md): calm, nothing judged while speaking. */
+.nt-exam-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.nt-exam-head button {
+  margin-left: auto;
+}
+.nt-exam-cue {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--nt-line, #e5ded3);
+  border-radius: 12px;
+  background: var(--nt-card, #fffdf8);
+}
+.nt-exam-cue ul {
+  margin: 4px 0 8px;
+  padding-left: 20px;
+}
+.nt-exam-notes {
+  display: grid;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+.nt-exam-notes textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+}
+.nt-exam-now {
+  margin: 18px 0 8px;
+  min-height: 96px;
+}
+.nt-exam-line {
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+.nt-exam-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c0392b;
+}
+.nt-exam-tests,
+.nt-exam-past {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.nt-exam-tests li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.nt-exam-part ol {
+  padding-left: 20px;
+  display: grid;
+  gap: 12px;
+}
+.nt-exam-part audio {
+  width: 100%;
+  max-width: 420px;
+}

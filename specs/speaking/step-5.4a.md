@@ -54,8 +54,24 @@ That the script, the timing or the cut-offs match the real test exactly; any sco
 only after SPK-001); that a machine voice prepares the learner for a human examiner's accent.
 
 ## Tasks
-- [ ] T1 Test file format, loader and checks (unit tests); five draft tests for the owner to edit
-- [ ] T2 Migration and repository for tests and answers; retention and owner-only rules (database tests)
-- [ ] T3 API routes (API tests)
-- [ ] T4 The page `/noi/thi`: consent, microphone check, the three parts with timing, replay, past tests (Vitest for the timing logic)
-- [ ] T5 Playwright test at phone size; `MAP.md`, `PLAN.md`, `SPEC.md` feature 9 status, `dolater.md` (the owner edits the drafts, then takes two full tests)
+- [x] T1 Test file format, loader and checks (unit tests); five draft tests for the owner to edit
+- [x] T2 Migration `0043` and the service for sittings and answers; retention and owner-only rules (database tests)
+- [x] T3 API routes (API tests)
+- [x] T4 The page `/noi/thi` and the result `/noi/thi/{id}`: consent, microphone check, the three parts with timing, replay, past tests (Vitest for the script and timing)
+- [x] T5 Playwright test at phone size; `MAP.md`, `PLAN.md`, `SPEC.md` feature 9 status, `dolater.md`
+
+## Built (27 Nov 2026)
+- `data/speaking/tests/t01`–`t05` (drafts); `apps/api/app/speaking/tests.py` (format, ids, limits); migration
+  `0043_speaking_tests.sql` (`speaking_tests`, `speaking_answers`); `app/services/speaking_tests.py` and
+  `app/api/speaking.py`; the worker clears expired audio with the recordings' purge.
+- Web: `lib/speaking/exam.ts` (decoders, the examiner's script in NodeTrail's own wording, timing),
+  `components/speaking/` (voice, recorder, page, result), `app/noi/thi/`.
+- **Choices made in building, for the owner to confirm:** a bad recording (too quiet, no speech) is still stored, since an
+  exam answer is what it is, and the result says why it may be hard to hear; the voice falls back from the server voice
+  to the browser's English voice to text on screen; Part 3 allows 60 seconds and the closing question 30 (assumptions,
+  `PART3_SECONDS`, `CLOSING_SECONDS`); the examiner never repeats a question (one could be added).
+- **Checked:** 14 API tests (loader, owner rule, consent, limits, once per question, 24-hour clearing, deletion),
+  10 Vitest, 2 Playwright with the fake microphone (a whole test of 18 answers, timing shortened by the test-only speed
+  setting `nodetrail_exam_speed`; the owner rule). The browser suite ran on the API, worker and web run natively with
+  the database in Docker, because image builds in the cloud sandbox cannot reach the package registries; CI builds the
+  images. Not checked: a real test at real speed with a real microphone and the server voice (the owner's two tests).

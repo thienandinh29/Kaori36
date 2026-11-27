@@ -56,7 +56,7 @@ target is recorded with the number and the reason, never hidden.
 | 2 | Writing, Task 2 then Task 1 (`specs/writing/`, steps 2.1–2.10) | Error → node mapping ≥ 90% on 100 errors checked by a teacher; QWK ≥ 0.7 against examiner bands on 50–100 private essays; band stability | built; gate waits on examiner-banded essays and a teacher |
 | 3 | Pronunciation (`specs/pronunciation/`, steps 3.1–3.7c) | False alarms ≤ 10% on 50–100 of the owner's kept recordings labelled by a phonetics-trained reviewer (Gold), before any red mark; speechocean762 baseline recorded (sentence r 0.59, phone AUC 0.86) | built; gate waits on the reviewer's labels; 3.6b part 2 waits on the L2-ARCTIC licence check |
 | 4 | Reading and Listening (`specs/listening-reading/plan.md`, checkpoints CP0–CP6) | Every question verified blind and reviewed before it enters the bank; an expert's labels against the checker on 50 items (agreement, kappa) | in progress (table below) |
-| 5 | Speaking Part 1–3, then opening to testers (`specs/speaking/`) | Per-user limits and a daily cost cap working; ≥ 5 of 10 testers still using it after 2 weeks; old errors falling over 4 weeks; word error rate and grammar-flag accuracy measured | specified; waits on the owner's decisions |
+| 5 | Speaking Part 1–3, then opening to testers (`specs/speaking/`; 5.4a examiner test built 27 Nov) | Per-user limits and a daily cost cap working; ≥ 5 of 10 testers still using it after 2 weeks; old errors falling over 4 weeks; word error rate and grammar-flag accuracy measured | specified; waits on the owner's decisions |
 
 ### Phase 4 checkpoints
 | CP | Work | Status |
@@ -84,9 +84,8 @@ target is recorded with the number and the reason, never hidden.
    own questions, with skill tags on each question in the same call (`step-4.3e.md`: six sub-skills, Bronze, summaries only,
    never BKT) and time per question in the timed test, CP4c exam details, CP2b planted test, the CP6 report, then phase 5 Speaking. The bank stays for drills and
    Listening; reviewing it is optional now, not daily work.
-3b. **Speaking first steps (owner's go, 27 Nov):** the examiner test before transcription (`specs/speaking/step-5.4a.md`:
-   voice examiner, real timing, answers recorded, replay, no model call), and criterion bands in the progress study
-   (`specs/validation/step-v4.md`, T6). Then 5.1 once the owner chooses the recogniser.
+3b. **Speaking first steps (owner's go, 27 Nov):** the examiner test is built (`/noi/thi`, step 5.4a); next, criterion
+   bands in the progress study (`specs/validation/step-v4.md`, T6). Then 5.1 once the owner chooses the recogniser.
 4. **Writing feedback quality (step 2.11):** measure stability on ~20 web essays (the owner collects them); the TR/CC
    structure checks are built (2.11b); then the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
    errors per opportunity next to sentence complexity, not a band.
@@ -145,6 +144,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-27 | Speaking 5.4a built (`/noi/thi`): a voice examiner reads authored Part 1–3 questions (five draft tests) with the real timing (Part 2: one minute to prepare, stopped at 2:00), each answer recorded and replayed afterwards, nothing shown while speaking, no score, no model call, no evidence. Owner only; audio cleared after 24 hours unless kept. Migration 0043. Checked with the fake microphone at shortened timing; a real test at real speed is the owner's |
 | 2026-11-27 | From the owner's research on IELTS Speaking scoring and open scoring models (Bronze), the agent's three proposals approved: (A) rated Writing and Speaking mocks store the rater's four criterion bands, the report names the lowest (`step-v4.md` addition; NodeTrail never computes a band from them, the Speaking round-down rule being unpublished); (B) step 5.2 counts pauses between clauses and inside a clause; (C) SPK-001 compares a ready-made scorer and tries speechocean762 pronunciation models and error-free clauses as inputs. Not adopted: an LLM scoring criteria from the band descriptors (no evidence, unstable, against the band rule). Speaking 5.4a specified (`step-5.4a.md`, owner's go): a voice examiner test before transcription. Docs only |
 | 2026-11-27 | Speaking band rule changed, owner's decision: "no Speaking band before the exam" becomes a CEFR level with its IELTS range, labelled an estimate, for a full mock only, from a model trained on human-rated speech (Speak & Improve Corpus 2025, Cambridge, non-commercial licence) that reaches QWK ≥ 0.75 on held-out speakers and agrees with the owner's rated mocks; never from an LLM, as a point or per criterion. Research track SPK-001 added (after 5.1–5.2). Prompted by a Speaking app the owner saw (full mock, then a band with sub-scores): the rest of its result page fits the existing spec. The owner's real band still comes from rated mocks every 4 weeks. Docs only |
 | 2026-11-27 | Reading 4.3d part 2, second half built: the passage's words above the learner's level (level test, else B1) and the B1+ words of the sentences that decided wrong answers, each with its sentence and the word list's draft gloss, kept as saved-phrase cards (gap-fill on the passage sentence, FSRS, `/tu-vung`). No model call. Migration 0042. Usefulness on real passages not measured |

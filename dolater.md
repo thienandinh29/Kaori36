@@ -113,7 +113,7 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Phase 3.5b:** fine-tuning the recogniser on a GPU notebook. Only worth it if the reviewer's labels show the
   frozen model is the limit (it needs GPU time, and replaces the pinned model).
 - [ ] **Phase 5, Speaking:** the recognition model; the transcript consent wording; accounts for testers.
-- [ ] **Speaking 5.4a, when built (new, 27 Nov):** edit the five draft examiner tests (`data/speaking/tests/`), then take two
+- [ ] **Speaking 5.4a, built 27 Nov:** edit the five draft examiner tests (`data/speaking/tests/`), then take two
   full tests on `/noi/thi` and say whether the timing and the cut-offs feel like the exam. When a rater bands a mock, record
   the four criterion bands too: `--criteria fc=..,lr=..,gra=..,p=..` (`specs/validation/step-v4.md`, T6).
 - [ ] **From the Speaking scoring research (new, 27 Nov), to check before relying on them:** whether IELTS publishes the

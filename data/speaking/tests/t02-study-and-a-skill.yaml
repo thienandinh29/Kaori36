@@ -1,0 +1,40 @@
+# Speaking examiner test (specs/speaking/step-5.4a.md). Written for NodeTrail on common topics;
+# not taken from past papers or "forecast" lists. Draft until a teacher reads a sample.
+id: t02
+title: Study, weather and a new skill
+status: draft
+author: agent draft, 27 Nov 2026, for the owner to edit
+part1:
+  - topic: work or study
+    questions:
+      - Do you work or are you a student?
+      - What do you enjoy most about your studies or your job?
+      - Is there anything you find difficult about it?
+      - What would you like to do in the next few years?
+  - topic: the weather
+    questions:
+      - What is the weather usually like where you live?
+      - Which season of the year do you like best?
+      - Does the weather ever change your plans?
+  - topic: reading
+    questions:
+      - Do you read much in your free time?
+      - What did you like to read when you were a child?
+      - Do you prefer reading on paper or on a screen?
+      - Is there a book you would like to read again?
+part2:
+  task: Describe a skill you learned that took you a long time.
+  points:
+    - what the skill is
+    - when and how you learned it
+    - what was difficult about learning it
+  explain: and explain how you feel about this skill now.
+  closing: Would you like to teach this skill to someone else?
+part3:
+  theme: learning and skills
+  questions:
+    - Which skills do you think young people most need today?
+    - Is it better to learn a skill from a teacher or by yourself?
+    - Why do some adults stop learning new things?
+    - How might technology change the way people learn skills in the future?
+    - Should schools teach practical skills, such as cooking and managing money?

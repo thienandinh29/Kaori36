@@ -71,9 +71,13 @@ def _percentile(values: list[float], q: float) -> float:
 
 
 def check(
-    data: bytes, min_seconds: float = MIN_SECONDS, min_speech: float = MIN_SPEECH_SECONDS
+    data: bytes,
+    min_seconds: float = MIN_SECONDS,
+    min_speech: float = MIN_SPEECH_SECONDS,
+    max_seconds: float = MAX_SECONDS,
 ) -> Quality:
-    """`min_seconds` and `min_speech` are lower for a single word (step 3.7) than a sentence."""
+    """`min_seconds` and `min_speech` are lower for a single word (step 3.7) than a sentence;
+    `max_seconds` is higher for a Speaking answer (step 5.4a) than a read sentence."""
     try:
         x = samples(data)
     except BadAudio:
@@ -81,7 +85,7 @@ def check(
     seconds = len(x) / RATE
     if seconds < min_seconds:
         return Quality(False, ("too_short",), round(seconds, 2))
-    if seconds > MAX_SECONDS:
+    if seconds > max_seconds:
         return Quality(False, ("too_long",), round(seconds, 2))
     levels = []
     for start in range(0, len(x) - FRAME + 1, FRAME):

@@ -1,0 +1,40 @@
+# Speaking examiner test (specs/speaking/step-5.4a.md). Written for NodeTrail on common topics;
+# not taken from past papers or "forecast" lists. Draft until a teacher reads a sample.
+id: t05
+title: Free time, shopping and a decision
+status: draft
+author: agent draft, 27 Nov 2026, for the owner to edit
+part1:
+  - topic: free time
+    questions:
+      - What do you like to do in your free time?
+      - Do you have more free time now than you did a few years ago?
+      - Do you prefer to relax at home or go out?
+  - topic: shopping
+    questions:
+      - Do you enjoy going shopping?
+      - Do you prefer shopping online or in shops?
+      - What was the last thing you bought for yourself?
+      - Do you usually plan what you are going to buy?
+  - topic: photographs
+    questions:
+      - Do you like taking photos?
+      - What do you usually take photos of?
+      - Do you keep printed photos at home?
+      - Do you like being in photos yourself?
+part2:
+  task: Describe an important decision you made.
+  points:
+    - what the decision was
+    - when you made it
+    - who you asked for advice
+  explain: and explain why it was important to you.
+  closing: Do you usually make decisions quickly?
+part3:
+  theme: decisions and advice
+  questions:
+    - Who do young people in your country usually ask for advice?
+    - Are big decisions harder to make today than they were in the past?
+    - Should parents make important decisions for their teenage children?
+    - Why do some people find it difficult to make decisions?
+    - Is it a good idea to follow advice from the internet?

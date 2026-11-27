@@ -29,13 +29,18 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
+## Just built (this branch, not yet merged)
+- **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
+  recorded and replayed, no score; migration `0043`. Checked with the fake microphone at shortened timing; the owner's real
+  test at real speed is not done.
+
 ## In progress
 Nothing in code. On `claude/lucid-goldberg-9997no`, waiting for review (docs only): the Speaking band rule change; the owner's
 scoring research adopted as A (criterion bands from the rater, `step-v4.md` T6), B (pauses between and inside clauses, 5.2)
 and C (SPK-001 comparisons and inputs); and the examiner test's step page `specs/speaking/step-5.4a.md` (owner's go).
 
 ## Next (build)
-1. Speaking 5.4a, the examiner test (no model call), then `step-v4.md` T6 (criterion bands). Both need no recogniser.
+1. `step-v4.md` T6 (criterion bands); the owner edits the five draft tests and takes two full tests on `/noi/thi`.
 2. 5.1 after the owner chooses the recogniser (Whisper small.en recommended).
 
 ## Next

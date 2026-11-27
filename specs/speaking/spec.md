@@ -128,7 +128,7 @@ mode shows nothing while speaking; and NodeTrail is one part of Speaking practic
 | 5.1 | Recording and prompts for the three parts, the recognition service, transcript and timestamps; word error rate on the owner's recordings |
 | 5.2 | Fluency measures and the pause analysis (pauses from the raw audio, before voice activity filtering) |
 | 5.3 | Grammar and vocabulary checks on the transcript; feedback with quotes checked against it |
-| 5.4a | The examiner test before transcription (`step-5.4a.md`): a voice examiner reads authored Part 1–3 questions with the real timing, each answer recorded, replay afterwards; no model call. Built first (owner, 27 Nov) |
+| 5.4a | The examiner test before transcription (`step-5.4a.md`): a voice examiner reads authored Part 1–3 questions with the real timing, each answer recorded, replay afterwards; no model call. Built 27 Nov (owner's go): `/noi/thi` |
 | 5.4 | The mock test flow with timing; guided mode with idea building and repeated answers; no band (see "The band") |
 | 5.5 | Opening to testers: accounts, per-user limits, the daily cost cap, the tester report |
 | 5.6 | Level estimate (SPK-001), after 5.1–5.2 and the corpus licence: the corpus loader and the same measures on its audio (agent); the model and its report (owner); the level on the mock test's result page only after the bar in "The band" |
