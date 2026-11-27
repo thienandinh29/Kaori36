@@ -7,6 +7,9 @@ wins; fix this page.
 **Last updated:** 27 Nov 2026, `main` at `6b6ca8b` (Wiktionary coverage, #147), plus the Reading diagnosis docs (this branch).
 
 ## Just finished
+- **TSL and BSL words** (branch `data/tsl-bsl-import`, owner's request 27 Nov, not pushed): 1,825 words added (the list is
+  now 5,488); BSL definitions written by DeepSeek and blind-checked by the free Ernie/dots checker (835 of 836 right); own
+  bands `vocab-tsl`/`vocab-bsl`; `specs/vocabulary-import/step-tsl-bsl.md`. Waits on the owner: push and PR.
 - **Reading 4.3d part 2, first half** (27 Nov, this branch, not merged): the passage's place and "đoán"/"không kịp" marks on the
   check step, the summary across pasted tests per question type and the pacing line on `/doc/bai-cua-ban`; migration `0041`.
   Tested with a mocked model and API; thresholds are assumptions until real tests exist.

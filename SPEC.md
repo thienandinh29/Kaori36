@@ -26,7 +26,7 @@ one engine chooses each day's work.
 |---|---|---|---|
 | 1 | **Hôm nay and the two maps** | 3–5 activities a day, each with "Vì sao?" (`/`); the CEFR foundation map and the IELTS competency map as a graph with the weakest link marked (`/ban-do`) | built (M1–M4). Writing, Reading and Listening feed competencies; the links between maps are Bronze ("đề xuất") until a teacher checks a sample |
 | 2 | **Level test and grammar roadmap** | Level test (`/kiem-tra`); milestones with hidden nodes (`/lo-trinh`); a failed milestone test opens its nodes and remediates the weakest prerequisite; practice per node (`/on-tap/...`); delayed re-checks of "known" nodes on the home page | built: 10 milestones, 19 hidden nodes, 76 draft items (owner-only until reviewed). A longer path (28 milestones, 51 nodes) is proposed, not live |
-| 3 | **Vocabulary** | FSRS review cards with meaning, gap-fill, collocation, word form and recall items (`/tu-vung`); hear the word; say the word and see each sound | built: 3,663 words (NGSL/NAWL + 130 authored), draft until a teacher checks a sample |
+| 3 | **Vocabulary** | FSRS review cards with meaning, gap-fill, collocation, word form and recall items (`/tu-vung`); hear the word; say the word and see each sound | built: 5,488 words (NGSL/NAWL, TSL/BSL + 130 authored), draft until a teacher checks a sample |
 | 4 | **Grammar lessons** | A lesson before practice: English voice, English and Vietnamese subtitles by level, a board, checkpoints (`/hoc/{node}`) | partly built: the player and one sample lesson; lessons from licence-checked textbooks are specified |
 | 5 | **Writing (Task 2 and Task 1)** | Write in the browser (`/viet`); the result (`/bai-viet/{id}`): "Sửa trước" (at most 5 things), grammar errors (LanguageTool, ERRANT, mapped to nodes), feedback on the four criteria with quoted evidence, hint-first self-correction, a paragraph rewrite, saved phrases as cards, repeated errors across essays; Task 1 facts checked against the chart's data; your own Task 2 question, and a timed 40-minute exam; Task 2 structure checks (every part of the question answered, a clear and consistent position, a hint on undeveloped paragraphs) | built (2.1–2.10, 2.11b). No band is shown yet: the band model is not calibrated on examiner-banded essays |
 | 6 | **Pronunciation** | Read authored sentences aloud (`/phat-am`): a recording-quality check, then the target sounds Vietnamese speakers often miss are scored; sounds to focus on | built, owner only. Raw scores and "chưa chắc" only: nothing is marked wrong until false alarms are measured on Gold labels |
@@ -73,8 +73,8 @@ the trace.
 **Content and verification**
 - **Verification gate.** A generator writes each item citing its source text; a model of a **different family** answers it
   blind from that text only (no key, no other context); a mismatch or "cannot tell" sends it to review. Routing today:
-  DeepSeek generates; a free Ernie model checks Reading questions and lesson checkpoints (dots as backup); Gemini verifies
-  other generated content. The gateway refuses a checker of the generator's family.
+  DeepSeek generates; a free Ernie model checks Reading questions, lesson checkpoints and model-written word definitions
+  (dots as backup); Gemini verifies other generated content. The gateway refuses a checker of the generator's family.
 - **A Reading question is served only when** it is approved, its `item_ok` labels are Silver or Gold and "right", its passage
   is unchanged (NFC SHA-256), and its code checks pass. Options and headings are shown in a fixed shuffled order on every
   surface; answers are stored in the original order.

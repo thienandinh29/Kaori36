@@ -52,6 +52,23 @@ A later NGSL/NAWL `run` keeps the TSL/BSL words already in the file.
 About 50 generation calls and about 21 check calls (40 definitions a call). Hard cap: US$1.00 with the configured
 (deliberately high) prices; the last import's real spend was US$0.12 for 3,533 words.
 
+## Result (run 27 Nov 2026, `import-report-tsl-bsl.json`)
+- **1,825 words added** (TSL 1,008, BSL 817): the list is now **5,488 words** (130 authored, 5,358 imported).
+  Levels: B1 2, B2 914, C1 909 (frequency estimates).
+- **Model definitions:** 836 written (BSL words and TSL words without a usable one); the blind check picked the right
+  word for 835 and the wrong one for 1 (`widen`, dropped). The free checker failed on 4 of 25 calls across three runs;
+  those words were asked again until every one had an answer (none left unchecked). The report's checker counts are the
+  last run's only.
+- **Dropped:** 35 in all: 10 prefixes, 3 not plain headwords, 5 function words, 9 model definitions that failed code's
+  rules, 7 examples that failed code's rules, 1 by the blind check.
+- **IPA:** shown for 1,162 of the 1,825 new words (64%), where espeak-ng and the model agreed; lower than the NGSL's 72%,
+  which fits American spellings and business terms.
+- **Cost:** 47 generation calls, 55,927 input and 175,812 output tokens, US$0.76 at the configured (deliberately high)
+  prices, under the US$1.00 cap; the checker is a free model.
+- **Seen in the data:** the TSL's own definitions are copied unchanged, typos included (for example "memo": "a written
+  reminder to do somethng"); a few model definitions start with a capital and end with a full stop. Neither is fixed
+  by hand.
+
 ## Not claimed
 The blind check shows that a definition picks out its word among four, not that it is good English or the best sense. The
 Vietnamese, examples and IPA stay Bronze drafts, as for the NGSL. Like the rest of the list, the new words stay draft until a
