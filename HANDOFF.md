@@ -16,7 +16,9 @@ wins; fix this page.
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
 ## In progress
-`feat/wiktionary-coverage` (not pushed): Wiktionary coverage of the word list measured (`specs/vocabulary-import/step-wiktionary.md`), no product change. Waits on the owner: Wiktionary's licence and whether an enrichment step follows (`dolater.md`, section 5).
+Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), on
+`claude/bold-mccarthy-jfbsad`, not pushed. Waits on the owner: review the page, then the go-ahead to build (two PRs, no model
+calls). Wiktionary coverage (#147) is merged; its licence and an enrichment step still wait on the owner (`dolater.md`, section 5).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

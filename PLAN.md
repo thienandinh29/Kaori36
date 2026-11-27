@@ -84,7 +84,8 @@ target is recorded with the number and the reason, never hidden.
    Listening; reviewing it is optional now, not daily work.
 4. **Writing feedback quality (step 2.11):** measure stability on ~20 web essays (the owner collects them); the TR/CC
    structure checks are built (2.11b); then the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
-   errors per opportunity next to sentence complexity, not a band.
+   errors per opportunity next to sentence complexity, not a band. A band closer to the examiner's (step 2.12: descriptor caps,
+   a model per criterion) is specified; it is measured only on examiner-banded essays.
 5. **Ongoing:** the daily Reading blind-check batch; fixes from the owner's use.
 
 ## Research tracks (`research/`)
@@ -136,6 +137,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-27 | Writing step 2.12 specified, owner's request (a band closer to the examiner's): descriptor caps (from code findings only; 2.11b's model findings shown as "có thể bị giới hạn", never applied without a `SPEC.md` change) and a ridge model per criterion on descriptor features, compared with the pinned scorer on the same splits; the simpler model wins on overlapping intervals. No band changes until the owner's examiner-banded essays exist. Not built |
 | 2026-11-26 | Vocabulary: Wiktionary coverage measured (`specs/vocabulary-import/step-wiktionary.md`, owner's request): kaikki.org's wiktextract dump would add a British IPA to 713 of the 981 words without one (IPA 73% → 93%); its British IPA agrees with ours on 93% after notation folds; Vietnamese translations for 68%. Nothing imported; Wiktionary's licence and an enrichment step are the owner's decisions |
 | 2026-11-23 | Reading 4.3d part 1 built (CP4b first): paste a test taken elsewhere on `/doc/bai-cua-ban`, the model lists the questions, code reads the official key and the learner's answers, the learner confirms, code marks, each wrong answer explained with the trap list (code names T/F/NG and completion traps) and labelled "chưa kiểm chứng". Owners only; one BKT observation per answered question, once per test fingerprint. Migration 0040. Real-paste accuracy not measured |
 | 2026-11-22 | Owner's decision: Reading feedback on tests taken outside the app (Cambridge books, official samples) comes next, as CP4b's first step (`step-4.3d.md`): pasted, marked by code against the official key, wrong answers explained with the trap list, vocabulary cards, evidence once per question; the pasted test stays private. The generated bank stays for drills and Listening; its review is optional. Cambridge material never enters the bank |

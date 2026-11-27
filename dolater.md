@@ -86,7 +86,11 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Phase 2, Writing:**
   - collect 50–100 essays with examiner bands (in `data/private/`); set aside the 30% test split first; **prefer essays that
     show all four criterion bands** (Task Response, Coherence and Cohesion, Lexical Resource, Grammar), so each criterion's
-    band can be measured too (`specs/writing/spec.md`, point 8b);
+    band can be measured too (`specs/writing/spec.md`, point 8b). One JSON line each in
+    `data/private/writing/essays.jsonl`: `id`, `question`, `text`, `band`, and where given `tr`, `cc`, `lr`, `gra`,
+    `marked_by` (`examiner` or `trained_rater`) and `source`. Good sources: the sample answers with examiner comments in
+    the Cambridge IELTS books, the official sample scripts (IELTS, British Council, IDP), your own essays banded by a
+    trained rater; a website's own marking is not an examiner band. Step 2.12 needs criterion bands on at least 40;
   - LanguageTool's misses and the feedback/correction ratings: by the teacher, on 10 essays (`docs/v2/writing-eval.md`
     has every number to fill).
 - [ ] **Phase 3:** write the pronunciation gate report, `docs/v2/pronunciation-eval.md`.
