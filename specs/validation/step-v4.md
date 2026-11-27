@@ -63,5 +63,5 @@ A page for entering results (the CLI is enough for one learner), any band predic
 - [x] T3 `cli.py`: add (with snapshot), schedule, report; database tests.
 - [x] T4 A separation test: only `app/progress/` touches `progress_tests`.
 - [x] T5 `dolater.md`, MAP, spec status, FORGET/KT notes in `research/`.
-- [ ] T6 Criterion bands (addition, 27 Nov): migration with `criteria jsonb`; `--criteria` in `cli.py add` with its checks;
+- [x] T6 Criterion bands (addition, 27 Nov; built: migration `0045`, `check_criteria`, `lowest`, `--criteria`): migration with `criteria jsonb`; `--criteria` in `cli.py add` with its checks;
   the lowest criterion in `study.report`; unit and database tests.

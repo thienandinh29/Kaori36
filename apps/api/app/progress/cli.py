@@ -3,6 +3,8 @@
     uv run python -m app.progress.cli add --learner ID --skill reading \\
         --paper "Cambridge 18 Test 1" --timed --raw 31/40 --band 7.0 --marked-by answer_key \\
         [--baseline] [--on 2026-11-20]
+    uv run python -m app.progress.cli add --learner ID --skill speaking --paper "Mock 1" --timed \\
+        --band 6.5 --marked-by trained_rater --criteria fc=7,lr=7,gra=6,p=7
     uv run python -m app.progress.cli schedule --learner ID
     uv run python -m app.progress.cli report --learner ID [--out ../../data/private/progress.json]
 
@@ -20,7 +22,15 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from app.config import REPO_ROOT
-from app.progress.study import SKILLS, Result, report, schedule, truth_of
+from app.progress.study import (
+    SKILLS,
+    Result,
+    check_criteria,
+    parse_criteria,
+    report,
+    schedule,
+    truth_of,
+)
 
 KNOWN = 0.9
 DEFAULT_OUT = REPO_ROOT / "data" / "private" / "progress-report.json"
@@ -59,11 +69,14 @@ def add(conn: psycopg.Connection, learner: str, r: Result) -> str:
     truth_of(r.marked_by)  # validates
     if r.raw_k is None and r.band is None:
         raise ValueError("give a raw score, a band, or both")
+    criteria = None if r.criteria is None else check_criteria(r.skill, r.marked_by, r.criteria)
     row = conn.execute(
         "insert into progress_tests(learner_id,taken_on,baseline,skill,paper,timed,raw_k,raw_n,"
-        "band,marked_by,snapshot) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning id::text",
+        "band,marked_by,snapshot,criteria) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) "
+        "returning id::text",
         (learner, r.taken_on, r.baseline, r.skill, r.paper, r.timed, r.raw_k, r.raw_n, r.band,
-         r.marked_by, Jsonb(snapshot(conn, learner))),
+         r.marked_by, Jsonb(snapshot(conn, learner)),
+         None if criteria is None else Jsonb(criteria)),
     ).fetchone()  # fmt: skip
     assert row is not None
     return str(row[0])
@@ -71,13 +84,13 @@ def add(conn: psycopg.Connection, learner: str, r: Result) -> str:
 
 def results(conn: psycopg.Connection, learner: str) -> list[Result]:
     rows = conn.execute(
-        "select taken_on,skill,paper,timed,marked_by,baseline,raw_k,raw_n,band,snapshot "
+        "select taken_on,skill,paper,timed,marked_by,baseline,raw_k,raw_n,band,snapshot,criteria "
         "from progress_tests where learner_id::text=%s order by taken_on, skill",
         (learner,),
     ).fetchall()
     return [
-        Result(t, s, p, timed, m, b, k, n, None if band is None else float(band), snap)
-        for t, s, p, timed, m, b, k, n, band, snap in rows
+        Result(t, s, p, timed, m, b, k, n, None if band is None else float(band), snap, crit)
+        for t, s, p, timed, m, b, k, n, band, snap, crit in rows
     ]
 
 
@@ -112,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database
     a.add_argument("--band", type=float)
     a.add_argument("--marked-by", required=True, choices=("answer_key", "trained_rater", "self"))
     a.add_argument("--baseline", action="store_true")
+    a.add_argument("--criteria", help="the rater's four bands, e.g. fc=7,lr=7,gra=6,p=7")
     a.add_argument("--on", type=date.fromisoformat, default=date.today())
     for name in ("schedule", "report"):
         p = sub.add_parser(name)
@@ -121,9 +135,10 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database
     with psycopg.connect(get_settings().database_url) as conn:
         if args.cmd == "add":
             k, n = _raw(args.raw)
-            r = Result(args.on, args.skill, args.paper, args.timed, args.marked_by,
-                       args.baseline, k, n, args.band)  # fmt: skip
             try:
+                crit = parse_criteria(args.criteria) if args.criteria else None
+                r = Result(args.on, args.skill, args.paper, args.timed, args.marked_by,
+                           args.baseline, k, n, args.band, criteria=crit)  # fmt: skip
                 out: Any = {
                     "id": add(conn, args.learner, r),
                     "next": when(conn, args.learner, args.on),

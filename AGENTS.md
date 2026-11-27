@@ -85,8 +85,8 @@ recommendation), `app/llm/` (the gateway), `app/jobs/` (the worker), `app/source
    - `dolater.md`: when the step adds work only the owner can do;
    - `README.md` (Vietnamese, public): when a skill's status changes.
 7. **Commit** with a message in English that says what changed and why. End it with the attribution lines your tool asks for.
-8. **Push and open a pull request only when the owner says so.** CI must be green (8 jobs, each on push and on the pull
-   request: 16 checks). Squash-merge with the expected head SHA, so nothing lands that CI did not see. Delete nothing on
+8. **Push and open a pull request only when the owner says so.** CI must be green (9 jobs, each on push and on the pull
+   request: 18 checks). Squash-merge with the expected head SHA, so nothing lands that CI did not see. Delete nothing on
    the way.
 
 ## Checks (all must pass before "done")
@@ -124,7 +124,7 @@ Two rules about how you work, not what the product does:
   report; the owner's judgement on correct English is learner feedback or Bronze.
 
 ## Database
-Migrations in `supabase/migrations/`, numbered in order (`0044` is the latest), **additive only**. Never edit a migration
+Migrations in `supabase/migrations/`, numbered in order (`0046` is the latest), **additive only**. Never edit a migration
 that has been merged. Tests make a throwaway migrated database per run (`apps/api/tests/conftest.py`); they never touch
 development data.
 

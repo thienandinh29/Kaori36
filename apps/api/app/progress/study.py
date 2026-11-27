@@ -18,6 +18,13 @@ INTERVAL_DAYS = 28
 Skill = Literal["listening", "reading", "writing", "speaking", "overall"]
 MarkedBy = Literal["answer_key", "trained_rater", "self"]
 SKILLS: tuple[str, ...] = ("listening", "reading", "writing", "speaking", "overall")
+# The rater's criteria per skill (step V4 addition, 27 Nov 2026): whole bands 0-9. TR stands for
+# Task Achievement on Writing Task 1. One weak criterion caps the skill's band, so the report names
+# the lowest; the skill's band itself is always the rater's, never computed here.
+CRITERIA: dict[str, tuple[str, ...]] = {
+    "writing": ("tr", "cc", "lr", "gra"),
+    "speaking": ("fc", "lr", "gra", "p"),
+}
 
 
 @dataclass(frozen=True)
@@ -32,6 +39,40 @@ class Result:
     raw_n: int | None = None
     band: float | None = None
     snapshot: Mapping[str, Any] = field(default_factory=dict)
+    criteria: Mapping[str, int] | None = None
+
+
+def parse_criteria(text: str) -> dict[str, int]:
+    """'fc=7,lr=7,gra=6,p=7' as a mapping; malformed text is refused."""
+    out: dict[str, int] = {}
+    for part in text.split(","):
+        key, sep, value = part.strip().partition("=")
+        if not sep or not key or not value.strip().isdigit():
+            raise ValueError(f"criteria look like fc=7,lr=7,gra=6,p=7, not {text!r}")
+        if key.strip().lower() in out:
+            raise ValueError(f"criterion {key.strip()!r} given twice")
+        out[key.strip().lower()] = int(value)
+    return out
+
+
+def check_criteria(skill: str, marked_by: str, criteria: Mapping[str, int]) -> dict[str, int]:
+    """All four of the skill's criteria as whole bands 0-9, from a rater or the learner."""
+    names = CRITERIA.get(skill)
+    if names is None:
+        raise ValueError("criterion bands are for writing or speaking only")
+    if marked_by not in ("trained_rater", "self"):
+        raise ValueError("criterion bands come from a rater (trained_rater) or yourself (self)")
+    if set(criteria) != set(names):
+        raise ValueError(f"{skill} criteria are exactly {', '.join(names)}")
+    if any(not 0 <= v <= 9 for v in criteria.values()):
+        raise ValueError("each criterion is a whole band from 0 to 9")
+    return {k: int(criteria[k]) for k in names}
+
+
+def lowest(criteria: Mapping[str, int]) -> list[str]:
+    """The weakest criteria (all of them on a tie)."""
+    low = min(criteria.values())
+    return [k for k, v in criteria.items() if v == low]
 
 
 def truth_of(marked_by: str) -> tuple[Literal["gold", "bronze"], bool]:
@@ -107,6 +148,16 @@ def report(results: Sequence[Result]) -> dict[str, Any]:
                 "basis": basis(truth, 1, 1, declared=declared),
                 "nodetrail_estimate": _estimate(r.snapshot),
             }
+            if r.criteria:
+                entry["criteria"] = dict(r.criteria)
+                entry["lowest"] = lowest(r.criteria)
+                before = next(
+                    (x.criteria for x in reversed(rows[: rows.index(r)]) if x.criteria), None
+                )
+                if before:
+                    entry["criteria_change"] = {
+                        k: v - before[k] for k, v in r.criteria.items() if k in before
+                    }
             if r is not base:
                 entry["change_from_baseline"] = _delta(_score(base), _score(r))
             if previous is not None:
@@ -130,7 +181,8 @@ def report(results: Sequence[Result]) -> dict[str, Any]:
         "note": (
             "N-of-1: one learner, few sittings. Changes are descriptive; practice with the same "
             "kind of paper, mood and test difficulty move scores too. A change in NodeTrail's "
-            "estimate is never evidence of progress on its own."
+            "estimate is never evidence of progress on its own. Criterion bands are the rater's; "
+            "NodeTrail never computes a band from them."
         ),
     }
 

@@ -182,7 +182,10 @@ def create_app(
     app.include_router(
         speaking_routes.create_router(
             SpeakingTests(
-                lambda: app.state.pool, settings.speaking_tests_dir, settings.draft_item_learners
+                lambda: app.state.pool,
+                settings.speaking_tests_dir,
+                settings.draft_item_learners,
+                transcripts=bool(settings.asr_url),
             )
         )
     )
