@@ -7,6 +7,9 @@ wins; fix this page.
 **Last updated:** 25 Nov 2026, `main` at `1d24d72` (Reading blind checks, 25 Nov batch, #144).
 
 ## Just finished
+- **Fix, Reading 4.3d key reader** (27 Nov): the owner's first real paste could not be read (separators without a space,
+  `Q1`/`Câu 1`, a "Questions 1–13" header); the page now shows why a paste is refused and keeps the text. The owner's
+  retry on a real Cambridge passage is still the only measure of the model's parse.
 - **Reading 4.3d part 1** (#142, 23 Nov): paste a Reading test taken outside the app on `/doc/bai-cua-ban`; the model lists the
   questions, code reads the official key and the learner's answers, the learner confirms, code marks, each wrong answer is
   explained with CP4b's trap list and labelled "chưa kiểm chứng". Owners only; one BKT observation per answered question, once

@@ -128,6 +128,11 @@ def test_only_owners_with_consent_and_a_readable_key(setup: Setup, database_url:
     with pytest.raises(HTTPException) as err:
         submit(svc, learner, key="TRUE FALSE")
     assert err.value.status_code == 422
+    # Answers typed but unreadable: refused, instead of every question marked blank.
+    with pytest.raises(HTTPException) as err:
+        submit(svc, learner, answers="TRUE FALSE")
+    assert err.value.status_code == 422 and "câu trả lời" in str(err.value.detail)
+    submit(svc, learner, key="Reading Passage 1, Questions 1-2\n1.TRUE\n2.NOT GIVEN")
 
 
 def test_paste_parse_confirm_mark_explain(setup: Setup) -> None:

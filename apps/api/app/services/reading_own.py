@@ -101,6 +101,10 @@ class OwnTests:
         entries = ot.numbered(key)
         if not entries:
             raise HTTPException(422, "Không đọc được đáp án. Dán theo dạng: 1 TRUE 2 NOT GIVEN 3 C")
+        if answers and not ot.numbered(answers):
+            raise HTTPException(
+                422, "Không đọc được câu trả lời của bạn. Dán theo dạng: 1 TRUE 2 NOT GIVEN 3 C"
+            )
         if len(entries) > ot.MAX_QUESTIONS:
             raise HTTPException(422, f"Mỗi lần tối đa {ot.MAX_QUESTIONS} câu (một bài đọc).")
         with self.pool().connection() as conn:

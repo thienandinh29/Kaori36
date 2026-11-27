@@ -115,3 +115,20 @@ describe("a pasted Reading test (step 4.3d)", () => {
     expect(trapName("made_up", t.traps, t.answerNames)).toBeNull();
   });
 });
+
+describe("a refused paste keeps the server's message", () => {
+  it("reads a 422's detail and ignores other statuses", async () => {
+    const { refusal } = await import("@/lib/english/client");
+    const msg = "Không đọc được đáp án. Dán theo dạng: 1 TRUE 2 NOT GIVEN 3 C";
+    const json = (status: number, body: unknown) =>
+      new Response(JSON.stringify(body), { status });
+    expect(await refusal(json(422, { detail: msg }))).toBe(msg);
+    expect(
+      await refusal(json(422, { detail: [{ msg: "x" }] })),
+    ).toBeUndefined();
+    expect(await refusal(json(500, { detail: msg }))).toBeUndefined();
+    expect(
+      await refusal(new Response("not json", { status: 422 })),
+    ).toBeUndefined();
+  });
+});

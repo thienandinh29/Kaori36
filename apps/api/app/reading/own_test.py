@@ -123,23 +123,39 @@ def fingerprint(passage: str, key: str) -> str:
 
 # --- Numbered answers: the key and the learner's own answers, read by code ---
 
-_ENTRY = re.compile(r"(?<![\w.,])(\d{1,2})\s*[.):]?\s+")
+# A number, then a separator: `1 TRUE`, `1. TRUE`, `1.TRUE`, `1) A`, `1:A`, `1 - TRUE`, or a lone
+# option letter glued to it (`1A`). A separator glued to a digit (`1.5`) is not one.
+_ENTRY = re.compile(
+    r"(?<![\w.,/])(\d{1,2})(?:\s*[.):,-]\s+|\s*[.):,-](?=[^\d\s])|\s+|(?=[A-J](?![A-Za-z])))"
+)
+# Headers printed above a key ("Reading Passage 1, Questions 1-13") and words before a number
+# ("Q1", "Question 1", "Câu 1"): removed before reading, so their numbers are not taken as answers.
+_HEADERS = (
+    re.compile(r"(?i)\bquestions?\s+\d{1,2}\s*(?:-|to|and)\s*\d{1,2}\b\s*[,.:]?"),
+    re.compile(r"(?i)\b(?:reading\s+)?(?:passage|section|part)\s+\d{1,2}\b\s*[,.:]?"),
+    re.compile(r"(?i)\b(?:q|question|câu|cau)\s*(?=\d)"),
+)
 
 
 def numbered(text: str) -> dict[int, str]:
     """`1 TRUE 2 NOT GIVEN 3 C 4 river` (or one per line) -> {1: 'TRUE', 2: 'NOT GIVEN', ...}.
 
-    The numbers must rise by one from the first, so a number inside an answer ("5 25 kilometres
-    6 TRUE") is read as part of it. A question with nothing after its number is left out.
+    The numbers must rise by one, so a number inside an answer ("5 25 kilometres 6 TRUE") is read
+    as part of it; of the rising runs, the longest is taken (a stray number before the list does
+    not hide it). A question with nothing after its number is left out.
     """
     text = clean(text)
+    for header in _HEADERS:
+        text = header.sub(" ", text)
     starts = [(m.start(), m.end(), int(m.group(1))) for m in _ENTRY.finditer(text + " ")]
     picked: list[tuple[int, int, int]] = []
-    for s, e, n in starts:
-        if not picked or n == picked[-1][2] + 1:
-            if picked and s < picked[-1][1]:
-                continue
-            picked.append((s, e, n))
+    for i in range(len(starts)):
+        run = [starts[i]]
+        for s, e, n in starts[i + 1 :]:
+            if n == run[-1][2] + 1 and s >= run[-1][1]:
+                run.append((s, e, n))
+        if len(run) > len(picked):
+            picked = run
     out: dict[int, str] = {}
     for i, (_, e, n) in enumerate(picked):
         end = picked[i + 1][0] if i + 1 < len(picked) else len(text)

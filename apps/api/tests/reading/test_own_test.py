@@ -50,6 +50,34 @@ class TestNumbered:
         assert ot.numbered("5 25 kilometres 6 TRUE") == {5: "25 kilometres", 6: "TRUE"}
         assert ot.numbered("1 1957 2 B") == {1: "1957", 2: "B"}
 
+    def test_separators_without_a_space(self) -> None:
+        # The owner's first real use (27 Nov): keys typed like these were not read at all.
+        want = {1: "TRUE", 2: "FALSE"}
+        for text in ("1.TRUE 2.FALSE", "1-TRUE 2-FALSE", "1 - TRUE\n2 \u2013 FALSE",
+                     "1,TRUE 2,FALSE", "1:TRUE 2:FALSE", "1)TRUE 2)FALSE"):  # fmt: skip
+            assert ot.numbered(text) == want, text
+        assert ot.numbered("1A 2B 3C") == {1: "A", 2: "B", 3: "C"}
+        assert ot.numbered("3 1.5 metres 4 TRUE") == {3: "1.5 metres", 4: "TRUE"}
+
+    def test_words_before_a_number(self) -> None:
+        for text in (
+            "Q1: TRUE\nQ2: FALSE",
+            "Question 1. TRUE\nQuestion 2. FALSE",
+            "Câu 1: TRUE\nCâu 2: FALSE",
+        ):
+            assert ot.numbered(text) == {1: "TRUE", 2: "FALSE"}, text
+
+    def test_a_header_does_not_hide_the_key(self) -> None:
+        # "Questions 1-13" used to start the run at 13, so every answer after it was lost.
+        for head in (
+            "Questions 1-13",
+            "Reading Passage 1, Questions 1\u201313",
+            "READING PASSAGE 1\nAnswers",
+        ):
+            assert ot.numbered(f"{head}\n1 TRUE\n2 NOT GIVEN\n3 C") == {
+                1: "TRUE", 2: "NOT GIVEN", 3: "C"}, head  # fmt: skip
+        assert ot.numbered("7 river 1 TRUE 2 FALSE 3 C") == {1: "TRUE", 2: "FALSE", 3: "C"}
+
     def test_a_blank_answer_is_left_out(self) -> None:
         assert ot.numbered("1 TRUE 2 3 C") == {1: "TRUE", 3: "C"}
         assert ot.numbered("1 TRUE\n2\n3 C") == {1: "TRUE", 3: "C"}

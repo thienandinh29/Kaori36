@@ -6,6 +6,13 @@ that becomes a product rule moves into `SPEC.md` (Contract); one about how we wo
 pointer here.
 
 ## Data and pipelines
+- **Test a parser on real pastes, not only our own format (27 Nov 2026).** The 4.3d key reader was tested only on the format
+  we wrote (`1 TRUE 2 C`). On the owner's first real use it read nothing: `1.TRUE`, `1-TRUE`, `Q1:` and `Câu 1:` failed, and a
+  header such as "Reading Passage 1, Questions 1–13" started the run at 13, so every answer after it was lost; answers that
+  could not be read were taken as all blank. Now headers and prefixes are removed, more separators are read, the longest
+  rising run wins, and unreadable answers are refused with a message. **Rule:** a parser of learner pastes is tested on the
+  forms real sources print (book keys, typed lists) before it ships, and "read nothing" is an error, never an empty result.
+  (`specs/listening-reading/step-4.3d.md`, "Fix")
 - **A failed model call is not a judgement (22 Nov 2026).** When the free checker gave no usable reply (quota, provider error,
   unreadable output), new Reading questions were marked `needs_review` with no checker answer, so the owner's queue showed
   never-judged questions as if the checker doubted them (8 by 22 Nov). Now an unusable reply changes nothing: the question stays

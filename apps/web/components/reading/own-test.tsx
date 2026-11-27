@@ -20,7 +20,7 @@ import {
   type OwnTestSummary,
 } from "@/lib/reading/own";
 import { vi } from "@/messages/vi";
-import { Problem } from "@/components/english/problem";
+import { Problem, problemText } from "@/components/english/problem";
 import { useLearner } from "@/components/english/use-learner";
 
 const t = vi.english.readingOwn;
@@ -219,10 +219,13 @@ function PasteForm({
   const [askConsent] = useState(() => !consentGiven());
   const [consent, setConsent] = useState(() => consentGiven());
   const [busy, setBusy] = useState(false);
+  // A refused paste is shown here, so the pasted text stays and can be fixed and sent again.
+  const [refused, setRefused] = useState<string | null>(null);
   const ready =
     passage.trim() && questions.trim() && key.trim() && consent && !busy;
   const send = async () => {
     setBusy(true);
+    setRefused(null);
     try {
       const id = await englishClient().submitOwnTest(learner, {
         passage,
@@ -234,7 +237,11 @@ function PasteForm({
       rememberConsent();
       onSent(id);
     } catch (e) {
-      onError(e);
+      if (e instanceof DataError && e.status === 403) onError(e);
+      else
+        setRefused(
+          e instanceof DataError && e.detail ? e.detail : problemText(e),
+        );
     } finally {
       setBusy(false);
     }
@@ -305,6 +312,11 @@ function PasteForm({
             {t.consentAccept}
           </label>
         </div>
+      )}
+      {refused && (
+        <p className="en-problem" role="alert">
+          {refused}
+        </p>
       )}
       <button
         type="button"

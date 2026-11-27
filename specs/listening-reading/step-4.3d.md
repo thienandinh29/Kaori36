@@ -86,3 +86,11 @@ Measured: unit and API tests with a scripted model (parse, marks, traps, a dropp
 budget and no-model failures). **Not measured:** how often the real model reads a real Cambridge paste correctly, or how many
 explanations pass code's checks; the owner's first real tests give that (Bronze). No blind check of explanations yet.
 
+## Fix (27 Nov 2026): reading the key and the learner's answers
+The owner's first real use found that the numbered-list reader missed common forms: no space after the separator (`1.TRUE`,
+`1-TRUE`, `1)A`, `1:A`, `1A`), a dash separator kept in the answer (`1 - TRUE`), words before the number (`Q1`, `Question 1`,
+`Câu 1`), and a header ("Reading Passage 1, Questions 1–13") that made the run start at 13 and lose the whole key. Now headers and
+those words are removed first, these separators are read (a separator glued to a digit, as in `1.5`, is not one), and the longest
+rising run of numbers is taken. Answers that are typed but cannot be read are refused with a message instead of being marked as
+all blank. A test pasted before the fix may get a different fingerprint, so re-pasting it could give its evidence once more; only
+the owner's few trial pastes are affected.

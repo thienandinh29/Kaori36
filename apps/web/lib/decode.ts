@@ -21,6 +21,8 @@ export class DataError extends Error {
       | "failed"
       | "upload",
     public status?: number,
+    /** The server's own message for a refused request (FastAPI's `detail`), when it sent one. */
+    public detail?: string,
   ) {
     super(code);
   }

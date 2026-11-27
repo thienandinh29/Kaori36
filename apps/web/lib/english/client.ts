@@ -139,6 +139,23 @@ export const COURSE = "english-ielts";
 
 type Fetch = typeof fetch;
 
+/** A 422's message, written by the API for the learner (e.g. "Không đọc được đáp án…"); else none. */
+export async function refusal(response: Response): Promise<string | undefined> {
+  if (response.status !== 422) return undefined;
+  try {
+    const body: unknown = await response.json();
+    const detail =
+      body && typeof body === "object"
+        ? (body as { detail?: unknown }).detail
+        : null;
+    return typeof detail === "string" && detail.length <= 300
+      ? detail
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
   async function request(
     path: string,
@@ -158,6 +175,7 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       throw new DataError(
         response.status === 503 ? "configuration" : "failed",
         response.status,
+        await refusal(response),
       );
     if (response.status === 204) return null;
     try {
