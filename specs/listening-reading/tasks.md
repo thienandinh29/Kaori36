@@ -22,6 +22,10 @@ word list.
 - [x] 4.3 Reading practice, competency evidence (`step-4.3.md`, built 19 Nov; serves nothing until CP1 texts and Silver questions exist)
 - [x] 4.3d part 1 (CP4b first, 23 Nov): a test taken outside the app, pasted, read back, confirmed, marked from the official
       key, wrong answers explained with the trap list (`step-4.3d.md`); part 2 (vocabulary cards, summary across tests) next
+- [ ] 4.3d part 2 also: position and pacing (passage 1–3, "đoán"/"không kịp" marks, the pacing line; `step-4.3d.md`)
+- [ ] 4.3e skill tags and time per question, four PRs (`step-4.3e.md`): (1) tags in CP4b's generation call, the blind pick, tags
+      for pasted tests; (2) per-skill lines in the summaries; (3) time and answer changes in the timed test (`0041`); (4) the
+      teacher's 50 labels on the portal
 - [ ] 4.3d (CP4b) why the wrong answer tempted you, three PRs (`spec.md`): (1) migration, generation, code checks, planted test,
       run; (2) learner pages and the flag; (3) "Theo dạng câu hỏi" and the Hôm nay link
 - [ ] CP4c exam details (timer warnings, highlighting, side by side, one-play Listening), when the owner chooses

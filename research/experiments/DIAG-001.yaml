@@ -1,0 +1,35 @@
+experiment_id: DIAG-001
+title: Can a cognitive diagnosis model tell Reading sub-skills apart?
+track: ml-engineering
+status: planned
+start_after: KT-001 (they share the public-dataset work); not before the owner's exam if it takes study time
+hypothesis: >
+  On a public reading test with an expert Q-matrix, a model with separate skills (DINA, G-DINA, NeuralCDM) predicts
+  held-out answers better than a one-skill model (a 2PL IRT model) beyond the bootstrap interval, and its skill
+  estimates are distinct enough (skill-to-skill correlation below 0.9) to report per skill.
+counts_against: >
+  The one-skill model does as well as the CDMs on log loss and AUC; or the skill estimates correlate above 0.9, so a
+  per-skill report adds nothing over an overall score. Either is a result: it would say NodeTrail's per-skill lines
+  should stay descriptive counts.
+data:
+  public: a reading-test response dataset with a published Q-matrix (candidates to find; licence read on its own
+    page before use)
+  learner: none until phase 5's testers. With one learner the item parameters of a CDM cannot be estimated
+  q_matrix: the dataset's own, plus a check of NodeTrail's six tags (specs/listening-reading/step-4.3e.md) only once a
+    teacher has labelled a sample
+split: examinees held out (5-fold); within an examinee, a random 20% of items held out for prediction
+models:
+  - irt_2pl: one ability per examinee (the one-skill baseline)
+  - dina: conjunctive skills
+  - gdina: saturated, with the Q-matrix validated (the GDINA package's Q-matrix validation, or the same method in Python)
+  - neuralcdm: EduCDM's NeuralCDM (Wang et al., AAAI 2020)
+metrics: [log_loss, auc_roc, brier, skill_correlation, classification_consistency]
+uncertainty: bootstrap over examinees, 1,000 resamples
+label_tier: Gold for the dataset's answer keys; the Q-matrix is the dataset authors' (expert), named as such
+not_claimed: anything about the owner's skills; this is a method comparison on public data
+owner_part: the whole analysis (model fitting, Q-matrix validation, the report); the agent builds the data loaders
+citations_to_check:
+  - Jang (2009), Fusion Model on LanguEdge reading
+  - Ravand (2016), G-DINA on an Iranian university entrance reading test
+  - Buck and Tatsuoka (1998) is likely a listening study; the TOEIC reading study may be Buck, Tatsuoka and Kostin (1997)
+  - Wang et al. (2020), NeuralCDM
