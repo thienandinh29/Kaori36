@@ -4,7 +4,7 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `f3165ce` (#151) merged into `claude/lucid-goldberg-9997no` (PR #154).
+**Last updated:** 27 Nov 2026, `main` at `cca973b` (#154 merged), plus T6 and Speaking 5.1 on `feat/speaking-transcripts`.
 
 ## Just finished
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
@@ -32,25 +32,23 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
-## Just built (this branch, not yet merged)
+## Just finished, merged in #154
 - **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
   recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
   test at real speed is not done.
+
+## Built, not yet merged (`feat/speaking-transcripts`)
 - **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
-  Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool): built after #154 was
-  opened, so on the branch after it.
+  Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
 
 ## In progress
-Nothing in code. On `claude/lucid-goldberg-9997no`, waiting for review (docs only): the Speaking band rule change; the owner's
-scoring research adopted as A (criterion bands from the rater, `step-v4.md` T6), B (pauses between and inside clauses, 5.2)
-and C (SPK-001 comparisons and inputs); and the examiner test's step page `specs/speaking/step-5.4a.md` (owner's go).
-Also: Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), in
-pull request #153; waits on the owner's go-ahead to build (two PRs, no model calls). The Reading diagnosis docs wait for
-review on `claude/compassionate-newton-d4dkru`.
+Nothing in code. Writing step 2.12 is specified (#153) and waits on the owner's go-ahead to build. The Reading diagnosis docs
+wait for review on `claude/compassionate-newton-d4dkru`.
 
 ## Next (build)
-1. The owner edits the five draft tests and takes two full tests on `/noi/thi`; record rated mocks with `--criteria`.
-2. 5.1 is built (Whisper small.en, `asr/`); the owner's 20 typed references give its word error rate. Next build: 5.2.
+1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
+   recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
+2. Next build: 5.2, fluency measures from the word timings (pauses from the raw audio, between and inside clauses).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
