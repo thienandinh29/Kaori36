@@ -190,7 +190,13 @@ function parseVocabItem(value: unknown): VocabItem {
   };
 }
 
-const WORD_ORIGINS: readonly WordOrigin[] = ["authored", "ngsl", "nawl"];
+const WORD_ORIGINS: readonly WordOrigin[] = [
+  "authored",
+  "ngsl",
+  "nawl",
+  "tsl",
+  "bsl",
+];
 
 function wordOrigin(value: unknown): WordOrigin {
   const origin = string(value);

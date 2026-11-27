@@ -15,7 +15,16 @@ from app.config import REPO_ROOT
 
 MAP_PATH = REPO_ROOT / "data" / "maps" / "ielts-competencies.yaml"
 Skill = Literal["reading", "listening", "writing", "speaking"]
-VOCAB_BANDS = ("vocab-a1", "vocab-a2", "vocab-b1", "vocab-b2", "vocab-c1", "vocab-nawl")
+VOCAB_BANDS = (
+    "vocab-a1",
+    "vocab-a2",
+    "vocab-b1",
+    "vocab-b2",
+    "vocab-c1",
+    "vocab-nawl",
+    "vocab-tsl",
+    "vocab-bsl",
+)
 
 
 class _M(BaseModel):

@@ -15,3 +15,12 @@
 - [x] W2 Run on the owner's laptop (26 Nov); the numbers are in the step page
 - [x] W3a Owner: Wiktionary's licence read (26 Nov): CC BY-SA 4.0 (dual with GFDL)
 - [ ] W3b Owner: decide whether an enrichment step follows
+
+## TSL and BSL (`step-tsl-bsl.md`, owner's request and decisions 27 Nov 2026)
+- [x] X1 Licences read on each list's page (CC BY-SA 4.0); `english-candidates.yaml`, `data-sa/LICENSE.md`
+- [x] X2 `headwords.read_extra`: TSL then BSL, levels from the 31K SFI with NGSL cut-offs, prefixes dropped; tests
+- [x] X3 `importer extra`: model definitions where the list has none, blind check (`definition_check.py`,
+      `vocab_check` route), additive write that never touches NGSL/NAWL entries, own report; tests with fakes
+- [x] X4 Own bands `vocab-tsl`, `vocab-bsl` (no competency links); web source labels per list
+- [x] X5 Run the import with the US$1.00 cap; commit the list, report and source hashes
+- [ ] X6 Owner: decide whether TSL/BSL words go into the 50-entry check or a sample of their own

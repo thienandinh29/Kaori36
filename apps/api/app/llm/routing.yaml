@@ -32,6 +32,9 @@ tiers:
       - {provider: openrouter, model: 'dots-studio/dots-3-note-preview:free', family: dots}
     # Reading questions, checked blind from the passage only (step 4.2b); same free models, same reason.
     reading_check: *lesson_check
+    # Model-written word definitions, checked blind (specs/vocabulary-import/step-tsl-bsl.md): public
+    # list headwords only, never a learner's data.
+    vocab_check: *lesson_check
   pro:
     graph: &graph
       - {provider: deepseek, model: '${DEEPSEEK_PRO_MODEL}', family: deepseek}
@@ -40,6 +43,7 @@ tiers:
     verify: *verify
     lesson_check: *lesson_check
     reading_check: *lesson_check
+    vocab_check: *lesson_check
     reading_items: *graph
     tutor: &pro
       - {provider: deepseek, model: '${DEEPSEEK_PRO_MODEL}', family: deepseek}

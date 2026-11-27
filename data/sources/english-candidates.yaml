@@ -30,6 +30,32 @@ candidates:
     # Read by the owner on the list's own page: "NAWL 1.2 by Browne, C., Culligan, B., and Phillips, J. is licensed
     # under a Creative Commons Attribution-ShareAlike 4.0 International License". The site also offers the list
     # with definitions in easy English (same page). Official site: .com only (the .org domain is not theirs).
+  - slug: tsl
+    name: TOEIC Service List (TSL)
+    url: https://www.newgeneralservicelist.com/toeic-service-list
+    use: everyday service and office English (about 1,250 words); about 1,020 not already in NGSL/NAWL
+    believed_licence: CC BY-SA 4.0
+    status: verified
+    licence: CC BY-SA 4.0
+    checked_on: 2026-11-27
+    checked_by: agent
+    licence_page: https://www.newgeneralservicelist.com/toeic-service-list
+    # Read by the agent at the owner's request on the list's own page: "TOEIC Service List by Browne, C. and Culligan, B.,
+    # is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License". Version 1.2, with easy-English
+    # definitions (TSL_12_definitions.xlsx). Imported by specs/vocabulary-import/step-tsl-bsl.md.
+  - slug: bsl
+    name: Business Service List (BSL)
+    url: https://www.newgeneralservicelist.com/business-service-list
+    use: general business English (about 1,750 words); about 1,240 not already in NGSL/NAWL
+    believed_licence: CC BY-SA 4.0
+    status: verified
+    licence: CC BY-SA 4.0
+    checked_on: 2026-11-27
+    checked_by: agent
+    licence_page: https://www.newgeneralservicelist.com/business-service-list
+    # Read by the agent at the owner's request on the list's own page: "Business Service List by Browne, C. and Culligan,
+    # B., is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License". Version 1.20; no
+    # definitions file: the model writes them, blind-checked (specs/vocabulary-import/step-tsl-bsl.md).
   - slug: wiktionary
     name: English Wiktionary
     url: https://en.wiktionary.org/

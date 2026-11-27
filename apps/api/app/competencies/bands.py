@@ -27,7 +27,8 @@ class Band:
 
 def band_of(level: str, origin: str) -> str:
     """The band node a word belongs to: NAWL words form their own academic band."""
-    return "vocab-nawl" if origin == "nawl" else f"vocab-{level.lower()}"
+    # The NAWL, TSL and BSL have their own bands (step-tsl-bsl.md), so they never dilute B2 and C1.
+    return f"vocab-{origin}" if origin in ("nawl", "tsl", "bsl") else f"vocab-{level.lower()}"
 
 
 def bands(words: Iterable[tuple[str, str, str]], stability: Mapping[str, float]) -> dict[str, Band]:

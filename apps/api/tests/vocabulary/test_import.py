@@ -207,7 +207,9 @@ class FakeModel(imp.Model):
     def __init__(self, cache: Path) -> None:
         self.cache, self.usage, self.calls = cache, imp.Usage(), 0
 
-    def entries(self, batch: Sequence[hw.Headword], topics: Sequence[str]) -> list[EntryOut]:
+    def entries(
+        self, batch: Sequence[hw.Headword], topics: Sequence[str], system: str = imp.SYSTEM
+    ) -> list[EntryOut]:
         self.calls += 1
         out = []
         for h in batch:
@@ -247,6 +249,25 @@ def test_a_run_writes_a_loadable_list_and_an_honest_report(files: Path, tmp_path
     assert saved["dropped"]["already in the authored list"] == 1
     assert saved["dropped"]["function word (not practised)"] == 1
     assert saved["ipa_agreed"] == 6 and saved["ipa_compared"] == 6
+
+
+def test_an_ngsl_rerun_keeps_the_tsl_and_bsl_words(files: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    model = FakeModel(tmp_path / "cache")
+    imp.run(files, out, model, lambda ws: {}, AUTHORED)
+    listed = load_wordlist(out / "core-seed.yaml")
+    refund = listed.words[0].model_copy(
+        update={"lemma": "refund", "origin": "tsl", "definition": "money given back to you"}
+    )
+    refund = refund.model_copy(
+        update={"examples": (refund.examples[0].model_copy(
+            update={"text": "They asked for a refund last week.", "answer": "refund"}),)}
+    )  # fmt: skip
+    imp.write_list(out, [*listed.words, refund], AUTHORED)
+    imp.run(files, out, FakeModel(tmp_path / "cache"), lambda ws: {}, AUTHORED)
+    again = load_wordlist(out / "core-seed.yaml")
+    assert "refund" in {w.lemma for w in again.words}
+    assert json.loads((out / "import-report.json").read_text())["kept"] == 6  # NGSL/NAWL only
 
 
 def test_the_learner_sees_one_list_and_authored_entries_win(tmp_path: Path) -> None:
@@ -339,11 +360,18 @@ def test_the_committed_import_loads_merges_and_matches_its_report() -> None:
     folder = ROOT / "data-sa" / "vocabulary"
     imported = load_wordlist(folder / "core-seed.yaml")
     report = json.loads((folder / "import-report.json").read_text(encoding="utf-8"))
-    assert len(imported.words) == report["kept"] and imported.status == "draft"
-    assert all(w.origin in ("ngsl", "nawl") for w in imported.words)
-    assert sum(w.ipa is not None for w in imported.words) == report["ipa_agreed"]
+    base = [w for w in imported.words if w.origin in ("ngsl", "nawl")]
+    extra = [w for w in imported.words if w.origin in imp.EXTRA]
+    assert len(base) == report["kept"] and imported.status == "draft"
+    assert len(base) + len(extra) == len(imported.words)
+    assert sum(w.ipa is not None for w in base) == report["ipa_agreed"]
     assert "CC BY-SA 4.0" in (folder / "core-seed.yaml").read_text(encoding="utf-8")[:600]
-    assert set(json.loads((folder / "sources.json").read_text())) == set(hw.FILES.values())
+    pinned = set(json.loads((folder / "sources.json").read_text()))
+    assert set(hw.FILES.values()) <= pinned <= set(hw.FILES.values()) | set(hw.EXTRA_FILES.values())
+    if extra:  # TSL and BSL added (step-tsl-bsl.md): the list matches its own report
+        extra_report = json.loads((folder / imp.EXTRA_REPORT).read_text(encoding="utf-8"))
+        assert len(extra) == extra_report["kept"]
+        assert sum(w.ipa is not None for w in extra) == extra_report["ipa_agreed"]
     merged = load_wordlist(ROOT / "data" / "vocabulary" / "core-seed.yaml", folder)
     assert len(merged.words) == len(AUTHORED.words) + len(imported.words)  # no lemma twice
     assert merged.words[: len(AUTHORED.words)] == AUTHORED.words
