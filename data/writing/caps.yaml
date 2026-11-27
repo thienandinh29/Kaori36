@@ -1,0 +1,69 @@
+# Descriptor caps for Task 2 (specs/writing/step-2.12.md, 2.12a): "if this finding holds, this criterion's band is
+# at most `cap`". Each rule quotes, word for word, the lines of the public band descriptors it rests on. The descriptors
+# themselves say: "A script must fully fit the positive features of the descriptor at a particular level. Bolded text
+# indicates negative features that will limit a rating." Which lines are bold was not checked (the text was read with
+# pdftotext, which drops the font); the reading of each line as a ceiling is the agent's, so every rule is `proposed`.
+#
+# `source`: who finds it. `code` findings are counted by code from the essay itself; `model` findings are 2.11b's
+# structure descriptions (checked by code, precision not measured). `applied`: whether the cap may change a band.
+# SPEC.md says a band never comes from an LLM, so a `model` rule is never applied: it is shown as a note only
+# ("có thể bị giới hạn"). A code rule is applied only after the evaluation shows it does not raise MAE on the essays
+# where it fires (2.12a, "A cap is kept only if it helps"); until then `applied` stays false for every rule.
+source:
+  title: "Writing Task 2 Band Descriptors (updated May 2023)"
+  url: https://ielts.org/cdn/ielts-guides/ielts-writing-band-descriptors.pdf
+  sha256: e3c88943ef92d98988ce4db454fd7fa8d8435f0b25e9ec667e3720a5c1168d1b
+  read: 2026-11-27
+  scoring:  # how a task's band is formed, from https://ielts.org/take-a-test/your-results/ielts-scoring-in-detail
+    quote: "The criteria are weighted equally and the score on the task is the average."
+    note: "How the average of one task is rounded is not stated on that page; the rounding it gives is for the overall test score."
+
+rules:
+  - id: no_paragraphing
+    criterion: cc
+    cap: 5
+    source: code
+    applied: false
+    status: proposed
+    finding: "The essay is one block of text: no blank line between paragraphs."
+    descriptor:
+      - "Band 5: Paragraphing may be inadequate or missing."
+      - "Band 6: Paragraphing may not always be logical and/or the central topic may not always be clear."
+    reading: "Band 6 describes paragraphing that is present but not always logical; missing paragraphing first appears at band 5."
+
+  - id: part_missing
+    criterion: tr
+    cap: 5
+    source: model
+    applied: false
+    status: proposed
+    finding: "A part of the question is not answered by any body paragraph (2.11b, part_missing)."
+    descriptor:
+      - "Band 6: The main parts of the prompt are addressed (though some may be more fully covered than others)."
+      - "Band 5: The main parts of the prompt are incompletely addressed."
+    reading: "A main part left out is 'incompletely addressed', which band 6 rules out."
+
+  - id: position_missing
+    criterion: tr
+    cap: 4
+    source: model
+    applied: false
+    status: proposed
+    finding: "Neither the introduction nor the conclusion states a position (2.11b, position_missing)."
+    descriptor:
+      - "Band 5: The writer expresses a position, but the development is not always clear."
+      - "Band 4: A position is discernible, but the reader has to read carefully to find it."
+      - "Band 3: No relevant position can be identified, and/or there is little direct response to the question/s."
+    reading: "A position found only in the body is at best 'discernible'; if there is none at all, band 3 applies, which this rule does not claim."
+
+  - id: position_changed
+    criterion: tr
+    cap: 6
+    source: model
+    applied: false
+    status: proposed
+    finding: "The conclusion takes the other side from the introduction (2.11b, position_changed)."
+    descriptor:
+      - "Band 7: A clear and developed position is presented."
+      - "Band 6: A position is presented that is directly relevant to the prompt, although the conclusions drawn may be unclear, unjustified or repetitive."
+    reading: "A position that flips is not 'clear'; band 6 allows unclear conclusions."

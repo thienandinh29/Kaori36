@@ -42,8 +42,10 @@ wins; fix this page.
   Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
 
 ## In progress
-Nothing in code. Writing step 2.12 is specified (#153) and waits on the owner's go-ahead to build. The Reading diagnosis docs
-wait for review on `claude/compassionate-newton-d4dkru`.
+Writing step 2.12 part 1 (descriptor caps and features, `specs/writing/step-2.12.md`, "Build note, part 1") in pull
+request #158; nothing wired into the app. Part 2 (the evaluation and the served path) follows once it is merged; the
+measurement waits on the owner's examiner-banded essays. The Reading diagnosis docs wait for review on
+`claude/compassionate-newton-d4dkru`.
 
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
