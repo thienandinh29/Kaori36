@@ -897,6 +897,20 @@ export const vi = {
       } as Record<string, string>,
       markHint:
         'Câu đánh dấu "Không kịp làm" không được tính vào kỹ năng Đọc, như câu bỏ trống. Câu "Đoán" vẫn được tính, như trong phòng thi.',
+      wordsTitle: "Từ vựng trong bài",
+      wordsIntro: (level: string, fromTest: boolean) =>
+        `Các từ trên mức ${level}${fromTest ? " (theo bài kiểm tra trình độ của bạn)" : " (mặc định, vì bạn chưa làm bài kiểm tra trình độ)"}, và các từ khó trong câu quyết định đáp án của câu bạn làm sai. Từ bạn chọn thành thẻ ôn tập điền từ vào đúng câu trong bài.`,
+      wordsNone: "Không có từ nào trên mức này trong bài.",
+      wordsDeciding: "câu quyết định đáp án",
+      wordsOutside: "ngoài danh sách từ",
+      wordsSaved: "đã lưu",
+      wordsDraft:
+        "Nghĩa và mức từ lấy từ danh sách từ của NodeTrail, còn là bản nháp (chưa được giáo viên kiểm tra). Từ ngoài danh sách không có nghĩa.",
+      wordsKeep: (n: number) => `Lưu ${n} từ thành thẻ ôn tập`,
+      wordsKeeping: "Đang lưu…",
+      wordsKept: (added: number, already: number) =>
+        `Đã lưu ${added} thẻ mới${already ? `, ${already} từ đã có sẵn` : ""}. Ôn ở mục Cụm từ đã lưu trên trang Từ vựng.`,
+      wordsReview: "Ôn ở trang Từ vựng",
       summaryTitle: "Tổng hợp các bài bạn tự làm",
       summaryEmpty: "Chưa có bài nào được chấm.",
       summaryTests: (tests: number, answers: number) =>

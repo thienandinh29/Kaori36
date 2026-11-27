@@ -108,7 +108,10 @@ import {
   parseOwnTest,
   parseOwnTests,
   parseOwnSummary,
+  parseKept,
+  parsePassageWords,
   type OwnSummary,
+  type PassageWords,
   type OwnQuestion,
   type OwnTest,
   type OwnTestSummary,
@@ -512,6 +515,24 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
           learner_id: learnerId,
           questions: confirmBody(questions),
           position,
+        }),
+      );
+    },
+    async ownTestWords(learnerId: string, id: string): Promise<PassageWords> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePassageWords(
+        await request(`reading/own-tests/${encodeURIComponent(id)}/words?${q}`),
+      );
+    },
+    async keepOwnTestWords(
+      learnerId: string,
+      id: string,
+      forms: string[],
+    ): Promise<{ added: number; already: number }> {
+      return parseKept(
+        await post(`reading/own-tests/${encodeURIComponent(id)}/words`, {
+          learner_id: learnerId,
+          forms,
         }),
       );
     },
