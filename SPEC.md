@@ -85,7 +85,8 @@ the trace.
   Bronze and never overwritten by an import.
 
 **Evidence and mastery**
-- One BKT observation per answer; a blank gives no evidence; aided answers (after a hint) count less than unaided ones;
+- One BKT observation per answer; a blank, or a pasted Reading answer the learner marks "không kịp" (ran out of time), gives
+  no evidence; a Reading question moves one competency, whatever its skill tags; aided answers (after a hint) count less than unaided ones;
   delayed re-checks and said-word scores never change mastery.
 - Writing evidence moves a node only through the error map (`data/writing/error-map.yaml`); unmapped errors are shown but
   move nothing. AI corrections are labelled "gợi ý từ AI" and are never evidence.
