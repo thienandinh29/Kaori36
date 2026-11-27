@@ -325,3 +325,59 @@ def test_summary_and_marks_through_the_routes(setup: Setup) -> None:
     assert ok.status_code == 200 and ok.json()["result"]["position"] == 2
     got = client.get("/reading/own-tests/summary", params={"learner_id": learner}).json()
     assert got["tests"] == 1 and got["answers"] == 5
+
+
+def test_words_from_the_passage_become_saved_phrase_cards(setup: Setup) -> None:
+    """Part 2, "Vocabulary": offered above B1 (no level test), kept as gap-fill cards."""
+    from app.services.rewrites import PhraseService
+
+    svc, learner, db = setup
+    tid, view = parsed(svc, learner, db, FakeModel())
+    with pytest.raises(HTTPException) as err:
+        svc.words(learner, tid)
+    assert err.value.status_code == 409  # not marked yet
+    svc.confirm(learner, tid, confirmable(view))
+    drain(db, model(db, FakeModel()))  # explanations: question 2's deciding sentence is quoted
+    offer = svc.words(learner, tid)
+    assert (offer["level"], offer["level_source"]) == ("B1", "default")
+    by = {w["headword"]: w for w in offer["words"]}
+    # Questions 2 and 4 quote their deciding sentences: their words come first, by level.
+    order = [w["headword"] for w in offer["words"]]
+    assert order[:4] == ["species", "seal", "cleanup", "estuary"]  # listed, then outside the lists
+    assert all(by[h]["deciding"] for h in order[:4]) and not by["heavily"]["deciding"]
+    assert by["species"]["level"] == "B2" and by["species"]["sentence"].startswith("Today more")
+    assert by["seal"]["form"] == "seals" and not by["seal"]["saved"]
+    assert "thames" not in by and "london" not in by  # names
+    with pytest.raises(HTTPException) as err:
+        svc.keep_words(learner, tid, ["species", "london"])
+    assert err.value.status_code == 422  # only words the server offers
+    assert svc.keep_words(learner, tid, ["species", "seals"]) == {"added": 2, "already": 0}
+    assert svc.keep_words(learner, tid, ["Species"]) == {"added": 0, "already": 1}
+    saved = {w["form"] for w in svc.words(learner, tid)["words"] if w["saved"]}
+    assert saved == {"species", "seals"}
+    cards = PhraseService(svc.pool).session(learner, now=NOW)
+    prompts = {e["phrase"]: e["prompt"] for e in cards["entries"]}
+    assert cards["saved"] == 2
+    assert prompts["seals"].endswith("and _____ are often seen near the estuary.")
+    svc.delete(learner, tid)  # the learner's cards stay; the link to the test is cleared
+    with psycopg.connect(db) as conn:
+        kept = conn.execute(
+            "select count(*), count(own_test_id) from learner_phrases where learner_id=%s",
+            (learner,),
+        ).fetchone()
+    assert kept == (2, 0)
+
+
+def test_words_routes(setup: Setup) -> None:
+    svc, learner, db = setup
+    app = FastAPI()
+    app.include_router(routes.create_router(svc))
+    client = TestClient(app)
+    tid, view = parsed(svc, learner, db, FakeModel())
+    svc.confirm(learner, tid, confirmable(view))
+    got = client.get(f"/reading/own-tests/{tid}/words", params={"learner_id": learner})
+    assert got.status_code == 200 and got.json()["words"]
+    url = f"/reading/own-tests/{tid}/words"
+    assert client.post(url, json={"learner_id": learner, "forms": []}).status_code == 422
+    kept = client.post(url, json={"learner_id": learner, "forms": ["species"]})
+    assert kept.status_code == 200 and kept.json() == {"added": 1, "already": 0}

@@ -138,7 +138,12 @@ def create_app(
 
     app.include_router(
         reading_own_routes.create_router(
-            OwnTests(lambda: app.state.pool, settings.draft_item_learners)
+            OwnTests(
+                lambda: app.state.pool,
+                settings.draft_item_learners,
+                vocab_dir=settings.vocab_dir,
+                vocab_imported_dir=settings.vocab_imported_dir,
+            )
         )
     )
     from app.api import listening_practice as listening_routes

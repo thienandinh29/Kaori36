@@ -354,3 +354,55 @@ export function shareText(s: Share): string {
   if (s.low === null || s.high === null) return base;
   return `${base} (${Math.round(s.low * 100)}–${Math.round(s.high * 100)}%)`;
 }
+
+// --- Words from the passage (part 2, "Vocabulary") ---
+
+export interface PassageWord {
+  headword: string;
+  form: string; // as written in the sentence: the card's answer
+  level: string | null; // null: not in NGSL/NAWL
+  sentence: string;
+  deciding: boolean; // in a sentence that decided a wrong answer
+  definition: string | null;
+  vi: string | null;
+  saved: boolean;
+}
+export interface PassageWords {
+  level: string;
+  levelSource: "level_test" | "default";
+  words: PassageWord[];
+}
+
+export function parsePassageWords(value: unknown): PassageWords {
+  const r = record(value);
+  if (r.level_source !== "level_test" && r.level_source !== "default")
+    throw new DataError("contract");
+  return {
+    level: string(r.level),
+    levelSource: r.level_source,
+    words: list(r.words).map((v) => {
+      const w = record(v);
+      return {
+        headword: string(w.headword),
+        form: string(w.form),
+        level: optString(w.level),
+        sentence: string(w.sentence),
+        deciding: bool(w.deciding),
+        definition: optString(w.definition),
+        vi: optString(w.vi),
+        saved: bool(w.saved),
+      };
+    }),
+  };
+}
+
+/** The words the learner may still keep (not saved yet), deciding-sentence words ticked first. */
+export function defaultPicks(words: PassageWord[]): string[] {
+  return words.filter((w) => w.deciding && !w.saved).map((w) => w.form);
+}
+
+/** What keeping words did: new cards, and words that were already saved. */
+export function parseKept(value: unknown): { added: number; already: number } {
+  const r = record(value);
+  return { added: int(r.added), already: int(r.already) };
+}
