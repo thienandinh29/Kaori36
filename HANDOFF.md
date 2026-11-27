@@ -36,6 +36,8 @@ wins; fix this page.
 - **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
   recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
   test at real speed is not done.
+- **Progress study T6** (criterion bands from the rater; migration `0044`): built after #154 was opened, so on the
+  branch after it.
 
 ## In progress
 Nothing in code. On `claude/lucid-goldberg-9997no`, waiting for review (docs only): the Speaking band rule change; the owner's
@@ -46,7 +48,7 @@ pull request #153; waits on the owner's go-ahead to build (two PRs, no model cal
 review on `claude/compassionate-newton-d4dkru`.
 
 ## Next (build)
-1. `step-v4.md` T6 (criterion bands); the owner edits the five draft tests and takes two full tests on `/noi/thi`.
+1. The owner edits the five draft tests and takes two full tests on `/noi/thi`; record rated mocks with `--criteria`.
 2. 5.1 after the owner chooses the recogniser (Whisper small.en recommended).
 
 ## Next

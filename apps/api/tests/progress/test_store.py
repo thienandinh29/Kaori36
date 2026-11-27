@@ -62,5 +62,19 @@ def test_snapshot_add_and_report(conn: psycopg.Connection) -> None:
     assert got[0].snapshot["subjects"]["english-ielts"]["mean_p_known"] == 0.65
     sittings = report(got)["skills"]["reading"]["sittings"]
     assert sittings[1]["change_from_baseline"] == 0.5 and sittings[1]["nodetrail_change"] == 0.0
+    crit = {"fc": 7, "lr": 7, "gra": 6, "p": 7}
+    add(conn, lid, Result(date(2026, 12, 18), "speaking", "Mock 1", True, "trained_rater",
+                          band=6.5, criteria=crit))  # fmt: skip
+    with pytest.raises(ValueError):  # a Reading sitting has no criteria
+        add(conn, lid, Result(date(2026, 12, 18), "reading", "x", True, "answer_key",
+                              band=6.0, criteria=crit))  # fmt: skip
+    with pytest.raises(psycopg.errors.CheckViolation), conn.transaction():  # nor in the table
+        conn.execute(
+            "update progress_tests set criteria=%s where learner_id::text=%s and skill='reading'",
+            (Jsonb(crit), lid),
+        )
+    spoken = [r for r in results(conn, lid) if r.skill == "speaking"]
+    assert spoken[0].criteria == crit and spoken[0].band == 6.5
+    assert report(spoken)["skills"]["speaking"]["sittings"][0]["lowest"] == ["gra"]
     s = when(conn, lid, date(2027, 1, 20))
     assert (s["next_due"], s["overdue_days"]) == ("2027-01-15", 5)
