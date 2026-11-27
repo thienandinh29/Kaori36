@@ -113,6 +113,13 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Phase 3.5b:** fine-tuning the recogniser on a GPU notebook. Only worth it if the reviewer's labels show the
   frozen model is the limit (it needs GPU time, and replaces the pinned model).
 - [ ] **Phase 5, Speaking:** the recognition model; the transcript consent wording; accounts for testers.
+- [ ] **Speaking 5.4a, when built (new, 27 Nov):** edit the five draft examiner tests (`data/speaking/tests/`), then take two
+  full tests on `/noi/thi` and say whether the timing and the cut-offs feel like the exam. When a rater bands a mock, record
+  the four criterion bands too: `--criteria fc=..,lr=..,gra=..,p=..` (`specs/validation/step-v4.md`, T6).
+- [ ] **From the Speaking scoring research (new, 27 Nov), to check before relying on them:** whether IELTS publishes the
+  Speaking round-down rule (.75 → .5); Tavakoli 2011 and de Jong et al. on pauses inside clauses; the licences of MultiPA and
+  GOPT on their own pages, and whether either fits the 4 GB machine; `OpenPronounce/wav2vec2-base-phones-en` is AGPL-3.0
+  (source-sharing duties if served), so not planned.
 - [ ] **Speaking level estimate, SPK-001 (new, 27 Nov; the band rule change is approved):** read the Speak & Improve Corpus
   2025 licence in full on Cambridge's ELiT site and sign it if it suits. Tell the agent: (a) may a model trained on it run
   inside NodeTrail for you, and later, free, for friends and family; (b) may the audio sit in a private free GPU notebook

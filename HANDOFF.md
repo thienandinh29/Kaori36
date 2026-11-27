@@ -30,10 +30,13 @@ wins; fix this page.
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
 ## In progress
-Nothing in code. The Speaking band rule change waits for review on `claude/lucid-goldberg-9997no`.
-**Proposed, not yet approved:** a Speaking examiner test built first (Piper voice reads authored Part 1–3 questions, real
-timing, each answer recorded, replay afterwards; no transcription, no model call), then 5.1–5.3 and a result page like the
-app the owner saw, without a band until SPK-001. Waits on the owner's "go" for its step page and the recogniser choice.
+Nothing in code. On `claude/lucid-goldberg-9997no`, waiting for review (docs only): the Speaking band rule change; the owner's
+scoring research adopted as A (criterion bands from the rater, `step-v4.md` T6), B (pauses between and inside clauses, 5.2)
+and C (SPK-001 comparisons and inputs); and the examiner test's step page `specs/speaking/step-5.4a.md` (owner's go).
+
+## Next (build)
+1. Speaking 5.4a, the examiner test (no model call), then `step-v4.md` T6 (criterion bands). Both need no recogniser.
+2. 5.1 after the owner chooses the recogniser (Whisper small.en recommended).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

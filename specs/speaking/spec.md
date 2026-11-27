@@ -61,6 +61,11 @@ quotes checked to be exact substrings of the transcript. The model never hears t
   length of pauses (a pause is a gap above a set length, proposed 0.5 s, and a long pause 2 s), filler words ("um", "uh", "er",
   "you know", "like" as a filler is not detectable by code and is not claimed), the longest fluent run, answer length against
   the time asked. These are numbers about speaking, never a verdict on quality.
+- **Where the pauses fall (added 27 Nov 2026, owner's decision):** each pause counted as between clauses or inside a clause,
+  from the word timings and a parse of the transcript. Studies of second-language fluency link pauses inside a clause to
+  searching for a word or a structure, the hesitation the band descriptors hold against a speaker, and pauses between
+  clauses to planning content (Tavakoli 2011; de Jong and colleagues; Bronze, citations to check). Shown as two counts per
+  minute with examples from the transcript, never labelled "language-related": code cannot know why someone paused.
 - **Grammar and vocabulary on the transcript:** LanguageTool and ERRANT as for writing, with two honest problems to measure:
   spoken grammar is not written grammar (false alarms), and the recogniser may "correct" the learner's errors or mishear a
   non-native accent (missed and invented errors). The owner types the reference for 20 recordings; report the word error rate
@@ -123,6 +128,7 @@ mode shows nothing while speaking; and NodeTrail is one part of Speaking practic
 | 5.1 | Recording and prompts for the three parts, the recognition service, transcript and timestamps; word error rate on the owner's recordings |
 | 5.2 | Fluency measures and the pause analysis (pauses from the raw audio, before voice activity filtering) |
 | 5.3 | Grammar and vocabulary checks on the transcript; feedback with quotes checked against it |
+| 5.4a | The examiner test before transcription (`step-5.4a.md`): a voice examiner reads authored Part 1–3 questions with the real timing, each answer recorded, replay afterwards; no model call. Built first (owner, 27 Nov) |
 | 5.4 | The mock test flow with timing; guided mode with idea building and repeated answers; no band (see "The band") |
 | 5.5 | Opening to testers: accounts, per-user limits, the daily cost cap, the tester report |
 | 5.6 | Level estimate (SPK-001), after 5.1–5.2 and the corpus licence: the corpus loader and the same measures on its audio (agent); the model and its report (owner); the level on the mock test's result page only after the bar in "The band" |

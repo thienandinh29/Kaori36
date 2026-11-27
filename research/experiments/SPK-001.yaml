@@ -39,8 +39,21 @@ features:
   - vocabulary from the transcript: share of words above B1 in NodeTrail's word list, lexical diversity
   - grammar hints per 100 words (LanguageTool and ERRANT, as in Writing)
   - answer length against the time allowed
+  - pauses between clauses and inside a clause, per minute (step 5.2; added 27 Nov)
+  - >-
+    share of error-free clauses (the descriptors' "error-free sentences"); from the grammar hints, so the recogniser
+    may hide errors (added 27 Nov)
+  - >-
+    candidate, only after its licence is read and only if it runs on the owner's 4 GB machine (added 27 Nov): scores
+    from a pronunciation model trained on speechocean762 (MultiPA, Interspeech 2024; GOPT, ICASSP 2022). Kept only if
+    they improve held-out QWK beyond the bootstrap interval; never shown on their own (read-aloud speech by Mandarin
+    speakers)
 models:
   - single_measure: speech rate alone; answer length alone (the baselines)
+  - ready_made_comparison: >-
+      saugataroy/ielts-speaking-scorer (Apache-2.0 card; weakly supervised on about 150 mock recordings of unknown
+      origin, per the owner's research; added 27 Nov) run on the eval split, its band compared with the human CEFR
+      scores by rank correlation. A comparison only, never shown to a learner
   - ordinal_regression: on the measures
   - gradient_boosting: on the measures
   - text_model: a small model on the transcript, only if the above fall short of the bar
