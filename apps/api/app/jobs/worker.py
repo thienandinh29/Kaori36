@@ -164,11 +164,13 @@ def writing_model(settings: Any) -> Any:
 
 
 def purge_recordings(database_url: str) -> int:
-    """Delete voice recordings past their deletion time (specs/pronunciation/step-3.1.md)."""
+    """Delete voice recordings past their deletion time (specs/pronunciation/step-3.1.md) and
+    clear Speaking answers' audio past theirs (specs/speaking/step-5.4a.md)."""
     from app.services.recordings import purge_expired
+    from app.services.speaking_tests import purge_expired as purge_answers
 
     with psycopg.connect(database_url) as conn:
-        return purge_expired(conn)
+        return purge_expired(conn) + purge_answers(conn)
 
 
 def recording_analyser(settings: Any) -> Callable[[], bool] | None:

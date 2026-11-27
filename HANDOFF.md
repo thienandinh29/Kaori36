@@ -4,14 +4,17 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `7f6aa61` (#152) merged into `feat/week-today-dictionary` (PR #151).
+**Last updated:** 27 Nov 2026, `main` at `f3165ce` (#151) merged into `claude/lucid-goldberg-9997no` (PR #154).
 
 ## Just finished
-- **Home page extras** (PR #151, owner's request 27 Nov, merge when CI is green): today's plan fixed for the day
-  with "Đã xong" marks from today's answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`,
-  migration `0043`); this week's study days as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien`
-  (`specs/vocabulary/step-dictionary.md`). Tested on the API and web run directly against the database; the Docker images
-  were not rebuilt in the cloud session (the sandbox's proxy blocks image builds), so CI's full-stack run is the first.
+- **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
+  answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
+  as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien` (`specs/vocabulary/step-dictionary.md`).
+- **Speaking band rule changed** (27 Nov, owner's decision, PR #154, docs): instead of "no Speaking band before the
+  exam", a full mock test may show a CEFR level with its IELTS range ("ước tính") from a model trained on human-rated speech
+  (Speak & Improve Corpus 2025) that passes SPK-001's bar (QWK ≥ 0.75 on held-out speakers) and agrees with the owner's rated
+  mocks; never from an LLM, as a point or per criterion. New research track `research/experiments/SPK-001.yaml`. Prompted
+  by a Speaking app the owner saw (a full mock, then a band with sub-scores, "practise your weakest answer", replay).
 - **Reading 4.3d part 2, second half** (#152, 27 Nov): words from the passage kept as saved-phrase cards (gap-fill on
   the passage sentence, reviewed on `/tu-vung`); migration `0042`. No model call.
 - **Reading 4.3d part 2, first half** (27 Nov, #149): the passage's place and "đoán"/"không kịp" marks on the
@@ -29,10 +32,22 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
+## Just built (this branch, not yet merged)
+- **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
+  recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
+  test at real speed is not done.
+
 ## In progress
-Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), in
+Nothing in code. On `claude/lucid-goldberg-9997no`, waiting for review (docs only): the Speaking band rule change; the owner's
+scoring research adopted as A (criterion bands from the rater, `step-v4.md` T6), B (pauses between and inside clauses, 5.2)
+and C (SPK-001 comparisons and inputs); and the examiner test's step page `specs/speaking/step-5.4a.md` (owner's go).
+Also: Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), in
 pull request #153; waits on the owner's go-ahead to build (two PRs, no model calls). The Reading diagnosis docs wait for
 review on `claude/compassionate-newton-d4dkru`.
+
+## Next (build)
+1. `step-v4.md` T6 (criterion bands); the owner edits the five draft tests and takes two full tests on `/noi/thi`.
+2. 5.1 after the owner chooses the recogniser (Whisper small.en recommended).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
@@ -63,5 +78,6 @@ merges its own data PR. It never touches the owner's review decisions.
 - No phase gate is measured yet; all content is still draft until a teacher reviews it.
 
 ## Already decided, do not reopen
-No Speaking band before the exam; target 7.0 overall; everything outside the English app is frozen (`AGENTS.md`, "English
+Speaking: never a band from an LLM, as a point or per criterion; a CEFR level only after SPK-001's bar (changed 27 Nov from
+"no Speaking band"); target 7.0 overall; everything outside the English app is frozen (`AGENTS.md`, "English
 only"); Cambridge material never enters the shared bank.

@@ -38,6 +38,7 @@ Each product phase ends only when its gate is measured with labels of the tier t
 
 ## Not the goal (before the exam)
 - Anything outside the English app: the contest's any-subject engine is frozen (`AGENTS.md`, "English only").
-- A Speaking band; a band shown as a point or from an LLM alone.
+- A band shown as a point or from an LLM alone; a Speaking level before a model trained on rated speech passes its bar
+  (SPK-001, owner's decision 27 Nov 2026).
 - Streaks or speed rewards, payment, login, a mobile app, real exam passages in the shared bank.
 - Deep knowledge tracing, a home-made LLM or a band model trained from scratch: there is not enough data.

@@ -1,0 +1,40 @@
+# Speaking examiner test (specs/speaking/step-5.4a.md). Written for NodeTrail on common topics;
+# not taken from past papers or "forecast" lists. Draft until a teacher reads a sample.
+id: t01
+title: Home, music and a journey
+status: draft
+author: agent draft, 27 Nov 2026, for the owner to edit
+part1:
+  - topic: where you live
+    questions:
+      - Do you live in a house or an apartment?
+      - What do you like most about the place where you live?
+      - Is there anything you would like to change about your home?
+      - Do you think you will live there for a long time?
+  - topic: music
+    questions:
+      - What kind of music do you usually listen to?
+      - When do you listen to music during the day?
+      - Did you learn to play a musical instrument as a child?
+      - Has your taste in music changed since you were younger?
+  - topic: mornings
+    questions:
+      - Are you a morning person?
+      - What is the first thing you do after you wake up?
+      - Do you have the same routine every morning?
+part2:
+  task: Describe a journey you remember well.
+  points:
+    - where you went
+    - how you travelled
+    - who you were with
+  explain: and explain why you remember this journey well.
+  closing: Do you often travel in that way?
+part3:
+  theme: travel and transport
+  questions:
+    - Why do some people prefer to travel alone?
+    - How has the way people travel in your country changed in recent years?
+    - Do you think cities should spend more money on public transport than on roads?
+    - What problems can tourism cause for the places people visit?
+    - In the future, do you think people will travel more or less than they do now?

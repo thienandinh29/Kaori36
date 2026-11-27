@@ -57,6 +57,17 @@ import {
   type ListeningTexts,
 } from "@/lib/listening/practice";
 import {
+  parseAnswerSaved,
+  parseMicCheck,
+  parseOverview,
+  parseResult,
+  parseSitting,
+  type MicCheck,
+  type Overview,
+  type Result as SpeakingResult,
+  type Sitting,
+} from "@/lib/speaking/exam";
+import {
   parseStartedTest,
   parseTestResult,
   type StartedTest,
@@ -792,6 +803,91 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       const q = new URLSearchParams({ learner_id: learnerId });
       await post(`recordings/${encodeURIComponent(id)}/labels?${q}`, {
         labels,
+      });
+    },
+    // The Speaking examiner test (specs/speaking/step-5.4a.md), owner only.
+    async speakingTests(learnerId: string): Promise<Overview> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseOverview(await request(`speaking/tests?${q}`));
+    },
+    async startSpeakingTest(
+      learnerId: string,
+      testId: string,
+      consent: string,
+      keep: boolean,
+    ): Promise<Sitting> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseSitting(
+        await post(`speaking/tests?${q}`, { test_id: testId, consent, keep }),
+      );
+    },
+    async speakingMicCheck(
+      learnerId: string,
+      wav: ArrayBuffer,
+    ): Promise<MicCheck> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseMicCheck(
+        await request(`speaking/mic-check?${q}`, {
+          method: "POST",
+          headers: { "Content-Type": "audio/wav" },
+          body: wav,
+        }),
+      );
+    },
+    async speakingAnswer(
+      learnerId: string,
+      sittingId: string,
+      questionId: string,
+      wav: ArrayBuffer,
+    ): Promise<{ id: string }> {
+      const q = new URLSearchParams({
+        learner_id: learnerId,
+        question: questionId,
+      });
+      return parseAnswerSaved(
+        await request(
+          `speaking/tests/${encodeURIComponent(sittingId)}/answers?${q}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "audio/wav" },
+            body: wav,
+            signal: AbortSignal.timeout(60000),
+          },
+        ),
+      );
+    },
+    async finishSpeakingTest(
+      learnerId: string,
+      sittingId: string,
+    ): Promise<SpeakingResult> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseResult(
+        await post(
+          `speaking/tests/${encodeURIComponent(sittingId)}/finish?${q}`,
+          {},
+        ),
+      );
+    },
+    async speakingResult(
+      learnerId: string,
+      sittingId: string,
+    ): Promise<SpeakingResult> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseResult(
+        await request(`speaking/tests/${encodeURIComponent(sittingId)}?${q}`),
+      );
+    },
+    speakingAudioUrl(learnerId: string, answerId: string): string {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return `/api/backend/speaking/answers/${encodeURIComponent(answerId)}/audio?${q}`;
+    },
+    async deleteSpeakingTest(
+      learnerId: string,
+      sittingId: string,
+    ): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await request(`speaking/tests/${encodeURIComponent(sittingId)}?${q}`, {
+        method: "DELETE",
       });
     },
     async deleteRecording(learnerId: string, id: string): Promise<void> {

@@ -32,7 +32,7 @@ one engine chooses each day's work.
 | 6 | **Pronunciation** | Read authored sentences aloud (`/phat-am`): a recording-quality check, then the target sounds Vietnamese speakers often miss are scored; sounds to focus on | built, owner only. Raw scores and "chưa chắc" only: nothing is marked wrong until false alarms are measured on Gold labels |
 | 7 | **Reading** | Practice by question type with the deciding sentence highlighted (`/doc/{slug}`); timed 20-minute tests (`/doc/{slug}/thi`); a test taken elsewhere, pasted, marked from its official key with each wrong answer explained, a summary by question type and pacing, and the passage's words kept as cards (`/doc/bai-cua-ban`) | built. Bank: 30 OpenStax texts; questions are generated, checked blind and reviewed; only Silver questions are served (2 approved so far). Pasted tests: owner only, explanations "chưa kiểm chứng", private to the learner |
 | 8 | **Listening** | Dictation and gap-fill from bank sentences (`/nghe/{slug}`); a whole passage by ear, then its questions (`/nghe/bai/{slug}`); shadowing of bank sentences or a YouTube video (`/noi-duoi`) | built; needs the server voice (compose profile `speech`). Machine voice, not exam audio |
-| 9 | **Speaking (Part 1–3)** | Guided practice and a strict mock: transcript, fluency measures, grammar and vocabulary from the Writing pipeline, pronunciation on read-aloud only | specified (`specs/speaking/`); waits on the owner's choice of recogniser. No Speaking band before the owner's exam |
+| 9 | **Speaking (Part 1–3)** | Guided practice and a strict mock: transcript, fluency measures, grammar and vocabulary from the Writing pipeline, pronunciation on read-aloud only | partly built: the examiner test (`/noi/thi`, step 5.4a: a voice examiner reads authored Part 1–3 questions with the real timing, answers recorded and replayed, owner only, no score); transcripts and feedback wait on the owner's choice of recogniser. No Speaking band from a model's opinion; a CEFR level with its IELTS range only after research track SPK-001 passes its bar |
 | 10 | **Explanations of wrong answers** | Why the key is right and what trap each wrong option set, after answering | specified (CP4b in `specs/listening-reading/spec.md`) |
 | 11 | **Reviewer portal** | Teachers and raters label content through a private link, blind (`/kiem-duyet`); the owner's review queue for Reading (`/duyet-doc`) | built (V1–V3, V5) |
 | 12 | **Progress study** | An independent test every 4 weeks, recorded by CLI, compared with NodeTrail's own estimates | built (V4); waits on the owner's baseline test |
@@ -98,6 +98,10 @@ the trace.
 - A band is always a range, only from a model calibrated on examiner-banded essays, never from an LLM. No band for Task 1,
   and none for a Task 2 essay that is more than 15% repeated or memorised text. Feedback quotes must be exact substrings of
   the learner's text.
+- Speaking (owner's decision, 27 Nov 2026): no band from an LLM, none as a point, none per criterion. A full mock test may
+  show a CEFR level with the IELTS range IELTS publishes for it, labelled "ước tính", only from a model trained on
+  human-rated speech (Speak & Improve Corpus 2025, research track SPK-001) that reaches QWK ≥ 0.75 on held-out speakers,
+  and only while it agrees with the owner's rated mocks (`specs/speaking/spec.md`, "The band"). Until then, nothing.
 - Progress is measured by independent tests (`progress_tests`, touched only by `app/progress/`), never by NodeTrail's own
   estimates.
 
@@ -124,13 +128,13 @@ ShareAlike flagged; no real exam passages or past papers.
 ## Interfaces
 - **Web** (`apps/web`, Next.js, Vietnamese UI): `/`, `/ban-do`, `/kiem-tra`, `/lo-trinh`, `/on-tap/{kind}/{slug}`, `/hoc/{slug}`,
   `/tu-vung`, `/tu-dien`, `/viet`, `/viet/{prompt}`, `/bai-viet/{id}`, `/phat-am`, `/doc`, `/doc/{slug}`, `/doc/{slug}/thi`, `/nghe`,
-  `/nghe/{slug}`, `/nghe/bai/{slug}`, `/noi-duoi`, `/duyet-doc` (owner), `/kiem-duyet` (reviewers), `/gioi-thieu`; the contest's
+  `/nghe/{slug}`, `/nghe/bai/{slug}`, `/noi-duoi`, `/noi/thi`, `/noi/thi/{id}`, `/duyet-doc` (owner), `/kiem-duyet` (reviewers), `/gioi-thieu`; the contest's
   topic research at `/kham-pha`. The browser calls the API only through the server proxy `app/api/backend/[...path]`, which
   adds the API key and forwards an allow-listed set of query parameters.
 - **API** (`apps/api`, FastAPI, every route except `/health` behind `X-API-Key`), by group: `/today`, `/today/week`, `/maps`; `/level-tests`, `/roadmap`,
   `/milestones`, `/nodes`, `/grammar-runs`, `/rechecks`; `/vocab/*` (session, answers, say, search), `/phrases`; `/lessons`;
   `/writing/prompts` (and `/check`), `/writing/tests`, `/essays` (corrections, rewrites, patterns); `/recordings`, `/pronunciation/prompts`; `/reading/*`
-  (texts, items, tests, review); `/listening/*` (texts, items, passages); `/shadowing/texts`; `/speech`; `/review/*` (reviewer
+  (texts, items, tests, review); `/listening/*` (texts, items, passages); `/shadowing/texts`; `/speaking/*` (the examiner test: tests, answers, audio, microphone check); `/speech`; `/review/*` (reviewer
   token in `X-Reviewer-Token`); `/learners` creates a learner id. Contest-era groups (`/topics`, `/graph`, `/tutor`,
   `/placement`, `/next-item`, `/reviews/due`, `/exam-plan`, `/ask`, `/uploads`, `/code`) remain for other subjects; 79 paths in
   all on 20 Nov 2026.

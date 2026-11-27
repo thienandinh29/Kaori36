@@ -28,3 +28,4 @@ reproducible from the repository and a data version.
 | VER-001 | How reliable and costly is the generated-content pipeline? | planned |
 | PRON-001 | Does comparing /æ/ only with /ɛ/ make that sound group usable? | done 19 Nov, synthetic: false alarms 60% → 10%, catches unchanged |
 | DIAG-001 | Can a cognitive diagnosis model tell Reading sub-skills apart better than one overall skill? | planned (after KT-001; public data only) |
+| SPK-001 | Can a small model trained on human-rated speech estimate a speaking level well enough to show? | planned (after Speaking 5.1–5.2 and the corpus licence) |
