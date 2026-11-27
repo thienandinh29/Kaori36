@@ -84,6 +84,25 @@ finish (182 left on 20 Nov, about four daily batches) or on alternate days.
 **Steps, one PR each:** (1) migration, generation, code checks, the planted-test tooling, run on the approved questions;
 (2) explanations on the learner pages and the flag; (3) "Theo dạng câu hỏi" and the Hôm nay link.
 
+**Step 1 split in two (27 Nov 2026, to keep each PR spec-sized):** (1a) migration, generation, code checks and the run;
+(1b) the blind check by another family and the planted-test tooling. **1a built:** `app/reading/explain.py` (pure: output
+shape, prompt, checks), `app/reading/explain_run.py` (`python -m app.reading.explain_run [--max-cost 0.10]
+[--include-verified N]`), gateway task `reading_explain` (DeepSeek), migration `0043` (`reading_explanations`: one row per
+question version, `checked` or `dropped` with its problems, and the 4.3e skill tags). Choices made while building:
+- **Headings are not explained yet** (a trap per paragraph needs its own design); T/F/NG, multiple choice and completion are.
+- **An explanation never names an option by letter** (learners see options shuffled, 4.3c): code refuses "đáp án A" and the like.
+- **The skill tags come in the same call** (`step-4.3e.md`), checked against the closed list; no blind pick yet.
+- `--include-verified N` explains verified, not-yet-approved questions too, only to build the planted test of 1b. Nothing in
+  this step reaches a learner.
+- **First real run (27 Nov, deepseek-flash, scratch database):** the 2 approved questions and 8 verified ones (5 T/F/NG, 2
+  completion, 2 multiple choice); 9 passed code's checks first time. The one drop was code's false alarm: "không hề nói" and
+  "không được đề cập" were not in the NOT GIVEN pattern (fixed, with a test), then 10 of 10. 11 calls, about 12,000 tokens in
+  and 2,800 out (US$0.024 at the configured prices, which are set above DeepSeek's). Two things this run shows for 1b: a
+  multiple-choice explanation places a quote "in the last paragraph", which code does not check; and the explanation of the
+  approved `os-introduction-sociolo-elements-of-culture-tfng-2` (key NOT GIVEN) quotes "will likely be fired" against "reward",
+  which reads like FALSE: a question for a teacher (Bronze), not changed here. The run's rows stay in the scratch database:
+  explanations are not exported to the item files yet, so the daily batch's laptop run makes its own.
+
 ## Question types (start with what code can grade)
 True / False / Not Given; multiple choice; sentence and short-answer completion (typed, graded exactly after normalisation, as in
 vocabulary); matching headings to paragraphs. Later: summary completion, form and note completion for Listening. **Not planned:**

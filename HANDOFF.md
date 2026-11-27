@@ -7,6 +7,9 @@ wins; fix this page.
 **Last updated:** 27 Nov 2026, `main` at `6b6ca8b` (Wiktionary coverage, #147), plus the Reading diagnosis docs (this branch).
 
 ## Just finished
+- **CP4b on the bank's own questions, step 1a** (27 Nov, this branch): explanations generated and checked by code
+  (`app/reading/explain.py`, `explain_run.py`, migration `0043`); first real run 10/10 after a check fix. Nothing reaches a
+  learner. One approved key looks doubtful (`dolater.md`, section 1).
 - **Reading 4.3d part 2, second half** (27 Nov, this branch): words from the passage kept as saved-phrase cards (gap-fill on
   the passage sentence, reviewed on `/tu-vung`); migration `0042`. No model call.
 - **Reading 4.3d part 2, first half** (27 Nov, #149): the passage's place and "đoán"/"không kịp" marks on the
@@ -35,7 +38,9 @@ Nothing in code. The Reading diagnosis docs wait for review on `claude/compassio
 2. **Owner:** confirm the build choices of 4.3d part 2 (`step-4.3d.md`: the first-paste row rule, kept words as saved phrases,
    which words are offered) after a real test or two.
    Spec-sized PR. Better after step 1, so part 2 builds on choices the owner has confirmed.
-3. Then, in `PLAN.md` order: CP4b on the bank's own questions, with skill tags in the same call (`step-4.3e.md` part 1), CP4c exam details, CP2b planted test, the CP6 report, phase 5
+3. **Agent: CP4b bank step 1b**, the blind check of explanations by another family and the planted-test tooling (`spec.md`,
+   CP4b). Then, in `PLAN.md` order: CP4b steps 2 and 3 (learner pages, "Theo dạng câu hỏi"), the skill tags' blind pick
+   (`step-4.3e.md` part 1), CP4c exam details, CP2b planted test, the CP6 report, phase 5
    Speaking. The owner may reorder.
 
 ## Waiting on the owner (not on a build)
