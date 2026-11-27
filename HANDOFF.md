@@ -36,8 +36,9 @@ wins; fix this page.
 - **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
   recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
   test at real speed is not done.
-- **Progress study T6** (criterion bands from the rater; migration `0044`): built after #154 was opened, so on the
-  branch after it.
+- **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
+  Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool): built after #154 was
+  opened, so on the branch after it.
 
 ## In progress
 Nothing in code. On `claude/lucid-goldberg-9997no`, waiting for review (docs only): the Speaking band rule change; the owner's
@@ -49,7 +50,7 @@ review on `claude/compassionate-newton-d4dkru`.
 
 ## Next (build)
 1. The owner edits the five draft tests and takes two full tests on `/noi/thi`; record rated mocks with `--criteria`.
-2. 5.1 after the owner chooses the recogniser (Whisper small.en recommended).
+2. 5.1 is built (Whisper small.en, `asr/`); the owner's 20 typed references give its word error rate. Next build: 5.2.
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
@@ -67,7 +68,7 @@ review on `claude/compassionate-newton-d4dkru`.
 - ~20 web essays for the Writing feedback stability run (`specs/writing/step-2.11.md`, 2.11a; the 60% bar stays
   "proposed" until the owner has seen the result).
 - A teacher (reviewer brief: `specs/validation/reviewer-brief.vi.md`); every phase gate waits on Gold labels.
-- Decisions: the Speaking recogniser and consent wording; whether the machine voice is good enough for whole-passage Listening;
+- Decisions: the transcript consent wording for 5.3 (recogniser chosen: Whisper small.en); whether the machine voice is good enough for whole-passage Listening;
   licences (L2-ARCTIC, Simple English Wikipedia). Full list: `dolater.md`.
 
 ## Running on its own

@@ -1212,7 +1212,7 @@ export const vi = {
       ownerOnly:
         "Ghi âm hiện chỉ mở cho chủ dự án, cho đến khi việc lưu giữ giọng nói được xem xét về quyền riêng tư.",
       consent:
-        "Bài thi ghi âm giọng nói của bạn và lưu trên máy chủ của NodeTrail, không gửi cho bên nào khác. Bản ghi tự xóa sau 24 giờ, trừ khi bạn chọn giữ lại. Bạn có thể xóa bất cứ lúc nào.",
+        "Bài thi ghi âm giọng nói của bạn và lưu trên máy chủ của NodeTrail, không gửi cho bên nào khác. Máy chủ của NodeTrail chép lại lời bạn nói thành chữ; bản chép lời được giữ cùng bài thi cho đến khi bạn xóa bài. Bản ghi âm tự xóa sau 24 giờ, trừ khi bạn chọn giữ lại. Bạn có thể xóa bất cứ lúc nào.",
       consentAgree: "Tôi đã đọc và đồng ý",
       keep: "Giữ lại các bản ghi của bài này để nghe lại sau 24 giờ (xóa được bất cứ lúc nào)",
       micCheck: "Thử micro (3 giây)",
@@ -1249,8 +1249,13 @@ export const vi = {
         `${n} câu trả lời không lưu được (mạng hoặc máy chủ). Các câu khác đã được lưu.`,
       resultTitle: "Nghe lại bài thi",
       resultIntro:
-        "Từng câu hỏi với câu trả lời của bạn. Chưa có điểm hay nhận xét: bản chép lời và các số đo (tốc độ, ngắt nghỉ) đến ở bước sau.",
+        "Từng câu hỏi với câu trả lời của bạn. Chưa có điểm hay nhận xét: các số đo (tốc độ, ngắt nghỉ) và nhận xét đến ở các bước sau.",
       notAnswered: "Không trả lời",
+      transcript: "Máy chép lại, có thể sai",
+      transcriptNote:
+        "Bản chép lời do máy làm: máy có thể nghe nhầm giọng, và có thể tự sửa mất lỗi của bạn. Đây không phải bằng chứng về điều bạn đã nói.",
+      transcribing: "Đang chép lời…",
+      transcriptFailed: "Không chép lời được câu này.",
       seconds: (s: number) => `${Math.round(s)} giây`,
       gone: "Bản ghi đã tự xóa sau 24 giờ.",
       keptNote: "Các bản ghi của bài này được giữ lại theo lựa chọn của bạn.",

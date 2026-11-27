@@ -21,7 +21,7 @@ from psycopg_pool import ConnectionPool
 
 from app.pronunciation.quality import check
 from app.services.backend import learner_uuid
-from app.services.recordings import CONSENT, RETENTION
+from app.services.recordings import RETENTION
 from app.speaking.tests import (
     CLOSING_SECONDS,
     LONG_TURN_SECONDS,
@@ -38,6 +38,9 @@ from app.speaking.tests import (
 BYTES_PER_SECOND = 32_000  # 16 kHz mono 16-bit
 MAX_ANSWER_BYTES = 44 + BYTES_PER_SECOND * (LONG_TURN_SECONDS + 10)
 MAX_CHECK_BYTES = 600_000  # the microphone check: a few seconds
+# The test's own notice (messages/vi.ts, speakingTest.consent): the voice policy plus the
+# transcript, which is kept with the sitting after the audio is gone (step 5.1).
+CONSENT = "speaking-v1"
 MIN_ANSWER_SECONDS = 0.3  # shorter is not a recording (a tap on "Xong" at once is still stored)
 
 
@@ -58,6 +61,25 @@ def purge_expired(conn: psycopg.Connection[Any], now: datetime | None = None) ->
     return cur.rowcount
 
 
+def _transcript(
+    status: str | None, data: dict[str, Any] | None, audio: bool, enabled: bool
+) -> dict[str, Any]:
+    """The answer's transcript for the page (step 5.1): done, failed, waiting (only when a
+    recogniser is configured and the audio is still there), or none."""
+    if status == "done" and data:
+        return {
+            "transcript": "done",
+            "text": data.get("text", ""),
+            "words": [
+                {"word": w["word"], "start": w["start"], "end": w["end"]}
+                for w in data.get("words", [])
+            ],
+        }
+    if status == "failed":
+        return {"transcript": "failed", "text": None, "words": []}
+    return {"transcript": "waiting" if audio and enabled else "none", "text": None, "words": []}
+
+
 class SpeakingTests:
     def __init__(
         self,
@@ -65,8 +87,10 @@ class SpeakingTests:
         folder: Path,
         draft_learners: str,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
+        transcripts: bool = False,
     ) -> None:
         self.pool = pool
+        self.transcripts = transcripts  # a recogniser is configured (ASR_URL, step 5.1)
         self.tests: dict[str, Loaded] = load_tests(folder)
         self.owners = {learner_uuid(x.strip()) for x in draft_learners.split(",") if x.strip()}
         self.clock = clock
@@ -255,8 +279,8 @@ class SpeakingTests:
                 "select started_at from speaking_tests where id=%s", (sitting,)
             ).fetchone()
             rows = conn.execute(
-                "select question_id,id,question,seconds,quality,audio is not null,delete_after "
-                "from speaking_answers where sitting_id=%s",
+                "select question_id,id,question,seconds,quality,audio is not null,delete_after,"
+                "transcript_status,transcript from speaking_answers where sitting_id=%s",
                 (sitting,),
             ).fetchall()
         assert started is not None
@@ -279,6 +303,7 @@ class SpeakingTests:
                         "problems": list(r[4].get("problems", [])),
                         "audio": bool(r[5]),
                         "delete_after": r[6].isoformat() if r[6] else None,
+                        **_transcript(r[7], r[8], bool(r[5]), self.transcripts),
                     },
                 }
             )

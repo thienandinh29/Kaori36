@@ -57,6 +57,8 @@ class Settings(BaseSettings):
     languagetool_url: str = ""
     # The band model service (specs/writing/step-2.3.md); empty: no band.
     scorer_url: str = ""
+    # Speech recognition (specs/speaking/step-5.1.md, compose profile `asr`); empty: no transcripts.
+    asr_url: str = ""
     # The self-hosted voice (specs/speech, S2); empty: the web uses the browser's own voice.
     tts_url: str = ""
     # Model prices for the daily cost cap (US$ per million tokens; specs/writing/step-2.4.md).

@@ -93,6 +93,9 @@ export function ExamResult({ sittingId }: { sittingId: string }) {
         {result.finished_at === null && ` · ${t.unfinished}`}
       </p>
       <p className="en-muted">{t.resultIntro}</p>
+      {result.questions.some((q) => q.answer?.transcript === "done") && (
+        <p className="en-muted small">{t.transcriptNote}</p>
+      )}
       <p className="en-muted">
         {result.keep
           ? t.keptNote
@@ -149,6 +152,18 @@ export function ExamResult({ sittingId }: { sittingId: string }) {
                         />
                       ) : (
                         <p className="en-muted">{t.gone}</p>
+                      )}
+                      {q.answer.transcript === "done" && (
+                        <div className="nt-exam-transcript">
+                          <p className="en-muted small">{t.transcript}</p>
+                          <p lang="en">{q.answer.text}</p>
+                        </div>
+                      )}
+                      {q.answer.transcript === "waiting" && (
+                        <p className="en-muted small">{t.transcribing}</p>
+                      )}
+                      {q.answer.transcript === "failed" && (
+                        <p className="en-muted small">{t.transcriptFailed}</p>
                       )}
                       <p className="en-muted small">
                         {t.seconds(q.answer.seconds)}

@@ -203,6 +203,31 @@ def recording_analyser(settings: Any) -> Callable[[], bool] | None:
     return run
 
 
+def transcriber(settings: Any) -> Callable[[], bool] | None:
+    """Transcribes one Speaking answer per call when the recognition service is configured
+    (specs/speaking/step-5.1.md); waits 30 s after the service fails to answer."""
+    if not settings.asr_url:
+        return None
+    from app.speaking.transcribe import Unavailable, process_next, service_transcribe
+
+    transcribe = service_transcribe(settings.asr_url)
+    retry_at = 0.0
+
+    def run() -> bool:
+        nonlocal retry_at
+        if time.monotonic() < retry_at:
+            return False
+        try:
+            with psycopg.connect(settings.database_url) as conn:
+                return process_next(conn, transcribe)
+        except Unavailable as exc:
+            logger.warning("recognition service unavailable, retrying in 30 s: %s", exc)
+            retry_at = time.monotonic() + 30
+            return False
+
+    return run
+
+
 def loop(
     database_url: str,
     *,
@@ -227,6 +252,7 @@ def loop(
     )
     purged_at = 0.0
     analyse = recording_analyser(settings)
+    transcribe = transcriber(settings)
     own_model = writing_model(settings)  # Reading tests taken elsewhere (step 4.3d)
     while True:
         try:
@@ -235,6 +261,8 @@ def loop(
                 purged_at = time.monotonic()
             if analyse is not None and analyse():
                 continue  # one recording at a time; the service is the slow part
+            if transcribe is not None and transcribe():
+                continue  # one Speaking answer at a time (step 5.1)
             if process_next_essay(database_url, writing_dir, grammar):
                 continue  # essays are short: drain them before the next topic job
             if process_next_rewrite(database_url, grammar):
