@@ -121,6 +121,10 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
   an enrichment step follows: British IPA for
   713 words that have none, Wiktionary's Vietnamese next to the model's, recordings later after a per-file licence check.
   Numbers: `specs/vocabulary-import/step-wiktionary.md`.
+- [ ] **Reading diagnosis (new, 27 Nov):** (a) whether a question should ever update several skills in BKT once a teacher
+  has checked the skill tags (`specs/listening-reading/step-4.3e.md`; today: one competency, tags in summaries only);
+  (b) a public reading dataset with a Q-matrix for DIAG-001: read its licence; (c) when DIAG-001 starts (after KT-001,
+  and only if it does not take study time). Check the citations listed in `research/experiments/DIAG-001.yaml` first.
 - [ ] **Order of the next builds (new, 20 Nov):** CP4b (why the wrong answer tempted you) before or after the CP6 report; CP4c
   (exam details) now or later; phase 5 Speaking right after CP6 (the research says Speaking is Vietnam's lowest skill, to check).
 

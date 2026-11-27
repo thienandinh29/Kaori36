@@ -14,6 +14,8 @@ import logging
 import re
 from collections.abc import Callable, Iterable
 from datetime import UTC, datetime
+from functools import cached_property
+from pathlib import Path
 from typing import Any, Protocol
 from uuid import UUID
 
@@ -23,13 +25,16 @@ from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
 
 from app.competencies.model import load_map
+from app.config import REPO_ROOT
 from app.engine import bkt
 from app.engine.bkt import DEFAULT_PARAMS
 from app.engine.trace import fmt_p
+from app.reading import own_summary, own_vocab
 from app.reading import own_test as ot
 from app.services.backend import learner_uuid, save_trace
 from app.services.competency_evidence import competency_ids
 from app.services.learning import save_mastery
+from app.vocabulary.wordlist import shared_wordlist
 
 logger = logging.getLogger(__name__)
 PARAMS = DEFAULT_PARAMS["mcq"]  # graded from a key, as the bank's Reading questions
@@ -62,11 +67,27 @@ class OwnTests:
         pool: Callable[[], ConnectionPool],
         draft_learners: str | Iterable[UUID] = "",
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
+        vocab_dir: Path = REPO_ROOT / "data" / "vocabulary",
+        vocab_imported_dir: Path = REPO_ROOT / "data-sa" / "vocabulary",
     ) -> None:
         self.pool = pool
         self.owners = _owners(draft_learners)
         self.clock = clock
         self.cmap = load_map()
+        self.vocab_dir = vocab_dir
+        self.vocab_imported_dir = vocab_imported_dir
+
+    @cached_property
+    def form_index(self) -> own_vocab.FormIndex:
+        return own_vocab.build_form_index(self.vocab_imported_dir / "forms.yaml")
+
+    def _gloss(self) -> Callable[[str], own_vocab.Gloss | None]:
+        """The word list's definition and Vietnamese gloss by headword (the first entry of it)."""
+        listed = shared_wordlist(self.vocab_dir / "core-seed.yaml", self.vocab_imported_dir)
+        by_lemma: dict[str, own_vocab.Gloss] = {}
+        for w in listed.words:
+            by_lemma.setdefault(w.lemma.lower(), own_vocab.Gloss(w.definition, w.vi))
+        return lambda head: by_lemma.get(head.lower())
 
     def _learner(self, conn: psycopg.Connection[Any], learner_id: str) -> UUID:
         learner = learner_uuid(learner_id)
@@ -157,6 +178,84 @@ class OwnTests:
             "result": result, "failure_vi": failure, "progress_test": prog, "submitted_at": at,
         }  # fmt: skip
 
+    def summary(self, learner_id: str) -> dict[str, Any]:
+        """Per question type and pacing across the learner's pasted tests (kept after a delete)."""
+        with self.pool().connection() as conn:
+            learner = self._learner(conn, learner_id)
+            rows = conn.execute(
+                "select fingerprint, number, kind, correct, blank, trap, mark, position "
+                "from reading_own_answers where learner_id=%s order by answered_at, number",
+                (learner,),
+            ).fetchall()
+        return own_summary.summary([own_summary.Answer(*r) for r in rows])
+
+    def _offer(
+        self, conn: psycopg.Connection[Any], learner: UUID, test_id: str
+    ) -> tuple[list[own_vocab.PassageWord], str, str]:
+        """The words offered from a marked test, the level they are above, and its source."""
+        row = conn.execute(
+            "select status, passage, result from reading_own_tests where id=%s and learner_id=%s",
+            (_uuid(test_id), learner),
+        ).fetchone()
+        if row is None:
+            raise HTTPException(404, "Không tìm thấy bài này.")
+        status, passage, result = row
+        if status not in ("marked", "explaining", "done") or not result:
+            raise HTTPException(409, "Bài này chưa được chấm.")
+        got = conn.execute(
+            "select result->>'vocab_level' from level_tests where learner_id=%s "
+            "and phase='done' order by finished_at desc limit 1",
+            (learner,),
+        ).fetchone()
+        level, source = own_vocab.learner_level(got[0] if got else None)
+        quotes = [
+            q for m in result["marks"] if not m["correct"] and m.get("explanation")
+            for q in m["explanation"].get("key_quotes", [])
+        ]  # fmt: skip
+        offered = own_vocab.words(
+            passage, level, self.form_index, own_vocab.deciding_sentences(passage, quotes),
+            self._gloss(),
+        )  # fmt: skip
+        return offered, level, source
+
+    def words(self, learner_id: str, test_id: str) -> dict[str, Any]:
+        """The passage's words to keep, each with its sentence, and which are already cards."""
+        with self.pool().connection() as conn:
+            learner = self._learner(conn, learner_id)
+            offered, level, source = self._offer(conn, learner, test_id)
+            saved = {
+                r[0].lower()
+                for r in conn.execute(
+                    "select phrase from learner_phrases where learner_id=%s", (learner,)
+                ).fetchall()
+            }
+        return {
+            "level": level, "level_source": source,
+            "words": [w.to_json() | {"saved": w.form.lower() in saved} for w in offered],
+        }  # fmt: skip
+
+    def keep_words(self, learner_id: str, test_id: str, forms: list[str]) -> dict[str, Any]:
+        """Kept words become saved-phrase cards (FSRS, gap-fill on the passage sentence).
+
+        Only words the server itself offers are kept, with the server's sentence; a word already
+        saved (from an essay or another test) is left as it is.
+        """
+        with self.pool().connection() as conn, conn.transaction():
+            learner = self._learner(conn, learner_id)
+            offered, _, _ = self._offer(conn, learner, test_id)
+            chosen = own_vocab.pick(offered, forms)
+            if len(chosen) != len({f.lower() for f in forms}):
+                raise HTTPException(422, "Có từ không nằm trong danh sách của bài này.")
+            added = 0
+            for w in chosen:
+                got = conn.execute(
+                    "insert into learner_phrases(learner_id,phrase,sentence,own_test_id) "
+                    "values (%s,%s,%s,%s) on conflict (learner_id, phrase) do nothing returning id",
+                    (learner, w.form, w.sentence, _uuid(test_id)),
+                ).fetchone()
+                added += got is not None
+        return {"added": added, "already": len(chosen) - added}
+
     def delete(self, learner_id: str, test_id: str) -> None:
         with self.pool().connection() as conn:
             learner = self._learner(conn, learner_id)
@@ -168,12 +267,18 @@ class OwnTests:
             raise HTTPException(404, "Không tìm thấy bài này.")
 
     def confirm(
-        self, learner_id: str, test_id: str, questions: list[dict[str, Any]]
+        self,
+        learner_id: str,
+        test_id: str,
+        questions: list[dict[str, Any]],
+        position: int | None = None,
     ) -> dict[str, Any]:
         """Mark the confirmed list from the key and record the evidence, once per question.
 
         A list that still has a problem is kept as the learner edited it and sent back with its
-        problems, unmarked (status `parsed`), so the page can say what to fix.
+        problems, unmarked (status `parsed`), so the page can say what to fix. `position` is the
+        passage's place in the test (1-3); each question may carry the learner's own `mark`
+        (`guessed` or `no_time`), part 2's pacing.
         """
         now = self.clock()
         with self.pool().connection() as conn, conn.transaction():
@@ -189,7 +294,8 @@ class OwnTests:
             if status != "parsed":
                 raise HTTPException(409, "Bài này không ở bước xác nhận câu hỏi.")
             confirmed = _confirmed(questions)
-            kept = Jsonb([q.to_json() for q in confirmed])
+            self_marks = _self_marks(questions)
+            kept = Jsonb([q.to_json() | {"mark": self_marks.get(q.number)} for q in confirmed])
             marked = [q for q in confirmed if q.kind != "unsupported"]
             if not marked:
                 raise HTTPException(422, "Không còn câu hỏi nào để chấm.")
@@ -200,7 +306,9 @@ class OwnTests:
                 return self._view(conn, learner, test_id)
             answers = ot.numbered(answers_text)
             marks = [ot.mark(q, answers.get(q.number)) for q in marked]
-            moved = self._evidence(conn, learner, _uuid(test_id), digest, marks, now)
+            moved = self._evidence(
+                conn, learner, _uuid(test_id), digest, marks, self_marks, position, now
+            )
             wrong = [m.number for m in marks if not m.correct]
             result = {
                 "correct": sum(m.correct for m in marks),
@@ -209,18 +317,19 @@ class OwnTests:
                 "unsupported": [q.number for q in confirmed if q.kind == "unsupported"],
                 "marks": [
                     {"number": m.number, "kind": m.kind, "answer": m.answer, "correct": m.correct,
-                     "trap": m.trap, "key": ot.key_text(q),
+                     "trap": m.trap, "key": ot.key_text(q), "self_mark": self_marks.get(m.number),
                      "answer_text": ot.answer_text(q, m.answer) if m.answer else None,
                      "explanation": None, "explanation_vi": None}
                     for m, q in zip(marks, marked, strict=True)
                 ],
                 "evidence": moved,
+                "position": position,
                 "explained": not wrong,
             }  # fmt: skip
             conn.execute(
-                "update reading_own_tests set status=%s, questions=%s, result=%s, confirmed_at=%s "
-                "where id=%s",
-                ("marked" if wrong else "done", kept, Jsonb(result), now, _uuid(test_id)),
+                "update reading_own_tests set status=%s, questions=%s, result=%s, confirmed_at=%s, "
+                "position=%s where id=%s",
+                ("marked" if wrong else "done", kept, Jsonb(result), now, position, _uuid(test_id)),
             )
             return self._view(conn, learner, test_id)
 
@@ -231,15 +340,20 @@ class OwnTests:
         test_id: UUID,
         digest: str,
         marks: list[ot.Mark],
+        self_marks: dict[int, own_summary.Mark],
+        position: int | None,
         now: datetime,
     ) -> int:
-        """One BKT observation per answered question, never twice for the same pasted test."""
+        """One BKT observation per answered question, never twice for the same pasted test.
+
+        Every marked question gets a row the first time its test is pasted, so the summary sees
+        blanks and marked answers too; a blank, or an answer the learner marked "không kịp", gives
+        no evidence (p_before and p_after stay null). A guessed answer counts, as in the exam.
+        """
         subject, ids = competency_ids(conn, self.cmap)
         names = {c.slug: c.name_vi for c in self.cmap.competencies}
         moved = 0
         for m in marks:
-            if m.answer is None:
-                continue  # a blank gives no evidence
             competency = ot.COMPETENCY[m.kind]
             seen = conn.execute(
                 "select 1 from reading_own_answers where learner_id=%s and fingerprint=%s "
@@ -247,6 +361,16 @@ class OwnTests:
                 (learner, digest, m.number),
             ).fetchone()
             if seen:
+                continue
+            own = self_marks.get(m.number)
+            if m.answer is None or own == "no_time":
+                conn.execute(
+                    "insert into reading_own_answers(learner_id,test_id,fingerprint,number,kind,"
+                    "competency,correct,trap,blank,mark,position,answered_at) "
+                    "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    (learner, test_id, digest, m.number, m.kind, competency, m.correct, m.trap,
+                     m.answer is None, own, position, now),
+                )  # fmt: skip
                 continue
             got = conn.execute(
                 "select p_known from mastery where learner_id=%s and concept_id=%s",
@@ -271,10 +395,10 @@ class OwnTests:
             save_trace(conn, learner, subject, trace)
             conn.execute(
                 "insert into reading_own_answers(learner_id,test_id,fingerprint,number,kind,"
-                "competency,correct,trap,p_before,p_after,answered_at) "
-                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                "competency,correct,trap,p_before,p_after,mark,position,answered_at) "
+                "values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                 (learner, test_id, digest, m.number, m.kind, competency, m.correct, m.trap,
-                 before, after, now),
+                 before, after, own, position, now),
             )  # fmt: skip
             moved += 1
         return moved
@@ -295,6 +419,18 @@ def _whole_words_in(part: str, text: str) -> bool:
     """`part` appears in `text` as whole words: a key edited to "A" needs an "A" of its own in the
     pasted key, not the letter inside "species"."""
     return bool(part) and re.search(rf"(?<!\w){re.escape(part)}(?!\w)", text) is not None
+
+
+def _self_marks(questions: list[dict[str, Any]]) -> dict[int, own_summary.Mark]:
+    """The learner's own marks by question number ("đoán", "không kịp"); others are ignored."""
+    out: dict[int, own_summary.Mark] = {}
+    for data in questions:
+        value = data.get("mark")
+        if value in ("guessed", "no_time"):
+            out[int(data["number"])] = value
+        elif value is not None:
+            raise HTTPException(422, "Đánh dấu không hợp lệ.")
+    return out
 
 
 def _confirmed(questions: list[dict[str, Any]]) -> list[ot.Question]:

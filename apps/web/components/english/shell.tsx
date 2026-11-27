@@ -16,6 +16,7 @@ const LINKS = [
   { href: "/lo-trinh", label: t.nav.roadmap },
   { href: "/ban-do", label: t.nav.maps },
   { href: "/tu-vung", label: t.homeToday.vocabTitle },
+  { href: "/tu-dien", label: t.nav.dictionary },
   { href: "/viet", label: t.nav.writing },
   { href: "/doc", label: t.nav.reading },
   { href: "/nghe", label: t.nav.listening },

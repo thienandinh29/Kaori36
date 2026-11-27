@@ -6,6 +6,7 @@
 - [x] Typed grader with the baseline normaliser
 - [x] Migration 0014, service (FSRS card, review log, trace), routes, mounting
 - [x] Tests (unit, database, routes), the stack smoke test, MAP and plan status
+- [x] Dictionary search (`step-dictionary.md`, owner's request 27 Nov): `GET /vocab/search`, web `/tu-dien`
 - [ ] **Owner:** extend `normalise` in `app/graders/typed.py` and write its tests. Decide, and test, each of:
       curly vs straight apostrophes (`don’t`/`don't`); hyphen vs space vs joined (`well-known`, `well known`);
       trailing full stop or spaces; a leading article the learner typed ("the decision" for `decision`);

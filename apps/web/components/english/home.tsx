@@ -12,6 +12,7 @@ import { TodayList } from "./today-list";
 import { useRoadmap } from "./roadmap-view";
 import { TraceNote } from "./trace-note";
 import { useLearner } from "./use-learner";
+import { WeekStrip } from "./week-strip";
 
 const t = vi.english;
 
@@ -45,6 +46,7 @@ export function EnglishHome() {
           <p className="en-muted">{t.home.senaRule}</p>
         </div>
       </section>
+      {learner && <WeekStrip learner={learner} />}
       {learner && <TodayList learner={learner} />}
       {error != null && <Problem error={error} onRetry={reload} />}
       {!error && !roadmap && <p className="en-muted">{t.loading}</p>}
@@ -76,6 +78,9 @@ export function EnglishHome() {
                 : t.vocab.noMoreWords}
             </p>
           )}
+          <Link className="en-button secondary" href="/tu-dien">
+            {t.dictionary.open}
+          </Link>
         </section>
       )}
       {learner && <RecheckCard learner={learner} />}

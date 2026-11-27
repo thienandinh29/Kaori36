@@ -22,6 +22,7 @@ export const en = {
       reading: "Reading",
       listening: "Listening",
       shadowing: "Shadowing",
+      dictionary: "Dictionary",
     },
     draft: "Draft",
     retry: "Try again",
@@ -103,6 +104,35 @@ export const en = {
       go: "Start",
       proposed:
         "The links between exam skills and foundations are proposed, not yet checked by a teacher.",
+      progress: (done: number, total: number) => `${done}/${total} done`,
+      minutes: (n: number) => `about ${n} min`,
+      done: "Done",
+      fixed:
+        "The list stays the same all day; what you practised today is marked. Times are estimates.",
+      allDone: "You have practised everything on today's list.",
+    },
+    week: {
+      label: "Days with study this week",
+      days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      count: (n: number) => `This week: ${n}/7 days with study`,
+      studied: (answers: number) => `studied (${answers} answers)`,
+      missed: "no study",
+      later: "not yet",
+      today: "today",
+    },
+    dictionary: {
+      title: "Dictionary",
+      open: "Look up a word",
+      intro:
+        "Look up a word in NodeTrail's word list, in English or Vietnamese.",
+      label: "Word to look up",
+      placeholder: "e.g. environment",
+      draft: "Meanings and examples not yet checked by a teacher.",
+      count: (shown: number, total: number) =>
+        shown < total ? `${shown} of ${total} results` : `${total} results`,
+      none: "This word is not in NodeTrail's list.",
+      scope:
+        "Only the words in the study list (NGSL, NAWL and authored words), not a full dictionary.",
     },
     recheck: {
       title: "A check, a week later",

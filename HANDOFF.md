@@ -4,9 +4,23 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 25 Nov 2026, `main` at `1d24d72` (Reading blind checks, 25 Nov batch, #144).
+**Last updated:** 27 Nov 2026, `main` at `7f6aa61` (#152) merged into `feat/week-today-dictionary` (PR #151).
 
 ## Just finished
+- **Home page extras** (PR #151, owner's request 27 Nov, merge when CI is green): today's plan fixed for the day
+  with "Đã xong" marks from today's answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`,
+  migration `0043`); this week's study days as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien`
+  (`specs/vocabulary/step-dictionary.md`). Tested on the API and web run directly against the database; the Docker images
+  were not rebuilt in the cloud session (the sandbox's proxy blocks image builds), so CI's full-stack run is the first.
+- **Reading 4.3d part 2, second half** (#152, 27 Nov): words from the passage kept as saved-phrase cards (gap-fill on
+  the passage sentence, reviewed on `/tu-vung`); migration `0042`. No model call.
+- **Reading 4.3d part 2, first half** (27 Nov, #149): the passage's place and "đoán"/"không kịp" marks on the
+  check step, the summary across pasted tests per question type and the pacing line on `/doc/bai-cua-ban`; migration `0041`.
+  Tested with a mocked model and API; thresholds are assumptions until real tests exist.
+- **Reading diagnosis specified** (27 Nov, docs only): pacing in 4.3d part 2 (`step-4.3d.md`, "Position and pacing"),
+  skill tags and time per question (`step-4.3e.md`), and the research track DIAG-001 (a CDM on public data, after KT-001).
+  SPEC's evidence rule gains: a pasted answer marked "không kịp" gives no evidence. From the owner's CDA research (Bronze).
+- **Wiktionary coverage** (#147): measured only; the enrichment step is the owner's decision (`dolater.md`, section 5).
 - **Reading 4.3d part 1** (#142, 23 Nov): paste a Reading test taken outside the app on `/doc/bai-cua-ban`; the model lists the
   questions, code reads the official key and the learner's answers, the learner confirms, code marks, each wrong answer is
   explained with CP4b's trap list and labelled "chưa kiểm chứng". Owners only; one BKT observation per answered question, once
@@ -16,18 +30,19 @@ wins; fix this page.
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
 ## In progress
-Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), on
-`claude/bold-mccarthy-jfbsad` (pull request open). Waits on the owner: the go-ahead to build (two PRs, no model
-calls). Wiktionary coverage (#147) is merged; its licence and an enrichment step still wait on the owner (`dolater.md`, section 5).
+Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), in
+pull request #153; waits on the owner's go-ahead to build (two PRs, no model calls). The Reading diagnosis docs wait for
+review on `claude/compassionate-newton-d4dkru`.
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
    conditions, pasted with its key and answers. Report how many questions were read wrongly, any wrong trap or explanation,
    and whether the three build choices in `specs/listening-reading/step-4.3d.md` ("Part 1 built") suit you. This is the only
    measure of the real model's parse accuracy.
-2. **Agent: 4.3d part 2**, vocabulary cards from the passage and the summary across tests (`step-4.3d.md`, "Build order").
+2. **Owner:** confirm the build choices of 4.3d part 2 (`step-4.3d.md`: the first-paste row rule, kept words as saved phrases,
+   which words are offered) after a real test or two.
    Spec-sized PR. Better after step 1, so part 2 builds on choices the owner has confirmed.
-3. Then, in `PLAN.md` order: CP4b on the bank's own questions, CP4c exam details, CP2b planted test, the CP6 report, phase 5
+3. Then, in `PLAN.md` order: CP4b on the bank's own questions, with skill tags in the same call (`step-4.3e.md` part 1), CP4c exam details, CP2b planted test, the CP6 report, phase 5
    Speaking. The owner may reorder.
 
 ## Waiting on the owner (not on a build)

@@ -33,12 +33,22 @@ class QuestionIn(BaseModel):
                                                                  max_length=8)  # fmt: skip
     max_words: int | None = Field(default=None, ge=1, le=5)
     key: str | None = Field(default=None, max_length=200)
+    mark: Literal["guessed", "no_time"] | None = None  # the learner's own: "đoán", "không kịp"
 
 
 class ConfirmIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     learner_id: str = Field(min_length=1, max_length=200)
     questions: list[QuestionIn] = Field(max_length=40)
+    position: int | None = Field(default=None, ge=1, le=3)  # the passage's place in the test
+
+
+class KeepWordsIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    learner_id: str = Field(min_length=1, max_length=200)
+    forms: list[Annotated[str, Field(min_length=1, max_length=60)]] = Field(
+        min_length=1, max_length=40
+    )
 
 
 class OwnTestQueued(BaseModel):
@@ -70,13 +80,27 @@ def create_router(service: OwnTests) -> APIRouter:
     def tests(learner_id: str = Learner) -> list[OwnTestSummary]:
         return [OwnTestSummary(**t) for t in service.listing(learner_id)]
 
+    @router.get("/reading/own-tests/summary")
+    def summary(learner_id: str = Learner) -> dict[str, Any]:
+        return service.summary(learner_id)
+
     @router.get("/reading/own-tests/{test_id}")
     def test(test_id: TestId, learner_id: str = Learner) -> dict[str, Any]:
         return service.get(learner_id, test_id)
 
     @router.post("/reading/own-tests/{test_id}/confirm")
     def confirm(test_id: TestId, body: ConfirmIn) -> dict[str, Any]:
-        return service.confirm(body.learner_id, test_id, [q.model_dump() for q in body.questions])
+        return service.confirm(
+            body.learner_id, test_id, [q.model_dump() for q in body.questions], body.position
+        )
+
+    @router.get("/reading/own-tests/{test_id}/words")
+    def words(test_id: TestId, learner_id: str = Learner) -> dict[str, Any]:
+        return service.words(learner_id, test_id)
+
+    @router.post("/reading/own-tests/{test_id}/words")
+    def keep_words(test_id: TestId, body: KeepWordsIn) -> dict[str, Any]:
+        return service.keep_words(body.learner_id, test_id, body.forms)
 
     @router.delete("/reading/own-tests/{test_id}", status_code=204)
     def delete(test_id: TestId, learner_id: str = Learner) -> Response:

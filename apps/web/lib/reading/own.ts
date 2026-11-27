@@ -9,6 +9,9 @@ export const MAX_QUESTIONS_CHARS = 8000;
 export const MAX_KEY_CHARS = 2000;
 
 export type OwnKind = "tfng" | "ynng" | "mcq" | "completion" | "unsupported";
+/** The learner's own mark on an answer: "đoán" (guessed) or "không kịp" (ran out of time). */
+export type SelfMark = "guessed" | "no_time";
+export const SELF_MARKS: readonly SelfMark[] = ["guessed", "no_time"];
 export type OwnStatus =
   "queued" | "parsing" | "parsed" | "marked" | "explaining" | "done" | "failed";
 
@@ -21,6 +24,7 @@ export interface OwnQuestion {
   key: string | null;
   answer: string | null; // the learner's, read by code from what they pasted
   problems: string[];
+  mark: SelfMark | null;
 }
 export interface Explanation {
   keyQuotes: string[];
@@ -38,6 +42,7 @@ export interface OwnMark {
   key: string;
   explanation: Explanation | null;
   explanationVi: string | null;
+  selfMark: SelfMark | null;
 }
 export interface OwnResult {
   correct: number;
@@ -47,6 +52,7 @@ export interface OwnResult {
   marks: OwnMark[];
   evidence: number;
   explained: boolean;
+  position: number | null;
 }
 export interface OwnTest {
   id: string;
@@ -102,6 +108,11 @@ function optString(v: unknown): string | null {
 function optInt(v: unknown): number | null {
   return v === null || v === undefined ? null : int(v);
 }
+function selfMark(v: unknown): SelfMark | null {
+  if (v === null || v === undefined) return null;
+  if (!SELF_MARKS.includes(v as SelfMark)) throw new DataError("contract");
+  return v as SelfMark;
+}
 function status(v: unknown): OwnStatus {
   if (!STATUSES.includes(v as OwnStatus)) throw new DataError("contract");
   return v as OwnStatus;
@@ -122,6 +133,7 @@ function question(v: unknown): OwnQuestion {
     key: optString(r.key),
     answer: optString(r.answer),
     problems: list(r.problems ?? []).map(string),
+    mark: selfMark(r.mark),
   };
 }
 
@@ -148,6 +160,7 @@ function mark(v: unknown): OwnMark {
     key: string(r.key),
     explanation: explanation(r.explanation),
     explanationVi: optString(r.explanation_vi),
+    selfMark: selfMark(r.self_mark),
   };
 }
 
@@ -162,6 +175,7 @@ function result(v: unknown): OwnResult | null {
     marks: list(r.marks).map(mark),
     evidence: int(r.evidence),
     explained: bool(r.explained),
+    position: optInt(r.position),
   };
 }
 
@@ -208,6 +222,7 @@ export function confirmBody(questions: OwnQuestion[]): unknown[] {
     options: q.options,
     max_words: q.maxWords,
     key: q.key,
+    mark: q.mark,
   }));
 }
 
@@ -240,4 +255,154 @@ export function trapName(
 /** The share of correct answers, as the page says it. */
 export function score(r: OwnResult): string {
   return `${r.correct}/${r.total}`;
+}
+
+// --- The summary across pasted tests (part 2) ---
+
+export interface Share {
+  k: number;
+  n: number;
+  low: number | null;
+  high: number | null;
+}
+export interface KindSummary {
+  kind: OwnKind;
+  answers: number;
+  wrong: number;
+  enough: boolean;
+  right: Share;
+  topTrap: { trap: string; count: number; of: number } | null;
+}
+export type PacingStatus = "not_enough" | "maybe_time" | "counts_only";
+export interface Pacing {
+  status: PacingStatus;
+  tests: number;
+  late: { wrong: number; n: number };
+  rest: { wrong: number; n: number };
+  lateWrongMarked: number;
+}
+export interface OwnSummary {
+  tests: number;
+  answers: number;
+  byKind: KindSummary[];
+  pacing: Pacing;
+}
+
+const PACING: readonly PacingStatus[] = [
+  "not_enough",
+  "maybe_time",
+  "counts_only",
+];
+
+function optNumber(v: unknown): number | null {
+  if (v === null || v === undefined) return null;
+  if (typeof v !== "number" || v < 0 || v > 1) throw new DataError("contract");
+  return v;
+}
+function share(v: unknown): Share {
+  const r = record(v);
+  return {
+    k: int(r.k),
+    n: int(r.n),
+    low: optNumber(r.low),
+    high: optNumber(r.high),
+  };
+}
+function wrongOf(v: unknown): { wrong: number; n: number } {
+  const r = record(v);
+  return { wrong: int(r.wrong), n: int(r.n) };
+}
+
+export function parseOwnSummary(value: unknown): OwnSummary {
+  const r = record(value);
+  const p = record(r.pacing);
+  if (!PACING.includes(p.status as PacingStatus))
+    throw new DataError("contract");
+  return {
+    tests: int(r.tests),
+    answers: int(r.answers),
+    byKind: list(r.by_kind).map((v) => {
+      const k = record(v);
+      const top =
+        k.top_trap === null || k.top_trap === undefined
+          ? null
+          : record(k.top_trap);
+      return {
+        kind: kind(k.kind),
+        answers: int(k.answers),
+        wrong: int(k.wrong),
+        enough: bool(k.enough),
+        right: share(k.right),
+        topTrap: top
+          ? { trap: string(top.trap), count: int(top.count), of: int(top.of) }
+          : null,
+      };
+    }),
+    pacing: {
+      status: p.status as PacingStatus,
+      tests: int(p.tests),
+      late: wrongOf(p.late),
+      rest: wrongOf(p.rest),
+      lateWrongMarked: int(p.late_wrong_marked),
+    },
+  };
+}
+
+/** A share as the page says it: "7/10 (35–93%)", the interval rounded to whole percent. */
+export function shareText(s: Share): string {
+  const base = `${s.k}/${s.n}`;
+  if (s.low === null || s.high === null) return base;
+  return `${base} (${Math.round(s.low * 100)}–${Math.round(s.high * 100)}%)`;
+}
+
+// --- Words from the passage (part 2, "Vocabulary") ---
+
+export interface PassageWord {
+  headword: string;
+  form: string; // as written in the sentence: the card's answer
+  level: string | null; // null: not in NGSL/NAWL
+  sentence: string;
+  deciding: boolean; // in a sentence that decided a wrong answer
+  definition: string | null;
+  vi: string | null;
+  saved: boolean;
+}
+export interface PassageWords {
+  level: string;
+  levelSource: "level_test" | "default";
+  words: PassageWord[];
+}
+
+export function parsePassageWords(value: unknown): PassageWords {
+  const r = record(value);
+  if (r.level_source !== "level_test" && r.level_source !== "default")
+    throw new DataError("contract");
+  return {
+    level: string(r.level),
+    levelSource: r.level_source,
+    words: list(r.words).map((v) => {
+      const w = record(v);
+      return {
+        headword: string(w.headword),
+        form: string(w.form),
+        level: optString(w.level),
+        sentence: string(w.sentence),
+        deciding: bool(w.deciding),
+        definition: optString(w.definition),
+        vi: optString(w.vi),
+        saved: bool(w.saved),
+      };
+    }),
+  };
+}
+
+/** The words the learner may still keep (not saved yet), deciding-sentence words ticked first. */
+export function defaultPicks(words: PassageWord[]): string[] {
+  return words.filter((w) => w.deciding && !w.saved).map((w) => w.form);
+}
+
+/** What keeping words did: new cards, and words that were already saved. */
+export function parseKept(value: unknown): { added: number; already: number } {
+  const r = record(value);
+  return { added: int(r.added), already: int(r.already) };
 }
