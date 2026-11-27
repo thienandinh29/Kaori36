@@ -11,11 +11,13 @@ import {
   OWN_CONSENT,
   OWN_CONSENT_KEY,
   confirmable,
+  defaultPicks,
   pending,
   shareText,
   trapName,
   type OwnKind,
   type OwnSummary,
+  type PassageWords,
   type SelfMark,
   type OwnMark,
   type OwnQuestion,
@@ -156,6 +158,9 @@ export function OwnTestPage() {
         />
       )}
       {test?.result && <Result test={test} />}
+      {test?.status === "done" && (
+        <WordsView key={test.id} learner={learner} testId={test.id} />
+      )}
       {test && (
         <section className="en-card nt-actions">
           <button
@@ -648,6 +653,100 @@ function SummaryView({ s }: { s: OwnSummary }) {
           </p>
           {p.status !== "not_enough" && (
             <p className="en-muted">{t.pacingAssumption}</p>
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
+function WordsView({ learner, testId }: { learner: string; testId: string }) {
+  const [words, setWords] = useState<PassageWords | null>(null);
+  const [picks, setPicks] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [kept, setKept] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
+  const load = useCallback(
+    () =>
+      englishClient()
+        .ownTestWords(learner, testId)
+        .then((w) => {
+          setWords(w);
+          setPicks(defaultPicks(w.words));
+        })
+        .catch((e: unknown) => setError(e)),
+    [learner, testId],
+  );
+  useEffect(() => {
+    void load();
+  }, [load]);
+  if (error) return <Problem error={error} />;
+  if (!words) return null;
+  const toggle = (form: string) =>
+    setPicks((all) =>
+      all.includes(form) ? all.filter((f) => f !== form) : [...all, form],
+    );
+  return (
+    <section className="en-card" data-testid="own-words">
+      <h2>{t.wordsTitle}</h2>
+      <p className="en-muted">
+        {t.wordsIntro(words.level, words.levelSource === "level_test")}
+      </p>
+      {words.words.length === 0 ? (
+        <p className="en-muted">{t.wordsNone}</p>
+      ) : (
+        <>
+          <ul className="en-own-list">
+            {words.words.map((w) => (
+              <li key={w.form} data-testid={`own-word-${w.form}`}>
+                <label>
+                  <input
+                    type="checkbox"
+                    disabled={w.saved}
+                    checked={w.saved || picks.includes(w.form)}
+                    onChange={() => toggle(w.form)}
+                  />{" "}
+                  <strong lang="en">{w.headword}</strong>{" "}
+                  <span className="en-muted">
+                    {w.level ?? t.wordsOutside}
+                    {w.deciding ? ` · ${t.wordsDeciding}` : ""}
+                    {w.saved ? ` · ${t.wordsSaved}` : ""}
+                  </span>
+                </label>
+                {(w.vi ?? w.definition) && (
+                  <p className="en-muted">
+                    {w.vi && <span>{w.vi}</span>}
+                    {w.vi && w.definition ? " · " : ""}
+                    {w.definition && <span lang="en">{w.definition}</span>}
+                  </p>
+                )}
+                <blockquote lang="en">{w.sentence}</blockquote>
+              </li>
+            ))}
+          </ul>
+          <p className="en-muted">{t.wordsDraft}</p>
+          <button
+            type="button"
+            className="en-button"
+            disabled={busy || picks.length === 0}
+            onClick={() => {
+              setBusy(true);
+              void englishClient()
+                .keepOwnTestWords(learner, testId, picks)
+                .then((r) => {
+                  setKept(t.wordsKept(r.added, r.already));
+                  return load();
+                })
+                .catch((e: unknown) => setError(e))
+                .finally(() => setBusy(false));
+            }}
+          >
+            {busy ? t.wordsKeeping : t.wordsKeep(picks.length)}
+          </button>
+          {kept && (
+            <p role="status">
+              {kept} <Link href="/tu-vung">{t.wordsReview}</Link>
+            </p>
           )}
         </>
       )}

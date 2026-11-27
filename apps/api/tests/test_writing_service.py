@@ -719,6 +719,14 @@ def test_a_saved_phrase_is_reviewed_with_fsrs_and_can_be_deleted(setup: Setup) -
     assert left == (0,) and phrases.session(learner, now=NOW)["saved"] == 0
 
 
+def test_a_saved_word_is_blanked_as_a_whole_word() -> None:
+    from app.services.rewrites import _blank
+
+    assert _blank("Use it because you can use it.", "use") == "_____ it because you can use it."
+    assert _blank("Because we can, we use it.", "use") == "Because we can, we _____ it."
+    assert _blank("It is pre-used.", "use") == "It is pre-_____d."  # no whole word: as before
+
+
 # --- step 2.5: Task 1 (specs/writing/step-2.5.md) -------------------------------------------
 
 TASK1_ESSAY = (

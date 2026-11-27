@@ -281,6 +281,10 @@ describe("graph confirmation session proxy", () => {
     expect(
       (await get("reading/own-tests/summary", `?learner_id=${id}`)).status,
     ).toBe(200);
+    expect(
+      (await get(`reading/own-tests/${own}/words`, `?learner_id=${id}`)).status,
+    ).toBe(200);
+    expect((await post(`reading/own-tests/${own}/words`)).status).toBe(200);
     expect((await post("reading/own-tests/not-a-uuid/confirm")).status).toBe(
       404,
     );

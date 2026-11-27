@@ -41,6 +41,19 @@ Listening's passages; reviewing it becomes optional (when more drills are wanted
   the deciding sentences of wrong answers; each shown with its passage sentence. Kept words become FSRS cards with that sentence as
   the example (a gap-fill on the sentence). Words outside our lists are listed with no definition, or with a model gloss marked
   "bản nháp", never presented as checked.
+  **Built 27 Nov 2026:** `app/reading/own_vocab.py` (pure), `GET`/`POST /reading/own-tests/{id}/words`, the "Từ vựng trong bài"
+  section on `/doc/bai-cua-ban` once a test is explained. Choices made while building, for the owner to confirm:
+  - **Kept words are saved phrases** (`learner_phrases`, Writing 2.4b's cards, reviewed on `/tu-vung`), not a new card type: the
+    word as written in the sentence is the answer, the passage sentence the gap-fill. Migration `0042` links a card to its test;
+    deleting the test keeps the cards the learner chose and clears the link.
+  - **Which words:** NGSL/NAWL forms (`data-sa/vocabulary/forms.yaml`) above the level, at their first sentence; deciding
+    sentences (those quoted by an explanation of a wrong answer) add their B1-or-harder words and come first, ticked for the
+    learner. A capitalised word outside the lists is taken as a name and left out; at most 40 words. **No model gloss**: a word
+    outside the lists has no definition; listed words show the word list's own (draft) definition and Vietnamese.
+  - The server recomputes the offer when words are kept and refuses a word it did not offer, so a sentence never comes from the
+    browser. A saved phrase's gap-fill now blanks the first **whole-word** match (a single word "use" no longer blanks the
+    middle of "because"; a Writing fix).
+  Not measured: how useful the offered words are on real Cambridge passages, or how often a name is taken for a word.
 - **Evidence (owner's decision):** each marked answer is one BKT observation on its Reading competency (the same mapping as the bank's
   question types), counted once per question, never again if the same test is pasted twice (a fingerprint of the passage and the
   key). A blank gives no evidence.
@@ -75,7 +88,7 @@ cognitive diagnosis, Bronze). Code only, no model call:
   what separate them, and they are self-report (Bronze). The 20-point and "half marked" thresholds are assumptions, labelled so.
 - `reading_own_answers` gains nullable `position` (the passage's place), `mark` (`guessed` | `no_time`) and `blank` in an additive
   migration (`0041`).
-- **Built 27 Nov 2026 (pacing and the summary; vocabulary cards still to come):** `app/reading/own_summary.py` (pure: per type,
+- **Built 27 Nov 2026 (pacing and the summary; vocabulary cards: "Vocabulary" above):** `app/reading/own_summary.py` (pure: per type,
   the share right with an exact 95% interval from 5 answers, the top trap; the pacing status `not_enough` | `maybe_time` |
   `counts_only`), `GET /reading/own-tests/summary`, the position and mark choices on the check step, the summary panel on
   `/doc/bai-cua-ban`. One choice made while building: **every marked question now gets a row the first time its test is
