@@ -28,9 +28,8 @@ A cap is a rule: *if a finding holds, the criterion's band is at most c*. Caps a
   | Finding | Comes from | Criterion | Proposed cap | Applied to the band? |
   |---|---|---|---|---|
   | No paragraph breaks (one block of text) | code (blank-line split) | CC | 5.0 | yes, after measurement |
-  | Only two paragraphs | code | CC | 6.0 | yes, after measurement |
   | A part of the question not answered (`part_missing`, 2.11b) | the model's structure, checked by code | TR | 5.0 | **no**: shown as "có thể bị giới hạn", see the rule below |
-  | No position anywhere (`position_missing`) | the model's structure | TR | 5.0 | **no** |
+  | No position anywhere (`position_missing`) | the model's structure | TR | 4.0 | **no** |
   | Position flips (`position_changed`) | the model's structure | TR | 6.0 | **no** |
 
 - **Not caps, on purpose:** "có thể chưa được phát triển" stays a hint (2.11b); under 250 words is a feature, not a cap
@@ -60,8 +59,10 @@ A cap is a rule: *if a finding holds, the criterion's band is at most c*. Caps a
 - **Model:** ridge regression per criterion (the existing pure `fit_ridge`, penalty chosen by cross-validation on the
   development folds), each calibrated to the band scale by isotonic regression, as the overall scorer is. An ordinal
   model is tried only if ridge leaves a visible pattern in the residuals by band.
-- **The overall band** is formed from the four predicted criteria with the published rule (the mean, rounded to the
-  half band as the published guidance says; the exact rounding read from that page and unit-tested). It is compared with
+- **The overall band** is formed from the four predicted criteria with the published rule: "The criteria are weighted
+  equally and the score on the task is the average" (ielts.org, IELTS scoring in detail, read 27 Nov 2026). How the
+  average of one task is rounded is not stated there (its rounding rule is for the overall test score), so the
+  unrounded mean goes into the range, as the overall scorer's prediction does. It is compared with
   predicting the overall band directly.
 - **Range:** as in step 2.3: the 10th–90th percentiles of cross-validated residuals, wider than 1.5 bands shown as "không
   chắc". The test report adds the share of test essays whose examiner band falls inside its range (target about 80%).
@@ -92,9 +93,40 @@ The owner chooses; the choice and the numbers go into `scorer.yaml` (a new `meth
   the range and, under "Vì sao?", any cap that fired with its descriptor line and evidence. No migration is expected;
   if the stored result needs criterion bands, one is added at build time.
 
+## Build note, part 1 (27 Nov 2026): caps and features
+- **The descriptors were read** from the official PDF (`https://ielts.org/cdn/ielts-guides/ielts-writing-band-descriptors.pdf`,
+  "Writing Task 2 Band Descriptors", updated May 2023, SHA-256 `e3c88943…68d1b`), after the owner's environment allowed
+  ielts.org; the PDF is not committed (copyright), only its address, hash and the quoted lines. Its own rule for caps:
+  "A script must fully fit the positive features of the descriptor at a particular level. Bolded text indicates negative
+  features that will limit a rating." Which lines are bold was not checked (text extraction drops the font).
+- **What changed from the proposal above, after reading:**
+  - *Two paragraphs* is dropped: no line says how many paragraphs a band needs. Band 5 says "Paragraphing may be
+    inadequate or missing", band 6 "Paragraphing may not always be logical"; only *no paragraphing* is a clear line.
+  - *No position* caps at **4**, not 5: band 5 needs "The writer expresses a position", band 4 "A position is
+    discernible, but the reader has to read carefully to find it". A position found only in the body fits band 4 at best.
+  - *Part missing* stays at 5 (band 6: "The main parts of the prompt are addressed"; band 5: "…incompletely
+    addressed"); *position flips* stays at 6 (band 7: "A clear and developed position is presented"; band 6: "the
+    conclusions drawn may be unclear, unjustified or repetitive").
+- **Built:** `data/writing/caps.yaml` (four rules, each with its quoted lines and the agent's reading, all `proposed`,
+  none `applied`); `app/writing/caps.py`: the file is checked on load (a model rule can never be applied, a rule is
+  applied only once `measured`, each rule quotes the band line it caps at), `fire` with evidence, `apply_caps` (applied
+  code rules only, never raises a band), `notes` ("có thể bị giới hạn"), `cap_effect` (MAE with and without the cap where
+  it fired, for the evaluation). One block of fewer than 120 words is not called unparagraphed (the length rules apply).
+- **Built:** `app/writing/descriptor_features.py`: MTLD (forwards and backwards, none under 50 words), errors per 100
+  words by kind (LanguageTool's category, as step 2.9 groups them; the model's suggestions never counted), the share of
+  sentences without a grammar or word-choice error, word levels from the NGSL/NAWL form index with unknown words apart
+  from advanced ones, prompt words per 100, linking variety, rate and the top linker's share; `CANDIDATES` per
+  criterion. Nothing is wired into the app or the evaluation yet; nothing a learner sees changes.
+- **Run for real:** the features on a 161-word sample essay written for the check, with the real form index and
+  linking words (no LanguageTool in the sandbox, so no error counts): 0.09 s; MTLD 169, 4.4% of known words above B1,
+  3% unknown, 6 linking groups; as one block it fires `no_paragraphing` (not applied). Limits seen: hyphenated words are
+  split ("non-graduates" counts "non"), and some advanced words are missing from the list ("beneficiaries",
+  "considerably", "workforce" count as unknown, not advanced). Whether any feature tracks examiner bands is not known
+  until the owner's essays exist.
+
 ## Build order (each part runs for real before the next)
-1. `caps.yaml` with the descriptor lines read from the published page; `caps.py` and its unit tests.
-2. The features of 2.12b as pure functions with unit tests (MTLD on known texts, linking overuse, error-free share).
+1. `caps.yaml` with the descriptor lines read from the published page; `caps.py` and its unit tests. **Built.**
+2. The features of 2.12b as pure functions with unit tests (MTLD on known texts, linking overuse, error-free share). **Built.**
 3. `writing_score` extended: the new fields, the per-criterion models, the five-way comparison, coverage; tested on
    synthetic essays (the report is then labelled synthetic).
 4. Served path behind the calibration: `scoring.py` uses the method in `scorer.yaml`; nothing shows while it is `null`.

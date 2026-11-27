@@ -41,8 +41,9 @@ wins; fix this page.
 Nothing in code. On `claude/lucid-goldberg-9997no`, waiting for review (docs only): the Speaking band rule change; the owner's
 scoring research adopted as A (criterion bands from the rater, `step-v4.md` T6), B (pauses between and inside clauses, 5.2)
 and C (SPK-001 comparisons and inputs); and the examiner test's step page `specs/speaking/step-5.4a.md` (owner's go).
-Also: Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), in
-pull request #153; waits on the owner's go-ahead to build (two PRs, no model calls). The Reading diagnosis docs wait for
+Also: Writing step 2.12 part 1 (descriptor caps and features, `specs/writing/step-2.12.md`, "Build note, part 1") on
+`feat/writing-2.12-caps`; nothing wired into the app. Part 2 (the evaluation and the served path) follows once part 1 is
+merged; the measurement waits on the owner's examiner-banded essays. The Reading diagnosis docs wait for
 review on `claude/compassionate-newton-d4dkru`.
 
 ## Next (build)
