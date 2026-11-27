@@ -7,6 +7,9 @@ wins; fix this page.
 **Last updated:** 27 Nov 2026, `main` at `6b6ca8b` (Wiktionary coverage, #147), plus the Reading diagnosis docs (this branch).
 
 ## Just finished
+- **Reading 4.3d part 2, first half** (27 Nov, this branch, not merged): the passage's place and "đoán"/"không kịp" marks on the
+  check step, the summary across pasted tests per question type and the pacing line on `/doc/bai-cua-ban`; migration `0041`.
+  Tested with a mocked model and API; thresholds are assumptions until real tests exist.
 - **Reading diagnosis specified** (27 Nov, docs only): pacing in 4.3d part 2 (`step-4.3d.md`, "Position and pacing"),
   skill tags and time per question (`step-4.3e.md`), and the research track DIAG-001 (a CDM on public data, after KT-001).
   SPEC's evidence rule gains: a pasted answer marked "không kịp" gives no evidence. From the owner's CDA research (Bronze).
@@ -27,8 +30,7 @@ Nothing in code. The Reading diagnosis docs wait for review on `claude/compassio
    conditions, pasted with its key and answers. Report how many questions were read wrongly, any wrong trap or explanation,
    and whether the three build choices in `specs/listening-reading/step-4.3d.md` ("Part 1 built") suit you. This is the only
    measure of the real model's parse accuracy.
-2. **Agent: 4.3d part 2**, vocabulary cards from the passage, the summary across tests, and position and pacing
-   (`step-4.3d.md`, "Build order").
+2. **Agent: 4.3d part 2, second half**: vocabulary cards from the passage (`step-4.3d.md`, "Vocabulary").
    Spec-sized PR. Better after step 1, so part 2 builds on choices the owner has confirmed.
 3. Then, in `PLAN.md` order: CP4b on the bank's own questions, with skill tags in the same call (`step-4.3e.md` part 1), CP4c exam details, CP2b planted test, the CP6 report, phase 5
    Speaking. The owner may reorder.

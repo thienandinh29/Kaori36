@@ -42,7 +42,7 @@ recommendation simulation gate. It is reconsidered only after the teacher's samp
 - The test page records, for each question, the seconds it was in view and how many times the answer changed before submit.
   It sends them with the submission. The server stores them and does not trust them for anything but description (the clock
   that decides "late" stays the server's).
-- `reading_answers` gains nullable `seconds_on` (integer) and `changes` (smallint) in an additive migration (`0041`, at build
+- `reading_answers` gains nullable `seconds_on` (integer) and `changes` (smallint) in an additive migration (the next free number, at build
   time). Practice answers leave them empty.
 - **Shown:** nothing, until 3 timed tests exist. Then the result page shows seconds per question next to the key, with no
   judgement. No rule reads them yet: they are the data that DIAG-001 and KT-001 need later.
@@ -57,5 +57,5 @@ then the per-skill lines are descriptive counts, not a diagnosis.
 ## Build order (one PR each)
 1. The tag list, code's checks, tags in CP4b's generation call and the blind pick; the tag proposal for pasted tests.
 2. The per-skill lines in the summaries.
-3. Time and answer changes in the timed test (migration `0041`).
+3. Time and answer changes in the timed test (an additive migration).
 4. The portal task for the teacher's 50 labels (when a teacher is found).
