@@ -24,4 +24,21 @@ test("today's list shows activities with a reason and in-app links", async ({
   await first.getByText("Vì sao?").click();
   await expect(first.locator("details p").first()).not.toBeEmpty();
   await expect(list.getByText("đề xuất", { exact: false })).toBeVisible();
+  // Step M5: the day's plan shows how much is done and a rough time per activity.
+  await expect(list.getByTestId("today-count")).toHaveText(
+    /^\d+\/\d+ đã xong$/,
+  );
+  await expect(first.getByText(/^khoảng \d+ phút$/)).toBeVisible();
+});
+
+test("the week shows days with study, never a streak", async ({ page }) => {
+  await page.addInitScript((value) => {
+    localStorage.setItem("nodetrail_english_learner", value);
+  }, LEARNER);
+  await page.goto("/");
+  const week = page.getByTestId("week-strip");
+  await expect(week.getByText(/^Tuần này: \d\/7 ngày có học$/)).toBeVisible();
+  await expect(week.locator("li")).toHaveCount(7);
+  await expect(week.locator('li[aria-current="date"]')).toHaveCount(1);
+  await expect(week.getByText(/chuỗi|liên tiếp|streak/i)).toHaveCount(0);
 });

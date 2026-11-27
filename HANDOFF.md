@@ -4,10 +4,15 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `6b6ca8b` (Wiktionary coverage, #147), plus the Reading diagnosis docs (this branch).
+**Last updated:** 27 Nov 2026, `main` at `7f6aa61` (#152) merged into `feat/week-today-dictionary` (PR #151).
 
 ## Just finished
-- **Reading 4.3d part 2, second half** (27 Nov, this branch): words from the passage kept as saved-phrase cards (gap-fill on
+- **Home page extras** (PR #151, owner's request 27 Nov, merge when CI is green): today's plan fixed for the day
+  with "Đã xong" marks from today's answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`,
+  migration `0043`); this week's study days as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien`
+  (`specs/vocabulary/step-dictionary.md`). Tested on the API and web run directly against the database; the Docker images
+  were not rebuilt in the cloud session (the sandbox's proxy blocks image builds), so CI's full-stack run is the first.
+- **Reading 4.3d part 2, second half** (#152, 27 Nov): words from the passage kept as saved-phrase cards (gap-fill on
   the passage sentence, reviewed on `/tu-vung`); migration `0042`. No model call.
 - **Reading 4.3d part 2, first half** (27 Nov, #149): the passage's place and "đoán"/"không kịp" marks on the
   check step, the summary across pasted tests per question type and the pacing line on `/doc/bai-cua-ban`; migration `0041`.
