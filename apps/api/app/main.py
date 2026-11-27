@@ -176,6 +176,16 @@ def create_app(
             )
         )
     )
+    from app.api import speaking as speaking_routes
+    from app.services.speaking_tests import SpeakingTests
+
+    app.include_router(
+        speaking_routes.create_router(
+            SpeakingTests(
+                lambda: app.state.pool, settings.speaking_tests_dir, settings.draft_item_learners
+            )
+        )
+    )
     from app.api import reading_review as reading_review_routes
     from app.services.reading_review import ReadingReview
 

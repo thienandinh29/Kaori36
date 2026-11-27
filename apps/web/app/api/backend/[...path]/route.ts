@@ -14,18 +14,20 @@ const allowedEnglish = new RegExp(
     `phrases|phrases/session|phrases/answers|phrases/${UUID}|speech|speech/status|` +
     `lessons|lessons/${SLUG}|lessons/${SLUG}/checkpoints|` +
     `pronunciation/prompts|recordings|recordings/${UUID}|recordings/${UUID}/audio|recordings/${UUID}/labels|reading/review|reading/review/${SLUG}|reading/review/texts/${SLUG}|` +
-    `rechecks/next|rechecks/${UUID}/answer|today|maps|` +
+    `rechecks/next|rechecks/${UUID}/answer|today|today/week|maps|vocab/search|` +
     `reading/texts|reading/texts/${SLUG}|reading/texts/${SLUG}/tests|reading/tests/${UUID}/submit|reading/items/${SLUG}/answer|` +
     `reading/own-tests|reading/own-tests/summary|reading/own-tests/${UUID}|reading/own-tests/${UUID}/confirm|reading/own-tests/${UUID}/words|` +
     `listening/texts|listening/texts/${SLUG}|listening/passages|listening/passages/${SLUG}|listening/passages/${SLUG}/audio/[0-9]{1,3}|listening/passages/${SLUG}/submit|listening/items/${SLUG}/audio|listening/items/${SLUG}/answer|` +
     `shadowing/texts|shadowing/texts/${SLUG}|vocab/say|vocab/say/status|vocab/say/focus|` +
+    `speaking/tests|speaking/tests/${UUID}|speaking/tests/${UUID}/answers|speaking/tests/${UUID}/finish|speaking/answers/${UUID}/audio|speaking/mic-check|` +
     `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
     `review/batches/${UUID}/items/${UUID}:[0-9]{1,3}|review/batches/${UUID}/items/${UUID}:[0-9]{1,3}/audio)$`,
 );
 // The only paths a learner may DELETE: their own essay (specs/writing/step-2.1.md), phrase,
-// recording, and a Reading test they pasted (specs/listening-reading/step-4.3d.md).
+// recording, a Reading test they pasted (specs/listening-reading/step-4.3d.md) and a Speaking
+// test they sat (specs/speaking/step-5.4a.md).
 const deletable = new RegExp(
-  `^(essays|phrases|recordings|reading/own-tests)/${UUID}$`,
+  `^(essays|phrases|recordings|reading/own-tests|speaking/tests)/${UUID}$`,
 );
 const forwardedParams = [
   "learner_id",
@@ -45,6 +47,8 @@ const forwardedParams = [
   "minutes",
   "pace",
   "word",
+  "question",
+  "q",
 ];
 const learnerCookie = "nodetrail_learner";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;
@@ -127,9 +131,13 @@ async function proxy(
       const limit =
         path === "uploads"
           ? Number(process.env.NODETRAIL_MAX_UPLOAD_BYTES) + 64 * 1024
-          : path === "recordings" || path === "vocab/say"
+          : path === "recordings" ||
+              path === "vocab/say" ||
+              path === "speaking/mic-check"
             ? 600 * 1024 // a 15-second 16 kHz mono WAV is about 480 KB
-            : 64 * 1024;
+            : /^speaking\/tests\/[^/]+\/answers$/.test(path)
+              ? 4300 * 1024 // a two-minute answer and its grace: about 4.2 MB
+              : 64 * 1024;
       if (
         !Number.isSafeInteger(limit) ||
         (limit <= 64 * 1024 && path === "uploads")

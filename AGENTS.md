@@ -124,7 +124,7 @@ Two rules about how you work, not what the product does:
   report; the owner's judgement on correct English is learner feedback or Bronze.
 
 ## Database
-Migrations in `supabase/migrations/`, numbered in order (`0043` is the latest), **additive only**. Never edit a migration
+Migrations in `supabase/migrations/`, numbered in order (`0045` is the latest), **additive only**. Never edit a migration
 that has been merged. Tests make a throwaway migrated database per run (`apps/api/tests/conftest.py`); they never touch
 development data.
 

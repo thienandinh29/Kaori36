@@ -13,7 +13,8 @@ from app.services.vocabulary import (
     MAX_ANSWER_CHARS,
     VocabPractice,
 )
-from app.vocabulary.items import LearnerItem, WordCard
+from app.vocabulary.items import LearnerItem, WordCard, card
+from app.vocabulary.search import MAX_QUERY, search
 
 SLUG_PATTERN = r"^[a-z0-9]+(?:-[a-z0-9]+)*$"
 
@@ -31,6 +32,14 @@ class VocabSession(BaseModel):
     new_today: int
     new_left_today: int
     new_available: int  # new words not started yet at the chosen level(s)
+
+
+class VocabSearch(BaseModel):
+    """Dictionary search (specs/vocabulary/step-dictionary.md): cards from the word list."""
+
+    status: Literal["draft", "reviewed"]
+    total: int
+    results: list[WordCard]
 
 
 class VocabLevel(BaseModel):
@@ -115,6 +124,20 @@ def create_router(practice: VocabPractice) -> APIRouter:
             new_today=result.new_today,
             new_left_today=result.new_left_today,
             new_available=result.new_available,
+        )
+
+    @router.get("/search")
+    def find(
+        q: str = Query(min_length=1, max_length=MAX_QUERY),
+        list_slug: str = Query(
+            default="core-seed", alias="list", min_length=1, max_length=40, pattern=SLUG_PATTERN
+        ),
+        limit: int = Query(default=20, ge=1, le=50),
+    ) -> VocabSearch:
+        wordlist = practice.wordlist(list_slug)
+        found = search(wordlist.words, q, limit)
+        return VocabSearch(
+            status=wordlist.status, total=found.total, results=[card(w) for w in found.words]
         )
 
     @router.get("/levels")

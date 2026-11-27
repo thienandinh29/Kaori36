@@ -4,13 +4,21 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `6b6ca8b` (Wiktionary coverage, #147), plus the Reading diagnosis docs (this branch).
+**Last updated:** 27 Nov 2026, `main` at `cca973b` (#154) merged into `claude/compassionate-newton-d4dkru` (CP4b bank step 1a).
 
 ## Just finished
 - **CP4b on the bank's own questions, step 1a** (27 Nov, this branch): explanations generated and checked by code
-  (`app/reading/explain.py`, `explain_run.py`, migration `0043`); first real run 10/10 after a check fix. Nothing reaches a
+  (`app/reading/explain.py`, `explain_run.py`, migration `0045`); first real run 10/10 after a check fix. Nothing reaches a
   learner. One approved key looks doubtful (`dolater.md`, section 1).
-- **Reading 4.3d part 2, second half** (27 Nov, this branch): words from the passage kept as saved-phrase cards (gap-fill on
+- **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
+  answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
+  as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien` (`specs/vocabulary/step-dictionary.md`).
+- **Speaking band rule changed** (27 Nov, owner's decision, PR #154, docs): instead of "no Speaking band before the
+  exam", a full mock test may show a CEFR level with its IELTS range ("ước tính") from a model trained on human-rated speech
+  (Speak & Improve Corpus 2025) that passes SPK-001's bar (QWK ≥ 0.75 on held-out speakers) and agrees with the owner's rated
+  mocks; never from an LLM, as a point or per criterion. New research track `research/experiments/SPK-001.yaml`. Prompted
+  by a Speaking app the owner saw (a full mock, then a band with sub-scores, "practise your weakest answer", replay).
+- **Reading 4.3d part 2, second half** (#152, 27 Nov): words from the passage kept as saved-phrase cards (gap-fill on
   the passage sentence, reviewed on `/tu-vung`); migration `0042`. No model call.
 - **Reading 4.3d part 2, first half** (27 Nov, #149): the passage's place and "đoán"/"không kịp" marks on the
   check step, the summary across pasted tests per question type and the pacing line on `/doc/bai-cua-ban`; migration `0041`.
@@ -27,8 +35,18 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
+## Just built (this branch, not yet merged)
+- **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
+  recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
+  test at real speed is not done.
+
 ## In progress
-Nothing in code. The Reading diagnosis docs wait for review on `claude/compassionate-newton-d4dkru`.
+CP4b on the bank's own questions, step 1a, in a pull request from `claude/compassionate-newton-d4dkru` (migration `0045`).
+Writing step 2.12 (#153) and the Speaking docs and 5.4a (#154) are merged; 2.12's build waits on the owner's go-ahead.
+
+## Next (build)
+1. `step-v4.md` T6 (criterion bands); the owner edits the five draft tests and takes two full tests on `/noi/thi`.
+2. 5.1 after the owner chooses the recogniser (Whisper small.en recommended).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
@@ -37,7 +55,6 @@ Nothing in code. The Reading diagnosis docs wait for review on `claude/compassio
    measure of the real model's parse accuracy.
 2. **Owner:** confirm the build choices of 4.3d part 2 (`step-4.3d.md`: the first-paste row rule, kept words as saved phrases,
    which words are offered) after a real test or two.
-   Spec-sized PR. Better after step 1, so part 2 builds on choices the owner has confirmed.
 3. **Agent: CP4b bank step 1b**, the blind check of explanations by another family and the planted-test tooling (`spec.md`,
    CP4b). Then, in `PLAN.md` order: CP4b steps 2 and 3 (learner pages, "Theo dạng câu hỏi"), the skill tags' blind pick
    (`step-4.3e.md` part 1), CP4c exam details, CP2b planted test, the CP6 report, phase 5
@@ -61,5 +78,6 @@ merges its own data PR. It never touches the owner's review decisions.
 - No phase gate is measured yet; all content is still draft until a teacher reviews it.
 
 ## Already decided, do not reopen
-No Speaking band before the exam; target 7.0 overall; everything outside the English app is frozen (`AGENTS.md`, "English
+Speaking: never a band from an LLM, as a point or per criterion; a CEFR level only after SPK-001's bar (changed 27 Nov from
+"no Speaking band"); target 7.0 overall; everything outside the English app is frozen (`AGENTS.md`, "English
 only"); Cambridge material never enters the shared bank.

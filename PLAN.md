@@ -56,7 +56,7 @@ target is recorded with the number and the reason, never hidden.
 | 2 | Writing, Task 2 then Task 1 (`specs/writing/`, steps 2.1–2.10) | Error → node mapping ≥ 90% on 100 errors checked by a teacher; QWK ≥ 0.7 against examiner bands on 50–100 private essays; band stability | built; gate waits on examiner-banded essays and a teacher |
 | 3 | Pronunciation (`specs/pronunciation/`, steps 3.1–3.7c) | False alarms ≤ 10% on 50–100 of the owner's kept recordings labelled by a phonetics-trained reviewer (Gold), before any red mark; speechocean762 baseline recorded (sentence r 0.59, phone AUC 0.86) | built; gate waits on the reviewer's labels; 3.6b part 2 waits on the L2-ARCTIC licence check |
 | 4 | Reading and Listening (`specs/listening-reading/plan.md`, checkpoints CP0–CP6) | Every question verified blind and reviewed before it enters the bank; an expert's labels against the checker on 50 items (agreement, kappa) | in progress (table below) |
-| 5 | Speaking Part 1–3, then opening to testers (`specs/speaking/`) | Per-user limits and a daily cost cap working; ≥ 5 of 10 testers still using it after 2 weeks; old errors falling over 4 weeks; word error rate and grammar-flag accuracy measured | specified; waits on the owner's decisions |
+| 5 | Speaking Part 1–3, then opening to testers (`specs/speaking/`; 5.4a examiner test built 27 Nov) | Per-user limits and a daily cost cap working; ≥ 5 of 10 testers still using it after 2 weeks; old errors falling over 4 weeks; word error rate and grammar-flag accuracy measured | specified; waits on the owner's decisions |
 
 ### Phase 4 checkpoints
 | CP | Work | Status |
@@ -84,9 +84,12 @@ target is recorded with the number and the reason, never hidden.
    own questions, with skill tags on each question in the same call (`step-4.3e.md`: six sub-skills, Bronze, summaries only,
    never BKT) and time per question in the timed test, CP4c exam details, CP2b planted test, the CP6 report, then phase 5 Speaking. The bank stays for drills and
    Listening; reviewing it is optional now, not daily work.
+3b. **Speaking first steps (owner's go, 27 Nov):** the examiner test is built (`/noi/thi`, step 5.4a); next, criterion
+   bands in the progress study (`specs/validation/step-v4.md`, T6). Then 5.1 once the owner chooses the recogniser.
 4. **Writing feedback quality (step 2.11):** measure stability on ~20 web essays (the owner collects them); the TR/CC
    structure checks are built (2.11b); then the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
-   errors per opportunity next to sentence complexity, not a band.
+   errors per opportunity next to sentence complexity, not a band. A band closer to the examiner's (step 2.12: descriptor caps,
+   a model per criterion) is specified; it is measured only on examiner-banded essays.
 5. **Ongoing:** the daily Reading blind-check batch; fixes from the owner's use.
 
 ## Research tracks (`research/`)
@@ -97,13 +100,15 @@ target is recorded with the number and the reason, never hidden.
 | VER-001 | How reliable and costly is the generated-content pipeline? Defect escape, false rejection, review rate, cost per accepted item | planned (needs the teacher's 50 labels) |
 | PRON-001 | Does comparing /æ/ only with /ɛ/ make that sound group usable? | done on synthetic speech: false alarms 60% → 10% |
 | DIAG-001 | Can a cognitive diagnosis model (DINA, G-DINA, NeuralCDM) tell Reading sub-skills apart better than one overall skill? Public dataset with an expert Q-matrix | planned, after KT-001 (one learner cannot calibrate a CDM) |
+| SPK-001 | Can a small model on fluency, vocabulary and grammar measures, trained on human-rated speech (Speak & Improve Corpus 2025, CEFR levels), estimate a speaking level well enough to show? QWK ≥ 0.75 on held-out speakers, then checked against the owner's rated mocks | planned, after Speaking 5.1–5.2 and the corpus licence read in full |
 
 Deep knowledge tracing, a home-made LLM or a band model trained from scratch are not planned: there is not enough data, and
 choosing the simple model that fits, and showing why, is the stronger evidence.
 
 ## Decisions waiting on the owner (detail in `dolater.md`)
 - Order of the next builds: CP4b, CP4c, CP6, Speaking.
-- Speaking: the recogniser, the transcript consent wording, whether to look for a rater for 30+ recordings.
+- Speaking: the recogniser, the transcript consent wording; a trained rater for the mock test every 4 weeks; the Speak &
+  Improve Corpus 2025 licence read in full (SPK-001).
 - Whether the machine voice is good enough for whole-passage Listening.
 - Licences to read: L2-ARCTIC (Vietnamese speakers, pronunciation benchmark), Simple English Wikipedia, the male voice's
   datasets.
@@ -130,7 +135,8 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
   the owner's single most important non-study task.
 - **One learner.** N-of-1 data cannot support general claims; reports say so.
 - **Free checker limits and drift.** Ernie is a free preview model: rerun the planted test before each batch; dots is the backup.
-- **Scores are estimates.** Every score shown is a range until measured against examiners. No Speaking band before the exam.
+- **Scores are estimates.** Every score shown is a range until measured against examiners. Speaking: never a band from a
+  model's opinion; a CEFR level with its IELTS range only after SPK-001's bar, and hidden again if the rated mocks disagree.
 - **Solo practice has limits.** Speech-recognition feedback helps most with explicit corrections and with peers, least alone and
   for stress and intonation; one Vietnamese study saw no Speaking band gain. NodeTrail is one part of Speaking practice, next to
   speaking with a partner or teacher.
@@ -139,7 +145,12 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
-| 2026-11-27 | CP4b on the bank's own questions, step 1a built: one DeepSeek call per approved question (task `reading_explain`) explains the key and, for multiple choice, each wrong option's trap, with the 4.3e skill tags; kept only when code's checks pass (quotes in the passage, the deciding sentence, NOT GIVEN said, listed traps, Vietnamese, no option letters). Headings later. First real run: 10 of 10 after a check fix. Nothing shown to learners before step 1b's blind check and planted test. Migration 0043 |
+| 2026-11-27 | CP4b on the bank's own questions, step 1a built: one DeepSeek call per approved question (task `reading_explain`) explains the key and, for multiple choice, each wrong option's trap, with the 4.3e skill tags; kept only when code's checks pass (quotes in the passage, the deciding sentence, NOT GIVEN said, listed traps, Vietnamese, no option letters). Headings later. First real run: 10 of 10 after a check fix. Nothing shown to learners before step 1b's blind check and planted test. Migration 0045 |
+| 2026-11-27 | Speaking 5.4a built (`/noi/thi`): a voice examiner reads authored Part 1–3 questions (five draft tests) with the real timing (Part 2: one minute to prepare, stopped at 2:00), each answer recorded and replayed afterwards, nothing shown while speaking, no score, no model call, no evidence. Owner only; audio cleared after 24 hours unless kept. Migration 0044. Checked with the fake microphone at shortened timing; a real test at real speed is the owner's |
+| 2026-11-27 | From the owner's research on IELTS Speaking scoring and open scoring models (Bronze), the agent's three proposals approved: (A) rated Writing and Speaking mocks store the rater's four criterion bands, the report names the lowest (`step-v4.md` addition; NodeTrail never computes a band from them, the Speaking round-down rule being unpublished); (B) step 5.2 counts pauses between clauses and inside a clause; (C) SPK-001 compares a ready-made scorer and tries speechocean762 pronunciation models and error-free clauses as inputs. Not adopted: an LLM scoring criteria from the band descriptors (no evidence, unstable, against the band rule). Speaking 5.4a specified (`step-5.4a.md`, owner's go): a voice examiner test before transcription. Docs only |
+| 2026-11-27 | Speaking band rule changed, owner's decision: "no Speaking band before the exam" becomes a CEFR level with its IELTS range, labelled an estimate, for a full mock only, from a model trained on human-rated speech (Speak & Improve Corpus 2025, Cambridge, non-commercial licence) that reaches QWK ≥ 0.75 on held-out speakers and agrees with the owner's rated mocks; never from an LLM, as a point or per criterion. Research track SPK-001 added (after 5.1–5.2). Prompted by a Speaking app the owner saw (full mock, then a band with sub-scores): the rest of its result page fits the existing spec. The owner's real band still comes from rated mocks every 4 weeks. Docs only |
+| 2026-11-27 | Writing step 2.12 specified, owner's request (a band closer to the examiner's): descriptor caps (from code findings only; 2.11b's model findings shown as "có thể bị giới hạn", never applied without a `SPEC.md` change) and a ridge model per criterion on descriptor features, compared with the pinned scorer on the same splits; the simpler model wins on overlapping intervals. No band changes until the owner's examiner-banded essays exist. Not built |
+| 2026-11-27 | Owner's request, after comparing another IELTS app's home page: **today's plan with progress** (the first list of the day is fixed in `today_plans`, migration 0043; each activity marked "Đã xong" from today's answers by assumed thresholds, a rough time each, "1/4 đã xong"), **this week's study days** (`GET /today/week`, Monday–Sunday from saved answers; a calendar, no streak: `SPEC.md` non-goal kept and clarified) and **dictionary search** over the word list (`/tu-dien`, `GET /vocab/search`, English or Vietnamese with diacritics). Specs `specs/two-layer-map/step-m5.md`, `specs/vocabulary/step-dictionary.md`. The owner asked why another app lists 10,929 cards against our 3,663 words: cards per sense and phrase, from Oxford lists we cannot import; more NGSL-family lists (TSL, BSL) stay a later choice after the 50-entry check |
 | 2026-11-27 | Reading 4.3d part 2, second half built: the passage's words above the learner's level (level test, else B1) and the B1+ words of the sentences that decided wrong answers, each with its sentence and the word list's draft gloss, kept as saved-phrase cards (gap-fill on the passage sentence, FSRS, `/tu-vung`). No model call. Migration 0042. Usefulness on real passages not measured |
 | 2026-11-27 | Reading 4.3d part 2, first half built: the passage's place (1–3) and the learner's "đoán"/"không kịp" marks on the check step; a "không kịp" answer gives no evidence; the summary across pasted tests per question type (share right with an exact 95% interval, the top trap) and the pacing line ("có thể do thời gian" when late errors are 20+ points higher and half are blank or marked; thresholds assumed). Migration 0041. Vocabulary cards next. Tested with a mocked model and API only |
 | 2026-11-27 | Reading diagnosis, from the owner's research on cognitive diagnostic assessment (Bronze), the agent's recommendation approved: pacing in 4.3d part 2 (passage position, "đoán"/"không kịp" marks; a "không kịp" answer gives no evidence, added to `SPEC.md`); skill tags on each question and time per question in the timed test (`step-4.3e.md`), tags Bronze and in summaries only, BKT unchanged; a CDM is research on public data (DIAG-001, after KT-001). Docs only |

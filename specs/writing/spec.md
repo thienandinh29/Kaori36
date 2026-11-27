@@ -28,7 +28,8 @@ explains it with an LLM, feeds the mistakes into the roadmap, and runs a correct
 ## Score
 7. A **small scoring model** predicts the Task 2 band from the text: candidates from Hugging Face (DeBERTa-v3 based
    IELTS scorers) are evaluated on the private set (point 12), the best is kept, then fine-tuned if open data with a
-   usable licence allows. The LLM never produces the number.
+   usable licence allows. The LLM never produces the number. Step 2.12 (specified) adds descriptor caps and a
+   model per criterion on descriptor features, compared with the scorer on the same splits.
 8. The band is shown as a **range** (e.g. "ước lượng 5.5–6.0") from the scorer's measured error, labelled as an estimate.
    When the scorer and the LLM's criterion judgements disagree by more than 1 band, the result says "không chắc"
    (uncertain) instead of a range.

@@ -1,0 +1,40 @@
+# Speaking examiner test (specs/speaking/step-5.4a.md). Written for NodeTrail on common topics;
+# not taken from past papers or "forecast" lists. Draft until a teacher reads a sample.
+id: t03
+title: Friends, food and a quiet place
+status: draft
+author: agent draft, 27 Nov 2026, for the owner to edit
+part1:
+  - topic: friends
+    questions:
+      - How often do you see your friends?
+      - What do you usually do together?
+      - Do you prefer to have a few close friends or many friends?
+      - Have you kept in touch with your friends from school?
+  - topic: food
+    questions:
+      - What do you usually eat for lunch?
+      - Is there any food you did not like as a child but enjoy now?
+      - Do you like cooking?
+  - topic: your phone
+    questions:
+      - How much time do you spend on your phone each day?
+      - What do you use your phone for most?
+      - Could you live without a phone for a week?
+      - Do you think you will change the way you use your phone?
+part2:
+  task: Describe a quiet place you like to go to.
+  points:
+    - where it is
+    - how often you go there
+    - what you do there
+  explain: and explain why you like this place.
+  closing: Do your friends know about this place?
+part3:
+  theme: cities and quiet places
+  questions:
+    - Why do people in cities often look for quiet places?
+    - Are parks and green spaces important for a city? Why?
+    - Is life in cities becoming more stressful than it used to be?
+    - Who should be responsible for keeping public places clean and pleasant?
+    - Do you think people today spend enough time alone?

@@ -10,14 +10,14 @@ NodeTrail kiểm tra trình độ của bạn, dựng lộ trình ngữ pháp th
 
 | Kỹ năng | Trong ứng dụng | Trạng thái |
 |---|---|---|
-| Hôm nay và bản đồ kỹ năng | Mỗi ngày 3–5 việc nên làm, mỗi việc có «Vì sao?» (trang chủ); bản đồ 17 kỹ năng thi IELTS và các nền tảng chúng cần, kèm mức chắc chắn của từng ước lượng (`/ban-do`) | Đã chạy; Viết được đo từ bài viết, các kỹ năng khác chờ bài luyện |
+| Hôm nay và bản đồ kỹ năng | Mỗi ngày 3–5 việc nên làm, mỗi việc có «Vì sao?», giữ nguyên trong ngày và đánh dấu việc đã luyện, kèm thời gian ước tính; lịch các ngày có học trong tuần (không đếm chuỗi ngày) (trang chủ); bản đồ 17 kỹ năng thi IELTS và các nền tảng chúng cần, kèm mức chắc chắn của từng ước lượng (`/ban-do`) | Đã chạy; Viết được đo từ bài viết, các kỹ năng khác chờ bài luyện |
 | Kiểm tra trình độ và lộ trình | Bài kiểm tra trình độ, bản đồ cột mốc ngữ pháp (`/kiem-tra`, `/lo-trinh`), mỗi cột mốc có các phần nhỏ ẩn; làm sai thì truy ngược về phần nền tảng yếu | Đã chạy; câu hỏi là bản nháp chờ duyệt |
-| Từ vựng | 3.663 từ (NGSL/NAWL và 130 từ tự soạn), thẻ ôn tập theo FSRS, bốn kiểu câu hỏi chấm bằng đáp án (`/tu-vung`) | Đã chạy; danh sách là bản nháp chờ kiểm tra mẫu |
+| Từ vựng | 3.663 từ (NGSL/NAWL và 130 từ tự soạn), thẻ ôn tập theo FSRS, bốn kiểu câu hỏi chấm bằng đáp án (`/tu-vung`); tra từ trong danh sách bằng tiếng Anh hoặc tiếng Việt (`/tu-dien`) | Đã chạy; danh sách là bản nháp chờ kiểm tra mẫu |
 | Ngữ pháp | Bài học kiểu lớp học: giọng đọc tiếng Anh, phụ đề Anh–Việt, bảng trắng, câu hỏi kiểm tra giữa bài (`/hoc/...`); luyện tập theo cột mốc (`/on-tap/...`) | Đã có trình phát và một bài mẫu; bài từ giáo trình mở đang làm |
 | Viết | Task 2 và Task 1: lỗi ngữ pháp (LanguageTool, ERRANT), nhận xét theo bốn tiêu chí có trích dẫn, khoảng band, viết lại đoạn, cụm từ hay thành thẻ ôn; mỗi bài viết cập nhật năm kỹ năng Viết trên bản đồ (`/viet`) | Đã chạy; cổng đo chờ bài viết có điểm giám khảo |
 | Phát âm | Đọc to câu mẫu, kiểm tra chất lượng bản ghi, chấm từng âm người Việt hay nhầm (phụ âm cuối, th, s/sh, r/l, nguyên âm dài…) (`/phat-am`) | Đã chạy, chỉ cho chủ dự án; chưa đánh dấu đúng/sai cho đến khi đo tỉ lệ báo nhầm |
 | Đọc và Nghe | Bài đọc từ nguồn mở (Simple English Wikipedia, OpenStax), câu hỏi kiểu IELTS được tạo sẵn, kiểm chứng mù rồi giáo viên duyệt; nghe bằng giọng máy | Đã chạy (giai đoạn 4): 30 bài đọc OpenStax, luyện Đọc và bài thi 20 phút (`/doc`), nghe chép chính tả, nghe cả bài và nói đuổi (`/nghe`, `/noi-duoi`); chỉ đưa câu hỏi đạt mức Silver, nên mới có rất ít câu để luyện cho đến khi duyệt xong |
-| Nói | Part 1–3, bản ghi chép lời nói, nhận xét ngữ pháp, từ vựng, phát âm, độ trôi chảy | Đã có đặc tả; chưa làm |
+| Nói | Part 1–3, bản ghi chép lời nói, nhận xét ngữ pháp, từ vựng, phát âm, độ trôi chảy | Đã chạy phần đầu (bước 5.4a): bài thi nói thử đủ ba phần với giám khảo đọc câu hỏi, đúng thời gian, ghi âm từng câu và nghe lại (`/noi/thi`, chỉ chủ dự án); chưa có chép lời, số đo hay nhận xét |
 
 ## Nguyên tắc: AI giải thích, bộ máy quyết định
 
@@ -52,7 +52,7 @@ Cách làm việc với dự án (cho người và AI agent): [`AGENTS.md`](AGEN
 | 3 | Phát âm | Đã làm (3.1–3.7c, cả phát âm từng từ vựng); cổng đo chờ nhãn của người có chuyên môn ngữ âm trên 50–100 bản ghi |
 | 4 | Đọc và Nghe | Đang làm: Đọc và Nghe đã chạy; 30 bài đọc OpenStax, 291 câu hỏi trên bản bài đọc hiện tại (52 câu đã kiểm chứng mù, chờ duyệt); còn bài kiểm tra lỗi cài sẵn và báo cáo cổng đo |
 | Song song | Hệ thống kiểm chứng (nhãn Vàng/Bạc/Đồng, cổng duyệt cho giáo viên, nghiên cứu tiến bộ cá nhân); hai bản đồ và «Hôm nay» | Đã làm |
-| 5 | Nói, và mở cho người dùng thử | Đã có đặc tả |
+| 5 | Nói, và mở cho người dùng thử | Đang làm: bài thi nói thử (5.4a) đã chạy |
 
 ## Hiện trạng trung thực
 

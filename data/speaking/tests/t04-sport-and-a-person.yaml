@@ -1,0 +1,40 @@
+# Speaking examiner test (specs/speaking/step-5.4a.md). Written for NodeTrail on common topics;
+# not taken from past papers or "forecast" lists. Draft until a teacher reads a sample.
+id: t04
+title: Sport, gifts and a helpful person
+status: draft
+author: agent draft, 27 Nov 2026, for the owner to edit
+part1:
+  - topic: sport and exercise
+    questions:
+      - Do you do any sport or exercise?
+      - Which sports are popular in your country?
+      - Did you play sports at school?
+      - Would you like to try a new sport?
+  - topic: gifts
+    questions:
+      - Do you enjoy choosing gifts for other people?
+      - What was the last gift you received?
+      - Is it better to give money or a present?
+  - topic: your neighbourhood
+    questions:
+      - Do you know your neighbours well?
+      - What can people do for fun in your area?
+      - Has your neighbourhood changed much in recent years?
+      - Would you recommend your neighbourhood to a friend?
+part2:
+  task: Describe a person who helped you at an important time.
+  points:
+    - who this person is
+    - when this happened
+    - how they helped you
+  explain: and explain how you felt about their help.
+  closing: Are you still in contact with this person?
+part3:
+  theme: helping others
+  questions:
+    - Why do some people enjoy helping others?
+    - Do people help their neighbours less than in the past?
+    - Should young people be required to do volunteer work?
+    - What kinds of help should the government give to older people?
+    - Can technology make people more willing to help each other?

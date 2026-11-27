@@ -60,11 +60,12 @@ export function encodeWav(samples: Float32Array, rate = RATE): ArrayBuffer {
   return buffer;
 }
 
-/** A decoded recording as WAV for the server: mono, 16 kHz, at most MAX_SECONDS. */
+/** A decoded recording as WAV for the server: mono, 16 kHz, at most `maxSeconds` (a read sentence: 15). */
 export function toServerWav(
   channels: Float32Array[],
   sampleRate: number,
+  maxSeconds: number = MAX_SECONDS,
 ): ArrayBuffer {
   const mono = resample(toMono(channels), sampleRate, RATE);
-  return encodeWav(mono.subarray(0, MAX_SECONDS * RATE));
+  return encodeWav(mono.subarray(0, Math.floor(maxSeconds * RATE)));
 }
