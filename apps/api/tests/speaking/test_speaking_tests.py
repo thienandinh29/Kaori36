@@ -10,8 +10,7 @@ from fastapi.testclient import TestClient
 from psycopg_pool import ConnectionPool
 
 from app.api import speaking as routes
-from app.services.recordings import CONSENT
-from app.services.speaking_tests import SpeakingTests, purge_expired
+from app.services.speaking_tests import CONSENT, SpeakingTests, purge_expired
 from tests.pronunciation.test_recordings import hiss, speech_like, tone, wav
 
 FOLDER = Path(__file__).resolve().parents[4] / "data" / "speaking" / "tests"
@@ -140,3 +139,12 @@ def test_the_microphone_check_stores_nothing(setup) -> None:  # type: ignore[no-
     assert noisy["problems"] == ["too_noisy"]
     with pool.connection() as conn:
         assert conn.execute(count).fetchone() == before
+
+
+def test_without_a_recogniser_no_answer_says_it_waits(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, _, _ = setup  # this fixture's service has transcripts=False (no ASR_URL)
+    s = start(client, owner).json()["id"]
+    answer(client, owner, s, "p1-1-1", speech_like())
+    got = client.get(f"/speaking/tests/{s}", params={"learner_id": owner}).json()
+    a = got["questions"][0]["answer"]
+    assert a["transcript"] == "none" and a["text"] is None

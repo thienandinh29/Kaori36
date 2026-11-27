@@ -22,7 +22,7 @@ not loaded: read it when you need a path, and update it when you add one. This f
   (for example `DEEPSEEK_API_KEY=proxy-injected`). Never ask for a key in chat.
 - Wikimedia refuses the sandbox (HTTP 429): Simple English Wikipedia is fetched on the owner's laptop.
 - When the owner says "merge it when CI is green": push, open the pull request, schedule one check about 8–10 minutes later,
-  and squash-merge with the full head SHA as the expected SHA once all 16 checks pass. Do not poll in a loop.
+  and squash-merge with the full head SHA as the expected SHA once all 18 checks pass (16 before the `asr` job, step 5.1). Do not poll in a loop.
 - A daily scheduled task runs the Reading blind checks (up to 45 questions, US$0.10 cap), exports the item files and merges
   them through a pull request. It never touches the owner's review decisions.
 

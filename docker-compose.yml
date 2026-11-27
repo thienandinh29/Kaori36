@@ -34,6 +34,8 @@ x-api-env: &api-env
     TTS_URL: ${TTS_URL:-}
     # Set by --profile pronunciation (http://pronunciation:8040); empty: recordings are kept unanalysed.
     PRONUNCIATION_URL: ${PRONUNCIATION_URL:-}
+    # Set by --profile asr (http://asr:8050); empty: Speaking answers are kept without a transcript.
+    ASR_URL: ${ASR_URL:-}
 
 services:
   db:
@@ -192,6 +194,23 @@ services:
       - pronunciation-models:/models
     mem_limit: ${PRON_MEMORY_LIMIT:-3g}
 
+  # Speech recognition for the Speaking test (asr/README.md, specs/speaking/step-5.1.md). Opt-in: about 1 GB.
+  asr:
+    image: nodetrail-asr:local
+    build: asr
+    profiles: [asr]
+    restart: unless-stopped
+    environment:
+      ASR_MODEL: Systran/faster-whisper-small.en
+      ASR_REVISION: d1d751a5f8271d482d14ca55d9e2deeebbae577f
+      ASR_SHA256_CONFIG: 666a9605530ac1f61fa8177f3702b4dacec9966749e42610839fcc32661d5fae
+      ASR_SHA256_MODEL: 62b2a45b05ee59acb4a5341b33ee35e041395d378d418a18acfe4c9e768ee37a
+      ASR_SHA256_TOKENIZER: 929c5252409436dce1b38a75d1abbcb5e132d170d8e324e4e04ed915fa2d22df
+      ASR_SHA256_VOCABULARY: ff77588746d3a2595d32ab5b69ffd7b95ce2441ac57533cb66fc3eb575a115cf
+    volumes:
+      - asr-models:/models
+    mem_limit: ${ASR_MEMORY_LIMIT:-2g}
+
   # bge-m3 embeddings for indexing and retrieval (docker/TEI.md). Opt-in: about 2.3 GB of weights.
   tei:
     image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.9
@@ -224,5 +243,6 @@ volumes:
   scorer-models:
   tts-models:
   pronunciation-models:
+  asr-models:
   tei-data:
   nodetrail-db:

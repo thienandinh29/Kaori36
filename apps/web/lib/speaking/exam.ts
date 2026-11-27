@@ -52,12 +52,22 @@ export interface Overview {
   tests: { id: string; title: string; draft: boolean; questions: number }[];
   past: PastSitting[];
 }
+export type TranscriptState = "done" | "waiting" | "failed" | "none";
+export interface TimedWord {
+  word: string;
+  start: number;
+  end: number;
+}
 export interface Answered {
   id: string;
   seconds: number;
   problems: string[];
   audio: boolean;
   delete_after: string | null;
+  /** Step 5.1: the machine transcript, labelled as such on the page. */
+  transcript: TranscriptState;
+  text: string | null;
+  words: TimedWord[];
 }
 export interface Result {
   id: string;
@@ -102,6 +112,18 @@ function part(value: unknown): Part {
   return value;
 }
 const strings = (value: unknown) => list(value).map(string);
+const STATES: readonly TranscriptState[] = [
+  "done",
+  "waiting",
+  "failed",
+  "none",
+];
+function transcriptState(value: unknown): TranscriptState {
+  const s = string(value);
+  if (!(STATES as readonly string[]).includes(s))
+    throw new DataError("contract");
+  return s as TranscriptState;
+}
 
 function cueCard(value: unknown): CueCard {
   const c = record(value);
@@ -198,7 +220,19 @@ export function parseResult(value: unknown): Result {
           problems: strings(a.problems),
           audio: flag(a.audio),
           delete_after: maybe(a.delete_after),
+          transcript: transcriptState(a.transcript),
+          text: maybe(a.text),
+          words: list(a.words).map((w) => {
+            const x = record(w);
+            return {
+              word: string(x.word),
+              start: num(x.start),
+              end: num(x.end),
+            };
+          }),
         };
+        if ((answer.transcript === "done") !== (answer.text !== null))
+          throw new DataError("contract");
       }
       return {
         id: string(q.id),

@@ -87,7 +87,7 @@ finish (182 left on 20 Nov, about four daily batches) or on alternate days.
 **Step 1 split in two (27 Nov 2026, to keep each PR spec-sized):** (1a) migration, generation, code checks and the run;
 (1b) the blind check by another family and the planted-test tooling. **1a built:** `app/reading/explain.py` (pure: output
 shape, prompt, checks), `app/reading/explain_run.py` (`python -m app.reading.explain_run [--max-cost 0.10]
-[--include-verified N]`), gateway task `reading_explain` (DeepSeek), migration `0045` (`reading_explanations`: one row per
+[--include-verified N]`), gateway task `reading_explain` (DeepSeek), migration `0047` (`reading_explanations`: one row per
 question version, `checked` or `dropped` with its problems, and the 4.3e skill tags). Choices made while building:
 - **Headings are not explained yet** (a trap per paragraph needs its own design); T/F/NG, multiple choice and completion are.
 - **An explanation never names an option by letter** (learners see options shuffled, 4.3c): code refuses "đáp án A" and the like.

@@ -4,11 +4,11 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `cca973b` (#154) merged into `claude/compassionate-newton-d4dkru` (CP4b bank step 1a).
+**Last updated:** 27 Nov 2026, `main` at `c5f518a` (#156) merged into `claude/compassionate-newton-d4dkru` (CP4b bank step 1a, #157).
 
 ## Just finished
 - **CP4b on the bank's own questions, step 1a** (27 Nov, this branch): explanations generated and checked by code
-  (`app/reading/explain.py`, `explain_run.py`, migration `0045`); first real run 10/10 after a check fix. Nothing reaches a
+  (`app/reading/explain.py`, `explain_run.py`, migration `0047`); first real run 10/10 after a check fix. Nothing reaches a
   learner. One approved key looks doubtful (`dolater.md`, section 1).
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
   answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
@@ -35,18 +35,23 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
-## Just built (this branch, not yet merged)
+## Just finished, merged in #154
 - **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
   recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
   test at real speed is not done.
 
+## Also merged today (#156)
+- **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
+  Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
+
 ## In progress
-CP4b on the bank's own questions, step 1a, in a pull request from `claude/compassionate-newton-d4dkru` (migration `0045`).
-Writing step 2.12 (#153) and the Speaking docs and 5.4a (#154) are merged; 2.12's build waits on the owner's go-ahead.
+CP4b on the bank's own questions, step 1a, in #157 from `claude/compassionate-newton-d4dkru` (migration `0047`).
+Writing step 2.12 is specified (#153) and waits on the owner's go-ahead to build.
 
 ## Next (build)
-1. `step-v4.md` T6 (criterion bands); the owner edits the five draft tests and takes two full tests on `/noi/thi`.
-2. 5.1 after the owner chooses the recogniser (Whisper small.en recommended).
+1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
+   recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
+2. Next build: 5.2, fluency measures from the word timings (pauses from the raw audio, between and inside clauses).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
@@ -65,7 +70,7 @@ Writing step 2.12 (#153) and the Speaking docs and 5.4a (#154) are merged; 2.12'
 - ~20 web essays for the Writing feedback stability run (`specs/writing/step-2.11.md`, 2.11a; the 60% bar stays
   "proposed" until the owner has seen the result).
 - A teacher (reviewer brief: `specs/validation/reviewer-brief.vi.md`); every phase gate waits on Gold labels.
-- Decisions: the Speaking recogniser and consent wording; whether the machine voice is good enough for whole-passage Listening;
+- Decisions: the transcript consent wording for 5.3 (recogniser chosen: Whisper small.en); whether the machine voice is good enough for whole-passage Listening;
   licences (L2-ARCTIC, Simple English Wikipedia). Full list: `dolater.md`.
 
 ## Running on its own
