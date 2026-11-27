@@ -2005,6 +2005,112 @@ svg.nt-trail {
   margin: 0.5rem 0;
   padding-left: 1.25rem;
 }
+.en-today-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.en-today-count {
+  font-weight: 600;
+  padding: 2px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.en-today-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.en-today-done {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 1px 8px;
+  border: 1.5px dashed var(--nt-known);
+  border-radius: 6px;
+  color: var(--nt-known);
+}
+.en-today li.is-done > strong {
+  text-decoration: line-through;
+  text-decoration-color: var(--nt-ink-2);
+}
+
+/* The week's study days (step M5): a calendar, never a streak. Shape and text, not colour alone. */
+.en-week {
+  gap: 8px;
+}
+.en-week-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.en-week-day {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 6px 0;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+.en-week-day.is-today {
+  outline: 2px solid var(--nt-known);
+  outline-offset: -2px;
+}
+.en-week-mark {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.en-week-day.is-studied .en-week-mark {
+  background: var(--nt-known);
+  color: var(--nt-card);
+}
+.en-week-day.is-missed .en-week-mark {
+  border: 2px solid var(--nt-ink-2);
+}
+.en-week-day.is-later .en-week-mark::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nt-line);
+}
+.en-week-count {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Dictionary search (specs/vocabulary/step-dictionary.md). */
+.en-dict-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.en-dict-input {
+  width: 100%;
+  font: inherit;
+  font-size: 1.05rem;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.en-dict-results {
+  display: grid;
+  gap: 10px;
+}
 
 /* The two maps (specs/two-layer-map, M4). */
 .en-mapskill {

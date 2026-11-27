@@ -55,14 +55,14 @@ only after SPK-001); that a machine voice prepares the learner for a human exami
 
 ## Tasks
 - [x] T1 Test file format, loader and checks (unit tests); five draft tests for the owner to edit
-- [x] T2 Migration `0043` and the service for sittings and answers; retention and owner-only rules (database tests)
+- [x] T2 Migration `0044` and the service for sittings and answers; retention and owner-only rules (database tests)
 - [x] T3 API routes (API tests)
 - [x] T4 The page `/noi/thi` and the result `/noi/thi/{id}`: consent, microphone check, the three parts with timing, replay, past tests (Vitest for the script and timing)
 - [x] T5 Playwright test at phone size; `MAP.md`, `PLAN.md`, `SPEC.md` feature 9 status, `dolater.md`
 
 ## Built (27 Nov 2026)
 - `data/speaking/tests/t01`–`t05` (drafts); `apps/api/app/speaking/tests.py` (format, ids, limits); migration
-  `0043_speaking_tests.sql` (`speaking_tests`, `speaking_answers`); `app/services/speaking_tests.py` and
+  `0044_speaking_tests.sql` (`speaking_tests`, `speaking_answers`); `app/services/speaking_tests.py` and
   `app/api/speaking.py`; the worker clears expired audio with the recordings' purge.
 - Web: `lib/speaking/exam.ts` (decoders, the examiner's script in NodeTrail's own wording, timing),
   `components/speaking/` (voice, recorder, page, result), `app/noi/thi/`.

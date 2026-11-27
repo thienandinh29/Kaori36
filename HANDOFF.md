@@ -4,15 +4,18 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `7f6aa61` (#152), plus the Speaking band rule change (this branch, docs only).
+**Last updated:** 27 Nov 2026, `main` at `f3165ce` (#151) merged into `claude/lucid-goldberg-9997no` (PR #154).
 
 ## Just finished
-- **Speaking band rule changed** (27 Nov, owner's decision, this branch, docs only): instead of "no Speaking band before the
+- **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
+  answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
+  as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien` (`specs/vocabulary/step-dictionary.md`).
+- **Speaking band rule changed** (27 Nov, owner's decision, PR #154, docs): instead of "no Speaking band before the
   exam", a full mock test may show a CEFR level with its IELTS range ("ước tính") from a model trained on human-rated speech
   (Speak & Improve Corpus 2025) that passes SPK-001's bar (QWK ≥ 0.75 on held-out speakers) and agrees with the owner's rated
   mocks; never from an LLM, as a point or per criterion. New research track `research/experiments/SPK-001.yaml`. Prompted
   by a Speaking app the owner saw (a full mock, then a band with sub-scores, "practise your weakest answer", replay).
-- **Reading 4.3d part 2, second half** (27 Nov, #152): words from the passage kept as saved-phrase cards (gap-fill on
+- **Reading 4.3d part 2, second half** (#152, 27 Nov): words from the passage kept as saved-phrase cards (gap-fill on
   the passage sentence, reviewed on `/tu-vung`); migration `0042`. No model call.
 - **Reading 4.3d part 2, first half** (27 Nov, #149): the passage's place and "đoán"/"không kịp" marks on the
   check step, the summary across pasted tests per question type and the pacing line on `/doc/bai-cua-ban`; migration `0041`.
@@ -31,7 +34,7 @@ wins; fix this page.
 
 ## Just built (this branch, not yet merged)
 - **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
-  recorded and replayed, no score; migration `0043`. Checked with the fake microphone at shortened timing; the owner's real
+  recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
   test at real speed is not done.
 
 ## In progress

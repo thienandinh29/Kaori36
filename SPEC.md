@@ -24,9 +24,9 @@ one engine chooses each day's work.
 ## Features
 | # | Feature | What the learner does (web page) | Status |
 |---|---|---|---|
-| 1 | **Hôm nay and the two maps** | 3–5 activities a day, each with "Vì sao?" (`/`); the CEFR foundation map and the IELTS competency map as a graph with the weakest link marked (`/ban-do`) | built (M1–M4). Writing, Reading and Listening feed competencies; the links between maps are Bronze ("đề xuất") until a teacher checks a sample |
+| 1 | **Hôm nay and the two maps** | 3–5 activities a day, each with "Vì sao?", fixed for the day with what was practised today marked, a rough time each, and this week's days with study as a calendar (`/`); the CEFR foundation map and the IELTS competency map as a graph with the weakest link marked (`/ban-do`) | built (M1–M4). Writing, Reading and Listening feed competencies; the links between maps are Bronze ("đề xuất") until a teacher checks a sample |
 | 2 | **Level test and grammar roadmap** | Level test (`/kiem-tra`); milestones with hidden nodes (`/lo-trinh`); a failed milestone test opens its nodes and remediates the weakest prerequisite; practice per node (`/on-tap/...`); delayed re-checks of "known" nodes on the home page | built: 10 milestones, 19 hidden nodes, 76 draft items (owner-only until reviewed). A longer path (28 milestones, 51 nodes) is proposed, not live |
-| 3 | **Vocabulary** | FSRS review cards with meaning, gap-fill, collocation, word form and recall items (`/tu-vung`); hear the word; say the word and see each sound | built: 3,663 words (NGSL/NAWL + 130 authored), draft until a teacher checks a sample |
+| 3 | **Vocabulary** | FSRS review cards with meaning, gap-fill, collocation, word form and recall items (`/tu-vung`); hear the word; say the word and see each sound; look a word up in the list by English or Vietnamese (`/tu-dien`) | built: 3,663 words (NGSL/NAWL + 130 authored), draft until a teacher checks a sample |
 | 4 | **Grammar lessons** | A lesson before practice: English voice, English and Vietnamese subtitles by level, a board, checkpoints (`/hoc/{node}`) | partly built: the player and one sample lesson; lessons from licence-checked textbooks are specified |
 | 5 | **Writing (Task 2 and Task 1)** | Write in the browser (`/viet`); the result (`/bai-viet/{id}`): "Sửa trước" (at most 5 things), grammar errors (LanguageTool, ERRANT, mapped to nodes), feedback on the four criteria with quoted evidence, hint-first self-correction, a paragraph rewrite, saved phrases as cards, repeated errors across essays; Task 1 facts checked against the chart's data; your own Task 2 question, and a timed 40-minute exam; Task 2 structure checks (every part of the question answered, a clear and consistent position, a hint on undeveloped paragraphs) | built (2.1–2.10, 2.11b). No band is shown yet: the band model is not calibrated on examiner-banded essays |
 | 6 | **Pronunciation** | Read authored sentences aloud (`/phat-am`): a recording-quality check, then the target sounds Vietnamese speakers often miss are scored; sounds to focus on | built, owner only. Raw scores and "chưa chắc" only: nothing is marked wrong until false alarms are measured on Gold labels |
@@ -127,12 +127,12 @@ ShareAlike flagged; no real exam passages or past papers.
 
 ## Interfaces
 - **Web** (`apps/web`, Next.js, Vietnamese UI): `/`, `/ban-do`, `/kiem-tra`, `/lo-trinh`, `/on-tap/{kind}/{slug}`, `/hoc/{slug}`,
-  `/tu-vung`, `/viet`, `/viet/{prompt}`, `/bai-viet/{id}`, `/phat-am`, `/doc`, `/doc/{slug}`, `/doc/{slug}/thi`, `/nghe`,
+  `/tu-vung`, `/tu-dien`, `/viet`, `/viet/{prompt}`, `/bai-viet/{id}`, `/phat-am`, `/doc`, `/doc/{slug}`, `/doc/{slug}/thi`, `/nghe`,
   `/nghe/{slug}`, `/nghe/bai/{slug}`, `/noi-duoi`, `/noi/thi`, `/noi/thi/{id}`, `/duyet-doc` (owner), `/kiem-duyet` (reviewers), `/gioi-thieu`; the contest's
   topic research at `/kham-pha`. The browser calls the API only through the server proxy `app/api/backend/[...path]`, which
   adds the API key and forwards an allow-listed set of query parameters.
-- **API** (`apps/api`, FastAPI, every route except `/health` behind `X-API-Key`), by group: `/today`, `/maps`; `/level-tests`, `/roadmap`,
-  `/milestones`, `/nodes`, `/grammar-runs`, `/rechecks`; `/vocab/*` (session, answers, say), `/phrases`; `/lessons`;
+- **API** (`apps/api`, FastAPI, every route except `/health` behind `X-API-Key`), by group: `/today`, `/today/week`, `/maps`; `/level-tests`, `/roadmap`,
+  `/milestones`, `/nodes`, `/grammar-runs`, `/rechecks`; `/vocab/*` (session, answers, say, search), `/phrases`; `/lessons`;
   `/writing/prompts` (and `/check`), `/writing/tests`, `/essays` (corrections, rewrites, patterns); `/recordings`, `/pronunciation/prompts`; `/reading/*`
   (texts, items, tests, review); `/listening/*` (texts, items, passages); `/shadowing/texts`; `/speaking/*` (the examiner test: tests, answers, audio, microphone check); `/speech`; `/review/*` (reviewer
   token in `X-Reviewer-Token`); `/learners` creates a learner id. Contest-era groups (`/topics`, `/graph`, `/tutor`,
@@ -156,7 +156,8 @@ contest routes (listed under Interfaces) are not part of the English product. Up
 offered to real learners without a privacy review. History: `docs/archive/contest-2026/`.
 
 ## Non-goals (for now)
-- Gamified streaks or speed rewards.
+- Gamified streaks or speed rewards. A calendar of this week's days with study is not a streak (owner's request, 27 Nov
+  2026): it never counts days in a row, nothing is lost by missing a day, and Sena never praises it.
 - Content without a trusted, licence-checked source.
 - A band from a model alone, or a band shown as a point.
 - Real exam passages or past papers (copyrighted).
