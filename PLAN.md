@@ -86,7 +86,8 @@ target is recorded with the number and the reason, never hidden.
    Listening; reviewing it is optional now, not daily work.
 4. **Writing feedback quality (step 2.11):** measure stability on ~20 web essays (the owner collects them); the TR/CC
    structure checks are built (2.11b); then the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
-   errors per opportunity next to sentence complexity, not a band.
+   errors per opportunity next to sentence complexity, not a band. A band closer to the examiner's (step 2.12: descriptor caps,
+   a model per criterion) is specified; it is measured only on examiner-banded essays.
 5. **Ongoing:** the daily Reading blind-check batch; fixes from the owner's use.
 
 ## Research tracks (`research/`)
@@ -139,6 +140,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-27 | Writing step 2.12 specified, owner's request (a band closer to the examiner's): descriptor caps (from code findings only; 2.11b's model findings shown as "có thể bị giới hạn", never applied without a `SPEC.md` change) and a ridge model per criterion on descriptor features, compared with the pinned scorer on the same splits; the simpler model wins on overlapping intervals. No band changes until the owner's examiner-banded essays exist. Not built |
 | 2026-11-27 | Owner's request, after comparing another IELTS app's home page: **today's plan with progress** (the first list of the day is fixed in `today_plans`, migration 0043; each activity marked "Đã xong" from today's answers by assumed thresholds, a rough time each, "1/4 đã xong"), **this week's study days** (`GET /today/week`, Monday–Sunday from saved answers; a calendar, no streak: `SPEC.md` non-goal kept and clarified) and **dictionary search** over the word list (`/tu-dien`, `GET /vocab/search`, English or Vietnamese with diacritics). Specs `specs/two-layer-map/step-m5.md`, `specs/vocabulary/step-dictionary.md`. The owner asked why another app lists 10,929 cards against our 3,663 words: cards per sense and phrase, from Oxford lists we cannot import; more NGSL-family lists (TSL, BSL) stay a later choice after the 50-entry check |
 | 2026-11-27 | Reading 4.3d part 2, second half built: the passage's words above the learner's level (level test, else B1) and the B1+ words of the sentences that decided wrong answers, each with its sentence and the word list's draft gloss, kept as saved-phrase cards (gap-fill on the passage sentence, FSRS, `/tu-vung`). No model call. Migration 0042. Usefulness on real passages not measured |
 | 2026-11-27 | Reading 4.3d part 2, first half built: the passage's place (1–3) and the learner's "đoán"/"không kịp" marks on the check step; a "không kịp" answer gives no evidence; the summary across pasted tests per question type (share right with an exact 95% interval, the top trap) and the pacing line ("có thể do thời gian" when late errors are 20+ points higher and half are blank or marked; thresholds assumed). Migration 0041. Vocabulary cards next. Tested with a mocked model and API only |

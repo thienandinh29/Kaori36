@@ -30,7 +30,9 @@ wins; fix this page.
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
 ## In progress
-Nothing in code. The Reading diagnosis docs wait for review on `claude/compassionate-newton-d4dkru`.
+Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), in
+pull request #153; waits on the owner's go-ahead to build (two PRs, no model calls). The Reading diagnosis docs wait for
+review on `claude/compassionate-newton-d4dkru`.
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
