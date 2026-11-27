@@ -1,0 +1,68 @@
+experiment_id: SPK-001
+title: Can a small model trained on human-rated speech estimate a speaking level well enough to show?
+track: ml-engineering
+status: planned
+decided: >
+  27 Nov 2026, owner's decision: a Speaking level may be shown as a CEFR level with its IELTS range, labelled an
+  estimate, only from a model that passes this experiment's bar (specs/speaking/spec.md, "The band"; SPEC.md,
+  "Scores shown to learners"). It replaces the 20 Nov rule "no Speaking band before the exam".
+start_after: >
+  Speaking 5.1 (transcript with word timings) and 5.2 (fluency measures), whose code makes the features; and the
+  corpus licence read in full and signed by the owner. Not before then, and not if it takes study time.
+hypothesis: >
+  A small model on code-made measures of a recording and its transcript predicts the human holistic score of held-out
+  speakers in the Speak & Improve Corpus 2025 with QWK >= 0.75 on the overall score (rounded to half levels), and does
+  better than the best single measure (speech rate or answer length alone) beyond the bootstrap interval.
+counts_against: >
+  QWK below 0.75 on held-out speakers; or no better than one measure alone; or errors at B2 and C1 (where the owner's
+  7.0 target lies) much larger than at B1. Any of these means no level is shown in the app, and the report keeps the
+  numbers as a negative result.
+data:
+  public: >
+    Speak & Improve Corpus 2025 (Cambridge University Press & Assessment, ELiT research datasets). About 315 hours from
+    over 7,000 test submissions; holistic scores per part from 2 (A1) to 5.5 (C1+), the overall score the average of the
+    four open parts; about 950 fully annotated tests and the equivalent of 2,500+ more with human scores; most speakers
+    B1 to B2+. Read 27 Nov 2026 on Cambridge's dataset page and the paper's abstract only (Bronze until the corpus's own
+    documentation is read).
+  licence: >
+    Non-commercial research and educational use under a licence agreement with the University of Cambridge (owner,
+    27 Nov 2026); no sub-licensing; never shared in full or in part through Hugging Face, GitHub or similar sites. Kept
+    only in git-ignored data/private/; never committed. To read in the full text before any download: (a) may a model
+    trained on it run inside NodeTrail for the owner, and later, free, for friends and family; (b) may the audio sit in
+    a private free GPU notebook (Kaggle, Colab); (c) may results be published in the portfolio.
+  learner: >
+    The owner's full mock tests rated by a trained rater (the progress study, every 4 weeks). Used only to check the
+    estimate, never to train or tune it.
+split: the corpus's own train / dev / eval split with speakers held out; tuned on dev only; eval scored once
+features:
+  - fluency from word timings (step 5.2): speech rate, articulation rate, pauses per minute, long pauses, longest fluent run
+  - vocabulary from the transcript: share of words above B1 in NodeTrail's word list, lexical diversity
+  - grammar hints per 100 words (LanguageTool and ERRANT, as in Writing)
+  - answer length against the time allowed
+models:
+  - single_measure: speech rate alone; answer length alone (the baselines)
+  - ordinal_regression: on the measures
+  - gradient_boosting: on the measures
+  - text_model: a small model on the transcript, only if the above fall short of the bar
+metrics: [qwk_overall_half_levels, rmse, pearson, within_half_level_accuracy, per_level_confusion]
+uncertainty: bootstrap over speakers, 1,000 resamples
+bar_to_show: >
+  QWK >= 0.75 on the eval split, with its interval; the B2/C1 confusion reported; error by first language if the
+  corpus records it. Then the check on the owner.
+owner_check: >
+  Each rated mock compared with the range the app would show, reported as N-of-1. Proposed: if the rater's band falls
+  outside the shown range on 2 of the first 3 rated mocks, the estimate is hidden until the cause is known.
+what_is_shown: >
+  For a full mock test only (all three parts, recording quality passed, enough speech): a CEFR level with the IELTS
+  range IELTS publishes for it (read on IELTS's own page before it is shown), labelled "ước tính", next to the latest
+  rated mock. Never a point band, never per criterion (the corpus has holistic scores only), never from an LLM.
+format_gap: >
+  The corpus's tasks are not IELTS's three parts (to read in its documentation), and its speakers are not chosen to be
+  Vietnamese. The check on the owner's rated mocks is the only evidence that the estimate carries over.
+label_tier: Gold for the corpus's scores (trained human assessors, the corpus's scale); Gold for the owner's rated mocks when the rater is trained
+not_claimed: an IELTS band; criterion scores; anything about Vietnamese learners as a group; use in a paid product
+owner_part: the modelling, the evaluation and the report; the agent builds the corpus loader and reuses 5.1–5.2's measures
+citations_to_check:
+  - Speak & Improve Corpus 2025, arXiv 2412.11986 (the corpus)
+  - Speak & Improve Challenge 2025, arXiv 2412.11985 (tasks and baseline systems; their reported errors set expectations)
+  - IELTS's own page aligning IELTS bands with CEFR levels

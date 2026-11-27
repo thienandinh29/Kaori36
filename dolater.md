@@ -74,7 +74,7 @@ reviewer portal (V2) exists, they can work from the same sheets and pages.
 | [ ] Writing: the error-type → node table (`data/writing/error-map.yaml`) and the 100-error mapping check | English teacher | 2 h | Writing evidence on grammar nodes |
 | [ ] Lessons: the sample lesson; the source gaps (there is/are, used to, nominalisation, participle clauses, cleft sentences, hedging, impersonal passive) | English teacher | 1–2 h | New milestones' lessons |
 | [ ] Pronunciation tips: a Vietnamese `tip_vi` for each of the 14 sounds (`data/pronunciation/sounds.yaml`), and review the draft `data/pronunciation/phone-tips.yaml` (how to say 46 sounds, 25 common confusions with minimal pairs; shown as guides when a word's sound stays low) | English or phonetics teacher | 2 h | Tips on `/phat-am` and the word guides |
-| [ ] Speaking (phase 5): ratings of 30+ recordings | IELTS rater | 3 h | Any Speaking band |
+| [ ] Speaking: rate your full mock test every 4 weeks (best: a mock done in NodeTrail, kept recordings sent through the portal), then record the band with `app.progress.cli` | Trained IELTS rater | 20 min a mock | Your real Speaking band; the check of SPK-001's estimate on you |
 | [ ] Testers: try the app and report what breaks or confuses | 3–5 testers | 1 h each | Wider use |
 
 Before asking anyone, send them `specs/validation/reviewer-brief.vi.md` (V5): fill in the [brackets] (your name,
@@ -113,6 +113,11 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Phase 3.5b:** fine-tuning the recogniser on a GPU notebook. Only worth it if the reviewer's labels show the
   frozen model is the limit (it needs GPU time, and replaces the pinned model).
 - [ ] **Phase 5, Speaking:** the recognition model; the transcript consent wording; accounts for testers.
+- [ ] **Speaking level estimate, SPK-001 (new, 27 Nov; the band rule change is approved):** read the Speak & Improve Corpus
+  2025 licence in full on Cambridge's ELiT site and sign it if it suits. Tell the agent: (a) may a model trained on it run
+  inside NodeTrail for you, and later, free, for friends and family; (b) may the audio sit in a private free GPU notebook
+  (Kaggle, Colab); (c) may results be published in your portfolio. Nothing is downloaded before that. The work starts after
+  Speaking 5.1–5.2 (`research/experiments/SPK-001.yaml`).
 - [ ] **Wiktionary for vocabulary (new, 26 Nov):** licence read by the owner (CC BY-SA 4.0, dual with GFDL); decide whether
   an enrichment step follows: British IPA for
   713 words that have none, Wiktionary's Vietnamese next to the model's, recordings later after a per-file licence check.

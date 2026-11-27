@@ -2,7 +2,8 @@
 
 Document only: nothing here is built. IELTS-style Speaking practice: the learner speaks, a model transcribes, tools measure how they
 spoke and what they said, a model explains with quotes checked against the transcript. **No band in the first version** (see "The
-band", below): the honest first product is measures and feedback.
+band", below): the honest first product is measures and feedback; a level estimate comes only after research track SPK-001
+passes its bar.
 
 ## What the learner sees
 A part of the test (Part 1 short questions; Part 2 a cue card with one minute to prepare and up to two minutes to speak; Part 3
@@ -73,15 +74,32 @@ quotes checked to be exact substrings of the transcript. The model never hears t
 - **Pronunciation:** only on read-aloud prompts, from phase 3. In free speech the intended phones are unknown, so phone-level marks
   would be guesses; free-speech pronunciation is not marked.
 
-## The band (a decision, with a limit stated up front)
-IELTS Speaking has four criteria (Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, Pronunciation). I know of
-no public set of speaking recordings with examiner bands to calibrate against, and without one a band would be an unvalidated guess.
-**Decision (20 Nov 2026): NodeTrail shows no Speaking band before the owner's exam.** The owner's research confirms there is no
+## The band (owner's decision, changed 27 Nov 2026)
+IELTS Speaking has four criteria (Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, Pronunciation). There is
+no public set of speaking recordings with IELTS examiner bands to calibrate against. The owner's research confirms there is no
 open dataset of Vietnamese learners' speech with IELTS ratings, and no consumer Speaking app publishes a validation against
-examiners. A responsible band needs far more than the 30 rated recordings first proposed here: the report's bar is 100–200 full
-tests rated by two trained raters, balanced by level, region and microphone, with held-out QWK ≥ 0.75 and no bias between groups.
-The owner's Speaking band comes from the progress study instead (`specs/validation/step-v4.md`: an independent mock with a
-trained rater every 4 weeks). The product is measures and feedback, which is a legitimate product, and it says why.
+examiners. A band from a model reading the transcript has nothing behind it: it cannot hear the speech, and its number moves
+between runs. It is never shown. A band calibrated on IELTS ratings directly would need 100–200 full tests rated by two trained
+raters, balanced by level, region and microphone, with held-out QWK ≥ 0.75 and no bias between groups (the report's bar).
+
+**20 Nov 2026:** no Speaking band before the owner's exam. **27 Nov 2026, owner's decision, replacing it:** a **Speaking level
+estimate** may be shown, but only when all of these hold:
+- it comes from a model trained on human-rated speech: the Speak & Improve Corpus 2025 (Cambridge University Press & Assessment,
+  CEFR-level holistic scores by trained assessors, non-commercial licence), research track SPK-001
+  (`research/experiments/SPK-001.yaml`);
+- that model reached QWK ≥ 0.75 against the human scores on held-out speakers, with the interval reported, and its errors at B2
+  and C1 (where the 7.0 target lies) are reported;
+- it is shown as a CEFR level with the IELTS range IELTS publishes for that level (read on IELTS's own page first), labelled
+  "ước tính", next to the latest independent rated mock. Never a point such as "7.5", never per criterion (the corpus has
+  holistic scores only), never from an LLM;
+- only for a full mock test (all three parts) whose recordings pass the quality check and hold enough speech;
+- it is checked against the owner's rated mocks as they come (N-of-1). Proposed: if the rater's band falls outside the shown
+  range on 2 of the first 3, the estimate is hidden until the cause is known.
+
+Until all of that holds, no level is shown. The corpus's tasks are not IELTS's three parts and its speakers are not chosen to be
+Vietnamese, so the check on the owner's rated mocks is the only evidence that the estimate carries over. The owner's Speaking
+band still comes from the progress study (`specs/validation/step-v4.md`: an independent mock with a trained rater every 4
+weeks). Measures and feedback stay the product; the level is an extra line, and the page says how it was made.
 
 ## Limits and privacy
 Cost: the model sees transcripts only (a few hundred words), so the writing budget applies; transcription runs on our machines.
@@ -107,10 +125,11 @@ mode shows nothing while speaking; and NodeTrail is one part of Speaking practic
 | 5.3 | Grammar and vocabulary checks on the transcript; feedback with quotes checked against it |
 | 5.4 | The mock test flow with timing; guided mode with idea building and repeated answers; no band (see "The band") |
 | 5.5 | Opening to testers: accounts, per-user limits, the daily cost cap, the tester report |
+| 5.6 | Level estimate (SPK-001), after 5.1–5.2 and the corpus licence: the corpus loader and the same measures on its audio (agent); the model and its report (owner); the level on the mock test's result page only after the bar in "The band" |
 
-Not in this phase: a native-like or accent score, intonation, an automatic band without ratings.
+Not in this phase: a native-like or accent score, intonation, a band from a model's opinion, a band per criterion.
 
 ## The owner's direction (17 Nov 2026)
 First help learners pronounce correctly (phase 3). Then a **simulated IELTS Speaking test** that uses both: pronunciation from
 phase 3 and what the learner says (transcript, grammar, vocabulary, the answer to the question), in the three parts of the test.
-The band rule above still holds: no band until rated recordings exist.
+The band rule above holds: a level only from a model trained on rated speech, after its bar (changed 27 Nov).

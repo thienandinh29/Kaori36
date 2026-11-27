@@ -97,13 +97,15 @@ target is recorded with the number and the reason, never hidden.
 | VER-001 | How reliable and costly is the generated-content pipeline? Defect escape, false rejection, review rate, cost per accepted item | planned (needs the teacher's 50 labels) |
 | PRON-001 | Does comparing /æ/ only with /ɛ/ make that sound group usable? | done on synthetic speech: false alarms 60% → 10% |
 | DIAG-001 | Can a cognitive diagnosis model (DINA, G-DINA, NeuralCDM) tell Reading sub-skills apart better than one overall skill? Public dataset with an expert Q-matrix | planned, after KT-001 (one learner cannot calibrate a CDM) |
+| SPK-001 | Can a small model on fluency, vocabulary and grammar measures, trained on human-rated speech (Speak & Improve Corpus 2025, CEFR levels), estimate a speaking level well enough to show? QWK ≥ 0.75 on held-out speakers, then checked against the owner's rated mocks | planned, after Speaking 5.1–5.2 and the corpus licence read in full |
 
 Deep knowledge tracing, a home-made LLM or a band model trained from scratch are not planned: there is not enough data, and
 choosing the simple model that fits, and showing why, is the stronger evidence.
 
 ## Decisions waiting on the owner (detail in `dolater.md`)
 - Order of the next builds: CP4b, CP4c, CP6, Speaking.
-- Speaking: the recogniser, the transcript consent wording, whether to look for a rater for 30+ recordings.
+- Speaking: the recogniser, the transcript consent wording; a trained rater for the mock test every 4 weeks; the Speak &
+  Improve Corpus 2025 licence read in full (SPK-001).
 - Whether the machine voice is good enough for whole-passage Listening.
 - Licences to read: L2-ARCTIC (Vietnamese speakers, pronunciation benchmark), Simple English Wikipedia, the male voice's
   datasets.
@@ -130,7 +132,8 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
   the owner's single most important non-study task.
 - **One learner.** N-of-1 data cannot support general claims; reports say so.
 - **Free checker limits and drift.** Ernie is a free preview model: rerun the planted test before each batch; dots is the backup.
-- **Scores are estimates.** Every score shown is a range until measured against examiners. No Speaking band before the exam.
+- **Scores are estimates.** Every score shown is a range until measured against examiners. Speaking: never a band from a
+  model's opinion; a CEFR level with its IELTS range only after SPK-001's bar, and hidden again if the rated mocks disagree.
 - **Solo practice has limits.** Speech-recognition feedback helps most with explicit corrections and with peers, least alone and
   for stress and intonation; one Vietnamese study saw no Speaking band gain. NodeTrail is one part of Speaking practice, next to
   speaking with a partner or teacher.
@@ -139,6 +142,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-27 | Speaking band rule changed, owner's decision: "no Speaking band before the exam" becomes a CEFR level with its IELTS range, labelled an estimate, for a full mock only, from a model trained on human-rated speech (Speak & Improve Corpus 2025, Cambridge, non-commercial licence) that reaches QWK ≥ 0.75 on held-out speakers and agrees with the owner's rated mocks; never from an LLM, as a point or per criterion. Research track SPK-001 added (after 5.1–5.2). Prompted by a Speaking app the owner saw (full mock, then a band with sub-scores): the rest of its result page fits the existing spec. The owner's real band still comes from rated mocks every 4 weeks. Docs only |
 | 2026-11-27 | Reading 4.3d part 2, second half built: the passage's words above the learner's level (level test, else B1) and the B1+ words of the sentences that decided wrong answers, each with its sentence and the word list's draft gloss, kept as saved-phrase cards (gap-fill on the passage sentence, FSRS, `/tu-vung`). No model call. Migration 0042. Usefulness on real passages not measured |
 | 2026-11-27 | Reading 4.3d part 2, first half built: the passage's place (1–3) and the learner's "đoán"/"không kịp" marks on the check step; a "không kịp" answer gives no evidence; the summary across pasted tests per question type (share right with an exact 95% interval, the top trap) and the pacing line ("có thể do thời gian" when late errors are 20+ points higher and half are blank or marked; thresholds assumed). Migration 0041. Vocabulary cards next. Tested with a mocked model and API only |
 | 2026-11-27 | Reading diagnosis, from the owner's research on cognitive diagnostic assessment (Bronze), the agent's recommendation approved: pacing in 4.3d part 2 (passage position, "đoán"/"không kịp" marks; a "không kịp" answer gives no evidence, added to `SPEC.md`); skill tags on each question and time per question in the timed test (`step-4.3e.md`), tags Bronze and in summaries only, BKT unchanged; a CDM is research on public data (DIAG-001, after KT-001). Docs only |

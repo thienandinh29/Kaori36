@@ -4,10 +4,15 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `6b6ca8b` (Wiktionary coverage, #147), plus the Reading diagnosis docs (this branch).
+**Last updated:** 27 Nov 2026, `main` at `7f6aa61` (#152), plus the Speaking band rule change (this branch, docs only).
 
 ## Just finished
-- **Reading 4.3d part 2, second half** (27 Nov, this branch): words from the passage kept as saved-phrase cards (gap-fill on
+- **Speaking band rule changed** (27 Nov, owner's decision, this branch, docs only): instead of "no Speaking band before the
+  exam", a full mock test may show a CEFR level with its IELTS range ("ước tính") from a model trained on human-rated speech
+  (Speak & Improve Corpus 2025) that passes SPK-001's bar (QWK ≥ 0.75 on held-out speakers) and agrees with the owner's rated
+  mocks; never from an LLM, as a point or per criterion. New research track `research/experiments/SPK-001.yaml`. Prompted
+  by a Speaking app the owner saw (a full mock, then a band with sub-scores, "practise your weakest answer", replay).
+- **Reading 4.3d part 2, second half** (27 Nov, #152): words from the passage kept as saved-phrase cards (gap-fill on
   the passage sentence, reviewed on `/tu-vung`); migration `0042`. No model call.
 - **Reading 4.3d part 2, first half** (27 Nov, #149): the passage's place and "đoán"/"không kịp" marks on the
   check step, the summary across pasted tests per question type and the pacing line on `/doc/bai-cua-ban`; migration `0041`.
@@ -25,7 +30,10 @@ wins; fix this page.
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
 ## In progress
-Nothing in code. The Reading diagnosis docs wait for review on `claude/compassionate-newton-d4dkru`.
+Nothing in code. The Speaking band rule change waits for review on `claude/lucid-goldberg-9997no`.
+**Proposed, not yet approved:** a Speaking examiner test built first (Piper voice reads authored Part 1–3 questions, real
+timing, each answer recorded, replay afterwards; no transcription, no model call), then 5.1–5.3 and a result page like the
+app the owner saw, without a band until SPK-001. Waits on the owner's "go" for its step page and the recogniser choice.
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
@@ -56,5 +64,6 @@ merges its own data PR. It never touches the owner's review decisions.
 - No phase gate is measured yet; all content is still draft until a teacher reviews it.
 
 ## Already decided, do not reopen
-No Speaking band before the exam; target 7.0 overall; everything outside the English app is frozen (`AGENTS.md`, "English
+Speaking: never a band from an LLM, as a point or per criterion; a CEFR level only after SPK-001's bar (changed 27 Nov from
+"no Speaking band"); target 7.0 overall; everything outside the English app is frozen (`AGENTS.md`, "English
 only"); Cambridge material never enters the shared bank.
