@@ -17,7 +17,7 @@ wins; fix this page.
 
 ## In progress
 Writing step 2.12 specified (`specs/writing/step-2.12.md`, owner's request 27 Nov: a band closer to the examiner's), on
-`claude/bold-mccarthy-jfbsad`, not pushed. Waits on the owner: review the page, then the go-ahead to build (two PRs, no model
+`claude/bold-mccarthy-jfbsad` (pull request open). Waits on the owner: the go-ahead to build (two PRs, no model
 calls). Wiktionary coverage (#147) is merged; its licence and an enrichment step still wait on the owner (`dolater.md`, section 5).
 
 ## Next
