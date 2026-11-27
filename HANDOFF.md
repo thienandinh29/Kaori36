@@ -4,9 +4,14 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 25 Nov 2026, `main` at `1d24d72` (Reading blind checks, 25 Nov batch, #144).
+**Last updated:** 27 Nov 2026, branch `feat/week-today-dictionary` (not pushed; waits on the owner).
 
 ## Just finished
+- **Home page extras** (`feat/week-today-dictionary`, owner's request 27 Nov, not pushed): today's plan fixed for the day
+  with "Đã xong" marks from today's answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`,
+  migration `0041`); this week's study days as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien`
+  (`specs/vocabulary/step-dictionary.md`). Tested on the API and web run directly against the database; the Docker images
+  were not rebuilt in the cloud session (the sandbox's proxy blocks image builds), so CI's full-stack run is the first.
 - **Reading 4.3d part 1** (#142, 23 Nov): paste a Reading test taken outside the app on `/doc/bai-cua-ban`; the model lists the
   questions, code reads the official key and the learner's answers, the learner confirms, code marks, each wrong answer is
   explained with CP4b's trap list and labelled "chưa kiểm chứng". Owners only; one BKT observation per answered question, once

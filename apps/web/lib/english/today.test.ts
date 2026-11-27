@@ -22,8 +22,12 @@ const body = (href: string) => ({
       via: null,
       href,
       trace,
+      done: true,
+      minutes: 5,
     },
   ],
+  day: "2026-12-01",
+  done_count: 1,
   notes: [],
   names: { "vocab-b2": "Từ vựng B2" },
   target: { overall: 7, exam_date: "2027-07-01", links_status: "proposed" },
@@ -36,7 +40,11 @@ describe("today's list", () => {
       kind: "learn_foundation",
       nameVi: "Từ vựng B2",
       href: "/tu-vung",
+      done: true,
+      minutes: 5,
     });
+    expect(t.doneCount).toBe(1);
+    expect(t.day).toBe("2026-12-01");
     expect(t.target).toEqual({
       overall: 7,
       examDate: "2027-07-01",
@@ -46,5 +54,17 @@ describe("today's list", () => {
   it("refuses links that leave the site", () => {
     expect(() => parseToday(body("https://evil.example"))).toThrow(DataError);
     expect(() => parseToday(body("//evil.example"))).toThrow(DataError);
+  });
+  it("needs the done mark, the minutes and the count", () => {
+    const b = body("/tu-vung");
+    expect(() =>
+      parseToday({ ...b, activities: [{ ...b.activities[0], done: "yes" }] }),
+    ).toThrow(DataError);
+    expect(() =>
+      parseToday({ ...b, activities: [{ ...b.activities[0], minutes: null }] }),
+    ).toThrow(DataError);
+    expect(() => parseToday({ ...b, done_count: undefined })).toThrow(
+      DataError,
+    );
   });
 });
