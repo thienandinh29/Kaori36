@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   confirmBody,
   confirmable,
+  defaultPicks,
+  parseKept,
   parseOwnSummary,
   parseOwnTest,
+  parsePassageWords,
   pending,
   shareText,
   trapName,
@@ -169,6 +172,54 @@ describe("a pasted Reading test (step 4.3d)", () => {
         by_kind: [],
         pacing: { status: "sure" },
       }),
+    ).toThrow();
+  });
+
+  it("decodes the passage's words and ticks the deciding ones not yet saved", () => {
+    const w = parsePassageWords({
+      level: "B1",
+      level_source: "default",
+      words: [
+        {
+          headword: "species",
+          form: "species",
+          level: "B2",
+          sentence: "s",
+          deciding: true,
+          definition: "a kind",
+          vi: null,
+          saved: false,
+        },
+        {
+          headword: "seal",
+          form: "seals",
+          level: "B2",
+          sentence: "s",
+          deciding: true,
+          definition: null,
+          vi: null,
+          saved: true,
+        },
+        {
+          headword: "estuary",
+          form: "estuary",
+          level: null,
+          sentence: "s",
+          deciding: false,
+          definition: null,
+          vi: null,
+          saved: false,
+        },
+      ],
+    });
+    expect(w.words[2].level).toBeNull();
+    expect(defaultPicks(w.words)).toEqual(["species"]);
+    expect(parseKept({ added: 1, already: 0 })).toEqual({
+      added: 1,
+      already: 0,
+    });
+    expect(() =>
+      parsePassageWords({ level: "B1", level_source: "guess", words: [] }),
     ).toThrow();
   });
 });

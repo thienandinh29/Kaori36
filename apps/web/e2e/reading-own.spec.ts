@@ -161,6 +161,33 @@ test("paste, check the questions, see the mark and the explained trap", async ({
       late_wrong_marked: 4,
     },
   };
+  const kept: unknown[] = [];
+  const words = {
+    level: "B1",
+    level_source: "default",
+    words: [
+      {
+        headword: "estuary",
+        form: "estuary",
+        level: "C1",
+        sentence: "Seals are often seen near the estuary.",
+        deciding: true,
+        definition: "the wide part of a river where it meets the sea",
+        vi: "cửa sông",
+        saved: false,
+      },
+      {
+        headword: "pollute",
+        form: "polluted",
+        level: "B2",
+        sentence: "It was heavily polluted.",
+        deciding: false,
+        definition: null,
+        vi: null,
+        saved: false,
+      },
+    ],
+  };
   let polls = 0;
   await page.route(
     "**/api/backend/reading/own-tests**",
@@ -178,6 +205,13 @@ test("paste, check the questions, see the mark and the explained trap", async ({
       if (req.method() === "POST" && url.pathname.endsWith("/confirm")) {
         confirmed.push(req.postDataJSON());
         return json(done);
+      }
+      if (url.pathname.endsWith("/words")) {
+        if (req.method() === "POST") {
+          kept.push(req.postDataJSON());
+          return json({ added: 1, already: 0 });
+        }
+        return json(words);
       }
       if (url.pathname.endsWith("/own-tests")) return json([]);
       if (url.pathname.endsWith("/own-tests/summary"))
@@ -224,4 +258,16 @@ test("paste, check the questions, see the mark and the explained trap", async ({
   await expect(totals.getByTestId("own-pacing")).toContainText(
     "Có thể do thời gian, chưa chắc là yếu kỹ năng",
   );
+
+  const list = page.getByTestId("own-words");
+  await expect(list.getByTestId("own-word-estuary")).toContainText("cửa sông");
+  await expect(
+    list.getByTestId("own-word-estuary").getByRole("checkbox"),
+  ).toBeChecked(); // a deciding-sentence word is ticked for you
+  await expect(
+    list.getByTestId("own-word-polluted").getByRole("checkbox"),
+  ).not.toBeChecked();
+  await list.getByRole("button", { name: "Lưu 1 từ thành thẻ ôn tập" }).click();
+  await expect(list.getByRole("status")).toContainText("Đã lưu 1 thẻ mới");
+  expect(kept).toEqual([{ learner_id: LEARNER, forms: ["estuary"] }]);
 });

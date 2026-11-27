@@ -407,6 +407,7 @@ export const vi = {
       listening: "Nghe",
       shadowing: "Nói đuổi",
       pronunciation: "Phát âm",
+      dictionary: "Từ điển",
     },
     brandSub: "Tiếng Anh · CEFR A2–C1 · luyện IELTS",
     loading: "Đang tải…",
@@ -784,6 +785,35 @@ export const vi = {
       go: "Bắt đầu",
       proposed:
         "Liên kết giữa kỹ năng thi và nền tảng là đề xuất, chưa được giáo viên kiểm tra.",
+      progress: (done: number, total: number) => `${done}/${total} đã xong`,
+      minutes: (n: number) => `khoảng ${n} phút`,
+      done: "Đã xong",
+      fixed:
+        "Danh sách giữ nguyên trong ngày; mục nào bạn đã luyện hôm nay sẽ được đánh dấu. Thời gian chỉ là ước tính.",
+      allDone: "Bạn đã luyện hết danh sách hôm nay.",
+    },
+    week: {
+      label: "Những ngày có học trong tuần này",
+      days: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+      count: (n: number) => `Tuần này: ${n}/7 ngày có học`,
+      studied: (answers: number) => `có học (${answers} câu trả lời)`,
+      missed: "không học",
+      later: "chưa tới",
+      today: "hôm nay",
+    },
+    dictionary: {
+      title: "Từ điển",
+      open: "Tra từ",
+      intro:
+        "Tra từ trong danh sách từ vựng của NodeTrail, bằng tiếng Anh hoặc tiếng Việt (gõ có dấu để tìm chính xác).",
+      label: "Từ cần tra",
+      placeholder: "ví dụ: environment, môi trường",
+      draft: "Nghĩa và ví dụ chưa được giáo viên kiểm tra.",
+      count: (shown: number, total: number) =>
+        shown < total ? `${shown} trên ${total} kết quả` : `${total} kết quả`,
+      none: "Không có từ này trong danh sách của NodeTrail.",
+      scope:
+        "Chỉ có các từ trong danh sách học (NGSL, NAWL và từ tự soạn), không phải một từ điển đầy đủ.",
     },
     recheck: {
       title: "Kiểm tra lại sau một tuần",
@@ -901,6 +931,20 @@ export const vi = {
       } as Record<string, string>,
       markHint:
         'Câu đánh dấu "Không kịp làm" không được tính vào kỹ năng Đọc, như câu bỏ trống. Câu "Đoán" vẫn được tính, như trong phòng thi.',
+      wordsTitle: "Từ vựng trong bài",
+      wordsIntro: (level: string, fromTest: boolean) =>
+        `Các từ trên mức ${level}${fromTest ? " (theo bài kiểm tra trình độ của bạn)" : " (mặc định, vì bạn chưa làm bài kiểm tra trình độ)"}, và các từ khó trong câu quyết định đáp án của câu bạn làm sai. Từ bạn chọn thành thẻ ôn tập điền từ vào đúng câu trong bài.`,
+      wordsNone: "Không có từ nào trên mức này trong bài.",
+      wordsDeciding: "câu quyết định đáp án",
+      wordsOutside: "ngoài danh sách từ",
+      wordsSaved: "đã lưu",
+      wordsDraft:
+        "Nghĩa và mức từ lấy từ danh sách từ của NodeTrail, còn là bản nháp (chưa được giáo viên kiểm tra). Từ ngoài danh sách không có nghĩa.",
+      wordsKeep: (n: number) => `Lưu ${n} từ thành thẻ ôn tập`,
+      wordsKeeping: "Đang lưu…",
+      wordsKept: (added: number, already: number) =>
+        `Đã lưu ${added} thẻ mới${already ? `, ${already} từ đã có sẵn` : ""}. Ôn ở mục Cụm từ đã lưu trên trang Từ vựng.`,
+      wordsReview: "Ôn ở trang Từ vựng",
       summaryTitle: "Tổng hợp các bài bạn tự làm",
       summaryEmpty: "Chưa có bài nào được chấm.",
       summaryTests: (tests: number, answers: number) =>

@@ -43,6 +43,14 @@ class ConfirmIn(BaseModel):
     position: int | None = Field(default=None, ge=1, le=3)  # the passage's place in the test
 
 
+class KeepWordsIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    learner_id: str = Field(min_length=1, max_length=200)
+    forms: list[Annotated[str, Field(min_length=1, max_length=60)]] = Field(
+        min_length=1, max_length=40
+    )
+
+
 class OwnTestQueued(BaseModel):
     id: str
     status: str
@@ -85,6 +93,14 @@ def create_router(service: OwnTests) -> APIRouter:
         return service.confirm(
             body.learner_id, test_id, [q.model_dump() for q in body.questions], body.position
         )
+
+    @router.get("/reading/own-tests/{test_id}/words")
+    def words(test_id: TestId, learner_id: str = Learner) -> dict[str, Any]:
+        return service.words(learner_id, test_id)
+
+    @router.post("/reading/own-tests/{test_id}/words")
+    def keep_words(test_id: TestId, body: KeepWordsIn) -> dict[str, Any]:
+        return service.keep_words(body.learner_id, test_id, body.forms)
 
     @router.delete("/reading/own-tests/{test_id}", status_code=204)
     def delete(test_id: TestId, learner_id: str = Learner) -> Response:

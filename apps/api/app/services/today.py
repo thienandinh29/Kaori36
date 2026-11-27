@@ -11,10 +11,12 @@ DecisionTrace.
 from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
+from uuid import UUID
 
 import yaml  # type: ignore[import-untyped]
+from psycopg.types.json import Jsonb
 
-from app.competencies.bands import bands
+from app.competencies.bands import band_of, bands
 from app.competencies.check import PROPOSED_PATH, load_foundations
 from app.competencies.model import VOCAB_BANDS, CompetencyMap, load_map
 from app.curriculum.course import load_course
@@ -29,6 +31,16 @@ from app.engine.recommend import (
 )
 from app.services.competency_evidence import SUBJECT as COMPETENCY_SUBJECT
 from app.services.grammar import GrammarService
+from app.services.today_plan import (
+    Target,
+    TodayEvidence,
+    estimate_minutes,
+    is_done,
+    local_day,
+    study_week,
+    week_bounds,
+)
+from app.services.vocabulary import start_of_day
 
 if TYPE_CHECKING:
     from app.services.listening_practice import ListeningPractice
@@ -50,6 +62,17 @@ BAND_NAMES_VI = {
     "vocab-tsl": "Từ vựng TOEIC (TSL)",
     "vocab-bsl": "Từ vựng kinh doanh (BSL)",
 }
+# Where a saved answer counts towards a study day (step M5): (table, timestamp column).
+STUDY_TABLES = (
+    ("vocab_reviews", "answered_at"),
+    ("grammar_answers", "answered_at"),
+    ("reading_answers", "answered_at"),
+    ("reading_own_answers", "answered_at"),
+    ("listening_answers", "answered_at"),
+    ("essays", "submitted_at"),
+    ("speech_recordings", "created_at"),
+    ("say_attempts", "said_at"),
+)
 REVIEW_NAMES_VI = {"vocab": "Từ vựng", "phrases": "Cụm từ đã lưu"}
 
 
@@ -198,7 +221,10 @@ class TodayService:
         return {k: v for k, v in foundations.items() if k in self.live}, competencies, due
 
     def today(self, learner_id: str, minutes: int) -> dict[str, Any]:
-        now = self.clock()
+        """The engine's list right now, recomputed on every call (the plan's first version)."""
+        return self._compute(learner_id, minutes, self.clock())
+
+    def _compute(self, learner_id: str, minutes: int, now: datetime) -> dict[str, Any]:
         foundations, competencies, due = self._state(learner_id, now)
         names = self._names()
         result = recommend(
@@ -231,6 +257,147 @@ class TodayService:
                 "exam_date": self.cmap.target.exam_date.isoformat(),
                 "links_status": self.cmap.status,
             },
+            "due": due,
+        }
+
+    # --- today's plan, fixed for the day (specs/two-layer-map/step-m5.md) ----------------------
+
+    def plan(self, learner_id: str, minutes: int) -> dict[str, Any]:
+        """The day's first list, stored, with each activity's done mark and minutes."""
+        now = self.clock()
+        day = local_day(now)
+        pool = self.grammar.pool()
+        with pool.connection() as conn:
+            learner = self.grammar._learner(conn, learner_id)
+            row = conn.execute(
+                "select plan from today_plans where learner_id=%s and day=%s", (learner, day)
+            ).fetchone()
+        if row is None:
+            fresh = self._compute(learner_id, minutes, now)
+            with pool.connection() as conn:
+                conn.execute(
+                    "insert into today_plans(learner_id,day,minutes,plan,created_at) "
+                    "values (%s,%s,%s,%s,%s) on conflict (learner_id,day) do nothing",
+                    (learner, day, minutes, Jsonb(fresh), now),
+                )
+                row = conn.execute(  # another request may have stored the day's plan first
+                    "select plan from today_plans where learner_id=%s and day=%s", (learner, day)
+                ).fetchone()
+            assert row is not None
+        stored: dict[str, Any] = row[0]
+        due: dict[str, int] = stored.get("due", {})
+        evidence = self._evidence(learner, start_of_day(now))
+        activities = []
+        for a in stored["activities"]:
+            target = self._target(a["kind"], a["target"])
+            planned = int(due.get(a["target"], 0))
+            activities.append(
+                {
+                    **a,
+                    "done": is_done(target, a["target"], planned, evidence),
+                    "minutes": estimate_minutes(target, planned, a["target"]),
+                }
+            )
+        return {
+            **{k: v for k, v in stored.items() if k != "due"},
+            "activities": activities,
+            "day": day.isoformat(),
+            "done_count": sum(a["done"] for a in activities),
+        }
+
+    def _target(self, kind: str, slug: str) -> Target:
+        if kind == "review":
+            return Target("review")
+        if kind in ("diagnostic", "practise_competency"):
+            skill = next((c.skill for c in self.cmap.competencies if c.slug == slug), None)
+            return Target("competency", skill=skill)
+        if slug in VOCAB_BANDS:
+            return Target("vocab_band")
+        if slug in {c.slug for c in self.pronunciation.concepts}:
+            return Target("pronunciation")
+        concepts = self.grammar.bundle(GRAMMAR).course.concepts
+        hidden = tuple(c.slug for c in concepts if c.part_of == slug)
+        return Target("grammar", nodes=(slug, *hidden))
+
+    def _evidence(self, learner: UUID, since: datetime) -> TodayEvidence:
+        with self.grammar.pool().connection() as conn:
+            reviews: dict[str, int] = {}
+            per_word: list[tuple[str, int]] = []
+            wordlist = self.grammar.wordlist()
+            for lst, key, n in conn.execute(
+                "select list_slug, word_key, count(*) from vocab_reviews "
+                "where learner_id=%s and answered_at>=%s group by list_slug, word_key",
+                (learner, since),
+            ).fetchall():
+                source = "phrases" if lst == PHRASES else "vocab"
+                reviews[source] = reviews.get(source, 0) + int(n)
+                if lst == wordlist.slug:
+                    per_word.append((str(key), int(n)))
+            grammar = {
+                str(node): int(n)
+                for node, n in conn.execute(
+                    "select node, count(*) from grammar_answers "
+                    "where learner_id=%s and answered_at>=%s group by node",
+                    (learner, since),
+                ).fetchall()
+            }
+            competencies: dict[str, int] = {}
+            for table in ("reading_answers", "listening_answers"):
+                for comp, n in conn.execute(
+                    f"select competency, count(*) from {table} "  # fixed table names
+                    "where learner_id=%s and answered_at>=%s group by competency",
+                    (learner, since),
+                ).fetchall():
+                    competencies[str(comp)] = competencies.get(str(comp), 0) + int(n)
+            counts = conn.execute(
+                "select (select count(*) from speech_recordings "
+                "where learner_id=%s and created_at>=%s), "
+                "(select count(*) from essays where learner_id=%s and submitted_at>=%s)",
+                (learner, since, learner, since),
+            ).fetchone()
+        assert counts is not None
+        by_band: dict[str, int] = {}
+        for key, n in per_word:
+            word = wordlist.get(key)
+            if word is not None:
+                band = band_of(word.level, word.origin)
+                by_band[band] = by_band.get(band, 0) + n
+        return TodayEvidence(
+            reviews=reviews,
+            bands=by_band,
+            grammar=grammar,
+            recordings=int(counts[0]),
+            essays=int(counts[1]),
+            competencies=competencies,
+        )
+
+    def week(self, learner_id: str) -> dict[str, Any]:
+        """This week's days (Monday to Sunday, Vietnam time) with the answers saved on each."""
+        now = self.clock()
+        begin, end = week_bounds(now)
+        with self.grammar.pool().connection() as conn:
+            learner = self.grammar._learner(conn, learner_id)
+            parts = " union all ".join(
+                f"select {col} as at from {table} where learner_id=%(l)s "  # fixed names
+                f"and {col}>=%(b)s and {col}<%(e)s"
+                for table, col in STUDY_TABLES
+            )
+            stamps = [
+                r[0] for r in conn.execute(parts, {"l": learner, "b": begin, "e": end}).fetchall()
+            ]
+        days = study_week(stamps, now)
+        return {
+            "days": [
+                {
+                    "date": d.day.isoformat(),
+                    "answers": d.answers,
+                    "studied": d.studied,
+                    "today": d.is_today,
+                    "future": d.is_future,
+                }
+                for d in days
+            ],
+            "studied_days": sum(d.studied for d in days),
         }
 
     def maps(self, learner_id: str) -> dict[str, Any]:

@@ -19,6 +19,11 @@ import {
   type PassageView,
 } from "@/lib/listening/passages";
 import { parseToday, type Today } from "@/lib/english/today";
+import { parseWeek, type StudyWeek } from "@/lib/english/week";
+import {
+  parseDictionary,
+  type DictionaryResult,
+} from "@/lib/english/dictionary";
 import { parseMaps, type Maps } from "@/lib/english/maps";
 import {
   parseAnswer,
@@ -108,7 +113,10 @@ import {
   parseOwnTest,
   parseOwnTests,
   parseOwnSummary,
+  parseKept,
+  parsePassageWords,
   type OwnSummary,
+  type PassageWords,
   type OwnQuestion,
   type OwnTest,
   type OwnTestSummary,
@@ -515,6 +523,24 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         }),
       );
     },
+    async ownTestWords(learnerId: string, id: string): Promise<PassageWords> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePassageWords(
+        await request(`reading/own-tests/${encodeURIComponent(id)}/words?${q}`),
+      );
+    },
+    async keepOwnTestWords(
+      learnerId: string,
+      id: string,
+      forms: string[],
+    ): Promise<{ added: number; already: number }> {
+      return parseKept(
+        await post(`reading/own-tests/${encodeURIComponent(id)}/words`, {
+          learner_id: learnerId,
+          forms,
+        }),
+      );
+    },
     async ownSummary(learnerId: string): Promise<OwnSummary> {
       const q = new URLSearchParams({ learner_id: learnerId });
       return parseOwnSummary(await request(`reading/own-tests/summary?${q}`));
@@ -683,6 +709,19 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         minutes: String(minutes),
       });
       return parseToday(await request(`today?${q}`));
+    },
+    async week(learnerId: string): Promise<StudyWeek> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseWeek(await request(`today/week?${q}`));
+    },
+    async dictionary(
+      query: string,
+      signal?: AbortSignal,
+    ): Promise<DictionaryResult> {
+      const q = new URLSearchParams({ q: query, list: VOCAB_LIST });
+      return parseDictionary(
+        await request(`vocab/search?${q}`, signal ? { signal } : {}),
+      );
     },
     async recheckNext(learnerId: string): Promise<RecheckQuestion | null> {
       const q = new URLSearchParams({ learner_id: learnerId });

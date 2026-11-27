@@ -14,6 +14,8 @@ import logging
 import re
 from collections.abc import Callable, Iterable
 from datetime import UTC, datetime
+from functools import cached_property
+from pathlib import Path
 from typing import Any, Protocol
 from uuid import UUID
 
@@ -23,14 +25,16 @@ from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
 
 from app.competencies.model import load_map
+from app.config import REPO_ROOT
 from app.engine import bkt
 from app.engine.bkt import DEFAULT_PARAMS
 from app.engine.trace import fmt_p
-from app.reading import own_summary
+from app.reading import own_summary, own_vocab
 from app.reading import own_test as ot
 from app.services.backend import learner_uuid, save_trace
 from app.services.competency_evidence import competency_ids
 from app.services.learning import save_mastery
+from app.vocabulary.wordlist import shared_wordlist
 
 logger = logging.getLogger(__name__)
 PARAMS = DEFAULT_PARAMS["mcq"]  # graded from a key, as the bank's Reading questions
@@ -63,11 +67,27 @@ class OwnTests:
         pool: Callable[[], ConnectionPool],
         draft_learners: str | Iterable[UUID] = "",
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
+        vocab_dir: Path = REPO_ROOT / "data" / "vocabulary",
+        vocab_imported_dir: Path = REPO_ROOT / "data-sa" / "vocabulary",
     ) -> None:
         self.pool = pool
         self.owners = _owners(draft_learners)
         self.clock = clock
         self.cmap = load_map()
+        self.vocab_dir = vocab_dir
+        self.vocab_imported_dir = vocab_imported_dir
+
+    @cached_property
+    def form_index(self) -> own_vocab.FormIndex:
+        return own_vocab.build_form_index(self.vocab_imported_dir / "forms.yaml")
+
+    def _gloss(self) -> Callable[[str], own_vocab.Gloss | None]:
+        """The word list's definition and Vietnamese gloss by headword (the first entry of it)."""
+        listed = shared_wordlist(self.vocab_dir / "core-seed.yaml", self.vocab_imported_dir)
+        by_lemma: dict[str, own_vocab.Gloss] = {}
+        for w in listed.words:
+            by_lemma.setdefault(w.lemma.lower(), own_vocab.Gloss(w.definition, w.vi))
+        return lambda head: by_lemma.get(head.lower())
 
     def _learner(self, conn: psycopg.Connection[Any], learner_id: str) -> UUID:
         learner = learner_uuid(learner_id)
@@ -168,6 +188,73 @@ class OwnTests:
                 (learner,),
             ).fetchall()
         return own_summary.summary([own_summary.Answer(*r) for r in rows])
+
+    def _offer(
+        self, conn: psycopg.Connection[Any], learner: UUID, test_id: str
+    ) -> tuple[list[own_vocab.PassageWord], str, str]:
+        """The words offered from a marked test, the level they are above, and its source."""
+        row = conn.execute(
+            "select status, passage, result from reading_own_tests where id=%s and learner_id=%s",
+            (_uuid(test_id), learner),
+        ).fetchone()
+        if row is None:
+            raise HTTPException(404, "Không tìm thấy bài này.")
+        status, passage, result = row
+        if status not in ("marked", "explaining", "done") or not result:
+            raise HTTPException(409, "Bài này chưa được chấm.")
+        got = conn.execute(
+            "select result->>'vocab_level' from level_tests where learner_id=%s "
+            "and phase='done' order by finished_at desc limit 1",
+            (learner,),
+        ).fetchone()
+        level, source = own_vocab.learner_level(got[0] if got else None)
+        quotes = [
+            q for m in result["marks"] if not m["correct"] and m.get("explanation")
+            for q in m["explanation"].get("key_quotes", [])
+        ]  # fmt: skip
+        offered = own_vocab.words(
+            passage, level, self.form_index, own_vocab.deciding_sentences(passage, quotes),
+            self._gloss(),
+        )  # fmt: skip
+        return offered, level, source
+
+    def words(self, learner_id: str, test_id: str) -> dict[str, Any]:
+        """The passage's words to keep, each with its sentence, and which are already cards."""
+        with self.pool().connection() as conn:
+            learner = self._learner(conn, learner_id)
+            offered, level, source = self._offer(conn, learner, test_id)
+            saved = {
+                r[0].lower()
+                for r in conn.execute(
+                    "select phrase from learner_phrases where learner_id=%s", (learner,)
+                ).fetchall()
+            }
+        return {
+            "level": level, "level_source": source,
+            "words": [w.to_json() | {"saved": w.form.lower() in saved} for w in offered],
+        }  # fmt: skip
+
+    def keep_words(self, learner_id: str, test_id: str, forms: list[str]) -> dict[str, Any]:
+        """Kept words become saved-phrase cards (FSRS, gap-fill on the passage sentence).
+
+        Only words the server itself offers are kept, with the server's sentence; a word already
+        saved (from an essay or another test) is left as it is.
+        """
+        with self.pool().connection() as conn, conn.transaction():
+            learner = self._learner(conn, learner_id)
+            offered, _, _ = self._offer(conn, learner, test_id)
+            chosen = own_vocab.pick(offered, forms)
+            if len(chosen) != len({f.lower() for f in forms}):
+                raise HTTPException(422, "Có từ không nằm trong danh sách của bài này.")
+            added = 0
+            for w in chosen:
+                got = conn.execute(
+                    "insert into learner_phrases(learner_id,phrase,sentence,own_test_id) "
+                    "values (%s,%s,%s,%s) on conflict (learner_id, phrase) do nothing returning id",
+                    (learner, w.form, w.sentence, _uuid(test_id)),
+                ).fetchone()
+                added += got is not None
+        return {"added": added, "already": len(chosen) - added}
 
     def delete(self, learner_id: str, test_id: str) -> None:
         with self.pool().connection() as conn:

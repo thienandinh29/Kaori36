@@ -216,7 +216,11 @@ def _subject(conn: psycopg.Connection[Any]) -> UUID:
 
 
 def _blank(sentence: str, phrase: str) -> str:
-    """The sentence with the phrase replaced by a gap (case-insensitive, first occurrence)."""
+    """The sentence with the phrase replaced by a gap (case-insensitive, first whole-word
+    occurrence: a saved word "use" blanks "use", never the middle of "because")."""
+    whole = rf"(?<!\w){re.escape(phrase)}(?!\w)"
+    if re.search(whole, sentence, flags=re.IGNORECASE):
+        return re.sub(whole, "_____", sentence, count=1, flags=re.IGNORECASE)
     return re.sub(re.escape(phrase), "_____", sentence, count=1, flags=re.IGNORECASE)
 
 
