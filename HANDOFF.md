@@ -4,12 +4,12 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `f3165ce` (#151), merged into `data/tsl-bsl-import` (not pushed).
+**Last updated:** 27 Nov 2026, `main` at `f3165ce` (#151), merged into `data/tsl-bsl-import` (PR #155).
 
 ## Just finished
-- **TSL and BSL words** (branch `data/tsl-bsl-import`, owner's request 27 Nov, not pushed): 1,825 words added (the list is
+- **TSL and BSL words** (PR #155, owner's request 27 Nov): 1,825 words added (the list is
   now 5,488); BSL definitions written by DeepSeek and blind-checked by the free Ernie/dots checker (835 of 836 right); own
-  bands `vocab-tsl`/`vocab-bsl`; `specs/vocabulary-import/step-tsl-bsl.md`. Waits on the owner: push and PR.
+  bands `vocab-tsl`/`vocab-bsl`; `specs/vocabulary-import/step-tsl-bsl.md`. Waits on CI and the owner's merge.
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day
   with "Đã xong" marks from today's answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`,
   migration `0043`); this week's study days as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien`
