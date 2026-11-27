@@ -9,8 +9,13 @@ export function originLabels(card: Pick<WordCard, "origin" | "level" | "ipa">) {
   return {
     level: imported ? `${card.level} · ${t.levelEstimated}` : card.level,
     ipaTitle: imported ? t.ipaAuto : t.ipaTitle,
-    source: imported
-      ? t.importedFrom.replace("{list}", card.origin.toUpperCase())
-      : null,
+    source:
+      card.origin === "tsl"
+        ? t.importedTsl
+        : card.origin === "bsl"
+          ? t.importedBsl
+          : imported
+            ? t.importedFrom.replace("{list}", card.origin.toUpperCase())
+            : null,
   };
 }

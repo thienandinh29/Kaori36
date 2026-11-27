@@ -59,6 +59,8 @@ BAND_NAMES_VI = {
     "vocab-b2": "Từ vựng B2",
     "vocab-c1": "Từ vựng C1",
     "vocab-nawl": "Từ vựng học thuật (NAWL)",
+    "vocab-tsl": "Từ vựng TOEIC (TSL)",
+    "vocab-bsl": "Từ vựng kinh doanh (BSL)",
 }
 # Where a saved answer counts towards a study day (step M5): (table, timestamp column).
 STUDY_TABLES = (

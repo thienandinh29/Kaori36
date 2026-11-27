@@ -77,9 +77,12 @@ def test_the_candidates_file_is_valid_and_only_owner_checked_sources_are_usable(
     assert set(usable) == {
         "ngsl", "nawl", "wikibooks-grammar", "esl-grammar-bissonnette",
         "al-haider-high-intermediate-grammar", "explorations-1", "college-esl-writers-hall-wallace",
-        "beginning-esol-dodson", "openstax-reading", "wiktionary",
+        "beginning-esol-dodson", "openstax-reading", "wiktionary", "tsl", "bsl",
     }  # fmt: skip
     assert usable["ngsl"].licence == "CC BY-SA 4.0" and not usable["ngsl"].non_commercial
+    # TSL and BSL, read by the agent at the owner's request (27 Nov 2026): same licence as the NGSL.
+    for slug in ("tsl", "bsl"):
+        assert usable[slug].licence == "CC BY-SA 4.0" and usable[slug].checked_by == "agent"
     assert usable["esl-grammar-bissonnette"].non_commercial  # flagged: tag every chunk
     assert usable["explorations-1"].non_commercial
     assert usable["college-esl-writers-hall-wallace"].non_commercial

@@ -177,7 +177,7 @@ def test_default_deepseek_routes_keep_independent_verifiers() -> None:
         for task, candidates in tasks.items():
             if task == "verify":
                 assert all(route.family == "gemini" for route in candidates)
-            elif task in ("lesson_check", "reading_check"):  # checkers: never the generator family
+            elif task in ("lesson_check", "reading_check", "vocab_check"):  # never the generator
                 assert all(route.family != "deepseek" for route in candidates)
             else:
                 assert all(route.provider == "deepseek" for route in candidates)

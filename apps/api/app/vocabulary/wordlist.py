@@ -90,15 +90,15 @@ class Form(_Model):
         return self
 
 
-Origin = Literal["authored", "ngsl", "nawl"]
+Origin = Literal["authored", "ngsl", "nawl", "tsl", "bsl"]
 
 
 class Word(_Model):
     lemma: Lemma
     pos: Pos
     level: Level
-    # authored: written for this project; ngsl/nawl: imported (specs/vocabulary-import), so the
-    # level is estimated from frequency and the IPA was kept only where espeak-ng agreed.
+    # authored: written for this project; ngsl/nawl/tsl/bsl: imported (specs/vocabulary-import),
+    # so the level is estimated from frequency and the IPA was kept only where espeak-ng agreed.
     origin: Origin = "authored"
     ipa: Ipa | None = None  # British pronunciation, shown next to the word
     topic: Slug | None = None  # one of the list's topics (specs/vocabulary, topics)

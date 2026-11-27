@@ -73,7 +73,7 @@ export interface WordCard {
   example: string;
 }
 
-export type WordOrigin = "authored" | "ngsl" | "nawl";
+export type WordOrigin = "authored" | "ngsl" | "nawl" | "tsl" | "bsl";
 
 export interface VocabEntry {
   item: VocabItem;

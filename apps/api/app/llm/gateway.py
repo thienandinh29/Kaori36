@@ -109,11 +109,12 @@ def generation_limits() -> GenerationLimits:
 
 _excluded_family: ContextVar[str | None] = ContextVar("generator_family", default=None)
 # Tasks that check another model's output: never the generator's family (verification_scope).
-VERIFY_TASKS = frozenset({"verify", "lesson_check", "reading_check"})
+VERIFY_TASKS = frozenset({"verify", "lesson_check", "reading_check", "vocab_check"})
 # Free (`:free`) models may log or train on prompts, so they are refused everywhere except checking
 # offline content built from public, openly licensed text, never a learner's data: lessons (owner's
-# decision, 17 Nov 2026) and Reading questions (phase 4 plan, approved 18 Nov 2026).
-FREE_MODEL_TASKS = frozenset({"lesson_check", "reading_check"})
+# decision, 17 Nov 2026), Reading questions (phase 4 plan, approved 18 Nov 2026) and definitions
+# written for public word-list headwords (step-tsl-bsl.md, owner's decision 27 Nov 2026).
+FREE_MODEL_TASKS = frozenset({"lesson_check", "reading_check", "vocab_check"})
 KNOWN_GENERATOR_FAMILIES = frozenset(
     {"gemini", "claude", "deepseek", "gpt", "llama", "mistral", "qwen"}
     | {"glm", "openai", "ernie", "dots"}

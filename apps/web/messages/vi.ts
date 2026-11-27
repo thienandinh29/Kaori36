@@ -573,6 +573,10 @@ export const vi = {
       levelEstimated: "ước lượng theo tần suất",
       importedFrom:
         "Từ và định nghĩa: {list} 1.2 (Browne, Culligan & Phillips, CC BY-SA 4.0). Nghĩa tiếng Việt, câu ví dụ: bản nháp tự động.",
+      importedTsl:
+        "Từ và định nghĩa: TSL 1.2 (Browne & Culligan, CC BY-SA 4.0); vài định nghĩa do máy viết, đã được một mô hình khác kiểm tra mù. Nghĩa tiếng Việt, câu ví dụ: bản nháp tự động.",
+      importedBsl:
+        "Từ: BSL 1.20 (Browne & Culligan, CC BY-SA 4.0). Định nghĩa do máy viết, đã được một mô hình khác kiểm tra mù. Nghĩa tiếng Việt, câu ví dụ: bản nháp tự động.",
       levelSuggested: "gợi ý",
       levelMix: "Trộn A1–C1",
       levelMixNote: "xen kẽ mọi cấp độ",

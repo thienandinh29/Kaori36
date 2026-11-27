@@ -1,7 +1,11 @@
-"""NGSL 1.2 and NAWL 1.2 headwords from the official files (specs/vocabulary-import, steps 1-3).
+"""NGSL 1.2, NAWL 1.2, TSL 1.2 and BSL 1.20 headwords from the official files.
 
-New General Service List and New Academic Word List by Browne, C., Culligan, B., and Phillips, J.,
-CC BY-SA 4.0 (https://www.newgeneralservicelist.com). Only the headword, its easy-English
+Spec: specs/vocabulary-import.
+
+New General Service List and New Academic Word List by Browne, C., Culligan, B., and Phillips, J.;
+TOEIC Service List and Business Service List by Browne, C. and Culligan, B.; all CC BY-SA 4.0
+(https://www.newgeneralservicelist.com). The BSL has no definitions: the model writes them
+(`step-tsl-bsl.md`). Only the headword, its easy-English
 definition, its inflected forms and a frequency figure are taken; everything else is written later
 and marked draft. Levels are estimated from frequency, never presented as official CEFR levels.
 """
@@ -19,7 +23,7 @@ from xml.etree import ElementTree
 
 from app.curriculum.course import Level
 
-Source = Literal["ngsl", "nawl"]
+Source = Literal["ngsl", "nawl", "tsl", "bsl"]
 FILES: dict[str, str] = {
     "ngsl_stats": "NGSL_12_stats.csv",  # frequency rank (SFI) per headword
     "ngsl_definitions": "NGSL_12_with_English_definitions.xlsx",
@@ -29,6 +33,32 @@ FILES: dict[str, str] = {
     "sfi_31k": "NGSLwithSFI-31K.xlsx",  # the SFI of ~31k words: orders the NAWL by frequency
     "ngsl_supplement": "SUP_lemmatized.csv",  # days, months, numbers (no rank): the narration check
 }
+# The add-on lists (specs/vocabulary-import/step-tsl-bsl.md), downloaded by the `extra` step only.
+EXTRA_FILES: dict[str, str] = {
+    "tsl_stats": "TSL_12_stats.csv",  # rank within the TSL (its own corpus): order only
+    "tsl_definitions": "TSL_12_definitions.xlsx",
+    "tsl_forms": "TSL_12_lemmatized_for_teaching.csv",
+    "bsl_stats": "BSL_120_stats.csv",
+    "bsl_forms": "BSL_120_lemmatized_for_teaching.csv",
+}
+# Headwords that are prefixes, not words (the NAWL's were left out the same way).
+PREFIXES = frozenset(
+    {
+        "anti",
+        "co",
+        "ex",
+        "inter",
+        "micro",
+        "mid",
+        "mini",
+        "multi",
+        "non",
+        "post",
+        "pre",
+        "semi",
+        "sub",
+    }
+)
 BASE_URL = "https://www.newgeneralservicelist.com/s/"
 # NGSL frequency rank -> level (the owner's decision, 16 Nov 2026); the rest of the NGSL is B2.
 NGSL_BANDS: tuple[tuple[int, Level], ...] = ((500, "A1"), (1200, "A2"), (2000, "B1"))
@@ -47,6 +77,11 @@ class Headword:
     forms: tuple[str, ...]  # the lemma first, then its inflections
     pos: str | None = None  # NAWL gives one; for the NGSL the model chooses
     rank: int | None = None  # NGSL frequency rank
+
+    @property
+    def needs_definition(self) -> bool:
+        """BSL words: the list has no definition, so the model writes one (blind-checked)."""
+        return not self.definition
 
 
 @dataclass(frozen=True)
@@ -160,6 +195,88 @@ def read(folder: Path) -> tuple[list[Headword], list[Dropped]]:
     for lemma, definition, pos in candidates:
         words.append(Headword(lemma, "nawl", levels[lemma], definition,
                               nawl_forms.get(lemma, (lemma,)), pos=pos))  # fmt: skip
+    return words, dropped
+
+
+def _sfi(folder: Path) -> dict[str, float]:
+    """General-English frequency (SFI) of about 31k words: the scale every list is levelled on."""
+    return {
+        clean(r["A"]).lower(): float(r["D"])
+        for r in list(xlsx_rows(folder / FILES["sfi_31k"]))[1:]
+        if r.get("A") and r.get("D")
+    }
+
+
+def ngsl_cuts(folder: Path, sfi: dict[str, float]) -> dict[Level, float]:
+    """The lowest general SFI inside each of the NGSL's A1, A2 and B1 bands."""
+    cuts: dict[Level, float] = {}
+    for r in _csv(folder / FILES["ngsl_stats"])[1:]:
+        lemma = r[0].strip().lower()
+        if not r[1].strip().isdigit() or lemma not in sfi:
+            continue
+        level = ngsl_level(int(r[1]))
+        if level != "B2":
+            cuts[level] = min(cuts.get(level, 1e9), sfi[lemma])
+    return cuts
+
+
+def extra_levels(
+    lemmas: list[str], sfi: dict[str, float], cuts: dict[Level, float]
+) -> dict[str, Level]:
+    """At or above an NGSL band's lowest SFI, that level; the rest like the NAWL (B2 or C1)."""
+    out: dict[str, Level] = {}
+    rest: list[str] = []
+    for w in lemmas:
+        x = sfi.get(w)
+        level = next(
+            (lv for lv in ("A1", "A2", "B1") if x is not None and lv in cuts and x >= cuts[lv]),
+            None,
+        )
+        if level is None:
+            rest.append(w)
+        else:
+            out[w] = level
+    return out | nawl_levels(rest, sfi)
+
+
+def read_extra(folder: Path, known: set[str]) -> tuple[list[Headword], list[Dropped]]:
+    """TSL then BSL headwords not in `known` (the list's lemmas); a word in both is the TSL's."""
+    sfi = _sfi(folder)
+    cuts = ngsl_cuts(folder, sfi)
+    definitions = {
+        clean(r.get("A", "")).lower(): clean(r.get("B", ""))
+        for r in list(xlsx_rows(folder / EXTRA_FILES["tsl_definitions"]))[1:]
+    }
+    words: list[Headword] = []
+    dropped: list[Dropped] = []
+    seen = set(known)
+    for source in ("tsl", "bsl"):
+        src: Source = "tsl" if source == "tsl" else "bsl"
+        family = forms(folder / EXTRA_FILES[f"{source}_forms"])
+        candidates: list[tuple[str, str]] = []
+        for r in _csv(folder / EXTRA_FILES[f"{source}_stats"])[1:]:
+            lemma = clean(r[0]).lower()
+            if not lemma or lemma in seen:
+                continue  # already in the list (or in the TSL): not counted as read twice
+            seen.add(lemma)
+            definition = definitions.get(lemma, "") if src == "tsl" else ""
+            if definition and _check(lemma, definition, src):
+                definition = ""  # unusable (it contains the word): the model writes one, checked
+            if lemma in PREFIXES:
+                why: str | None = "a prefix, not a word"
+            elif not _LEMMA.match(lemma) or len(lemma) > 40:
+                why = "not a plain lowercase headword"
+            else:
+                why = None
+            if why:
+                dropped.append(Dropped(lemma, src, why))
+                continue
+            candidates.append((lemma, definition))
+        levels = extra_levels([c[0] for c in candidates], sfi, cuts)
+        for lemma, definition in candidates:
+            words.append(
+                Headword(lemma, src, levels[lemma], definition, family.get(lemma, (lemma,)))
+            )
     return words, dropped
 
 
