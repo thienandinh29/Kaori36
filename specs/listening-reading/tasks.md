@@ -28,8 +28,9 @@ word list.
 - [ ] 4.3e skill tags and time per question, four PRs (`step-4.3e.md`): (1) tags in CP4b's generation call, the blind pick, tags
       for pasted tests; (2) per-skill lines in the summaries; (3) time and answer changes in the timed test (a new migration); (4) the
       teacher's 50 labels on the portal
-- [ ] 4.3d (CP4b) why the wrong answer tempted you, three PRs (`spec.md`): (1) migration, generation, code checks, planted test,
-      run; (2) learner pages and the flag; (3) "Theo dạng câu hỏi" and the Hôm nay link
+- [x] CP4b on the bank, step 1a (27 Nov): migration `0047`, generation, code checks, the run (`spec.md`, "Step 1 split in two")
+- [ ] CP4b on the bank, step 1b: the blind check of explanations by another family, the planted-test tooling, the gate
+- [ ] CP4b on the bank, steps 2 and 3: learner pages and the flag; "Theo dạng câu hỏi" and the Hôm nay link
 - [ ] CP4c exam details (timer warnings, highlighting, side by side, one-play Listening), when the owner chooses
 - [ ] 4.4 Listening audio and items
 - [ ] 4.5 gate report

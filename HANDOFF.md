@@ -4,9 +4,12 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `cca973b` (#154 merged), plus T6 and Speaking 5.1 on `feat/speaking-transcripts`.
+**Last updated:** 27 Nov 2026, `main` at `c5f518a` (#156) merged into `claude/compassionate-newton-d4dkru` (CP4b bank step 1a, #157).
 
 ## Just finished
+- **CP4b on the bank's own questions, step 1a** (27 Nov, this branch): explanations generated and checked by code
+  (`app/reading/explain.py`, `explain_run.py`, migration `0047`); first real run 10/10 after a check fix. Nothing reaches a
+  learner. One approved key looks doubtful (`dolater.md`, section 1).
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
   answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
   as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien` (`specs/vocabulary/step-dictionary.md`).
@@ -37,13 +40,13 @@ wins; fix this page.
   recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
   test at real speed is not done.
 
-## Built, not yet merged (`feat/speaking-transcripts`)
+## Also merged today (#156)
 - **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
   Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
 
 ## In progress
-Nothing in code. Writing step 2.12 is specified (#153) and waits on the owner's go-ahead to build. The Reading diagnosis docs
-wait for review on `claude/compassionate-newton-d4dkru`.
+CP4b on the bank's own questions, step 1a, in #157 from `claude/compassionate-newton-d4dkru` (migration `0047`).
+Writing step 2.12 is specified (#153) and waits on the owner's go-ahead to build.
 
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
@@ -57,8 +60,9 @@ wait for review on `claude/compassionate-newton-d4dkru`.
    measure of the real model's parse accuracy.
 2. **Owner:** confirm the build choices of 4.3d part 2 (`step-4.3d.md`: the first-paste row rule, kept words as saved phrases,
    which words are offered) after a real test or two.
-   Spec-sized PR. Better after step 1, so part 2 builds on choices the owner has confirmed.
-3. Then, in `PLAN.md` order: CP4b on the bank's own questions, with skill tags in the same call (`step-4.3e.md` part 1), CP4c exam details, CP2b planted test, the CP6 report, phase 5
+3. **Agent: CP4b bank step 1b**, the blind check of explanations by another family and the planted-test tooling (`spec.md`,
+   CP4b). Then, in `PLAN.md` order: CP4b steps 2 and 3 (learner pages, "Theo dạng câu hỏi"), the skill tags' blind pick
+   (`step-4.3e.md` part 1), CP4c exam details, CP2b planted test, the CP6 report, phase 5
    Speaking. The owner may reorder.
 
 ## Waiting on the owner (not on a build)
