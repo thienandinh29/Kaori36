@@ -265,3 +265,63 @@ def test_routes(setup: Setup) -> None:
     assert gone.status_code == 204
     assert client.get(f"/reading/own-tests/{tid}",
                       params={"learner_id": learner}).status_code == 404  # fmt: skip
+
+
+def test_position_and_marks_pacing_part_2(setup: Setup) -> None:
+    """A "không kịp" answer gives no evidence, a guess still does; both and blanks get a row."""
+    svc, learner, db = setup
+    tid = svc.submit(learner, ot.CONSENT, PASSAGE, QUESTIONS, KEY, "1 TRUE 2 FALSE 3 FALSE 4 A")
+    drain(db, model(db, FakeModel()))
+    marks = {2: "no_time", 4: "guessed"}
+    qs = [q | {"mark": marks.get(q["number"])} for q in confirmable(svc.get(learner, tid))]
+    with pytest.raises(HTTPException) as err:
+        svc.confirm(learner, tid, [q | {"mark": "lazy"} for q in qs], position=3)
+    assert err.value.status_code == 422
+    done = svc.confirm(learner, tid, qs, position=3)
+    r = done["result"]
+    assert r["evidence"] == 3 and r["position"] == 3  # 1, 3 and 4 (guessed); 2 no_time, 5 blank
+    by = {m["number"]: m for m in r["marks"]}
+    assert by[2]["self_mark"] == "no_time" and by[4]["self_mark"] == "guessed"
+    assert by[1]["self_mark"] is None
+    assert {q["number"]: q["mark"] for q in done["questions"]}[2] == "no_time"
+    with psycopg.connect(db) as conn:
+        rows = conn.execute(
+            "select number, blank, mark, position, p_after is not null from reading_own_answers "
+            "where test_id=%s order by number", (tid,),
+        ).fetchall()  # fmt: skip
+        pos = conn.execute("select position from reading_own_tests where id=%s", (tid,)).fetchone()
+    assert rows == [
+        (1, False, None, 3, True), (2, False, "no_time", 3, False), (3, False, None, 3, True),
+        (4, False, "guessed", 3, True), (5, True, None, 3, False),
+    ]  # fmt: skip
+    assert pos == (3,)
+    s = svc.summary(learner)
+    assert (s["tests"], s["answers"]) == (1, 5)
+    tf = next(k for k in s["by_kind"] if k["kind"] == "tfng")
+    assert (tf["answers"], tf["wrong"], tf["enough"]) == (3, 1, False)
+    assert s["pacing"]["status"] == "not_enough"
+    svc.delete(learner, tid)
+    assert svc.summary(learner)["answers"] == 5  # the counts outlive a deleted test
+
+
+def test_summary_and_marks_through_the_routes(setup: Setup) -> None:
+    svc, learner, db = setup
+    app = FastAPI()
+    app.include_router(routes.create_router(svc))
+    client = TestClient(app)
+    empty = client.get("/reading/own-tests/summary", params={"learner_id": learner})
+    assert empty.status_code == 200 and empty.json()["tests"] == 0
+    tid = submit(svc, learner)
+    drain(db, model(db, FakeModel()))
+    qs = confirmable(svc.get(learner, tid))
+    url = f"/reading/own-tests/{tid}/confirm"
+    bad = client.post(url, json={"learner_id": learner, "questions": qs, "position": 4})
+    assert bad.status_code == 422
+    bad = client.post(url, json={"learner_id": learner,
+                                 "questions": [q | {"mark": "lazy"} for q in qs]})  # fmt: skip
+    assert bad.status_code == 422
+    ok = client.post(url, json={"learner_id": learner, "position": 2,
+                                "questions": [q | {"mark": "guessed"} for q in qs]})  # fmt: skip
+    assert ok.status_code == 200 and ok.json()["result"]["position"] == 2
+    got = client.get("/reading/own-tests/summary", params={"learner_id": learner}).json()
+    assert got["tests"] == 1 and got["answers"] == 5
