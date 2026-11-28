@@ -28,7 +28,7 @@ A cap is a rule: *if a finding holds, the criterion's band is at most c*. Caps a
   | Finding | Comes from | Criterion | Proposed cap | Applied to the band? |
   |---|---|---|---|---|
   | No paragraph breaks (one block of text) | code (blank-line split) | CC | 5.0 | yes, after measurement |
-  | A part of the question not answered (`part_missing`, 2.11b) | the model's structure, checked by code | TR | 5.0 | **no**: shown as "có thể bị giới hạn", see the rule below |
+  | A part of the question not answered (`part_missing`, 2.11b) | the model's structure, checked by code | TR | 5.0 | **no**: since 28 Nov it is a hint in 2.11b (the mapping is unchecked), so it no longer reaches the notes; see the rule below |
   | No position anywhere (`position_missing`) | the model's structure | TR | 4.0 | **no** |
   | Position flips (`position_changed`) | the model's structure | TR | 6.0 | **no** |
 

@@ -7,6 +7,10 @@ wins; fix this page.
 **Last updated:** 28 Nov 2026, `main` at `c5f518a` (#156 merged), plus Speaking 5.2 on `feat/speaking-fluency`.
 
 ## Just finished
+- **Worker fixes** (28 Nov, branch `claude/festive-babbage-2ei6lw`, pull request open): stuck `analysing` essays requeued at start,
+  failed essays not counted in the daily limit, Speaking transcripts tried three times (migration `0047`) with no row lock
+  during the call, essays before transcription, and `part_missing` demoted to a hint. Still open: the same retry cap for
+  pronunciation recordings, timings per Writing stage, and whether `POLL_LIMIT` needs raising.
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
   answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
   as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien` (`specs/vocabulary/step-dictionary.md`).

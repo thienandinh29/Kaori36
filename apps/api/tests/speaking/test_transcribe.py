@@ -42,6 +42,7 @@ def setup(database_url: str) -> Iterator[tuple[TestClient, str, ConnectionPool, 
         ).fetchone()
         assert row is not None
         owner = str(row[0])
+        conn.execute("delete from speaking_answers")  # the test database is shared: start empty
     app = FastAPI()
     app.include_router(
         routes.create_router(
@@ -113,6 +114,9 @@ def test_a_refusal_is_stored_once_and_an_outage_is_retried(setup) -> None:  # ty
     with pool.connection() as conn, pytest.raises(t.Unavailable):
         t.process_next(conn, down, lambda: NOW)
     assert result(client, owner, sitting)["p1-2-1"]["transcript"] == "waiting"  # not marked
+    with pool.connection() as conn:
+        counted = conn.execute("select transcript_attempts from speaking_answers").fetchone()
+    assert counted == (1,)
 
     def refuse(audio: bytes) -> dict[str, Any]:
         raise t.Refused("422: bad audio")
@@ -120,6 +124,40 @@ def test_a_refusal_is_stored_once_and_an_outage_is_retried(setup) -> None:  # ty
     drain(pool, refuse)
     assert result(client, owner, sitting)["p1-2-1"]["transcript"] == "failed"
     assert drain(pool, refuse) == 0  # never retried in a loop
+
+
+def test_the_third_service_failure_fails_the_answer_and_it_is_not_retried(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-2-1")
+
+    def down(audio: bytes) -> dict[str, Any]:
+        raise t.Unavailable("timeout")
+
+    for _ in range(t.MAX_ATTEMPTS):
+        with pool.connection() as conn, pytest.raises(t.Unavailable):
+            t.process_next(conn, down, lambda: NOW)
+    assert result(client, owner, sitting)["p1-2-1"]["transcript"] == "failed"
+    assert drain(pool, lambda audio: RESULT) == 0  # a failed answer is left alone
+
+
+def test_a_failing_answer_goes_behind_the_ones_not_yet_tried(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-2-1")
+    answer(client, owner, sitting, "p1-2-2")
+    seen: list[int] = []
+
+    def flaky(audio: bytes) -> dict[str, Any]:
+        seen.append(len(audio))
+        raise t.Unavailable("x")
+
+    for _ in range(2):  # the first answer fails once, then the second gets its turn
+        with pool.connection() as conn, pytest.raises(t.Unavailable):
+            t.process_next(conn, flaky, lambda: NOW)
+    with pool.connection() as conn:
+        tries = conn.execute(
+            "select transcript_attempts from speaking_answers order by recorded_at"
+        ).fetchall()
+    assert tries == [(1,), (1,)]  # not (2,), (0,): one failing answer does not hold up the next
 
 
 def test_cleared_audio_is_not_transcribed_but_the_transcript_stays(setup) -> None:  # type: ignore[no-untyped-def]

@@ -33,7 +33,7 @@ anyone paused, and a short answer gives shaky rates. Where an answer has no tran
   minimum answer length).
 
 ## How it is built
-- **Migration 0047 (additive):** `speaking_answers.measures jsonb`, `measured_at`.
+- **Migration 0048 (additive):** `speaking_answers.measures jsonb`, `measured_at`.
 - **Worker:** the audio is cleared after 24 hours, so the measures are made while it is there: in the same step as the
   transcript (the audio, the word timings, a spaCy parse), and by the same step for a transcript made before this step
   existed. `app/speaking/clauses.py` finds the clause boundaries; `app/speaking/measures.py` does the rest.
@@ -50,12 +50,12 @@ worker step and the API against a real database; the page's decoders; a run on t
 ## Tasks
 - [x] T1 `measures.py` (pauses from raw audio, rates, runs, fillers, placement) with tests
 - [x] T2 `clauses.py` (boundaries from a spaCy parse of the words) with tests
-- [x] T3 Migration 0047; the worker step; the API result and pooled summary; tests
+- [x] T3 Migration 0048; the worker step; the API result and pooled summary; tests
 - [x] T4 The page: decoders, the line, the summary, texts; Vitest; a Playwright test on a mocked result
 - [x] T5 Run for real; docs
 
 ## Built (28 Nov 2026)
-- `app/speaking/measures.py`, `clauses.py`; migration `0047_speaking_measures.sql`; `transcribe.process_next` measures in the
+- `app/speaking/measures.py`, `clauses.py`; migration `0048_speaking_measures.sql`; `transcribe.process_next` measures in the
   same step as the transcript (or alone, for a transcript made earlier while its audio is still there); the result's
   per-answer `measures` and pooled `summary` (the time asked and the share of it come from the question, not the audio);
   web `lib/speaking/exam.ts` (decoders), `components/speaking/exam-result.tsx`.
