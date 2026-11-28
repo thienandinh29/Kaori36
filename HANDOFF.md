@@ -4,9 +4,12 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `cd964ab` (#166 merged); Speaking 5.3b in the open pull request from `feat/speaking-feedback-pr`.
+**Last updated:** 28 Nov 2026, `main` at `c355b92` (#167 merged); Speaking 5.3b in the open pull request from `feat/speaking-feedback-pr`.
 
 ## Just finished
+- **Pronunciation retry cap** (#166, 28 Nov; migration `0052`): a recording the service answered 5xx or 429 to, or hung on, is counted; the
+  third failure marks it `failed` (audio cleared unless kept) and one with fewer failures goes first. A refused connection or a
+  service still loading its weights is not counted. Tested with scripted failures only.
 - **Speaking 5.5, testers, built and shut** (#165, 28 Nov; `specs/speaking/step-5.5.md`, migration `0051`): `python -m app.testers.cli add --label X`
   then `invite --tester ID` prints a one-time link `/vao/{token}` (7 days; the button on the page spends it, a link preview does
   not); the tester gets a 30-day HttpOnly session; limits of 3 mock tests and 20 practice tries a Vietnam day; `report` writes
