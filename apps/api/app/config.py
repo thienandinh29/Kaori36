@@ -57,6 +57,9 @@ class Settings(BaseSettings):
     languagetool_url: str = ""
     # The band model service (specs/writing/step-2.3.md); empty: no band.
     scorer_url: str = ""
+    # Invited testers may record only after the owner's privacy review (specs/speaking/step-5.5.md):
+    # off by default; set TESTERS_MAY_RECORD=true when the review is done.
+    testers_may_record: bool = False
     # Speech recognition (specs/speaking/step-5.1.md, compose profile `asr`); empty: no transcripts.
     asr_url: str = ""
     # The self-hosted voice (specs/speech, S2); empty: the web uses the browser's own voice.

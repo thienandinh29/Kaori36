@@ -67,6 +67,8 @@ export interface Overview {
     tries: number;
   }[];
   max_tries: number;
+  /** A tester's allowance for today (step 5.5); null for the owner. */
+  left_today: { mock_tests: number; practice_tries: number } | null;
 }
 export type TranscriptState = "done" | "waiting" | "failed" | "none";
 export interface TimedWord {
@@ -382,6 +384,13 @@ export function parseOverview(value: unknown): Overview {
       };
     }),
     max_tries: num(o.max_tries),
+    left_today:
+      o.left_today === null || o.left_today === undefined
+        ? null
+        : {
+            mock_tests: num(record(o.left_today).mock_tests),
+            practice_tries: num(record(o.left_today).practice_tries),
+          },
     past: list(o.past).map((x) => {
       const p = record(x);
       return {

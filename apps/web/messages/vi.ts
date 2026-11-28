@@ -1206,6 +1206,33 @@ export const vi = {
       heard: (h: string) => `thường nghe giống /${h}/`,
       example: "Ví dụ",
     },
+    tester: {
+      joinTitle: "Mời bạn thử luyện nói IELTS",
+      joinIntro: (label: string) =>
+        `Chào ${label}. Chủ dự án mời bạn thử phần luyện nói của NodeTrail: thi thử đủ ba phần với giám khảo đọc câu hỏi, và luyện từng câu có gợi ý cách xây dựng ý.`,
+      keepNotice:
+        "Trước khi bắt đầu, hãy đọc thông báo về ghi âm. Bạn xóa được bài của mình bất cứ lúc nào.",
+      researchTitle: "Thông báo nghiên cứu (không bắt buộc)",
+      researchDraft:
+        "Bản nháp: chủ dự án sẽ chốt lời lẽ này trước khi mời người thử thật.",
+      researchText:
+        "Nếu bạn đồng ý, chủ dự án sẽ xem các số đo về cách bạn nói (tốc độ, số lần ngắt…) theo từng tuần để nghiên cứu cách luyện. Chủ dự án không xem bản ghi âm hay lời bạn nói trong báo cáo, và bạn có thể rút lại bất cứ lúc nào bằng cách báo cho chủ dự án. Không đồng ý cũng không ảnh hưởng gì đến việc bạn dùng.",
+      researchAgree: "Tôi đồng ý cho chủ dự án xem số đo của tôi để nghiên cứu",
+      otherAccount:
+        "Trình duyệt này đang dùng một tài khoản khác. Mở liên kết sẽ thay bằng tài khoản người thử. Nếu bạn là chủ dự án, hãy mở liên kết trong cửa sổ riêng tư.",
+      start: "Bắt đầu",
+      joining: "Đang vào…",
+      badLink:
+        "Liên kết không dùng được: đã dùng, hết hạn hoặc đã bị thu hồi. Hãy xin chủ dự án một liên kết mới.",
+      joined: "Đã vào. Từ giờ trình duyệt này nhớ bạn trong 30 ngày.",
+      closed:
+        "Phần ghi âm chưa mở cho người thử: chủ dự án đang xem xét việc lưu giữ giọng nói. Bạn đã được ghi nhận, chủ dự án sẽ báo khi mở.",
+      goExam: "Thi thử",
+      goPractice: "Luyện nói",
+      leftToday: (mock: number, tries: number) =>
+        `Hôm nay còn: ${mock} bài thi thử, ${tries} lần luyện.`,
+      dailyLimit: "Hôm nay bạn đã dùng hết lượt. Mai quay lại nhé.",
+    },
     speakingPractice: {
       title: "Luyện nói có hướng dẫn",
       intro:

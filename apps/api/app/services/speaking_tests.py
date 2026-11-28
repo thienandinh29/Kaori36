@@ -38,6 +38,8 @@ from app.speaking.tests import (
     questions,
     try_seconds,
 )
+from app.testers import store as testers
+from app.testers.limits import DailyLimits, used_today
 
 BYTES_PER_SECOND = 32_000  # 16 kHz mono 16-bit
 MAX_ANSWER_BYTES = 44 + BYTES_PER_SECOND * (LONG_TURN_SECONDS + 10)
@@ -126,22 +128,70 @@ class SpeakingTests:
         draft_learners: str,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
         transcripts: bool = False,
+        testers_may_record: bool = False,
+        limits: DailyLimits | None = None,
     ) -> None:
         self.pool = pool
+        # Invited testers (step 5.5): they record only while the owner's switch is on (set after the
+        # privacy review), and only with their own session; the limits apply to them, not the owner.
+        self.testers_may_record = testers_may_record
+        self.limits = limits
         self.transcripts = transcripts  # a recogniser is configured (ASR_URL, step 5.1)
         self.tests: dict[str, Loaded] = load_tests(folder)
         self.owners = {learner_uuid(x.strip()) for x in draft_learners.split(",") if x.strip()}
         self.clock = clock
 
-    def _owner(self, learner_id: str) -> UUID:
+    def _allowed(self, learner: UUID, session: str | None) -> bool:
+        """The owner; or a tester with a valid session of their own while the switch is on."""
+        if learner in self.owners:
+            return True
+        if not self.testers_may_record:
+            return False
+        with self.pool().connection() as conn:
+            return (
+                testers.is_tester(conn, learner)
+                and testers.session_learner(conn, session, self.clock()) == learner
+            )
+
+    def _owner(self, learner_id: str, session: str | None = None) -> UUID:
         learner = learner_uuid(learner_id)
-        if learner not in self.owners:
+        if not self._allowed(learner, session):
             raise HTTPException(
                 403,
                 "Ghi âm hiện chỉ mở cho chủ dự án, cho đến khi việc lưu giữ giọng nói được xem xét "
                 "về quyền riêng tư.",
             )
         return learner
+
+    def _check_limit(self, learner: UUID, guided: bool) -> None:
+        """A tester's daily limit on starting a mock test or a practice try (Vietnam day)."""
+        if learner in self.owners or self.limits is None:
+            return
+        with self.pool().connection() as conn:
+            mocks, tries = used_today(conn, learner, self.clock())
+        if guided and tries >= self.limits.practice_tries_per_day:
+            raise HTTPException(
+                429,
+                f"Hôm nay bạn đã luyện đủ {self.limits.practice_tries_per_day} lần. "
+                "Mai quay lại nhé.",
+            )
+        if not guided and mocks >= self.limits.mock_tests_per_day:
+            raise HTTPException(
+                429,
+                f"Hôm nay bạn đã thi thử đủ {self.limits.mock_tests_per_day} bài. "
+                "Mai quay lại nhé.",
+            )
+
+    def _left(self, learner: UUID) -> dict[str, int] | None:
+        """What a tester has left today; None for the owner or when there are no limits."""
+        if learner in self.owners or self.limits is None:
+            return None
+        with self.pool().connection() as conn:
+            mocks, tries = used_today(conn, learner, self.clock())
+        return {
+            "mock_tests": max(0, self.limits.mock_tests_per_day - mocks),
+            "practice_tries": max(0, self.limits.practice_tries_per_day - tries),
+        }
 
     @staticmethod
     def timing() -> dict[str, int]:
@@ -170,10 +220,10 @@ class SpeakingTests:
             "timing": self.timing(),
         }
 
-    def overview(self, learner_id: str) -> dict[str, Any]:
+    def overview(self, learner_id: str, session: str | None = None) -> dict[str, Any]:
         """The tests on offer and the learner's past sittings."""
         learner = learner_uuid(learner_id)
-        can = learner in self.owners
+        can = self._allowed(learner, session)
         past: list[dict[str, Any]] = []
         practices: list[dict[str, Any]] = []
         if can:
@@ -238,17 +288,28 @@ class SpeakingTests:
             "past": past,
             "practices": practices,
             "max_tries": MAX_TRIES,
+            "left_today": self._left(learner) if can else None,
         }
 
-    def mic_check(self, learner_id: str, audio: bytes) -> dict[str, Any]:
+    def mic_check(
+        self, learner_id: str, audio: bytes, session: str | None = None
+    ) -> dict[str, Any]:
         """The phase 3 quality check on a few seconds of audio; nothing is stored."""
-        self._owner(learner_id)
+        self._owner(learner_id, session)
         if len(audio) > MAX_CHECK_BYTES:
             raise HTTPException(413, "Bản thử quá dài.")
         return asdict(check(audio))
 
-    def start(self, learner_id: str, test_id: str, consent: str, keep: bool) -> dict[str, Any]:
-        learner = self._owner(learner_id)
+    def start(
+        self,
+        learner_id: str,
+        test_id: str,
+        consent: str,
+        keep: bool,
+        session: str | None = None,
+    ) -> dict[str, Any]:
+        learner = self._owner(learner_id, session)
+        self._check_limit(learner, guided=False)
         if consent != CONSENT:
             raise HTTPException(409, "Cần đồng ý với thông báo về ghi âm trước.")
         loaded = self.tests.get(test_id)
@@ -277,9 +338,14 @@ class SpeakingTests:
         return self.tests[row[0]], bool(row[1]), row[2]
 
     def answer(
-        self, learner_id: str, sitting_id: str, question_id: str, audio: bytes
+        self,
+        learner_id: str,
+        sitting_id: str,
+        question_id: str,
+        audio: bytes,
+        session: str | None = None,
     ) -> dict[str, Any]:
-        learner = self._owner(learner_id)
+        learner = self._owner(learner_id, session)
         sitting = _uuid(sitting_id, "bài thi")
         if len(audio) > MAX_ANSWER_BYTES:
             raise HTTPException(413, "Bản ghi quá dài.")
@@ -328,8 +394,10 @@ class SpeakingTests:
             raise HTTPException(409, "Câu này đã được trả lời.")
         return {"id": str(row[0]), "seconds": quality.seconds, "problems": list(quality.problems)}
 
-    def finish(self, learner_id: str, sitting_id: str) -> dict[str, Any]:
-        learner = self._owner(learner_id)
+    def finish(
+        self, learner_id: str, sitting_id: str, session: str | None = None
+    ) -> dict[str, Any]:
+        learner = self._owner(learner_id, session)
         sitting = _uuid(sitting_id, "bài thi")
         with self.pool().connection() as conn:
             self._sitting(conn, learner, sitting)
@@ -337,7 +405,7 @@ class SpeakingTests:
                 "update speaking_tests set finished_at=coalesce(finished_at,%s) where id=%s",
                 (self.clock(), sitting),
             )
-        return self.result(learner_id, sitting_id)
+        return self.result(learner_id, sitting_id, session)
 
     def _item(self, r: Any, asked: int) -> dict[str, Any]:
         """One stored answer as the pages see it (`r` is a row of the answers query)."""
@@ -358,10 +426,12 @@ class SpeakingTests:
         consent: str,
         keep: bool,
         previous_id: str | None,
+        session: str | None = None,
     ) -> dict[str, Any]:
         """Start a try of one question: the first, or a repeat of `previous_id`'s question with
         less time. A fourth try, a repeat of a try nobody answered, or another question: refused."""
-        learner = self._owner(learner_id)
+        learner = self._owner(learner_id, session)
+        self._check_limit(learner, guided=True)
         if consent != CONSENT:
             raise HTTPException(409, "Cần đồng ý với thông báo về ghi âm trước.")
         loaded = self.tests.get(test_id)
@@ -413,10 +483,12 @@ class SpeakingTests:
         assert made is not None
         return {"id": str(made[0]), "keep": keep, "try_no": try_no, "asked_seconds": asked}
 
-    def practice(self, learner_id: str, sitting_id: str) -> dict[str, Any]:
+    def practice(
+        self, learner_id: str, sitting_id: str, session: str | None = None
+    ) -> dict[str, Any]:
         """A question's tries, in order, each with its answer's transcript, numbers and checks, and
         the time the next try would have. Only the first try counts as evidence of fluency."""
-        learner = self._owner(learner_id)
+        learner = self._owner(learner_id, session)
         sitting = _uuid(sitting_id, "lần luyện")
         with self.pool().connection() as conn:
             purge_expired(conn, self.clock())
@@ -477,9 +549,11 @@ class SpeakingTests:
             else None,
         }
 
-    def result(self, learner_id: str, sitting_id: str) -> dict[str, Any]:
+    def result(
+        self, learner_id: str, sitting_id: str, session: str | None = None
+    ) -> dict[str, Any]:
         """Every question of the sitting, with its answer when there is one (no score)."""
-        learner = self._owner(learner_id)
+        learner = self._owner(learner_id, session)
         sitting = _uuid(sitting_id, "bài thi")
         with self.pool().connection() as conn:
             purge_expired(conn, self.clock())
@@ -527,8 +601,8 @@ class SpeakingTests:
             ),
         }
 
-    def audio(self, learner_id: str, answer_id: str) -> bytes:
-        learner = self._owner(learner_id)
+    def audio(self, learner_id: str, answer_id: str, session: str | None = None) -> bytes:
+        learner = self._owner(learner_id, session)
         answer = _uuid(answer_id, "câu trả lời")
         with self.pool().connection() as conn:
             purge_expired(conn, self.clock())
@@ -541,8 +615,18 @@ class SpeakingTests:
             raise HTTPException(404, "Bản ghi này đã được xóa nên không nghe lại được.")
         return bytes(row[0])
 
-    def delete(self, learner_id: str, sitting_id: str) -> None:
+    def delete(self, learner_id: str, sitting_id: str, session: str | None = None) -> None:
+        """Deleting one's own sitting works even when recording is shut, but a tester's learner id
+        is not enough: it needs that tester's own session."""
         learner = learner_uuid(learner_id)
+        if learner not in self.owners:
+            with self.pool().connection() as conn:
+                bound = (
+                    not testers.is_tester(conn, learner)
+                    or testers.session_learner(conn, session, self.clock()) == learner
+                )
+            if not bound:
+                raise HTTPException(403, "Hãy mở lại liên kết mời để xóa.")
         sitting = _uuid(sitting_id, "bài thi")
         with self.pool().connection() as conn:
             cur = conn.execute(
