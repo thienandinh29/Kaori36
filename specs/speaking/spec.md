@@ -65,7 +65,10 @@ quotes checked to be exact substrings of the transcript. The model never hears t
   from the word timings and a parse of the transcript. Studies of second-language fluency link pauses inside a clause to
   searching for a word or a structure, the hesitation the band descriptors hold against a speaker, and pauses between
   clauses to planning content (Tavakoli 2011; de Jong and colleagues; Bronze, citations to check). Shown as two counts per
-  minute with examples from the transcript, never labelled "language-related": code cannot know why someone paused.
+  minute, never labelled "language-related": code cannot know why someone paused. **The clause ends come from a parse of
+  the words only, not from the recogniser's punctuation** (28 Nov, found on the real recogniser: it writes a full stop at a
+  long pause, so a pause would decide its own class); fillers are skipped; run-on speech parses unreliably, so boundaries are
+  missed and the split is approximate until the owner has checked it on their own answers (`step-5.2.md`).
 - **Grammar and vocabulary on the transcript:** LanguageTool and ERRANT as for writing, with two honest problems to measure:
   spoken grammar is not written grammar (false alarms), and the recogniser may "correct" the learner's errors or mishear a
   non-native accent (missed and invented errors). The owner types the reference for 20 recordings; report the word error rate
@@ -126,11 +129,11 @@ mode shows nothing while speaking; and NodeTrail is one part of Speaking practic
 | Step | Work |
 |---|---|
 | 5.1 | Recording and prompts for the three parts, the recognition service, transcript and timestamps; word error rate on the owner's recordings. Built 27 Nov (`step-5.1.md`): Whisper small.en in `asr/`, transcripts on `/noi/thi/{id}`, the WER tool; the owner's references and laptop numbers pending |
-| 5.2 | Fluency measures and the pause analysis (pauses from the raw audio, before voice activity filtering) |
-| 5.3 | Grammar and vocabulary checks on the transcript; feedback with quotes checked against it |
+| 5.2 | Fluency measures and the pause analysis (pauses from the raw audio, before voice activity filtering). Built 28 Nov (`step-5.2.md`): rates, pauses between and inside clauses, fillers, the longest run, shown as numbers under each transcript and pooled for the test; the owner's check on five answers pending |
+| 5.3 | Grammar and vocabulary checks on the transcript; feedback with quotes checked against it. **5.3a built 28 Nov** (`step-5.3.md`): code only: memorised-phrase and repeated-text check, grammar hints with the audio, endings apart, vocabulary numbers. **5.3b built 28 Nov** (`step-5.3b.md`): the model's feedback with quotes checked against the transcript, owner only, behind a draft notice the owner still has to set |
 | 5.4a | The examiner test before transcription (`step-5.4a.md`): a voice examiner reads authored Part 1–3 questions with the real timing, each answer recorded, replay afterwards; no model call. Built 27 Nov (owner's go): `/noi/thi` |
-| 5.4 | The mock test flow with timing; guided mode with idea building and repeated answers; no band (see "The band") |
-| 5.5 | Opening to testers: accounts, per-user limits, the daily cost cap, the tester report |
+| 5.4 | The mock test flow with timing (5.4a, built); guided mode with idea building and repeated answers (**5.4b, built 28 Nov**: `step-5.4b.md`, `/noi/luyen`); no band (see "The band") |
+| 5.5 | Opening to testers (**built 28 Nov, kept shut**: `step-5.5.md`): invite links, per-tester daily limits, the tester report; recording stays owner-only until the owner sets `TESTERS_MAY_RECORD` after the privacy review. The daily cost cap applies from 5.3b |
 | 5.6 | Level estimate (SPK-001), after 5.1–5.2 and the corpus licence: the corpus loader and the same measures on its audio (agent); the model and its report (owner); the level on the mock test's result page only after the bar in "The band" |
 
 Not in this phase: a native-like or accent score, intonation, a band from a model's opinion, a band per criterion.

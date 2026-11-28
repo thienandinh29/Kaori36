@@ -18,6 +18,10 @@ a gate's truth.
 | [ ] **Phase 4, Listening sources (new, 19 Nov):** listen to the sample dialogue sent with the study; read `docs/v2/listening-sources.md`; choose the first source (recommended: own scripts voiced by Piper, with an audio check) and read the male voice's licences (OpenSLR 83 and Piper's lessac base) | 20 min | CP5 Listening | `specs/listening-reading/plan.md` |
 | [ ] **Phase 4, CP5 decision (new, 20 Nov):** once some Reading questions are approved, run with the voice (`COMPOSE_PROFILES=...,speech` and `TTS_URL=http://tts:8030`), open `/nghe` → **Nghe cả bài**, listen to 5 passages and answer; decide whether the machine voice is good enough to keep for whole passages (it is one British voice reading textbook prose, not exam audio) | 30 min | CP5 closes; CP6 report | `specs/listening-reading/step-4.4c.md` |
 | [x] **Phase 5, speech recognition:** Whisper small.en chosen (27 Nov); built in step 5.1 | done | | `specs/speaking/step-5.1.md` |
+| [ ] **Speaking 5.4b, try guided practice for a week (new, 28 Nov):** on `/noi/luyen`, practise a Part 3 question and a Part 2 cue card three times each and look at the numbers side by side. Tell the agent whether the idea shape, the three opening questions and the topic words help you start, whether 100%/75%/50% of the time feels right, and edit the topic words in `data/speaking/tests/` (each must stay in the word list). Whether repeating helps is for you to watch over weeks, not for the app to claim | 3 × 20 min | The shrink factors; the idea texts | `specs/speaking/step-5.4b.md` |
+| [ ] **Speaking 5.3b, set the transcript notice wording and judge 20 points (new, 28 Nov):** the notice a learner ticks before an answer's transcript goes to DeepSeek (through the gateway) is a **draft** (`messages/vi.ts`, `speakingFeedback.noticeText`, version `speaking-feedback-v1`, labelled "Bản nháp"): set what is sent, to whom and how long it is kept, and change the version if the meaning changes; only you can use the button until testers are opened. Then, on 5 of your own answers of 15 s or more, press "Nhận xét bằng AI" and judge 20 points: right, wrong, or not useful (a wrong point or an invented quote is a bug to tell the agent) | 30 min | Speaking 5.3b results, tester opening | `specs/speaking/step-5.3b.md` |
+| [ ] **Speaking 5.3a, judge the hints (new, 28 Nov):** with LanguageTool on (`COMPOSE_PROFILES` has `writing`, `LANGUAGETOOL_URL` set), take a test and, for 20 hints, say whether each is a real error, a false alarm (spoken English that is fine) or a possible mishearing. The share of false alarms decides whether hints stay "có thể sai" | 40 min | The labels on the hints | `specs/speaking/step-5.3.md` |
+| [ ] **Speaking 5.2, check the pauses on your own answers (new, 28 Nov):** after a test with the `asr` profile on, open `/noi/thi/{id}`, play five answers and count the pauses you hear (0.5 s or longer) against the app's count, and note whether "giữa mệnh đề" and "trong mệnh đề" agree with where you stopped. Tell the agent the mismatches; the thresholds (0.5 s, 2 s) and the clause rule are assumptions until then | 30 min | Whether the numbers can be trusted; the next tuning | `specs/speaking/step-5.2.md` |
 | [ ] **Speaking 5.1, word error rate (new, 27 Nov):** start the stack with the recogniser (`COMPOSE_PROFILES=...,asr`, `ASR_URL=http://asr:8050`; the first start downloads about 490 MB), take a test on `/noi/thi`, then type what you said, word for word, for about 20 answers in `data/private/speaking/references.jsonl` (`{"answer_id": "…", "reference": "…"}`; the answer ids are in the result page's audio links). From `apps/api`: `uv run python -m app.speaking.wer --refs ../../data/private/speaking/references.jsonl --out ../../evals/speaking/wer.json`, and commit only the JSON. Also note the recogniser's speed and memory on your laptop (`docker stats`). Add `ASR_URL=` to `.env.example` (this session could not read that file) | 1 h | Whether grammar feedback on speech can be trusted (5.3) | `specs/speaking/step-5.1.md` |
 | [ ] **Phase 3, L2-ARCTIC (new, 19 Nov):** open L2-ARCTIC's page; read its licence (believed CC BY-NC 4.0) and confirm it has Vietnamese speakers with phone-level error labels (believed 4). If both hold, tell the agent: it unblocks the real pronunciation benchmark (3.6b part 2) | 10 min | 3.6b part 2, 3.6c calibration | `specs/pronunciation/step-3.6b.md` |
 | [ ] **Phase 4, CP1, Simple English Wikipedia:** read its licence page; if CC BY-SA 4.0, set `simple-wikipedia` to `verified` (with `checked_on`, `licence_page`) | 5 min | A2–B1 texts | `data/sources/english-candidates.yaml` |
@@ -92,6 +96,17 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
     `marked_by` (`examiner` or `trained_rater`) and `source`. Good sources: the sample answers with examiner comments in
     the Cambridge IELTS books, the official sample scripts (IELTS, British Council, IDP), your own essays banded by a
     trained rater; a website's own marking is not an examiner band. Step 2.12 needs criterion bands on at least 40;
+  - **then run the comparison** (step 2.12, from `apps/api`; the heavy services one at a time on the 4 GB VM: first
+    `docker compose --profile scoring up -d` with `--scorer-url http://localhost:8020` so the raw scores are cached in
+    `data/private/writing/raw-cache.json`, then stop it and start `--profile writing` for `--languagetool-url
+    http://localhost:8010`; a second run reads the cache):
+    `uv run python -m app.evalkit.writing_score develop ../../data/private/writing/essays.jsonl --scorer-url http://localhost:8020 --languagetool-url http://localhost:8010`
+    then read `evals/writing/develop-report.json`: `methods` (QWK with intervals for the five methods), `descriptors.choice`
+    (the recommendation and whether it clearly beats the feature baseline), `descriptors.descriptor_model` (which features
+    were kept), `descriptors.per_criterion`, `descriptors.caps` (does each cap help where it fires) and `ranges`. **Without
+    LanguageTool the grammar features are missing, so the model is not the one the app will use.** Your decision: add
+    `--write-calibration` (the pinned scorer) and/or `--write-descriptors criteria|blend` to store a method in
+    `data/writing/scorer.yaml`, then `test` once for the held-out essays. The app shows nothing until you do;
   - LanguageTool's misses and the feedback/correction ratings: by the teacher, on 10 essays (`docs/v2/writing-eval.md`
     has every number to fill).
 - [ ] **Phase 3:** write the pronunciation gate report, `docs/v2/pronunciation-eval.md`.
@@ -109,7 +124,11 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
   200-question bank takes about 5 days. US$10 of credit raises this to 1,000 a day. It's optional, and nothing is
   blocked without it.
 - [ ] **Before anyone but you records their voice:** a privacy review of the voice policy (consent, retention, where
-  audio goes). Recording is owner-only until then; a reviewer only *listens* to your kept recordings.
+  audio goes). Recording is owner-only until then; a reviewer only *listens* to your kept recordings. Testers (step 5.5)
+  are built: after the review, set `TESTERS_MAY_RECORD=true` (add it to `.env.example`; this session could not read that
+  file), make testers with `python -m app.testers.cli add --label ...` and send each their `invite` link.
+- [ ] **Set the wording of the optional research notice** (`research-v1`, on the tester join page, labelled "Bản nháp" until
+  you do): what numbers you see, for how long, how a tester withdraws. Change the version if the meaning changes.
 - [ ] **Before any paid tier:**
   - replace or relicense the NonCommercial sources (OpenStax reading texts; the Bissonnette, Explorations and Hall &
     Wallace grammar books);

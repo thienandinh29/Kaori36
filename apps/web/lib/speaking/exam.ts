@@ -49,8 +49,26 @@ export interface PastSitting {
 export interface Overview {
   can_record: boolean;
   consent: string;
-  tests: { id: string; title: string; draft: boolean; questions: number }[];
+  tests: {
+    id: string;
+    title: string;
+    draft: boolean;
+    questions: number;
+    /** The questions guided practice can take (step 5.4b). */
+    practice: { id: string; part: Part; text: string; seconds: number }[];
+  }[];
   past: PastSitting[];
+  /** Questions practised so far, one row per question (its first try). */
+  practices: {
+    id: string;
+    title: string;
+    question: string;
+    started_at: string;
+    tries: number;
+  }[];
+  max_tries: number;
+  /** A tester's allowance for today (step 5.5); null for the owner. */
+  left_today: { mock_tests: number; practice_tries: number } | null;
 }
 export type TranscriptState = "done" | "waiting" | "failed" | "none";
 export interface TimedWord {
@@ -58,6 +76,94 @@ export interface TimedWord {
   start: number;
   end: number;
 }
+/** Step 5.2: numbers about how an answer was spoken. Never a score or a verdict. */
+export interface Measures {
+  words: number;
+  speaking_seconds: number;
+  short: boolean;
+  speech_rate: number | null;
+  articulation_rate: number | null;
+  pauses: {
+    count: number;
+    per_minute: number | null;
+    between_clauses: number;
+    inside_clause: number;
+    long: number;
+    longest_seconds: number;
+  };
+  fillers: number;
+  longest_run: { words: number; seconds: number };
+  asked_seconds: number | null;
+  share_of_time: number | null;
+}
+export interface Summary {
+  answers: number;
+  words: number;
+  speaking_seconds: number;
+  speech_rate: number | null;
+  pauses_per_minute: number | null;
+  between_clauses: number;
+  inside_clause: number;
+  long: number;
+  fillers: number;
+  longest_run_words: number;
+}
+/** Step 5.3a: checks by code on the transcript. Hints, never evidence; never a score. */
+export interface Hint {
+  kind: "grammar" | "word" | "ending";
+  text: string;
+  suggestion: string | null;
+  message_en: string;
+  start_s: number | null;
+  end_s: number | null;
+}
+export interface Vocabulary {
+  words: number;
+  mtld: number | null;
+  beyond_b1_share: number | null;
+  unknown_share: number | null;
+  repeated: { word: string; count: number }[];
+}
+export interface Guard {
+  templates: string[];
+  template_words: number;
+  repeated_words: number;
+  repeated_sentences: string[];
+  prompt_overlap: number | null;
+  off_topic: boolean;
+}
+export type Language =
+  | { state: "short" }
+  | { state: "failed" }
+  | {
+      state: "checked";
+      guard: Guard;
+      vocabulary: Vocabulary;
+      /** null: LanguageTool is not configured, the grammar was not checked */
+      hints: Hint[] | null;
+    };
+/** Step 5.3b: the model's feedback on an answer, its quotes already checked by the server. */
+export type FeedbackStatus = "none" | "queued" | "working" | "done" | "failed";
+export type FeedbackArea = "answer" | "grammar" | "vocabulary" | "linking";
+
+export interface FeedbackPoint {
+  kind: "strength" | "issue";
+  area: FeedbackArea;
+  point_vi: string;
+  quote: string;
+  better: string | null;
+}
+
+export interface Feedback {
+  status: FeedbackStatus;
+  points: FeedbackPoint[];
+  failed: string | null;
+  /** The owner may ask now (a transcript, 15 s of speech, tries left). */
+  can_ask: boolean;
+  /** The version of the notice the learner accepts. */
+  consent: string;
+}
+
 export interface Answered {
   id: string;
   seconds: number;
@@ -68,6 +174,9 @@ export interface Answered {
   transcript: TranscriptState;
   text: string | null;
   words: TimedWord[];
+  measures: Measures | null;
+  language: Language | null;
+  feedback: Feedback | null;
 }
 export interface Result {
   id: string;
@@ -84,6 +193,7 @@ export interface Result {
     text: string;
     answer: Answered | null;
   }[];
+  summary: Summary | null;
 }
 export interface MicCheck {
   ok: boolean;
@@ -98,6 +208,101 @@ function num(value: unknown): number {
   if (typeof value !== "number" || !Number.isFinite(value) || value < 0)
     throw new DataError("contract");
   return value;
+}
+const KINDS = ["grammar", "word", "ending"] as const;
+function parseHint(value: unknown): Hint {
+  const h = record(value);
+  const kind = string(h.kind);
+  if (!(KINDS as readonly string[]).includes(kind))
+    throw new DataError("contract");
+  return {
+    kind: kind as Hint["kind"],
+    text: string(h.text),
+    suggestion: maybe(h.suggestion),
+    message_en: string(h.message_en),
+    start_s: maybeNum(h.start_s),
+    end_s: maybeNum(h.end_s),
+  };
+}
+function parseLanguage(value: unknown): Language | null {
+  if (value === null || value === undefined) return null;
+  const l = record(value);
+  if (l.failed !== undefined) return { state: "failed" };
+  if (l.skipped !== null && l.skipped !== undefined) {
+    if (l.skipped !== "short") throw new DataError("contract");
+    return { state: "short" };
+  }
+  const g = record(l.guard);
+  const v = record(l.vocabulary);
+  return {
+    state: "checked",
+    guard: {
+      templates: strings(g.templates),
+      template_words: num(g.template_words),
+      repeated_words: num(g.repeated_words),
+      repeated_sentences: strings(g.repeated_sentences),
+      prompt_overlap: maybeNum(g.prompt_overlap),
+      off_topic: flag(g.off_topic),
+    },
+    vocabulary: {
+      words: num(v.words),
+      mtld: maybeNum(v.mtld),
+      beyond_b1_share: maybeNum(v.beyond_b1_share),
+      unknown_share: maybeNum(v.unknown_share),
+      repeated: list(v.repeated).map((x) => {
+        const r = record(x);
+        return { word: string(r.word), count: num(r.count) };
+      }),
+    },
+    hints:
+      l.hints === null || l.hints === undefined
+        ? null
+        : list(l.hints).map(parseHint),
+  };
+}
+function maybeNum(value: unknown): number | null {
+  return value === null || value === undefined ? null : num(value);
+}
+function parseMeasures(value: unknown): Measures | null {
+  if (value === null || value === undefined) return null;
+  const m = record(value);
+  const p = record(m.pauses);
+  const run = record(m.longest_run);
+  return {
+    words: num(m.words),
+    speaking_seconds: num(m.speaking_seconds),
+    short: flag(m.short),
+    speech_rate: maybeNum(m.speech_rate),
+    articulation_rate: maybeNum(m.articulation_rate),
+    pauses: {
+      count: num(p.count),
+      per_minute: maybeNum(p.per_minute),
+      between_clauses: num(p.between_clauses),
+      inside_clause: num(p.inside_clause),
+      long: num(p.long),
+      longest_seconds: num(p.longest_seconds),
+    },
+    fillers: num(record(m.fillers).count),
+    longest_run: { words: num(run.words), seconds: num(run.seconds) },
+    asked_seconds: maybeNum(m.asked_seconds),
+    share_of_time: maybeNum(m.share_of_time),
+  };
+}
+function parseSummary(value: unknown): Summary | null {
+  if (value === null || value === undefined) return null;
+  const s = record(value);
+  return {
+    answers: num(s.answers),
+    words: num(s.words),
+    speaking_seconds: num(s.speaking_seconds),
+    speech_rate: maybeNum(s.speech_rate),
+    pauses_per_minute: maybeNum(s.pauses_per_minute),
+    between_clauses: num(s.between_clauses),
+    inside_clause: num(s.inside_clause),
+    long: num(s.long),
+    fillers: num(s.fillers),
+    longest_run_words: num(s.longest_run_words),
+  };
 }
 function flag(value: unknown): boolean {
   if (typeof value !== "boolean") throw new DataError("contract");
@@ -180,8 +385,35 @@ export function parseOverview(value: unknown): Overview {
         title: string(t.title),
         draft: flag(t.draft),
         questions: num(t.questions),
+        practice: list(t.practice).map((y) => {
+          const q = record(y);
+          return {
+            id: string(q.id),
+            part: part(q.part),
+            text: string(q.text),
+            seconds: num(q.seconds),
+          };
+        }),
       };
     }),
+    practices: list(o.practices).map((x) => {
+      const p = record(x);
+      return {
+        id: string(p.id),
+        title: string(p.title),
+        question: string(p.question),
+        started_at: string(p.started_at),
+        tries: num(p.tries),
+      };
+    }),
+    max_tries: num(o.max_tries),
+    left_today:
+      o.left_today === null || o.left_today === undefined
+        ? null
+        : {
+            mock_tests: num(record(o.left_today).mock_tests),
+            practice_tries: num(record(o.left_today).practice_tries),
+          },
     past: list(o.past).map((x) => {
       const p = record(x);
       return {
@@ -198,6 +430,79 @@ export function parseOverview(value: unknown): Overview {
   };
 }
 
+/** One stored answer with its transcript, numbers and checks (steps 5.1 to 5.3a), strictly. */
+const FEEDBACK_STATES: readonly FeedbackStatus[] = [
+  "none",
+  "queued",
+  "working",
+  "done",
+  "failed",
+];
+const FEEDBACK_AREAS: readonly FeedbackArea[] = [
+  "answer",
+  "grammar",
+  "vocabulary",
+  "linking",
+];
+
+export function parseFeedback(value: unknown): Feedback | null {
+  if (value === null || value === undefined) return null;
+  const f = record(value);
+  const status = string(f.status) as FeedbackStatus;
+  if (!FEEDBACK_STATES.includes(status)) throw new DataError("contract");
+  return {
+    status,
+    points: list(f.points).map((p) => {
+      const o = record(p);
+      const kind = string(o.kind);
+      const area = string(o.area) as FeedbackArea;
+      if (
+        (kind !== "strength" && kind !== "issue") ||
+        !FEEDBACK_AREAS.includes(area)
+      )
+        throw new DataError("contract");
+      return {
+        kind,
+        area,
+        point_vi: string(o.point_vi),
+        quote: string(o.quote),
+        better: maybe(o.better),
+      };
+    }),
+    failed: maybe(f.failed),
+    can_ask: flag(f.can_ask),
+    consent: string(f.consent),
+  };
+}
+
+export function parseAnswered(value: unknown): Answered {
+  const a = record(value);
+  const answer: Answered = {
+    id: string(a.id),
+    seconds: num(a.seconds),
+    problems: strings(a.problems),
+    audio: flag(a.audio),
+    delete_after: maybe(a.delete_after),
+    transcript: transcriptState(a.transcript),
+    text: maybe(a.text),
+    measures: parseMeasures(a.measures),
+    language: parseLanguage(a.language),
+    feedback: parseFeedback(a.feedback),
+    words: list(a.words).map((w) => {
+      const x = record(w);
+      return { word: string(x.word), start: num(x.start), end: num(x.end) };
+    }),
+  };
+  if ((answer.transcript === "done") !== (answer.text !== null))
+    throw new DataError("contract");
+  if (
+    (answer.measures !== null || answer.language !== null) &&
+    answer.transcript !== "done"
+  )
+    throw new DataError("contract");
+  return answer;
+}
+
 export function parseResult(value: unknown): Result {
   const r = record(value);
   return {
@@ -211,29 +516,7 @@ export function parseResult(value: unknown): Result {
     part3_theme: string(r.part3_theme),
     questions: list(r.questions).map((x) => {
       const q = record(x);
-      let answer: Answered | null = null;
-      if (q.answer !== null) {
-        const a = record(q.answer);
-        answer = {
-          id: string(a.id),
-          seconds: num(a.seconds),
-          problems: strings(a.problems),
-          audio: flag(a.audio),
-          delete_after: maybe(a.delete_after),
-          transcript: transcriptState(a.transcript),
-          text: maybe(a.text),
-          words: list(a.words).map((w) => {
-            const x = record(w);
-            return {
-              word: string(x.word),
-              start: num(x.start),
-              end: num(x.end),
-            };
-          }),
-        };
-        if ((answer.transcript === "done") !== (answer.text !== null))
-          throw new DataError("contract");
-      }
+      const answer = q.answer === null ? null : parseAnswered(q.answer);
       return {
         id: string(q.id),
         part: part(q.part),
@@ -241,6 +524,7 @@ export function parseResult(value: unknown): Result {
         answer,
       };
     }),
+    summary: parseSummary(r.summary),
   };
 }
 
@@ -314,6 +598,10 @@ export function script(test: ExamTest): Step[] {
   return steps;
 }
 
+/** The version of the Speaking notice the learner accepts. */
+export const CONSENT = "speaking-v1";
+/** The browser key of the Speaking notice the learner accepted (`speaking-v1`). */
+export const CONSENT_KEY = "nodetrail_speaking_consent";
 export const SPEED_KEY = "nodetrail_exam_speed";
 
 /** A speed factor for automated tests only (0 < x ≤ 1); anything else means real time. */

@@ -15,10 +15,10 @@
 
 **Build (agent), in order:**
 - [x] 5.4a the examiner test before transcription (`step-5.4a.md`, owner's go-ahead 27 Nov): voice examiner, real timing, answers recorded, replay; no model call
-- [ ] 5.2 addition: pauses between clauses and inside a clause (27 Nov)
 - [x] 5.1 recognition service `asr/`, transcripts of the examiner test's answers, word error rate tool (`step-5.1.md`, 27 Nov)
-- [ ] 5.2 fluency measures
-- [ ] 5.3 transcript checks and feedback with checked quotes
-- [ ] 5.4 mock test flow (no band); guided mode: idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time
-- [ ] 5.5 limits, cost cap, tester report
+- [x] 5.2 fluency measures, with pauses between and inside clauses (`step-5.2.md`, 28 Nov)
+- [x] 5.3a transcript checks by code (`step-5.3.md`, 28 Nov): grammar hints, endings apart, vocabulary numbers, the memorised-phrase check
+- [x] 5.3b the model's feedback with checked quotes (`step-5.3b.md`, 28 Nov; owner only, a draft notice until the owner sets the wording)
+- [x] 5.4b guided mode (`step-5.4b.md`, 28 Nov; the strict mock is 5.4a): idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time, numbers side by side; was: 5.4 mock test flow (no band); guided mode: idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time
+- [x] 5.5 invite links, limits, tester report (`step-5.5.md`, 28 Nov; shut until the privacy review: `TESTERS_MAY_RECORD`); the cost cap applies from 5.3b
 - [ ] 5.6 SPK-001's corpus loader and measures on its audio; the level on the result page only after the bar

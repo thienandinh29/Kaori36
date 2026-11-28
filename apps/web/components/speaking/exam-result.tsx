@@ -5,11 +5,210 @@ import { useEffect, useRef, useState } from "react";
 import { Problem } from "@/components/english/problem";
 import { useLearner } from "@/components/english/use-learner";
 import { englishClient } from "@/lib/english/client";
-import type { Part, Result } from "@/lib/speaking/exam";
+import type {
+  Answered,
+  Language,
+  Measures,
+  Part,
+  Result,
+  Summary,
+} from "@/lib/speaking/exam";
 import { vi } from "@/messages/vi";
+import { FeedbackBlock } from "./answer-feedback";
 import { makeExaminer } from "./examiner";
 
 const t = vi.english.speakingTest;
+
+/** The numbers of one answer, said plainly: counts only, no verdict (step 5.2). */
+function MeasuresLine({ m }: { m: Measures }) {
+  if (m.words === 0) return null;
+  const parts = [
+    m.speech_rate === null ? null : t.measuresRate(m.speech_rate),
+    t.measuresPauses(
+      m.pauses.count,
+      m.pauses.between_clauses,
+      m.pauses.inside_clause,
+      m.pauses.long,
+    ),
+    t.measuresFillers(m.fillers),
+    t.measuresRun(m.longest_run.words, m.longest_run.seconds),
+    m.share_of_time === null ? null : t.measuresShare(m.share_of_time),
+  ].filter((x): x is string => x !== null);
+  return (
+    <p className="en-muted small" data-testid="exam-measures">
+      {parts.join(" · ")}
+      {m.short && <> · {t.measuresShort}</>}
+    </p>
+  );
+}
+
+/** What the checks found in one answer, said as hints: never errors, never a score (step 5.3a). */
+function LanguageBlock({
+  language,
+  onPlay,
+}: {
+  language: Language;
+  /** Plays the answer's recording between two moments; absent when the audio is gone. */
+  onPlay?: (from: number, to: number) => void;
+}) {
+  if (language.state === "short")
+    return <p className="en-muted small">{t.languageShort}</p>;
+  if (language.state === "failed")
+    return <p className="en-muted small">{t.languageFailed}</p>;
+  const { guard, vocabulary: v, hints } = language;
+  const warnings = [
+    guard.templates.length > 0
+      ? t.guardTemplates(guard.templates.join("; "))
+      : null,
+    guard.repeated_words > 0 ? t.guardRepeated(guard.repeated_words) : null,
+    guard.off_topic ? t.guardOffTopic : null,
+  ].filter((x): x is string => x !== null);
+  const vocab = [
+    v.mtld === null ? t.vocabTooShort : t.vocabDiversity(v.mtld),
+    v.beyond_b1_share === null ? null : t.vocabBeyond(v.beyond_b1_share),
+    v.unknown_share === null || v.unknown_share === 0
+      ? null
+      : t.vocabUnknown(v.unknown_share),
+    v.repeated.length > 0
+      ? t.vocabRepeated(
+          v.repeated.map((r) => `${r.word} (${r.count})`).join(", "),
+        )
+      : null,
+  ].filter((x): x is string => x !== null);
+  return (
+    <div className="nt-exam-language" data-testid="exam-language">
+      {warnings.length > 0 && (
+        <div data-testid="exam-guard">
+          <p className="en-muted small">
+            <strong>{t.languageGuard}</strong>
+          </p>
+          {warnings.map((w) => (
+            <p key={w} className="en-muted small">
+              {w}
+            </p>
+          ))}
+        </div>
+      )}
+      <p className="en-muted small">
+        <strong>{t.hintsTitle}</strong>
+      </p>
+      {hints === null ? (
+        <p className="en-muted small">{t.hintsNotChecked}</p>
+      ) : hints.length === 0 ? (
+        <p className="en-muted small">{t.hintsNone}</p>
+      ) : (
+        <ul className="nt-exam-hints" data-testid="exam-hints">
+          {hints.map((h, i) => (
+            <li key={`${h.text}-${i}`}>
+              <span lang="en">
+                {h.suggestion
+                  ? t.hintSuggest(h.text, h.suggestion)
+                  : `“${h.text}”`}
+              </span>{" "}
+              <span className="en-muted small">
+                {h.kind === "ending" ? t.hintEnding : h.message_en}
+              </span>{" "}
+              {h.start_s !== null && h.end_s !== null && onPlay && (
+                <button
+                  type="button"
+                  className="en-button ghost small"
+                  onClick={() => onPlay(h.start_s!, h.end_s!)}
+                >
+                  {t.hintPlay}
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+      {hints !== null && <p className="en-muted small">{t.hintsNote}</p>}
+      <p className="en-muted small" data-testid="exam-vocab">
+        <strong>{t.vocabTitle}:</strong> {vocab.join(" · ")}
+      </p>
+    </div>
+  );
+}
+
+/** One answer: its recording, transcript, numbers and checks, with the audio the hints can play. */
+export function AnswerView({ answer, url }: { answer: Answered; url: string }) {
+  const audio = useRef<HTMLAudioElement | null>(null);
+  const play = (from: number, to: number) => {
+    const el = audio.current;
+    if (!el) return;
+    el.currentTime = Math.max(0, from - 0.3);
+    void el.play();
+    window.setTimeout(
+      () => el.pause(),
+      Math.max(800, (to - from + 0.6) * 1000),
+    );
+  };
+  return (
+    <>
+      {answer.audio ? (
+        <audio ref={audio} controls preload="none" src={url} />
+      ) : (
+        <p className="en-muted">{t.gone}</p>
+      )}
+      {answer.transcript === "done" && (
+        <div className="nt-exam-transcript">
+          <p className="en-muted small">{t.transcript}</p>
+          <p lang="en">{answer.text}</p>
+        </div>
+      )}
+      {answer.measures && <MeasuresLine m={answer.measures} />}
+      {answer.language && (
+        <LanguageBlock
+          language={answer.language}
+          onPlay={answer.audio ? play : undefined}
+        />
+      )}
+      {answer.feedback &&
+        (answer.feedback.status !== "none" || answer.feedback.can_ask) && (
+          <FeedbackBlock answerId={answer.id} initial={answer.feedback} />
+        )}
+      {answer.transcript === "waiting" && (
+        <p className="en-muted small">{t.transcribing}</p>
+      )}
+      {answer.transcript === "failed" && (
+        <p className="en-muted small">{t.transcriptFailed}</p>
+      )}
+      <p className="en-muted small">
+        {t.seconds(answer.seconds)}
+        {answer.problems
+          .map((p) => t.problems[p])
+          .filter(Boolean)
+          .map((p) => ` · ${p}`)
+          .join("")}
+      </p>
+    </>
+  );
+}
+
+function SummaryBlock({ s }: { s: Summary }) {
+  const parts = [
+    s.speech_rate === null ? null : t.measuresRate(s.speech_rate),
+    s.pauses_per_minute === null
+      ? null
+      : t.summaryPerMinute(s.pauses_per_minute),
+    t.measuresPauses(
+      s.between_clauses + s.inside_clause,
+      s.between_clauses,
+      s.inside_clause,
+      s.long,
+    ),
+    t.measuresFillers(s.fillers),
+    t.summaryLine(s.answers, s.words),
+  ].filter((x): x is string => x !== null);
+  return (
+    <div className="nt-exam-transcript" data-testid="exam-summary">
+      <p>
+        <strong>{t.summaryTitle}</strong>
+      </p>
+      <p className="en-muted small">{parts.join(" · ")}</p>
+      <p className="en-muted small">{t.measuresNote}</p>
+    </div>
+  );
+}
 
 function playOne(url: string, signal: AbortSignal): Promise<void> {
   return new Promise((resolve) => {
@@ -93,6 +292,7 @@ export function ExamResult({ sittingId }: { sittingId: string }) {
         {result.finished_at === null && ` · ${t.unfinished}`}
       </p>
       <p className="en-muted">{t.resultIntro}</p>
+      {result.summary && <SummaryBlock s={result.summary} />}
       {result.questions.some((q) => q.answer?.transcript === "done") && (
         <p className="en-muted small">{t.transcriptNote}</p>
       )}
@@ -143,37 +343,10 @@ export function ExamResult({ sittingId }: { sittingId: string }) {
                   {q.answer === null ? (
                     <p className="en-muted">{t.notAnswered}</p>
                   ) : (
-                    <>
-                      {q.answer.audio ? (
-                        <audio
-                          controls
-                          preload="none"
-                          src={client.speakingAudioUrl(learner, q.answer.id)}
-                        />
-                      ) : (
-                        <p className="en-muted">{t.gone}</p>
-                      )}
-                      {q.answer.transcript === "done" && (
-                        <div className="nt-exam-transcript">
-                          <p className="en-muted small">{t.transcript}</p>
-                          <p lang="en">{q.answer.text}</p>
-                        </div>
-                      )}
-                      {q.answer.transcript === "waiting" && (
-                        <p className="en-muted small">{t.transcribing}</p>
-                      )}
-                      {q.answer.transcript === "failed" && (
-                        <p className="en-muted small">{t.transcriptFailed}</p>
-                      )}
-                      <p className="en-muted small">
-                        {t.seconds(q.answer.seconds)}
-                        {q.answer.problems
-                          .map((p) => t.problems[p])
-                          .filter(Boolean)
-                          .map((p) => ` · ${p}`)
-                          .join("")}
-                      </p>
-                    </>
+                    <AnswerView
+                      answer={q.answer}
+                      url={client.speakingAudioUrl(learner, q.answer.id)}
+                    />
                   )}
                 </li>
               ))}

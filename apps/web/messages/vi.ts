@@ -408,6 +408,7 @@ export const vi = {
       shadowing: "Nói đuổi",
       pronunciation: "Phát âm",
       speakingTest: "Thi nói",
+      speakingPractice: "Luyện nói",
       dictionary: "Từ điển",
     },
     brandSub: "Tiếng Anh · CEFR A2–C1 · luyện IELTS",
@@ -1205,6 +1206,133 @@ export const vi = {
       heard: (h: string) => `thường nghe giống /${h}/`,
       example: "Ví dụ",
     },
+    tester: {
+      joinTitle: "Mời bạn thử luyện nói IELTS",
+      joinIntro: (label: string) =>
+        `Chào ${label}. Chủ dự án mời bạn thử phần luyện nói của NodeTrail: thi thử đủ ba phần với giám khảo đọc câu hỏi, và luyện từng câu có gợi ý cách xây dựng ý.`,
+      keepNotice:
+        "Trước khi bắt đầu, hãy đọc thông báo về ghi âm. Bạn xóa được bài của mình bất cứ lúc nào.",
+      researchTitle: "Thông báo nghiên cứu (không bắt buộc)",
+      researchDraft:
+        "Bản nháp: chủ dự án sẽ chốt lời lẽ này trước khi mời người thử thật.",
+      researchText:
+        "Nếu bạn đồng ý, chủ dự án sẽ xem các số đo về cách bạn nói (tốc độ, số lần ngắt…) theo từng tuần để nghiên cứu cách luyện. Chủ dự án không xem bản ghi âm hay lời bạn nói trong báo cáo, và bạn có thể rút lại bất cứ lúc nào bằng cách báo cho chủ dự án. Không đồng ý cũng không ảnh hưởng gì đến việc bạn dùng.",
+      researchAgree: "Tôi đồng ý cho chủ dự án xem số đo của tôi để nghiên cứu",
+      otherAccount:
+        "Trình duyệt này đang dùng một tài khoản khác. Mở liên kết sẽ thay bằng tài khoản người thử. Nếu bạn là chủ dự án, hãy mở liên kết trong cửa sổ riêng tư.",
+      start: "Bắt đầu",
+      joining: "Đang vào…",
+      badLink:
+        "Liên kết không dùng được: đã dùng, hết hạn hoặc đã bị thu hồi. Hãy xin chủ dự án một liên kết mới.",
+      joined: "Đã vào. Từ giờ trình duyệt này nhớ bạn trong 30 ngày.",
+      closed:
+        "Phần ghi âm chưa mở cho người thử: chủ dự án đang xem xét việc lưu giữ giọng nói. Bạn đã được ghi nhận, chủ dự án sẽ báo khi mở.",
+      goExam: "Thi thử",
+      goPractice: "Luyện nói",
+      leftToday: (mock: number, tries: number) =>
+        `Hôm nay còn: ${mock} bài thi thử, ${tries} lần luyện.`,
+      dailyLimit: "Hôm nay bạn đã dùng hết lượt. Mai quay lại nhé.",
+    },
+    speakingFeedback: {
+      button: "Nhận xét bằng AI",
+      title: "Nhận xét của AI",
+      label:
+        "Gợi ý từ AI, dựa trên bản máy chép lại, có thể sai. Không phải điểm và không dùng để tính mức thành thạo.",
+      noticeTitle: "Trước khi gửi bản chép cho AI",
+      noticeDraft:
+        "Bản nháp: chủ dự án sẽ chốt lời lẽ này. Hiện chỉ chủ dự án dùng được nút này.",
+      noticeText:
+        "Khi bạn bấm gửi, chỉ bản chép chữ của câu trả lời này và câu hỏi được gửi tới nhà cung cấp mô hình AI (DeepSeek, qua máy chủ của NodeTrail) để viết nhận xét. Âm thanh không được gửi, tên bạn cũng không. Nhận xét được lưu cùng bài thi cho đến khi bạn xóa bài thi.",
+      noticeAgree: "Tôi đã đọc và đồng ý gửi bản chép này",
+      send: "Gửi và nhận nhận xét",
+      waiting: "Đang viết nhận xét… thường mất khoảng nửa phút.",
+      tooLong: "Nhận xét lâu hơn dự kiến. Tải lại trang sau ít phút để xem.",
+      strength: "Điểm tốt",
+      issue: "Có thể cải thiện",
+      better: "Có thể nói",
+      areas: {
+        answer: "Câu trả lời",
+        grammar: "Ngữ pháp",
+        vocabulary: "Từ vựng",
+        linking: "Liên kết ý",
+      } as Record<string, string>,
+      retry: "Thử lại",
+    },
+    speakingPractice: {
+      title: "Luyện nói có hướng dẫn",
+      intro:
+        "Chọn một câu hỏi, nói, xem số đo rồi nói lại đúng câu đó, tối đa 3 lần và mỗi lần ít thời gian hơn. Gợi ý ý tưởng chỉ hiện trước khi nói, không bao giờ trong lúc nói, và NodeTrail không viết sẵn đáp án để học thuộc.",
+      ownerOnly:
+        "Ghi âm hiện chỉ mở cho chủ dự án, cho đến khi việc lưu giữ giọng nói được xem xét về quyền riêng tư.",
+      consentFirst: "Hãy đồng ý với thông báo ghi âm ở trang Thi nói trước.",
+      toExam: "Mở trang Thi nói",
+      pick: "Chọn một câu hỏi",
+      part: (n: number) => `Phần ${n}`,
+      secondsLabel: (s: number) => `${s} giây`,
+      start: "Luyện câu này",
+      keep: "Giữ lại các bản ghi để nghe lại sau 24 giờ (xóa được bất cứ lúc nào)",
+      practised: "Các câu đã luyện",
+      noneYet: "Chưa luyện câu nào.",
+      triesOf: (n: number, max: number) => `${n}/${max} lần`,
+      ideasTitle: "Cách xây dựng câu trả lời (không phải đáp án)",
+      shapeTitle: "Khung ý",
+      shape: [
+        "Nêu ý chính",
+        "Giải thích lý do",
+        "Cho một ví dụ của riêng bạn",
+        "Nối lại với câu hỏi",
+      ],
+      shapePart3: [
+        "So sánh với một trường hợp khác",
+        "Nêu mặt ngược lại",
+        "Nói vì sao điều đó quan trọng",
+      ],
+      openersTitle: "Ba câu hỏi để mở rộng ý",
+      openers: [
+        "Ai liên quan đến chuyện này, và họ cảm thấy thế nào?",
+        "Vì sao lại như vậy?",
+        "Điều gì đã thay đổi, và nếu khác đi thì sẽ ra sao?",
+      ],
+      wordsTitle: "Từ gợi ý cho chủ đề này",
+      wordsNote: "Dùng từ nào hợp với ý của bạn, không cần dùng hết.",
+      noScript:
+        "NodeTrail không viết sẵn câu trả lời để bạn học thuộc: giám khảo trừ điểm câu học thuộc, và hệ thống sẽ gọi tên cụm học thuộc nếu có.",
+      cueTitle: "Đề Phần 2",
+      youShouldSay: "Bạn nên nói về:",
+      notes: "Ghi chú (chỉ lưu trong trình duyệt này)",
+      startSpeak: (s: number) => `Bắt đầu nói (${s} giây)`,
+      prepare: "Chuẩn bị",
+      skipPrep: "Nói ngay",
+      recording: "Đang ghi",
+      left: "Còn lại",
+      done: "Xong",
+      saving: "Đang lưu câu trả lời…",
+      noMic:
+        "Không dùng được micro. Hãy cho phép trình duyệt dùng micro rồi thử lại.",
+      saveFailed:
+        "Không lưu được câu trả lời (mạng hoặc máy chủ). Thử nói lại.",
+      tryTitle: (n: number, s: number) => `Lần ${n} · ${s} giây`,
+      firstTry: "Lần đầu: số đo này được lưu làm bằng chứng về độ trôi chảy.",
+      repeatTry:
+        "Nói lại là luyện tập, không tính làm bằng chứng: câu đã quen không còn là nói tự nhiên.",
+      compareTitle: "Số đo từng lần, cạnh nhau",
+      compareNote:
+        "Chỉ là số, không có điểm và không có đánh giá tốt hay xấu. Một người nói vài lần chưa đủ để kết luận cách luyện này có tác dụng hay không.",
+      colTry: (n: number) => `Lần ${n}`,
+      rows: {
+        speechRate: "Tốc độ (từ/phút)",
+        pausesPerMinute: "Lần ngắt mỗi phút",
+        longestRun: "Đoạn liền dài nhất (từ)",
+        shareOfTime: "Phần thời gian đã nói",
+      } as Record<string, string>,
+      noValue: "–",
+      waiting: "Đang chờ bản chép lời và số đo…",
+      repeat: (s: number) => `Nói lại câu này (${s} giây)`,
+      usedUp: "Đã đủ 3 lần cho câu này.",
+      another: "Chọn câu khác",
+      delete: "Xóa lần luyện này",
+      confirmDelete: "Xóa vĩnh viễn câu này và các bản ghi?",
+    },
     speakingTest: {
       title: "Thi nói thử (IELTS Speaking)",
       intro:
@@ -1255,6 +1383,53 @@ export const vi = {
       transcriptNote:
         "Bản chép lời do máy làm: máy có thể nghe nhầm giọng, và có thể tự sửa mất lỗi của bạn. Đây không phải bằng chứng về điều bạn đã nói.",
       transcribing: "Đang chép lời…",
+      measuresNote:
+        "Số đo lấy từ âm thanh và thời gian từng từ, không phải điểm hay nhận xét. Máy không biết vì sao bạn ngừng, nó chỉ đếm. Câu trả lời ngắn cho số đo thiếu chắc chắn.",
+      measuresShort:
+        "Dưới 15 giây nói: tốc độ và số lần ngắt chỉ để tham khảo.",
+      measuresRate: (wpm: number) => `${Math.round(wpm)} từ/phút`,
+      measuresPauses: (
+        n: number,
+        between: number,
+        inside: number,
+        long: number,
+      ) =>
+        `${n} lần ngắt (${between} giữa mệnh đề, ${inside} trong mệnh đề${long > 0 ? `, ${long} dài từ 2 giây` : ""})`,
+      measuresFillers: (n: number) => `${n} từ đệm (um, uh…)`,
+      measuresRun: (words: number, seconds: number) =>
+        `đoạn liền dài nhất ${words} từ (${seconds.toFixed(1)} giây)`,
+      measuresShare: (share: number) =>
+        `nói ${Math.round(share * 100)}% thời gian cho phép`,
+      languageGuard: "Kiểm tra trước khi góp ý",
+      guardTemplates: (list: string) => `Cụm giống mẫu học thuộc: ${list}.`,
+      guardRepeated: (n: number) => `${n} từ nằm trong đoạn lặp lại.`,
+      guardSentences: "Câu nói hai lần trở lên:",
+      guardOffTopic:
+        "Rất ít từ của câu hỏi xuất hiện trong câu trả lời. Đây chỉ là cảnh báo, không phải đánh giá.",
+      hintsTitle: "Gợi ý ngữ pháp (có thể sai)",
+      hintsNote:
+        "Văn nói không giống văn viết, và máy chép lời có thể nghe nhầm hoặc tự sửa lỗi của bạn, nên đây chỉ là gợi ý. Không có gợi ý nào ảnh hưởng đến mức thành thạo của bạn.",
+      hintsNone: "Không có gợi ý nào.",
+      hintsNotChecked: "Chưa kiểm tra ngữ pháp (chưa bật LanguageTool).",
+      hintEnding:
+        "có thể thiếu đuôi -s/-ed: có thể do phát âm (đuôi /s/ /z/ /t/ /d/ hay bị nuốt), do ngữ pháp, hoặc do máy chép lời",
+      hintSuggest: (text: string, suggestion: string) =>
+        `“${text}” → “${suggestion}”`,
+      hintPlay: "Nghe đoạn này",
+      vocabTitle: "Vốn từ (số đo)",
+      vocabDiversity: (n: number) => `đa dạng từ (MTLD) ${n.toFixed(0)}`,
+      vocabTooShort: "đa dạng từ: cần ít nhất 50 từ",
+      vocabBeyond: (share: number) => `${Math.round(share * 100)}% từ trên B1`,
+      vocabUnknown: (share: number) =>
+        `${Math.round(share * 100)}% từ chưa có trong danh sách`,
+      vocabRepeated: (list: string) => `từ lặp nhiều: ${list}`,
+      languageShort:
+        "Câu trả lời dưới 15 giây nói: chỉ có số đo, chưa có góp ý ngôn ngữ.",
+      languageFailed: "Không kiểm tra được ngôn ngữ của câu này.",
+      summaryTitle: "Cả bài thi",
+      summaryLine: (answers: number, words: number) =>
+        `${words} từ trong ${answers} câu trả lời`,
+      summaryPerMinute: (n: number) => `${n.toFixed(1)} lần ngắt mỗi phút`,
       transcriptFailed: "Không chép lời được câu này.",
       seconds: (s: number) => `${Math.round(s)} giây`,
       gone: "Bản ghi đã tự xóa sau 24 giờ.",
@@ -1532,7 +1707,7 @@ export const vi = {
       findingHint: "Gợi ý",
       findings: {
         part_missing:
-          "Chưa thấy đoạn thân bài nào trả lời phần này của đề: {part}",
+          "Có thể chưa có đoạn thân bài nào trả lời phần này của đề: {part}. Công cụ có thể hiểu nhầm, bạn hãy tự đọc lại bài.",
         position_missing:
           "Chưa thấy ý kiến của bạn (đề hỏi: {part}). Hãy nêu rõ ở mở bài và nhắc lại ở kết bài.",
         position_changed:

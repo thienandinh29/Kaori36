@@ -36,6 +36,8 @@ x-api-env: &api-env
     PRONUNCIATION_URL: ${PRONUNCIATION_URL:-}
     # Set by --profile asr (http://asr:8050); empty: Speaking answers are kept without a transcript.
     ASR_URL: ${ASR_URL:-}
+    # Off until the owner's privacy review of the voice policy: invited testers cannot record before.
+    TESTERS_MAY_RECORD: ${TESTERS_MAY_RECORD:-false}
 
 services:
   db:

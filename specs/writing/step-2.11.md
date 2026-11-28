@@ -73,7 +73,11 @@ item gets its own short build note here when it starts.
   code (blank-line split), so each quote is checked **in its own paragraph**, not just somewhere in the essay.
 - **The rules** (code, pure, unit-tested): a description whose quote fails is dropped (main idea) or treated as unknown
   (stance, development). A part is **missing** only when every body paragraph has a checked description and none answers
-  it; otherwise it shows "chưa chắc". A position part is answered by a stated stance or a body paragraph; **no position** is
+  it; otherwise it shows "chưa chắc". **Fix (28 Nov 2026, owner's decision): a missing part is a hint, not an issue**
+  ("Có thể chưa có đoạn nào trả lời…"). The `answers` lists are the model's own claim and carry no quote for code to
+  check, so the app does not assert "you left this out" until export_review has measured how often the mapping is
+  wrong; if it holds, asking for the answering sentence per part and promoting the finding again is a spec change.
+  A hint is not a cap candidate (`caps.py` reads issues only), so `part_missing` no longer reaches 2.12's notes. A position part is answered by a stated stance or a body paragraph; **no position** is
   an issue only when both introduction and conclusion say none. A **flip** is `first` against `second` (balanced against a
   side is not); both quotes are shown. **"Có thể chưa được phát triển"** is a hint for a body paragraph whose development
   is `none`; a claimed example or explanation whose quote fails gives no hint. Findings are Task Response; Coherence gets

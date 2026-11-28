@@ -115,14 +115,14 @@ def test_structure_issues_become_notes_with_their_quotes_and_hints_do_not() -> N
         ],
     }))  # fmt: skip
     found = model_findings(s)
-    assert set(found) == {"part_missing", "position_changed"}  # "undeveloped" is a hint, not a cap
+    assert set(found) == {"position_changed"}  # hints ("undeveloped", "part_missing") are not caps
     assert found["position_changed"] == (
         "I believe classrooms are still better", "online study is clearly the better choice"
     )  # fmt: skip
     fired = fire(load_caps().rules, "\n\n".join(PARAS), s)
-    assert {f.rule.id for f in fired} == {"part_missing", "position_changed"}
+    assert {f.rule.id for f in fired} == {"position_changed"}
     assert apply_caps({"tr": 8.0}, fired) == {"tr": 8.0}  # model findings never touch the band
-    assert len(notes(fired)) == 2
+    assert len(notes(fired)) == 1
     assert model_findings(None) == {}
 
 

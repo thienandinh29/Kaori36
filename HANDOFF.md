@@ -4,9 +4,40 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `cca973b` (#154 merged), plus T6 and Speaking 5.1 on `feat/speaking-transcripts`.
+**Last updated:** 28 Nov 2026, `main` at `c355b92` (#167 merged); Speaking 5.3b in the open pull request from `feat/speaking-feedback-pr`.
 
 ## Just finished
+- **Pronunciation retry cap** (#166, 28 Nov; migration `0052`): a recording the service answered 5xx or 429 to, or hung on, is counted; the
+  third failure marks it `failed` (audio cleared unless kept) and one with fewer failures goes first. A refused connection or a
+  service still loading its weights is not counted. Tested with scripted failures only.
+- **Speaking 5.5, testers, built and shut** (#165, 28 Nov; `specs/speaking/step-5.5.md`, migration `0051`): `python -m app.testers.cli add --label X`
+  then `invite --tester ID` prints a one-time link `/vao/{token}` (7 days; the button on the page spends it, a link preview does
+  not); the tester gets a 30-day HttpOnly session; limits of 3 mock tests and 20 practice tries a Vietnam day; `report` writes
+  `data/private/testers-report.json` (counts, retention with an interval, own numbers only for testers who accepted the optional
+  research notice). **Recording stays owner-only until you set `TESTERS_MAY_RECORD=true`** after the privacy review. The research
+  notice wording is a draft on the join page.
+- **Speaking 5.4b, guided practice** (#163, 28 Nov; `/noi/luyen`, migration `0050`): idea building for Part 2 and 3 before speaking (a shape, three
+  opening questions, authored topic words; never a script), the same question again up to three times with 100%/75%/50% of the time,
+  the numbers side by side; only the first try counts as evidence. A try is a `guided` sitting, so the worker is unchanged.
+- **Speaking 5.3a, grammar and vocabulary checks by code** (#161, 28 Nov; migration `0049`): memorised-phrase and repeated-text check, LanguageTool and
+  ERRANT hints each playable at its moment, a possibly-missing -s/-ed ending kept apart, vocabulary numbers; answers under 15 s
+  skipped; no model call; never mastery. The model's feedback (5.3b) waits on the owner's consent wording.
+- **Speaking 5.2, fluency numbers** (#160, 28 Nov; migration `0048`): speech rate, pauses found in the raw audio and counted
+  between and inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts
+  only. The clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
+- **Worker fixes** (#159, 28 Nov): an essay left `analysing` by a stopped worker is queued again when the worker starts
+  (one worker assumed); failed essays no longer count towards the day's limit; a Speaking answer is tried three times, then
+  `failed`, a failing one going behind untried ones, and no row lock is held during the transcript call (migration `0047`);
+  essays run before transcription. **Owner's decision:** Writing's `part_missing` is a hint, not an issue (the model's
+  "answers" lists have no quote for code to check; `step-2.11.md`). Side effect: it no longer reaches 2.12's notes, so the
+  `part_missing` rule in `data/writing/caps.yaml` cannot fire until the finding is promoted again.
+- **Writing 2.12 part 1** (#158, 27 Nov): descriptor caps (`data/writing/caps.yaml`) and descriptor features per criterion;
+  nothing applied or shown to learners.
+- **Speaking 5.1 and progress study T6** (#156, 27 Nov): transcripts with Whisper small.en in the `asr/` service (migration
+  `0046`, consent `speaking-v1`, the WER tool) and the rater's four criterion bands (migration `0045`).
+- **Speaking 5.4a, the examiner test** (`/noi/thi`, #154): five draft tests, voice examiner with the real timing, answers
+  recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
+  test at real speed is not done.
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
   answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
   as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien` (`specs/vocabulary/step-dictionary.md`).
@@ -32,25 +63,28 @@ wins; fix this page.
 - **Daily Reading blind checks done** (#137–#146, 28 Nov): 267 verified, 14 needs_review, 2 approved, 6 rejected,
   112 dropped (76 of them stale questions of replaced passages, `itemfile drop-stale`), 1 unchecked. The daily task is off.
 
-## Just finished, merged in #154
-- **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
-  recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
-  test at real speed is not done.
-
-## Built, not yet merged (`feat/speaking-transcripts`)
-- **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
-  Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
+## Built, not yet merged (5.3b, `feat/speaking-feedback-pr`)
+- **Speaking 5.3b, the model's feedback** (`specs/speaking/step-5.3b.md`, migration `0053`): on a result page, "Nhận xét bằng AI" under an
+  answer with a transcript and 15 s of speech (owner only): the notice first (**a draft, labelled "Bản nháp": set its wording**, `dolater.md`),
+  then the worker writes 2–5 points through the gateway (task `speaking_feedback`), each quoting the transcript; code drops a point whose
+  quote is not an exact substring, a missing-ending point and any talk of a band. Never a score, never evidence. Run for real on a
+  synthetic transcript (4 points, US$0.002); whether the points are right is the owner's judgement of 20 (`dolater.md`).
 
 ## In progress
-Writing step 2.12 part 1 (descriptor caps and features, `specs/writing/step-2.12.md`, "Build note, part 1") in pull
-request #158; nothing wired into the app. Part 2 (the evaluation and the served path) follows once it is merged; the
-measurement waits on the owner's examiner-banded essays. The Reading diagnosis docs wait for review on
-`claude/compassionate-newton-d4dkru`.
+Writing 2.12 part 2 (`feat/writing-2.12-eval`, pull request #168): the comparison of five band methods, the
+per-criterion descriptor model, its store in `scorer.yaml` (`method`, `descriptors`) and the served band. Run end to end on
+synthetic essays only; the measurement waits on the owner's examiner-banded essays (`dolater.md`, Phase 2, has the commands).
+
+## Open from the code review (28 Nov, none urgent)
+- No timings per Writing stage; `POLL_LIMIT` (`essay-view.tsx`, 60 × 2 s) is unchanged. Measure before changing either.
+- An essay that crashes the worker process itself would be requeued at the next start and crash it again.
+- Still not promoted: asking the model to quote the sentence that answers each question part, so `part_missing` can be
+  checked and measured with `export_review` before it is an issue again.
 
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: 5.2, fluency measures from the word timings (pauses from the raw audio, between and inside clauses).
+2. Next build: the owner's call (5.6 SPK-001 waits on the corpus licence; CP4b/CP4c/CP6 per `PLAN.md`). 5.3b is built and waits on the owner's notice wording and judgement of 20 points; 5.5 is merged and shut: it waits on the privacy review. The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

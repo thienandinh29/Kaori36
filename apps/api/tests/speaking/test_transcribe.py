@@ -7,6 +7,7 @@ from typing import Any
 
 import httpx
 import psycopg
+import psycopg.types.json
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -41,6 +42,7 @@ def setup(database_url: str) -> Iterator[tuple[TestClient, str, ConnectionPool, 
         ).fetchone()
         assert row is not None
         owner = str(row[0])
+        conn.execute("delete from speaking_answers")  # the test database is shared: start empty
     app = FastAPI()
     app.include_router(
         routes.create_router(
@@ -112,6 +114,9 @@ def test_a_refusal_is_stored_once_and_an_outage_is_retried(setup) -> None:  # ty
     with pool.connection() as conn, pytest.raises(t.Unavailable):
         t.process_next(conn, down, lambda: NOW)
     assert result(client, owner, sitting)["p1-2-1"]["transcript"] == "waiting"  # not marked
+    with pool.connection() as conn:
+        counted = conn.execute("select transcript_attempts from speaking_answers").fetchone()
+    assert counted == (1,)
 
     def refuse(audio: bytes) -> dict[str, Any]:
         raise t.Refused("422: bad audio")
@@ -119,6 +124,40 @@ def test_a_refusal_is_stored_once_and_an_outage_is_retried(setup) -> None:  # ty
     drain(pool, refuse)
     assert result(client, owner, sitting)["p1-2-1"]["transcript"] == "failed"
     assert drain(pool, refuse) == 0  # never retried in a loop
+
+
+def test_the_third_service_failure_fails_the_answer_and_it_is_not_retried(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-2-1")
+
+    def down(audio: bytes) -> dict[str, Any]:
+        raise t.Unavailable("timeout")
+
+    for _ in range(t.MAX_ATTEMPTS):
+        with pool.connection() as conn, pytest.raises(t.Unavailable):
+            t.process_next(conn, down, lambda: NOW)
+    assert result(client, owner, sitting)["p1-2-1"]["transcript"] == "failed"
+    assert drain(pool, lambda audio: RESULT) == 0  # a failed answer is left alone
+
+
+def test_a_failing_answer_goes_behind_the_ones_not_yet_tried(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-2-1")
+    answer(client, owner, sitting, "p1-2-2")
+    seen: list[int] = []
+
+    def flaky(audio: bytes) -> dict[str, Any]:
+        seen.append(len(audio))
+        raise t.Unavailable("x")
+
+    for _ in range(2):  # the first answer fails once, then the second gets its turn
+        with pool.connection() as conn, pytest.raises(t.Unavailable):
+            t.process_next(conn, flaky, lambda: NOW)
+    with pool.connection() as conn:
+        tries = conn.execute(
+            "select transcript_attempts from speaking_answers order by recorded_at"
+        ).fetchall()
+    assert tries == [(1,), (1,)]  # not (2,), (0,): one failing answer does not hold up the next
 
 
 def test_cleared_audio_is_not_transcribed_but_the_transcript_stays(setup) -> None:  # type: ignore[no-untyped-def]
@@ -176,3 +215,189 @@ def test_a_deleted_sitting_takes_its_transcripts(setup) -> None:  # type: ignore
         assert conn.execute(
             "select count(*) from speaking_answers where id=%s", (a,)
         ).fetchone() == (0,)
+
+
+# --- Step 5.2: fluency measures made in the same step, while the audio is there ---
+
+
+def timed(words: list[tuple[str, float, float]]) -> dict[str, Any]:
+    return {
+        "model": "m",
+        "revision": "r",
+        "words": [{"word": w, "start": a, "end": b, "probability": 0.9} for w, a, b in words],
+    }
+
+
+# speech_like() is 0.5 s of room, 1.2 s of speech, 0.5 s of room: words sit inside the speech
+SPOKEN = timed([("Um,", 0.55, 0.9), ("I", 0.95, 1.05), ("went", 1.05, 1.4), ("home.", 1.4, 1.65)])
+
+
+@pytest.fixture(scope="module")
+def nlp():  # type: ignore[no-untyped-def]
+    import spacy
+
+    return spacy.load("en_core_web_sm")
+
+
+def test_measures_are_made_with_the_transcript_and_shown_with_a_pooled_summary(  # type: ignore[no-untyped-def]
+    setup, nlp
+) -> None:
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-1-1")
+    answer(client, owner, sitting, "p1-1-2")
+    with pool.connection() as conn:
+        while t.process_next(conn, lambda audio: SPOKEN, lambda: NOW, nlp):
+            pass
+    out = client.get(f"/speaking/tests/{sitting}", params={"learner_id": owner}).json()
+    m = {q["id"]: q["answer"] for q in out["questions"] if q["answer"]}["p1-1-1"]["measures"]
+    assert m["words"] == 4 and m["fillers"]["count"] == 1 and m["short"] is True
+    assert m["speaking_seconds"] == pytest.approx(1.1) and m["asked_seconds"] == 40
+    assert m["share_of_time"] == pytest.approx(0.03, abs=0.01)  # 1.1 s of the 40 s asked
+    assert m["pauses"]["count"] == 0 and m["longest_run"]["words"] == 4
+    assert not {"band", "score", "grade", "level"} & set(m)
+    summary = out["summary"]
+    assert summary["answers"] >= 2 and summary["words"] >= 8 and summary["fillers"] >= 2
+
+
+def test_an_answer_transcribed_before_measures_existed_is_measured_from_its_audio(  # type: ignore[no-untyped-def]
+    setup, nlp
+) -> None:
+    client, owner, pool, sitting = setup
+    a = answer(client, owner, sitting, "p1-2-1")
+    with pool.connection() as conn:
+        conn.execute(
+            "update speaking_answers set transcript=%s,transcript_status='done' where id=%s",
+            (psycopg.types.json.Jsonb(t.stored(SPOKEN)), a),
+        )
+        conn.commit()
+        calls: list[bytes] = []
+
+        def transcribe(audio: bytes) -> dict[str, Any]:
+            calls.append(audio)
+            return SPOKEN
+
+        assert t.process_next(conn, transcribe, lambda: NOW, nlp)
+    assert calls == []  # not transcribed again
+    got = result(client, owner, sitting)["p1-2-1"]
+    assert got["transcript"] == "done" and got["measures"]["words"] == 4
+
+
+def test_a_refused_answer_has_no_measures_and_cleared_audio_is_never_measured(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-3-1")
+    drain(pool, lambda audio: (_ for _ in ()).throw(t.Refused("422: bad")))
+    got = result(client, owner, sitting)["p1-3-1"]
+    assert got["transcript"] == "failed" and got["measures"] is None
+    answer(client, owner, sitting, "p1-3-2")
+    with pool.connection() as conn:
+        purge_expired(conn, datetime(2026, 11, 30, tzinfo=UTC))
+        conn.commit()
+    assert drain(pool, lambda audio: SPOKEN) == 0
+    assert result(client, owner, sitting)["p1-3-2"]["measures"] is None
+
+
+# --- Step 5.3a: grammar and vocabulary checks, in the same step, with a scripted LanguageTool ---
+
+
+def scripted_matches(text: str) -> list[Any]:
+    from app.writing.languagetool import Match
+
+    found = []
+    for word, replacement in (("have", "has"), ("cat", "cats")):
+        if word in text:
+            found.append(Match(text.index(word), len(word), "R", "GRAMMAR", "m", (replacement,)))
+    return found
+
+
+def language_step(nlp: Any, matches: Any = scripted_matches) -> Any:
+    from pathlib import Path
+
+    import errant
+
+    from app.lessons.graded import WordIndex
+    from app.speaking.language import LanguageStep
+    from app.writing.error_map import load_error_map
+
+    writing = Path(__file__).resolve().parents[4] / "data" / "writing"
+    return LanguageStep(
+        nlp=nlp,
+        annotator=errant.load("en", nlp),
+        error_map=load_error_map(writing / "error-map.yaml"),
+        index=WordIndex({"my": "A1", "sister": "A1", "have": "A1", "two": "A1", "cat": "A1"}),
+        templates=(),
+        matches=matches,
+    )
+
+
+# the same words spread over 20 s of speaking, so that the answer is long enough (15 s)
+LONG = timed(
+    [
+        ("Um,", 0.55, 0.9),
+        ("my", 1.0, 1.2),
+        ("sister", 1.2, 1.7),
+        ("have", 1.7, 2.0),
+        ("two", 2.0, 2.2),
+        ("cat.", 2.2, 19.0),
+    ]
+)
+
+
+def test_language_checks_are_stored_with_the_answer_and_never_touch_mastery(  # type: ignore[no-untyped-def]
+    setup, nlp
+) -> None:
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-1-1")
+    with pool.connection() as conn:
+        before = conn.execute("select count(*) from mastery").fetchone()
+        while t.process_next(conn, lambda audio: LONG, lambda: NOW, nlp, language_step(nlp)):
+            pass
+        after = conn.execute("select count(*) from mastery").fetchone()
+    assert before == after  # grammar flags on speech never move mastery
+    got = result(client, owner, sitting)["p1-1-1"]["language"]
+    assert got["skipped"] is None
+    kinds = {(h["text"], h["kind"]) for h in got["hints"]}
+    assert ("have", "grammar") in kinds and ("cat", "ending") in kinds
+    assert got["vocabulary"]["words"] == 5 and got["guard"]["templates"] == []
+
+
+def test_a_short_answer_is_skipped_and_an_earlier_one_is_checked_later(setup, nlp) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    a = answer(client, owner, sitting, "p1-2-1")
+    with pool.connection() as conn:  # transcribed and measured before 5.3 existed
+        while t.process_next(conn, lambda audio: LONG, lambda: NOW, nlp):
+            pass
+    assert result(client, owner, sitting)["p1-2-1"]["language"] is None
+    with pool.connection() as conn:
+        assert t.process_next(conn, lambda audio: LONG, lambda: NOW, nlp, language_step(nlp))
+    assert result(client, owner, sitting)["p1-2-1"]["language"]["skipped"] is None
+    b = answer(client, owner, sitting, "p1-2-2")
+    with pool.connection() as conn:
+        while t.process_next(conn, lambda audio: SPOKEN, lambda: NOW, nlp, language_step(nlp)):
+            pass
+    assert result(client, owner, sitting)["p1-2-2"]["language"] == {"skipped": "short"}
+    assert a != b
+
+
+def test_languagetool_down_is_retried_and_other_failures_are_stored_once(setup, nlp) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-3-1")
+
+    def down(text: str) -> list[Any]:
+        raise httpx.ConnectError("down")
+
+    with pool.connection() as conn, pytest.raises(t.Unavailable):
+        t.process_next(conn, lambda audio: LONG, lambda: NOW, nlp, language_step(nlp, down))
+    got = result(client, owner, sitting)["p1-3-1"]
+    assert got["transcript"] == "done" and got["measures"] and got["language"] is None  # kept
+
+    def broken(text: str) -> list[Any]:
+        raise ValueError("boom")
+
+    with pool.connection() as conn:
+        assert t.process_next(
+            conn, lambda audio: LONG, lambda: NOW, nlp, language_step(nlp, broken)
+        )
+        assert not t.process_next(
+            conn, lambda audio: LONG, lambda: NOW, nlp, language_step(nlp, broken)
+        )
+    assert "boom" in result(client, owner, sitting)["p1-3-1"]["language"]["failed"]

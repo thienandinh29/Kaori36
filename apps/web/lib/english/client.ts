@@ -56,12 +56,21 @@ import {
   type ListeningText,
   type ListeningTexts,
 } from "@/lib/listening/practice";
+import { parseJoined, type Joined } from "@/lib/speaking/tester";
+import {
+  parsePractice,
+  parseStartedTry,
+  type Practice,
+  type StartedTry,
+} from "@/lib/speaking/practice";
 import {
   parseAnswerSaved,
   parseMicCheck,
+  parseFeedback,
   parseOverview,
   parseResult,
   parseSitting,
+  type Feedback,
   type MicCheck,
   type Overview,
   type Result as SpeakingResult,
@@ -877,9 +886,72 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
         await request(`speaking/tests/${encodeURIComponent(sittingId)}?${q}`),
       );
     },
+    /** Step 5.3b: ask for the model's feedback on an answer's transcript (after the notice). */
+    async requestSpeakingFeedback(
+      learnerId: string,
+      answerId: string,
+      consent: string,
+    ): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await post(
+        `speaking/answers/${encodeURIComponent(answerId)}/feedback?${q}`,
+        { consent },
+      );
+    },
+    async speakingFeedback(
+      learnerId: string,
+      answerId: string,
+    ): Promise<Feedback> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      const f = parseFeedback(
+        await request(
+          `speaking/answers/${encodeURIComponent(answerId)}/feedback?${q}`,
+        ),
+      );
+      if (f === null) throw new DataError("contract");
+      return f;
+    },
     speakingAudioUrl(learnerId: string, answerId: string): string {
       const q = new URLSearchParams({ learner_id: learnerId });
       return `/api/backend/speaking/answers/${encodeURIComponent(answerId)}/audio?${q}`;
+    },
+    /** An invited tester joins (specs/speaking/step-5.5.md); the proxy keeps the session in a cookie. */
+    async redeemInvite(token: string): Promise<Joined> {
+      return parseJoined(await post("testers/redeem", { token }));
+    },
+    async acceptResearchNotice(version: string): Promise<void> {
+      await post("testers/research-consent", { version });
+    },
+    /** Guided practice (specs/speaking/step-5.4b.md): a try of one question, or a repeat of one. */
+    async startSpeakingPractice(
+      learnerId: string,
+      pick: {
+        testId: string;
+        questionId: string;
+        consent: string;
+        keep: boolean;
+        previousId: string | null;
+      },
+    ): Promise<StartedTry> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseStartedTry(
+        await post(`speaking/practice?${q}`, {
+          test_id: pick.testId,
+          question_id: pick.questionId,
+          consent: pick.consent,
+          keep: pick.keep,
+          previous_id: pick.previousId,
+        }),
+      );
+    },
+    async speakingPractice(
+      learnerId: string,
+      tryId: string,
+    ): Promise<Practice> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePractice(
+        await request(`speaking/practice/${encodeURIComponent(tryId)}?${q}`),
+      );
     },
     async deleteSpeakingTest(
       learnerId: string,

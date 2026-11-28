@@ -30,8 +30,11 @@ part2:
     - what was difficult about learning it
   explain: and explain how you feel about this skill now.
   closing: Would you like to teach this skill to someone else?
+  # topic words from the word list for the idea-building screen (guided mode, step 5.4b)
+  words: [practise, improve, mistake, progress, confident, challenge, technique]
 part3:
   theme: learning and skills
+  words: [education, skills, practical, technology, teacher, knowledge, training, opportunity]
   questions:
     - Which skills do you think young people most need today?
     - Is it better to learn a skill from a teacher or by yourself?

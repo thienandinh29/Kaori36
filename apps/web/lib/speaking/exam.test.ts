@@ -6,6 +6,7 @@ import {
   cueText,
   examSpeed,
   ms,
+  parseFeedback,
   parseOverview,
   parseResult,
   parseSitting,
@@ -156,7 +157,26 @@ describe("decoders", () => {
     const o = parseOverview({
       can_record: true,
       consent: "voice-v1",
-      tests: [{ id: "t01", title: "Home", draft: true, questions: 18 }],
+      tests: [
+        {
+          id: "t01",
+          title: "Home",
+          draft: true,
+          questions: 18,
+          practice: [{ id: "p3-1", part: 3, text: "Why?", seconds: 60 }],
+        },
+      ],
+      practices: [
+        {
+          id: "g1",
+          title: "Home",
+          question: "Why?",
+          started_at: "2026-11-28T09:00:00+00:00",
+          tries: 2,
+        },
+      ],
+      max_tries: 3,
+      left_today: { mock_tests: 2, practice_tries: 17 },
       past: [
         {
           id: "s1",
@@ -170,7 +190,16 @@ describe("decoders", () => {
         },
       ],
     });
+    expect(o.left_today).toEqual({ mock_tests: 2, practice_tries: 17 });
     expect(o.past[0]?.finished_at).toBeNull();
+    expect(o.tests[0]?.practice[0]).toEqual({
+      id: "p3-1",
+      part: 3,
+      text: "Why?",
+      seconds: 60,
+    });
+    expect(o.practices[0]?.tries).toBe(2);
+    expect(o.max_tries).toBe(3);
     const r = parseResult({
       id: "s1",
       test_id: "t01",
@@ -222,5 +251,311 @@ describe("decoders", () => {
     expect(() =>
       parseResult({ ...r, questions: [{ id: "x", part: 1, text: "Q" }] }),
     ).toThrow(DataError);
+  });
+});
+
+describe("measures (step 5.2)", () => {
+  const measures = {
+    words: 40,
+    speaking_seconds: 20.5,
+    short: false,
+    speech_rate: 117.1,
+    articulation_rate: 130.2,
+    pauses: {
+      count: 4,
+      per_minute: 11.7,
+      between_clauses: 3,
+      inside_clause: 1,
+      long: 0,
+      longest_seconds: 1.2,
+      total_seconds: 3.0,
+      unplaced: 0,
+    },
+    fillers: { count: 2 },
+    longest_run: { words: 12, seconds: 5.1 },
+    asked_seconds: 40,
+    share_of_time: 0.51,
+  };
+  const base = {
+    id: "s1",
+    test_id: "t01",
+    title: "Home",
+    keep: false,
+    started_at: "2026-11-28T09:00:00+00:00",
+    finished_at: "2026-11-28T09:14:00+00:00",
+    cue_card: {
+      task: "Describe a journey.",
+      points: ["a", "b", "c"],
+      explain: "and why.",
+    },
+    part3_theme: "travel",
+  };
+  const answer = (over: Record<string, unknown>) => ({
+    ...base,
+    questions: [
+      {
+        id: "p1-1-1",
+        part: 1,
+        text: "Q?",
+        answer: {
+          id: "a1",
+          seconds: 20,
+          problems: [],
+          audio: true,
+          delete_after: null,
+          transcript: "done",
+          text: "Um, I went home.",
+          words: [],
+          measures,
+          ...over,
+        },
+      },
+    ],
+    summary: null,
+  });
+
+  it("reads the numbers and the pooled summary", () => {
+    const r = parseResult({
+      ...answer({}),
+      summary: {
+        answers: 1,
+        words: 40,
+        speaking_seconds: 20.5,
+        speech_rate: 117.1,
+        pauses_per_minute: 11.7,
+        between_clauses: 3,
+        inside_clause: 1,
+        long: 0,
+        fillers: 2,
+        longest_run_words: 12,
+      },
+    });
+    const m = r.questions[0]!.answer!.measures!;
+    expect(m.pauses.between_clauses).toBe(3);
+    expect(m.fillers).toBe(2);
+    expect(m.longest_run).toEqual({ words: 12, seconds: 5.1 });
+    expect(r.summary?.longest_run_words).toBe(12);
+    expect("band" in m || "score" in m).toBe(false);
+  });
+
+  it("accepts an answer without measures and refuses measures without a transcript", () => {
+    expect(
+      parseResult(answer({ measures: null })).questions[0]!.answer!.measures,
+    ).toBeNull();
+    expect(
+      parseResult({ ...answer({ measures: undefined }) }).questions[0]!.answer!
+        .measures,
+    ).toBeNull();
+    expect(() =>
+      parseResult(answer({ transcript: "waiting", text: null })),
+    ).toThrow(DataError);
+  });
+
+  it("refuses a malformed number", () => {
+    expect(() =>
+      parseResult(answer({ measures: { ...measures, speech_rate: "fast" } })),
+    ).toThrow(DataError);
+    expect(() =>
+      parseResult(answer({ measures: { ...measures, fillers: 2 } })),
+    ).toThrow(DataError);
+  });
+
+  it("keeps a null rate for an answer with no words", () => {
+    const empty = {
+      ...measures,
+      words: 0,
+      speech_rate: null,
+      articulation_rate: null,
+      short: true,
+    };
+    expect(
+      parseResult(answer({ measures: empty })).questions[0]!.answer!.measures!
+        .speech_rate,
+    ).toBeNull();
+  });
+});
+
+describe("language checks (step 5.3a)", () => {
+  const checked = {
+    skipped: null,
+    guard: {
+      templates: ["in this day and age"],
+      template_words: 5,
+      repeated_words: 0,
+      repeated_sentences: [],
+      prompt_overlap: 0.4,
+      off_topic: false,
+    },
+    vocabulary: {
+      words: 60,
+      mtld: 48.2,
+      beyond_b1_share: 0.1,
+      unknown_share: 0.02,
+      repeated: [{ word: "people", count: 4 }],
+    },
+    hints: [
+      {
+        kind: "ending",
+        text: "cat",
+        suggestion: "cats",
+        message_en: "m",
+        rule_id: "R",
+        errant_type: null,
+        start_s: 2.2,
+        end_s: 2.8,
+      },
+      {
+        kind: "grammar",
+        text: "have",
+        suggestion: "has",
+        message_en: "Use has.",
+        rule_id: "R",
+        errant_type: "R:VERB:SVA",
+        start_s: null,
+        end_s: null,
+      },
+    ],
+  };
+  const withLanguage = (
+    language: unknown,
+    transcript = "done",
+    text: string | null = "x",
+  ) =>
+    parseResult({
+      id: "s1",
+      test_id: "t01",
+      title: "Home",
+      keep: false,
+      started_at: "2026-11-28T09:00:00+00:00",
+      finished_at: null,
+      cue_card: {
+        task: "Describe a journey.",
+        points: ["a", "b", "c"],
+        explain: "and why.",
+      },
+      part3_theme: "travel",
+      questions: [
+        {
+          id: "p1-1-1",
+          part: 1,
+          text: "Q?",
+          answer: {
+            id: "a1",
+            seconds: 20,
+            problems: [],
+            audio: true,
+            delete_after: null,
+            transcript,
+            text,
+            words: [],
+            measures: null,
+            language,
+          },
+        },
+      ],
+      summary: null,
+    }).questions[0]!.answer!.language;
+
+  it("reads the checks, the hints and an ending apart from grammar", () => {
+    const l = withLanguage(checked);
+    expect(l?.state).toBe("checked");
+    if (l?.state !== "checked") return;
+    expect(l.guard.templates).toEqual(["in this day and age"]);
+    expect(l.vocabulary.mtld).toBe(48.2);
+    expect(l.hints?.map((h) => h.kind)).toEqual(["ending", "grammar"]);
+    expect(l.hints?.[1]?.start_s).toBeNull();
+  });
+
+  it("reads short, failed and not-checked, and a LanguageTool that was not configured", () => {
+    expect(withLanguage({ skipped: "short" })?.state).toBe("short");
+    expect(withLanguage({ failed: "ValueError: x" })?.state).toBe("failed");
+    expect(withLanguage(null)).toBeNull();
+    const none = withLanguage({ ...checked, hints: null });
+    expect(none?.state === "checked" && none.hints).toBeNull();
+  });
+
+  it("refuses an unknown kind, an unknown skip reason and checks without a transcript", () => {
+    const bad = { ...checked, hints: [{ ...checked.hints[0], kind: "error" }] };
+    expect(() => withLanguage(bad)).toThrow(DataError);
+    expect(() => withLanguage({ skipped: "later" })).toThrow(DataError);
+    expect(() => withLanguage(checked, "waiting", null)).toThrow(DataError);
+    expect(() =>
+      withLanguage({
+        ...checked,
+        vocabulary: { ...checked.vocabulary, words: "60" },
+      }),
+    ).toThrow(DataError);
+  });
+});
+
+describe("the model's feedback on an answer (step 5.3b)", () => {
+  const done = {
+    status: "done",
+    points: [
+      {
+        kind: "issue",
+        area: "vocabulary",
+        point_vi: "Từ này hơi chung chung.",
+        quote: "the city is very crowded",
+        better: "the city is packed",
+      },
+      {
+        kind: "strength",
+        area: "answer",
+        point_vi: "Bạn có một lý do rõ ràng.",
+        quote: "because it is cheap",
+        better: null,
+      },
+    ],
+    failed: null,
+    can_ask: false,
+    consent: "speaking-feedback-v1",
+  };
+
+  it("reads the checked points, with the better way only on an issue", () => {
+    const f = parseFeedback(done);
+    expect(f?.status).toBe("done");
+    expect(f?.points.map((p) => p.kind)).toEqual(["issue", "strength"]);
+    expect(f?.points[0]?.better).toBe("the city is packed");
+    expect(f?.points[1]?.better).toBeNull();
+    expect(f?.consent).toBe("speaking-feedback-v1");
+  });
+
+  it("reads none and a failure with its message, and absence as null", () => {
+    const none = parseFeedback({
+      status: "none",
+      points: [],
+      failed: null,
+      can_ask: true,
+      consent: "speaking-feedback-v1",
+    });
+    expect(none?.can_ask).toBe(true);
+    const failed = parseFeedback({
+      ...done,
+      status: "failed",
+      points: [],
+      failed: "x",
+    });
+    expect(failed?.failed).toBe("x");
+    expect(parseFeedback(undefined)).toBeNull();
+    expect(parseFeedback(null)).toBeNull();
+  });
+
+  it("refuses a status, a kind or an area it does not know", () => {
+    expect(() => parseFeedback({ ...done, status: "weird" })).toThrow(
+      DataError,
+    );
+    expect(() =>
+      parseFeedback({
+        ...done,
+        points: [{ ...done.points[0], kind: "score" }],
+      }),
+    ).toThrow(DataError);
+    expect(() =>
+      parseFeedback({ ...done, points: [{ ...done.points[0], area: "band" }] }),
+    ).toThrow(DataError);
+    expect(() =>
+      parseFeedback({ ...done, points: [{ kind: "issue" }] }),
+    ).toThrow();
   });
 });
