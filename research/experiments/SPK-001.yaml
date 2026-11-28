@@ -1,7 +1,7 @@
 experiment_id: SPK-001
 title: Can a small model trained on human-rated speech estimate a speaking level well enough to show?
 track: ml-engineering
-status: planned
+status: planned  # 28 Nov: the feature-extraction command is built (specs/speaking/step-5.6.md); the corpus, the licence and the modelling are not started
 decided: >
   27 Nov 2026, owner's decision: a Speaking level may be shown as a CEFR level with its IELTS range, labelled an
   estimate, only from a model that passes this experiment's bar (specs/speaking/spec.md, "The band"; SPEC.md,

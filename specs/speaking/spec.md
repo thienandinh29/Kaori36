@@ -134,7 +134,7 @@ mode shows nothing while speaking; and NodeTrail is one part of Speaking practic
 | 5.4a | The examiner test before transcription (`step-5.4a.md`): a voice examiner reads authored Part 1–3 questions with the real timing, each answer recorded, replay afterwards; no model call. Built 27 Nov (owner's go): `/noi/thi` |
 | 5.4 | The mock test flow with timing (5.4a, built); guided mode with idea building and repeated answers (**5.4b, built 28 Nov**: `step-5.4b.md`, `/noi/luyen`); no band (see "The band") |
 | 5.5 | Opening to testers (**built 28 Nov, kept shut**: `step-5.5.md`): invite links, per-tester daily limits, the tester report; recording stays owner-only until the owner sets `TESTERS_MAY_RECORD` after the privacy review. The daily cost cap applies from 5.3b |
-| 5.6 | Level estimate (SPK-001), after 5.1–5.2 and the corpus licence: the corpus loader and the same measures on its audio (agent); the model and its report (owner); the level on the mock test's result page only after the bar in "The band" |
+| 5.6 | Level estimate (SPK-001), after 5.1–5.2 and the corpus licence: the corpus loader and the same measures on its audio (agent); the model and its report (owner); the level on the mock test's result page only after the bar in "The band" | **Feature extraction built 28 Nov** (`step-5.6.md`: a command from any manifest of recordings to one row of features each, with the app's own measures; the licence gate, held-out speakers and private output are enforced; no corpus touched).
 
 Not in this phase: a native-like or accent score, intonation, a band from a model's opinion, a band per criterion.
 

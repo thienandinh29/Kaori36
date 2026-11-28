@@ -155,3 +155,24 @@ class LanguageStep:
             )
             result["hints"] = hints(found.issues, transcript["words"])
         return result
+
+
+def build_step(settings: Any, grammar: Any) -> LanguageStep:
+    """The language step from the Writing grammar step's tools and the word and phrase lists
+    (the worker and the SPK-001 feature command build it the same way)."""
+    from app.lessons.graded import build_index
+    from app.vocabulary.wordlist import load_wordlist
+    from app.writing import guardrails
+
+    authored = load_wordlist(settings.vocab_dir / "core-seed.yaml")
+    return LanguageStep(
+        nlp=grammar.nlp,
+        annotator=grammar.annotator,
+        error_map=grammar.error_map,
+        index=build_index(
+            settings.vocab_imported_dir / "forms.yaml",
+            [(w.lemma, w.level) for w in authored.words],
+        ),
+        templates=guardrails.load_templates(settings.writing_dir / "templates.yaml"),
+        matches=grammar.client.matches if grammar.client is not None else None,
+    )

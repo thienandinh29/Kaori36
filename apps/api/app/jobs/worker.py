@@ -212,29 +212,15 @@ def transcriber(settings: Any, grammar: Any = None) -> Callable[[], bool] | None
         return None
     import spacy
 
-    from app.lessons.graded import build_index
-    from app.speaking.language import LanguageStep
+    from app.speaking.language import build_step
     from app.speaking.transcribe import Unavailable, process_next, service_transcribe
-    from app.vocabulary.wordlist import load_wordlist
-    from app.writing import guardrails
 
     transcribe = service_transcribe(settings.asr_url)
     # the parser is shared with the Writing grammar step when there is one (spaCy takes a second)
     nlp = grammar.nlp if grammar is not None else spacy.load("en_core_web_sm")
     language = None
     if grammar is not None:
-        authored = load_wordlist(settings.vocab_dir / "core-seed.yaml")
-        language = LanguageStep(
-            nlp=grammar.nlp,
-            annotator=grammar.annotator,
-            error_map=grammar.error_map,
-            index=build_index(
-                settings.vocab_imported_dir / "forms.yaml",
-                [(w.lemma, w.level) for w in authored.words],
-            ),
-            templates=guardrails.load_templates(settings.writing_dir / "templates.yaml"),
-            matches=grammar.client.matches if grammar.client is not None else None,
-        )
+        language = build_step(settings, grammar)
     retry_at = 0.0
 
     def run() -> bool:

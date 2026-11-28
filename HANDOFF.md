@@ -4,9 +4,10 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `c355b92` (#167 merged); Speaking 5.3b in the open pull request from `feat/speaking-feedback-pr`.
+**Last updated:** 28 Nov 2026, `main` at `343fe5e` (#169 merged); Speaking 5.6's feature extraction on `feat/spk001-features` (not pushed).
 
 ## Just finished
+- **Speaking 5.3b, the model's feedback** (#169, 28 Nov; migration `0053`): on a result page, "Nhận xét bằng AI" under an answer with a transcript and 15 s of speech (owner only): a notice first (**a draft, labelled "Bản nháp": set its wording**, `dolater.md`), then the worker writes 2–5 points through the gateway (task `speaking_feedback`), each quoting the transcript; code drops a point whose quote is not an exact substring, a missing-ending point and any talk of a band. Never a score, never evidence. Run for real on a synthetic transcript (4 points, US$0.002); whether the points are right is the owner's judgement of 20 (`dolater.md`).
 - **Pronunciation retry cap** (#166, 28 Nov; migration `0052`): a recording the service answered 5xx or 429 to, or hung on, is counted; the
   third failure marks it `failed` (audio cleared unless kept) and one with fewer failures goes first. A refused connection or a
   service still loading its weights is not counted. Tested with scripted failures only.
@@ -63,12 +64,12 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
-## Built, not yet merged (5.3b, `feat/speaking-feedback-pr`)
-- **Speaking 5.3b, the model's feedback** (`specs/speaking/step-5.3b.md`, migration `0053`): on a result page, "Nhận xét bằng AI" under an
-  answer with a transcript and 15 s of speech (owner only): the notice first (**a draft, labelled "Bản nháp": set its wording**, `dolater.md`),
-  then the worker writes 2–5 points through the gateway (task `speaking_feedback`), each quoting the transcript; code drops a point whose
-  quote is not an exact substring, a missing-ending point and any talk of a band. Never a score, never evidence. Run for real on a
-  synthetic transcript (4 points, US$0.002); whether the points are right is the owner's judgement of 20 (`dolater.md`).
+## Built, not yet merged (5.6 first half, `feat/spk001-features`)
+- **Speaking 5.6, SPK-001 feature extraction** (`specs/speaking/step-5.6.md`, no migration): `python -m app.speaking.spk001 check|extract
+  MANIFEST` turns any manifest of recordings into one row of the app's own measures each (`data/private/spk-001/features.jsonl`).
+  It refuses a speaker in two splits and refuses `corpus` rows until the owner's `data/private/spk-001/LICENCE.txt` exists. **No
+  corpus touched, no adapter written** (the corpus layout is unread, the licence unsigned); model, evaluation and report are the
+  owner's; the level appears on no page before the bar. Run for real on four synthetic clips.
 
 ## In progress
 Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
@@ -83,7 +84,7 @@ the owner's examiner-banded essays.
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: the owner's call (5.6 SPK-001 waits on the corpus licence; CP4b/CP4c/CP6 per `PLAN.md`). 5.3b is built and waits on the owner's notice wording and judgement of 20 points; 5.5 is merged and shut: it waits on the privacy review. The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
+2. Next build: the owner's call (5.6's second half, the corpus adapter, waits on your signed licence and its folder layout; CP4b/CP4c/CP6 per `PLAN.md`). 5.3b is built and waits on the owner's notice wording and judgement of 20 points; 5.5 is merged and shut: it waits on the privacy review. The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
@@ -101,7 +102,7 @@ the owner's examiner-banded essays.
 - ~20 web essays for the Writing feedback stability run (`specs/writing/step-2.11.md`, 2.11a; the 60% bar stays
   "proposed" until the owner has seen the result).
 - A teacher (reviewer brief: `specs/validation/reviewer-brief.vi.md`); every phase gate waits on Gold labels.
-- Decisions: the transcript consent wording for 5.3 (recogniser chosen: Whisper small.en); whether the machine voice is good enough for whole-passage Listening;
+- Decisions: the wording of the 5.3b transcript notice (a draft now) and the SPK-001 corpus licence (read, sign, answer its three questions); whether the machine voice is good enough for whole-passage Listening;
   licences (L2-ARCTIC, Simple English Wikipedia). Full list: `dolater.md`.
 
 ## Running on its own

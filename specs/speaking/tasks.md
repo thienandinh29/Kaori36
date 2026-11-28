@@ -21,4 +21,4 @@
 - [x] 5.3b the model's feedback with checked quotes (`step-5.3b.md`, 28 Nov; owner only, a draft notice until the owner sets the wording)
 - [x] 5.4b guided mode (`step-5.4b.md`, 28 Nov; the strict mock is 5.4a): idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time, numbers side by side; was: 5.4 mock test flow (no band); guided mode: idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time
 - [x] 5.5 invite links, limits, tester report (`step-5.5.md`, 28 Nov; shut until the privacy review: `TESTERS_MAY_RECORD`); the cost cap applies from 5.3b
-- [ ] 5.6 SPK-001's corpus loader and measures on its audio; the level on the result page only after the bar
+- [ ] 5.6 SPK-001: **feature extraction built 28 Nov** (`step-5.6.md`, any manifest of recordings, no corpus touched); the corpus adapter waits on the owner's licence note, the model and report are the owner's, the level on the result page only after the bar

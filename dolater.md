@@ -136,8 +136,11 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
 - [ ] **Speaking level estimate, SPK-001 (new, 27 Nov; the band rule change is approved):** read the Speak & Improve Corpus
   2025 licence in full on Cambridge's ELiT site and sign it if it suits. Tell the agent: (a) may a model trained on it run
   inside NodeTrail for you, and later, free, for friends and family; (b) may the audio sit in a private free GPU notebook
-  (Kaggle, Colab); (c) may results be published in your portfolio. Nothing is downloaded before that. The work starts after
-  Speaking 5.1–5.2 (`research/experiments/SPK-001.yaml`).
+  (Kaggle, Colab); (c) may results be published in your portfolio. Nothing is downloaded before that. **The feature-extraction command is built (28 Nov, `specs/speaking/step-5.6.md`):**
+  after you sign, put a one-line note in `data/private/spk-001/LICENCE.txt` (it refuses corpus rows without it), tell the agent the
+  corpus's folder layout so the adapter can be written, and run `python -m app.speaking.spk001 extract MANIFEST` on your laptop
+  with the `asr` profile (`COMPOSE_PROFILES=...,asr`, `ASR_URL=http://localhost:8050`). Recognition of about 300 hours is slow on
+  4 GB: time one hour first. The model, the evaluation and the report are yours (`research/experiments/SPK-001.yaml`).
 - [ ] **Wiktionary for vocabulary (new, 26 Nov):** licence read by the owner (CC BY-SA 4.0, dual with GFDL); decide whether
   an enrichment step follows: British IPA for
   713 words that have none, Wiktionary's Vietnamese next to the model's, recordings later after a per-file licence check.
