@@ -19,7 +19,7 @@ const allowedEnglish = new RegExp(
     `reading/own-tests|reading/own-tests/summary|reading/own-tests/${UUID}|reading/own-tests/${UUID}/confirm|reading/own-tests/${UUID}/words|` +
     `listening/texts|listening/texts/${SLUG}|listening/passages|listening/passages/${SLUG}|listening/passages/${SLUG}/audio/[0-9]{1,3}|listening/passages/${SLUG}/submit|listening/items/${SLUG}/audio|listening/items/${SLUG}/answer|` +
     `shadowing/texts|shadowing/texts/${SLUG}|vocab/say|vocab/say/status|vocab/say/focus|` +
-    `speaking/practice|speaking/practice/${UUID}|speaking/tests|speaking/tests/${UUID}|speaking/tests/${UUID}/answers|speaking/tests/${UUID}/finish|speaking/answers/${UUID}/audio|speaking/mic-check|` +
+    `testers/redeem|testers/me|testers/research-consent|speaking/practice|speaking/practice/${UUID}|speaking/tests|speaking/tests/${UUID}|speaking/tests/${UUID}/answers|speaking/tests/${UUID}/finish|speaking/answers/${UUID}/audio|speaking/mic-check|` +
     `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
     `review/batches/${UUID}/items/${UUID}:[0-9]{1,3}|review/batches/${UUID}/items/${UUID}:[0-9]{1,3}/audio)$`,
 );
@@ -51,6 +51,9 @@ const forwardedParams = [
   "q",
 ];
 const learnerCookie = "nodetrail_learner";
+// An invited tester's session (specs/speaking/step-5.5.md): kept in an HttpOnly cookie, sent to the API
+// in a header on Speaking and tester paths only; the browser's own scripts never read it.
+const testerCookie = "nodetrail_tester";
 const sessionToken = /^[A-Za-z0-9_-]{43}$/;
 const reviewerToken = /^[A-Za-z0-9_-]{43}$/;
 
@@ -111,6 +114,13 @@ async function proxy(
     const token = request.cookies.get(learnerCookie)?.value;
     if (token && sessionToken.test(token))
       headers.set("Cookie", `${learnerCookie}=${token}`);
+    const tester = request.cookies.get(testerCookie)?.value;
+    if (
+      tester &&
+      sessionToken.test(tester) &&
+      (path.startsWith("speaking/") || path.startsWith("testers/"))
+    )
+      headers.set("X-Tester-Session", tester);
     const contentType = request.headers.get("content-type");
     if (contentType) headers.set("content-type", contentType);
     if (
@@ -188,6 +198,24 @@ async function proxy(
           "Set-Cookie",
           `${learnerCookie}=${issued}; Path=/; Max-Age=2592000; HttpOnly; SameSite=Lax${request.nextUrl.protocol === "https:" ? "; Secure" : ""}`,
         );
+    }
+    // Redeeming an invite: the session goes into a cookie and is taken out of the body.
+    if (path === "testers/redeem" && response.ok && request.method === "POST") {
+      const body = (await response.json()) as { session?: unknown } & Record<
+        string,
+        unknown
+      >;
+      const { session, ...rest } = body;
+      if (typeof session !== "string" || !sessionToken.test(session))
+        return new Response(null, { status: 502 });
+      responseHeaders.set(
+        "Set-Cookie",
+        `${testerCookie}=${session}; Path=/; Max-Age=2592000; HttpOnly; SameSite=Lax${request.nextUrl.protocol === "https:" ? "; Secure" : ""}`,
+      );
+      return new Response(JSON.stringify(rest), {
+        status: response.status,
+        headers: responseHeaders,
+      });
     }
     return new Response(response.status === 204 ? null : response.body, {
       status: response.status,

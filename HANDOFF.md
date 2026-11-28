@@ -4,9 +4,12 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `0ca7ae0` (#163 merged), plus the pronunciation retry cap on `fix/pronunciation-retry-cap`.
+**Last updated:** 28 Nov 2026, `main` at `36faf02` (#165 merged), plus the pronunciation retry cap on `fix/pronunciation-retry-cap`.
 
 ## Just finished
+- **Speaking 5.4b, guided practice** (#163, 28 Nov; `/noi/luyen`, migration `0050`): idea building for Part 2 and 3 before speaking (a shape, three
+  opening questions, authored topic words; never a script), the same question again up to three times with 100%/75%/50% of the time,
+  the numbers side by side; only the first try counts as evidence. A try is a `guided` sitting, so the worker is unchanged.
 - **Speaking 5.3a, grammar and vocabulary checks by code** (#161, 28 Nov; migration `0049`): memorised-phrase and repeated-text check, LanguageTool and
   ERRANT hints each playable at its moment, a possibly-missing -s/-ed ending kept apart, vocabulary numbers; answers under 15 s
   skipped; no model call; never mastery. The model's feedback (5.3b) waits on the owner's consent wording.
@@ -51,10 +54,13 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
-## Built, not yet merged (5.4b, `feat/speaking-guided-pr`)
-- **Speaking 5.4b, guided practice** (`/noi/luyen`, migration `0050`): idea building for Part 2 and 3 before speaking (a shape, three
-  opening questions, authored topic words; never a script), the same question again up to three times with 100%/75%/50% of the time,
-  the numbers side by side; only the first try counts as evidence. A try is a `guided` sitting, so the worker is unchanged.
+## Built, not yet merged (5.5, `feat/speaking-testers`, not pushed)
+- **Speaking 5.5, testers, built and shut** (`specs/speaking/step-5.5.md`, migration `0051`): `python -m app.testers.cli add --label X`
+  then `invite --tester ID` prints a one-time link `/vao/{token}` (7 days; the button on the page spends it, a link preview does
+  not); the tester gets a 30-day HttpOnly session; limits of 3 mock tests and 20 practice tries a Vietnam day; `report` writes
+  `data/private/testers-report.json` (counts, retention with an interval, own numbers only for testers who accepted the optional
+  research notice). **Recording stays owner-only until you set `TESTERS_MAY_RECORD=true`** after the privacy review. The research
+  notice wording is a draft on the join page.
 
 ## In progress
 Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
@@ -69,7 +75,7 @@ the owner's examiner-banded essays.
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: 5.3b once the owner sets the transcript consent wording (`dolater.md`), then 5.5 (accounts and limits for testers). The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
+2. Next build: 5.3b once the owner sets the transcript consent wording (`dolater.md`); 5.5 is built and waits on the privacy review. The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

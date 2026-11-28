@@ -56,6 +56,7 @@ import {
   type ListeningText,
   type ListeningTexts,
 } from "@/lib/listening/practice";
+import { parseJoined, type Joined } from "@/lib/speaking/tester";
 import {
   parsePractice,
   parseStartedTry,
@@ -886,6 +887,13 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     speakingAudioUrl(learnerId: string, answerId: string): string {
       const q = new URLSearchParams({ learner_id: learnerId });
       return `/api/backend/speaking/answers/${encodeURIComponent(answerId)}/audio?${q}`;
+    },
+    /** An invited tester joins (specs/speaking/step-5.5.md); the proxy keeps the session in a cookie. */
+    async redeemInvite(token: string): Promise<Joined> {
+      return parseJoined(await post("testers/redeem", { token }));
+    },
+    async acceptResearchNotice(version: string): Promise<void> {
+      await post("testers/research-consent", { version });
     },
     /** Guided practice (specs/speaking/step-5.4b.md): a try of one question, or a repeat of one. */
     async startSpeakingPractice(

@@ -1,0 +1,5 @@
+# Daily limits for invited testers, per Vietnam day (specs/speaking/step-5.5.md). The owner is unlimited.
+# Assumptions: a full mock is 18 answers of recogniser time on the owner's CPU, so a few a day suit it.
+tester:
+  mock_tests_per_day: 3
+  practice_tries_per_day: 20
