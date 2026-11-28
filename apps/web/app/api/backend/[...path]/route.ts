@@ -19,7 +19,7 @@ const allowedEnglish = new RegExp(
     `reading/own-tests|reading/own-tests/summary|reading/own-tests/${UUID}|reading/own-tests/${UUID}/confirm|reading/own-tests/${UUID}/words|` +
     `listening/texts|listening/texts/${SLUG}|listening/passages|listening/passages/${SLUG}|listening/passages/${SLUG}/audio/[0-9]{1,3}|listening/passages/${SLUG}/submit|listening/items/${SLUG}/audio|listening/items/${SLUG}/answer|` +
     `shadowing/texts|shadowing/texts/${SLUG}|vocab/say|vocab/say/status|vocab/say/focus|` +
-    `speaking/tests|speaking/tests/${UUID}|speaking/tests/${UUID}/answers|speaking/tests/${UUID}/finish|speaking/answers/${UUID}/audio|speaking/mic-check|` +
+    `speaking/practice|speaking/practice/${UUID}|speaking/tests|speaking/tests/${UUID}|speaking/tests/${UUID}/answers|speaking/tests/${UUID}/finish|speaking/answers/${UUID}/audio|speaking/mic-check|` +
     `review/me|review/batches/${UUID}/next|review/batches/${UUID}/items/${SLUG}|` +
     `review/batches/${UUID}/items/${UUID}:[0-9]{1,3}|review/batches/${UUID}/items/${UUID}:[0-9]{1,3}/audio)$`,
 );

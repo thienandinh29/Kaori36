@@ -21,6 +21,7 @@ const LINKS = [
   { href: "/doc", label: t.nav.reading },
   { href: "/nghe", label: t.nav.listening },
   { href: "/noi-duoi", label: t.nav.shadowing },
+  { href: "/noi/luyen", label: t.nav.speakingPractice },
   { href: "/noi/thi", label: t.nav.speakingTest },
   { href: "/phat-am", label: t.nav.pronunciation },
   { href: "/kiem-tra", label: t.nav.levelTest },

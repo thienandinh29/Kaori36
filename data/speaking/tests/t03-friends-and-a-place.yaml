@@ -30,8 +30,11 @@ part2:
     - what you do there
   explain: and explain why you like this place.
   closing: Do your friends know about this place?
+  # topic words from the word list for the idea-building screen (guided mode, step 5.4b)
+  words: [quiet, relax, noise, nature, calm, garden, stress, silence]
 part3:
   theme: cities and quiet places
+  words: [urban, noise, stress, pollution, crowded, park, busy, public]
   questions:
     - Why do people in cities often look for quiet places?
     - Are parks and green spaces important for a city? Why?

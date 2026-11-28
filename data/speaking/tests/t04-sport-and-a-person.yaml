@@ -30,8 +30,11 @@ part2:
     - how they helped you
   explain: and explain how you felt about their help.
   closing: Are you still in contact with this person?
+  # topic words from the word list for the idea-building screen (guided mode, step 5.4b)
+  words: [support, advice, grateful, difficult, encourage, trust, appreciate]
 part3:
   theme: helping others
+  words: [volunteer, community, charity, support, elderly, government, responsibility, society]
   questions:
     - Why do some people enjoy helping others?
     - Do people help their neighbours less than in the past?
