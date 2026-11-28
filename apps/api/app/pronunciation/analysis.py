@@ -30,6 +30,9 @@ from app.pronunciation.marks import Applied, observations
 Score = Callable[[bytes, list[str]], dict[str, Any]]
 
 
+MAX_ATTEMPTS = 3
+
+
 class ServiceUnavailable(Exception):
     """The pronunciation service could not be reached (starting, down, overloaded): try later."""
 
@@ -39,6 +42,15 @@ def transient(exc: BaseException) -> bool:
     if isinstance(exc, urllib.error.HTTPError):
         return exc.code >= 500 or exc.code == 429
     return isinstance(exc, urllib.error.URLError | TimeoutError | ConnectionError)
+
+
+def counts_against_recording(exc: BaseException) -> bool:
+    """A transient failure that may be this recording's doing: the service answered 5xx or 429, or
+    accepted the audio and then hung past the timeout. A service that is not there (still loading
+    its weights, down, a refused connection) says nothing about the recording and is not counted."""
+    if isinstance(exc, urllib.error.HTTPError):
+        return True  # transient() has already limited this to 5xx and 429
+    return isinstance(exc, TimeoutError)
 
 
 # Reading a sentence aloud is a little practice; small until fitted from data (engine/bkt_fit.py).
@@ -170,24 +182,43 @@ def process_next(
 ) -> bool:
     """Analyse one stored recording; False when none waits.
 
-    Raises ServiceUnavailable, changing nothing, when the service cannot be reached: a recording is
-    marked failed (and, unless kept, its audio cleared) only for a failure of the recording itself.
+    Raises ServiceUnavailable when the service cannot be used. If the service was reachable but
+    failed (5xx, 429, a hang), the failure is counted and the recording stays queued (behind those
+    not yet tried) until the third, which marks it failed; if it was not reachable (starting up,
+    down), nothing is counted and nothing changes.
+    A recording is marked failed at once (and, unless kept, its audio cleared) for a failure of the
+    recording itself.
     """
     row = conn.execute(
-        "select id,prompt_id,audio,keep,learner_id from speech_recordings where status='stored' "
-        "order by created_at limit 1 for update skip locked"
+        "select id,prompt_id,audio,keep,learner_id,attempts from speech_recordings "
+        "where status='stored' order by attempts, created_at limit 1 for update skip locked"
     ).fetchone()
     if row is None:
         return False
-    rid, prompt_id, audio, keep, learner = row
+    rid, prompt_id, audio, keep, learner, attempts = row
     now = now or datetime.now(UTC)
     try:
         words = canonical[prompt_id]
         result = summarise(words, prompt_sounds[prompt_id], score(bytes(audio), flat(words)))
     except Exception as exc:  # recorded, never retried in a loop
         if transient(exc):
-            conn.rollback()  # releases the row lock; the recording stays 'stored'
-            raise ServiceUnavailable(f"{type(exc).__name__}: {exc}") from exc
+            reason = f"{type(exc).__name__}: {exc}"[:200]
+            if not counts_against_recording(exc):
+                conn.rollback()  # the service is away, not this recording: it stays queued
+                raise ServiceUnavailable(reason) from exc
+            if attempts + 1 >= MAX_ATTEMPTS:
+                conn.execute(
+                    "update speech_recordings set status='failed', failure=%s, attempts=attempts+1,"
+                    " analysed_at=%s" + ("" if keep else ", audio=''::bytea") + " where id=%s",
+                    (f"service unavailable after {MAX_ATTEMPTS} tries: {reason}", now, rid),
+                )
+            else:
+                conn.execute(
+                    "update speech_recordings set attempts=attempts+1, failure=%s where id=%s",
+                    (reason, rid),
+                )
+            conn.commit()  # releases the row lock; below the cap the recording stays 'stored'
+            raise ServiceUnavailable(reason) from exc
         conn.execute(
             "update speech_recordings set status='failed', failure=%s, analysed_at=%s"
             + ("" if keep else ", audio=''::bytea")
