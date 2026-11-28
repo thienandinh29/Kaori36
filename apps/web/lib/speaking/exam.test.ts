@@ -156,7 +156,25 @@ describe("decoders", () => {
     const o = parseOverview({
       can_record: true,
       consent: "voice-v1",
-      tests: [{ id: "t01", title: "Home", draft: true, questions: 18 }],
+      tests: [
+        {
+          id: "t01",
+          title: "Home",
+          draft: true,
+          questions: 18,
+          practice: [{ id: "p3-1", part: 3, text: "Why?", seconds: 60 }],
+        },
+      ],
+      practices: [
+        {
+          id: "g1",
+          title: "Home",
+          question: "Why?",
+          started_at: "2026-11-28T09:00:00+00:00",
+          tries: 2,
+        },
+      ],
+      max_tries: 3,
       past: [
         {
           id: "s1",
@@ -171,6 +189,14 @@ describe("decoders", () => {
       ],
     });
     expect(o.past[0]?.finished_at).toBeNull();
+    expect(o.tests[0]?.practice[0]).toEqual({
+      id: "p3-1",
+      part: 3,
+      text: "Why?",
+      seconds: 60,
+    });
+    expect(o.practices[0]?.tries).toBe(2);
+    expect(o.max_tries).toBe(3);
     const r = parseResult({
       id: "s1",
       test_id: "t01",

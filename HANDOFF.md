@@ -4,9 +4,12 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `04a968b` (#160 merged). Speaking 5.3a is open in #161.
+**Last updated:** 28 Nov 2026, `main` at `47b83e0` (#161 merged); Speaking 5.4b in the open pull request from `feat/speaking-guided-pr`.
 
 ## Just finished
+- **Speaking 5.3a, grammar and vocabulary checks by code** (#161, 28 Nov; migration `0049`): memorised-phrase and repeated-text check, LanguageTool and
+  ERRANT hints each playable at its moment, a possibly-missing -s/-ed ending kept apart, vocabulary numbers; answers under 15 s
+  skipped; no model call; never mastery. The model's feedback (5.3b) waits on the owner's consent wording.
 - **Speaking 5.2, fluency numbers** (#160, 28 Nov; migration `0048`): speech rate, pauses found in the raw audio and counted
   between and inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts
   only. The clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
@@ -48,10 +51,10 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
-## Built, not yet merged (#161, `feat/speaking-grammar-pr`)
-- **Speaking 5.3a, grammar and vocabulary checks by code** (migration `0049`): memorised-phrase and repeated-text check, LanguageTool and
-  ERRANT hints each playable at its moment, a possibly-missing -s/-ed ending kept apart, vocabulary numbers; answers under 15 s
-  skipped; no model call; never mastery. The model's feedback (5.3b) waits on the owner's consent wording.
+## Built, not yet merged (5.4b, `feat/speaking-guided-pr`)
+- **Speaking 5.4b, guided practice** (`/noi/luyen`, migration `0050`): idea building for Part 2 and 3 before speaking (a shape, three
+  opening questions, authored topic words; never a script), the same question again up to three times with 100%/75%/50% of the time,
+  the numbers side by side; only the first try counts as evidence. A try is a `guided` sitting, so the worker is unchanged.
 
 ## In progress
 Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
@@ -68,7 +71,7 @@ the owner's examiner-banded essays.
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: 5.3b once the owner sets the transcript consent wording (`dolater.md`), or 5.4 (the mock test flow, guided mode). The owner also judges 20 hints and checks 5.2's pause counts (`dolater.md`).
+2. Next build: 5.3b once the owner sets the transcript consent wording (`dolater.md`), then 5.5 (accounts and limits for testers). The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

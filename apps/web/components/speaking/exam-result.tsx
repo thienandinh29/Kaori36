@@ -129,7 +129,7 @@ function LanguageBlock({
 }
 
 /** One answer: its recording, transcript, numbers and checks, with the audio the hints can play. */
-function AnswerView({ answer, url }: { answer: Answered; url: string }) {
+export function AnswerView({ answer, url }: { answer: Answered; url: string }) {
   const audio = useRef<HTMLAudioElement | null>(null);
   const play = (from: number, to: number) => {
     const el = audio.current;

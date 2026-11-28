@@ -49,8 +49,24 @@ export interface PastSitting {
 export interface Overview {
   can_record: boolean;
   consent: string;
-  tests: { id: string; title: string; draft: boolean; questions: number }[];
+  tests: {
+    id: string;
+    title: string;
+    draft: boolean;
+    questions: number;
+    /** The questions guided practice can take (step 5.4b). */
+    practice: { id: string; part: Part; text: string; seconds: number }[];
+  }[];
   past: PastSitting[];
+  /** Questions practised so far, one row per question (its first try). */
+  practices: {
+    id: string;
+    title: string;
+    question: string;
+    started_at: string;
+    tries: number;
+  }[];
+  max_tries: number;
 }
 export type TranscriptState = "done" | "waiting" | "failed" | "none";
 export interface TimedWord {
@@ -344,8 +360,28 @@ export function parseOverview(value: unknown): Overview {
         title: string(t.title),
         draft: flag(t.draft),
         questions: num(t.questions),
+        practice: list(t.practice).map((y) => {
+          const q = record(y);
+          return {
+            id: string(q.id),
+            part: part(q.part),
+            text: string(q.text),
+            seconds: num(q.seconds),
+          };
+        }),
       };
     }),
+    practices: list(o.practices).map((x) => {
+      const p = record(x);
+      return {
+        id: string(p.id),
+        title: string(p.title),
+        question: string(p.question),
+        started_at: string(p.started_at),
+        tries: num(p.tries),
+      };
+    }),
+    max_tries: num(o.max_tries),
     past: list(o.past).map((x) => {
       const p = record(x);
       return {
@@ -362,6 +398,34 @@ export function parseOverview(value: unknown): Overview {
   };
 }
 
+/** One stored answer with its transcript, numbers and checks (steps 5.1 to 5.3a), strictly. */
+export function parseAnswered(value: unknown): Answered {
+  const a = record(value);
+  const answer: Answered = {
+    id: string(a.id),
+    seconds: num(a.seconds),
+    problems: strings(a.problems),
+    audio: flag(a.audio),
+    delete_after: maybe(a.delete_after),
+    transcript: transcriptState(a.transcript),
+    text: maybe(a.text),
+    measures: parseMeasures(a.measures),
+    language: parseLanguage(a.language),
+    words: list(a.words).map((w) => {
+      const x = record(w);
+      return { word: string(x.word), start: num(x.start), end: num(x.end) };
+    }),
+  };
+  if ((answer.transcript === "done") !== (answer.text !== null))
+    throw new DataError("contract");
+  if (
+    (answer.measures !== null || answer.language !== null) &&
+    answer.transcript !== "done"
+  )
+    throw new DataError("contract");
+  return answer;
+}
+
 export function parseResult(value: unknown): Result {
   const r = record(value);
   return {
@@ -375,36 +439,7 @@ export function parseResult(value: unknown): Result {
     part3_theme: string(r.part3_theme),
     questions: list(r.questions).map((x) => {
       const q = record(x);
-      let answer: Answered | null = null;
-      if (q.answer !== null) {
-        const a = record(q.answer);
-        answer = {
-          id: string(a.id),
-          seconds: num(a.seconds),
-          problems: strings(a.problems),
-          audio: flag(a.audio),
-          delete_after: maybe(a.delete_after),
-          transcript: transcriptState(a.transcript),
-          text: maybe(a.text),
-          measures: parseMeasures(a.measures),
-          language: parseLanguage(a.language),
-          words: list(a.words).map((w) => {
-            const x = record(w);
-            return {
-              word: string(x.word),
-              start: num(x.start),
-              end: num(x.end),
-            };
-          }),
-        };
-        if ((answer.transcript === "done") !== (answer.text !== null))
-          throw new DataError("contract");
-        if (
-          (answer.measures !== null || answer.language !== null) &&
-          answer.transcript !== "done"
-        )
-          throw new DataError("contract");
-      }
+      const answer = q.answer === null ? null : parseAnswered(q.answer);
       return {
         id: string(q.id),
         part: part(q.part),
@@ -486,6 +521,10 @@ export function script(test: ExamTest): Step[] {
   return steps;
 }
 
+/** The version of the Speaking notice the learner accepts. */
+export const CONSENT = "speaking-v1";
+/** The browser key of the Speaking notice the learner accepted (`speaking-v1`). */
+export const CONSENT_KEY = "nodetrail_speaking_consent";
 export const SPEED_KEY = "nodetrail_exam_speed";
 
 /** A speed factor for automated tests only (0 < x ≤ 1); anything else means real time. */

@@ -2672,3 +2672,25 @@ details[data-testid="all-issues"] > summary {
   margin: 4px 0;
   padding-left: 18px;
 }
+.nt-exam-compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.nt-exam-compare th,
+.nt-exam-compare td {
+  padding: 4px 6px;
+  text-align: right;
+  border-bottom: 1px solid var(--nt-line, #e5ded3);
+}
+.nt-exam-compare th:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+.nt-exam-pick {
+  margin: 6px 0;
+}
+.nt-exam-pick summary {
+  cursor: pointer;
+  padding: 6px 0;
+}

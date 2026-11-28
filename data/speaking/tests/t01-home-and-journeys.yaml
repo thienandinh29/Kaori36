@@ -30,8 +30,11 @@ part2:
     - who you were with
   explain: and explain why you remember this journey well.
   closing: Do you often travel in that way?
+  # topic words from the word list for the idea-building screen (guided mode, step 5.4b)
+  words: [journey, destination, delay, explore, souvenir, itinerary, adventure]
 part3:
   theme: travel and transport
+  words: [tourism, traffic, pollution, crowded, destination, transport, environment]
   questions:
     - Why do some people prefer to travel alone?
     - How has the way people travel in your country changed in recent years?

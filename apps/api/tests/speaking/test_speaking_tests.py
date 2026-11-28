@@ -3,6 +3,7 @@
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import pytest
 from fastapi import FastAPI
@@ -148,3 +149,103 @@ def test_without_a_recogniser_no_answer_says_it_waits(setup) -> None:  # type: i
     got = client.get(f"/speaking/tests/{s}", params={"learner_id": owner}).json()
     a = got["questions"][0]["answer"]
     assert a["transcript"] == "none" and a["text"] is None
+
+
+# --- Step 5.4b: guided practice, a try at a time ---
+
+
+def practise(
+    client: TestClient,
+    learner: str,
+    question: str = "p3-1",
+    previous: str | None = None,
+    **extra: object,
+) -> Any:
+    body = {"test_id": "t01", "question_id": question, "consent": CONSENT, "previous_id": previous}
+    return client.post("/speaking/practice", params={"learner_id": learner}, json={**body, **extra})
+
+
+def test_a_question_is_tried_three_times_with_less_time_and_never_a_fourth(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, other, _ = setup
+    assert practise(client, other).status_code == 403
+    first = practise(client, owner, keep=True).json()
+    assert (first["try_no"], first["asked_seconds"], first["keep"]) == (1, 60, True)
+    q = {"learner_id": owner}
+    # a repeat needs the previous try to have an answer
+    assert practise(client, owner, previous=first["id"]).status_code == 409
+    assert answer(client, owner, first["id"], "p3-1", speech_like()).status_code == 200
+    second = practise(client, owner, previous=first["id"]).json()
+    assert (second["try_no"], second["asked_seconds"], second["keep"]) == (2, 45, True)  # keeps
+    assert answer(client, owner, second["id"], "p3-1", speech_like()).status_code == 200
+    third = practise(client, owner, previous=second["id"]).json()  # any try leads to the first
+    assert (third["try_no"], third["asked_seconds"]) == (3, 30)
+    assert answer(client, owner, third["id"], "p3-1", speech_like()).status_code == 200
+    assert practise(client, owner, previous=third["id"]).status_code == 409  # not a fourth
+    view = client.get(f"/speaking/practice/{third['id']}", params=q).json()
+    assert view["id"] == first["id"] and view["next_seconds"] is None and view["max_tries"] == 3
+    assert [(t["try_no"], t["asked_seconds"], t["counts_as_evidence"]) for t in view["tries"]] == [
+        (1, 60, True), (2, 45, False), (3, 30, False)
+    ]  # fmt: skip
+    assert all(t["answer"]["audio"] for t in view["tries"])
+    assert view["question"]["part"] == 3 and view["theme"] == "travel and transport"
+    assert view["cue_card"] is None and "tourism" in view["words"]
+
+
+def test_a_try_takes_only_its_question_within_its_shrunk_time(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, _, _ = setup
+    first = practise(client, owner, "p3-2").json()
+    # another question of the test is refused, and so is audio past the time allowed
+    assert answer(client, owner, first["id"], "p3-1", speech_like()).status_code == 422
+    too_long = wav(tone(66, 8000))  # 60 s allowed + 5 s grace
+    assert answer(client, owner, first["id"], "p3-2", too_long).status_code == 413
+    assert answer(client, owner, first["id"], "p3-2", speech_like()).status_code == 200
+    second = practise(client, owner, "p3-2", previous=first["id"]).json()
+    assert answer(client, owner, second["id"], "p3-2", wav(tone(51, 8000))).status_code == 413
+    assert practise(client, owner, "p3-3", previous=first["id"]).status_code == 422  # same question
+    assert practise(client, owner, "p3-2", previous="not-a-uuid").status_code == 404
+    assert practise(client, owner, "p9-9").status_code == 422  # not a question id at all
+    unknown = {"test_id": "t99", "question_id": "p3-1", "consent": CONSENT}
+    gone = client.post("/speaking/practice", params={"learner_id": owner}, json=unknown)
+    assert gone.status_code == 404
+
+
+def test_part_two_gets_its_cue_card_and_words_and_part_one_none(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, _, _ = setup
+    p2 = practise(client, owner, "p2-long").json()
+    assert p2["asked_seconds"] == 120
+    v2 = client.get(f"/speaking/practice/{p2['id']}", params={"learner_id": owner}).json()
+    assert v2["cue_card"]["task"].startswith("Describe") and "journey" in v2["words"]
+    p1 = practise(client, owner, "p1-1-1").json()
+    v1 = client.get(f"/speaking/practice/{p1['id']}", params={"learner_id": owner}).json()
+    assert v1["words"] == [] and v1["cue_card"] is None and v1["theme"] is None
+
+
+def test_practice_stays_out_of_the_exam_list_and_is_listed_apart_and_deleted_together(
+    setup: Any,
+) -> None:
+    client, owner, other, pool = setup
+    q = {"learner_id": owner}
+    first = practise(client, owner).json()
+    answer(client, owner, first["id"], "p3-1", speech_like())
+    second = practise(client, owner, previous=first["id"]).json()
+    seen = client.get("/speaking/tests", params=q).json()
+    assert first["id"] not in {p["id"] for p in seen["past"]}  # not an exam sitting
+    mine = [p for p in seen["practices"] if p["id"] == first["id"]]
+    assert len(mine) == 1 and mine[0]["tries"] == 2 and "travel" in mine[0]["question"].lower()
+    assert second["id"] not in {p["id"] for p in seen["practices"]}  # only the first try lists
+    t1 = next(t for t in seen["tests"] if t["id"] == "t01")
+    assert {"id": "p3-1", "part": 3, "seconds": 60}.items() <= next(
+        x for x in t1["practice"] if x["id"] == "p3-1"
+    ).items()
+    assert (
+        client.get(f"/speaking/practice/{first['id']}", params={"learner_id": other}).status_code
+        == 403
+    )
+    assert (
+        client.delete(f"/speaking/tests/{first['id']}", params={"learner_id": other}).status_code
+        == 404
+    )
+    assert client.delete(f"/speaking/tests/{first['id']}", params=q).status_code == 204
+    with pool.connection() as conn:  # the repeat went with the first try
+        assert conn.execute("select count(*) from speaking_tests where id in (%s,%s)",
+                            (first["id"], second["id"])).fetchone() == (0,)  # fmt: skip
