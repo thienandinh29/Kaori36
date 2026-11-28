@@ -7,6 +7,7 @@ from typing import Any
 
 import httpx
 import psycopg
+import psycopg.types.json
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -214,3 +215,82 @@ def test_a_deleted_sitting_takes_its_transcripts(setup) -> None:  # type: ignore
         assert conn.execute(
             "select count(*) from speaking_answers where id=%s", (a,)
         ).fetchone() == (0,)
+
+
+# --- Step 5.2: fluency measures made in the same step, while the audio is there ---
+
+
+def timed(words: list[tuple[str, float, float]]) -> dict[str, Any]:
+    return {
+        "model": "m",
+        "revision": "r",
+        "words": [{"word": w, "start": a, "end": b, "probability": 0.9} for w, a, b in words],
+    }
+
+
+# speech_like() is 0.5 s of room, 1.2 s of speech, 0.5 s of room: words sit inside the speech
+SPOKEN = timed([("Um,", 0.55, 0.9), ("I", 0.95, 1.05), ("went", 1.05, 1.4), ("home.", 1.4, 1.65)])
+
+
+@pytest.fixture(scope="module")
+def nlp():  # type: ignore[no-untyped-def]
+    import spacy
+
+    return spacy.load("en_core_web_sm")
+
+
+def test_measures_are_made_with_the_transcript_and_shown_with_a_pooled_summary(  # type: ignore[no-untyped-def]
+    setup, nlp
+) -> None:
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-1-1")
+    answer(client, owner, sitting, "p1-1-2")
+    with pool.connection() as conn:
+        while t.process_next(conn, lambda audio: SPOKEN, lambda: NOW, nlp):
+            pass
+    out = client.get(f"/speaking/tests/{sitting}", params={"learner_id": owner}).json()
+    m = {q["id"]: q["answer"] for q in out["questions"] if q["answer"]}["p1-1-1"]["measures"]
+    assert m["words"] == 4 and m["fillers"]["count"] == 1 and m["short"] is True
+    assert m["speaking_seconds"] == pytest.approx(1.1) and m["asked_seconds"] == 40
+    assert m["share_of_time"] == pytest.approx(0.03, abs=0.01)  # 1.1 s of the 40 s asked
+    assert m["pauses"]["count"] == 0 and m["longest_run"]["words"] == 4
+    assert not {"band", "score", "grade", "level"} & set(m)
+    summary = out["summary"]
+    assert summary["answers"] >= 2 and summary["words"] >= 8 and summary["fillers"] >= 2
+
+
+def test_an_answer_transcribed_before_measures_existed_is_measured_from_its_audio(  # type: ignore[no-untyped-def]
+    setup, nlp
+) -> None:
+    client, owner, pool, sitting = setup
+    a = answer(client, owner, sitting, "p1-2-1")
+    with pool.connection() as conn:
+        conn.execute(
+            "update speaking_answers set transcript=%s,transcript_status='done' where id=%s",
+            (psycopg.types.json.Jsonb(t.stored(SPOKEN)), a),
+        )
+        conn.commit()
+        calls: list[bytes] = []
+
+        def transcribe(audio: bytes) -> dict[str, Any]:
+            calls.append(audio)
+            return SPOKEN
+
+        assert t.process_next(conn, transcribe, lambda: NOW, nlp)
+    assert calls == []  # not transcribed again
+    got = result(client, owner, sitting)["p1-2-1"]
+    assert got["transcript"] == "done" and got["measures"]["words"] == 4
+
+
+def test_a_refused_answer_has_no_measures_and_cleared_audio_is_never_measured(setup) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool, sitting = setup
+    answer(client, owner, sitting, "p1-3-1")
+    drain(pool, lambda audio: (_ for _ in ()).throw(t.Refused("422: bad")))
+    got = result(client, owner, sitting)["p1-3-1"]
+    assert got["transcript"] == "failed" and got["measures"] is None
+    answer(client, owner, sitting, "p1-3-2")
+    with pool.connection() as conn:
+        purge_expired(conn, datetime(2026, 11, 30, tzinfo=UTC))
+        conn.commit()
+    assert drain(pool, lambda audio: SPOKEN) == 0
+    assert result(client, owner, sitting)["p1-3-2"]["measures"] is None

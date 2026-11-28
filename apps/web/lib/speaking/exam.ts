@@ -58,6 +58,38 @@ export interface TimedWord {
   start: number;
   end: number;
 }
+/** Step 5.2: numbers about how an answer was spoken. Never a score or a verdict. */
+export interface Measures {
+  words: number;
+  speaking_seconds: number;
+  short: boolean;
+  speech_rate: number | null;
+  articulation_rate: number | null;
+  pauses: {
+    count: number;
+    per_minute: number | null;
+    between_clauses: number;
+    inside_clause: number;
+    long: number;
+    longest_seconds: number;
+  };
+  fillers: number;
+  longest_run: { words: number; seconds: number };
+  asked_seconds: number | null;
+  share_of_time: number | null;
+}
+export interface Summary {
+  answers: number;
+  words: number;
+  speaking_seconds: number;
+  speech_rate: number | null;
+  pauses_per_minute: number | null;
+  between_clauses: number;
+  inside_clause: number;
+  long: number;
+  fillers: number;
+  longest_run_words: number;
+}
 export interface Answered {
   id: string;
   seconds: number;
@@ -68,6 +100,7 @@ export interface Answered {
   transcript: TranscriptState;
   text: string | null;
   words: TimedWord[];
+  measures: Measures | null;
 }
 export interface Result {
   id: string;
@@ -84,6 +117,7 @@ export interface Result {
     text: string;
     answer: Answered | null;
   }[];
+  summary: Summary | null;
 }
 export interface MicCheck {
   ok: boolean;
@@ -98,6 +132,50 @@ function num(value: unknown): number {
   if (typeof value !== "number" || !Number.isFinite(value) || value < 0)
     throw new DataError("contract");
   return value;
+}
+function maybeNum(value: unknown): number | null {
+  return value === null || value === undefined ? null : num(value);
+}
+function parseMeasures(value: unknown): Measures | null {
+  if (value === null || value === undefined) return null;
+  const m = record(value);
+  const p = record(m.pauses);
+  const run = record(m.longest_run);
+  return {
+    words: num(m.words),
+    speaking_seconds: num(m.speaking_seconds),
+    short: flag(m.short),
+    speech_rate: maybeNum(m.speech_rate),
+    articulation_rate: maybeNum(m.articulation_rate),
+    pauses: {
+      count: num(p.count),
+      per_minute: maybeNum(p.per_minute),
+      between_clauses: num(p.between_clauses),
+      inside_clause: num(p.inside_clause),
+      long: num(p.long),
+      longest_seconds: num(p.longest_seconds),
+    },
+    fillers: num(record(m.fillers).count),
+    longest_run: { words: num(run.words), seconds: num(run.seconds) },
+    asked_seconds: maybeNum(m.asked_seconds),
+    share_of_time: maybeNum(m.share_of_time),
+  };
+}
+function parseSummary(value: unknown): Summary | null {
+  if (value === null || value === undefined) return null;
+  const s = record(value);
+  return {
+    answers: num(s.answers),
+    words: num(s.words),
+    speaking_seconds: num(s.speaking_seconds),
+    speech_rate: maybeNum(s.speech_rate),
+    pauses_per_minute: maybeNum(s.pauses_per_minute),
+    between_clauses: num(s.between_clauses),
+    inside_clause: num(s.inside_clause),
+    long: num(s.long),
+    fillers: num(s.fillers),
+    longest_run_words: num(s.longest_run_words),
+  };
 }
 function flag(value: unknown): boolean {
   if (typeof value !== "boolean") throw new DataError("contract");
@@ -222,6 +300,7 @@ export function parseResult(value: unknown): Result {
           delete_after: maybe(a.delete_after),
           transcript: transcriptState(a.transcript),
           text: maybe(a.text),
+          measures: parseMeasures(a.measures),
           words: list(a.words).map((w) => {
             const x = record(w);
             return {
@@ -233,6 +312,8 @@ export function parseResult(value: unknown): Result {
         };
         if ((answer.transcript === "done") !== (answer.text !== null))
           throw new DataError("contract");
+        if (answer.measures !== null && answer.transcript !== "done")
+          throw new DataError("contract");
       }
       return {
         id: string(q.id),
@@ -241,6 +322,7 @@ export function parseResult(value: unknown): Result {
         answer,
       };
     }),
+    summary: parseSummary(r.summary),
   };
 }
 

@@ -14,6 +14,9 @@ import httpx
 import psycopg
 from psycopg.types.json import Jsonb
 
+from app.speaking.clauses import clause_boundaries
+from app.speaking.measures import FRAME_SECONDS, Word, measure, pauses, speech_frames
+
 Transcribe = Callable[[bytes], dict[str, Any]]
 
 
@@ -69,20 +72,54 @@ def stored(result: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def measures_of(
+    audio: bytes, transcript: dict[str, Any], nlp: Callable[[str], Any] | None = None
+) -> dict[str, Any]:
+    """The answer's fluency measures (step 5.2): pauses from the raw audio, placed on the words'
+    gaps and called between or inside a clause. Without a parser only a leading filler marks a
+    clause end."""
+    words = [Word(w["word"], w["start"], w["end"]) for w in transcript.get("words", [])]
+    frames = speech_frames(audio)
+    boundaries = clause_boundaries([w.text for w in words], nlp or (lambda text: []))
+    return measure(words, pauses(frames), boundaries, len(frames) * FRAME_SECONDS)
+
+
 MAX_ATTEMPTS = 3
+
+
+def _finish(
+    conn: psycopg.Connection[Any],
+    answer: Any,
+    audio: bytes,
+    transcript: dict[str, Any],
+    measures: dict[str, Any] | None,
+    nlp: Callable[[str], Any] | None,
+    now: Callable[[], datetime],
+) -> None:
+    """Measure a transcribed answer while its audio is still there. Written only if it has no
+    measures yet; nothing is held locked."""
+    if measures is None:
+        conn.execute(
+            "update speaking_answers set measures=%s,measured_at=%s where id=%s "
+            "and measures is null",
+            (Jsonb(measures_of(audio, transcript, nlp)), now(), answer),
+        )
+        conn.commit()
 
 
 def process_next(
     conn: psycopg.Connection[Any],
     transcribe: Transcribe,
     now: Callable[[], datetime] = lambda: datetime.now(UTC),
+    nlp: Callable[[str], Any] | None = None,
 ) -> bool:
-    """Transcribe one waiting answer; False when none waits.
+    """Transcribe, and measure, one waiting answer; False when none waits.
 
     The row is read and the transaction closed before the service is called (a transcript can take
     minutes), and the result is written only if the answer is still waiting. One worker transcribes,
     so no row lock is needed. A refusal fails the answer at once; a service failure is counted and,
-    on the third, fails it too. Answers with fewer failures go first.
+    on the third, fails it too. Answers with fewer failures go first. An answer transcribed
+    before measures existed is measured while its audio is still there.
     """
     row = conn.execute(
         "select id,audio,transcript_attempts from speaking_answers "
@@ -91,7 +128,16 @@ def process_next(
     ).fetchone()
     conn.commit()
     if row is None:
-        return False
+        unmeasured = conn.execute(
+            "select id,audio,transcript from speaking_answers where audio is not null "
+            "and transcript_status='done' and measures is null order by recorded_at limit 1"
+        ).fetchone()
+        conn.commit()
+        if unmeasured is None:
+            return False
+        answer, audio, transcript = unmeasured
+        _finish(conn, answer, bytes(audio), transcript, None, nlp, now)
+        return True
     answer, audio, attempts = row
     try:
         result = transcribe(bytes(audio))
@@ -123,10 +169,13 @@ def process_next(
         )
         conn.commit()
         raise
-    conn.execute(
+    transcript = stored(result)
+    done = conn.execute(
         "update speaking_answers set transcript=%s,transcript_status='done',transcribed_at=%s "
         "where id=%s and transcript_status is null",
-        (Jsonb(stored(result)), now(), answer),
+        (Jsonb(transcript), now(), answer),
     )
     conn.commit()
+    if done.rowcount:  # the answer may have been deleted or already finished meanwhile
+        _finish(conn, answer, bytes(audio), transcript, None, nlp, now)
     return True

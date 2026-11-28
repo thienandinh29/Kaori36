@@ -4,9 +4,12 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `e7eb8aa` (#159 merged). Nothing is waiting in an unmerged branch.
+**Last updated:** 28 Nov 2026, `main` at `04a968b` (#160 merged). Nothing is waiting in an unmerged branch.
 
 ## Just finished
+- **Speaking 5.2, fluency numbers** (#160, 28 Nov; migration `0048`): speech rate, pauses found in the raw audio and counted
+  between and inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts
+  only. The clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
 - **Worker fixes** (#159, 28 Nov): an essay left `analysing` by a stopped worker is queued again when the worker starts
   (one worker assumed); failed essays no longer count towards the day's limit; a Speaking answer is tried three times, then
   `failed`, a failing one going behind untried ones, and no row lock is held during the transcript call (migration `0047`);
@@ -60,7 +63,7 @@ the owner's examiner-banded essays.
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: 5.2, fluency measures from the word timings (pauses from the raw audio, between and inside clauses).
+2. Next build: 5.3, grammar and vocabulary checks on the transcript (LanguageTool and ERRANT as hints, never mastery) with feedback whose quotes are checked against it. The owner also checks 5.2's pause counts on five answers (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

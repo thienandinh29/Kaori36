@@ -208,9 +208,12 @@ def transcriber(settings: Any) -> Callable[[], bool] | None:
     (specs/speaking/step-5.1.md); waits 30 s after the service fails to answer."""
     if not settings.asr_url:
         return None
+    import spacy
+
     from app.speaking.transcribe import Unavailable, process_next, service_transcribe
 
     transcribe = service_transcribe(settings.asr_url)
+    nlp = spacy.load("en_core_web_sm")  # clause boundaries for the fluency measures (step 5.2)
     retry_at = 0.0
 
     def run() -> bool:
@@ -219,7 +222,7 @@ def transcriber(settings: Any) -> Callable[[], bool] | None:
             return False
         try:
             with psycopg.connect(settings.database_url) as conn:
-                return process_next(conn, transcribe)
+                return process_next(conn, transcribe, nlp=nlp)
         except Unavailable as exc:
             logger.warning("recognition service unavailable, retrying in 30 s: %s", exc)
             retry_at = time.monotonic() + 30
