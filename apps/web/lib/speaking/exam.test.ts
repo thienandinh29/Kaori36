@@ -224,3 +224,124 @@ describe("decoders", () => {
     ).toThrow(DataError);
   });
 });
+
+describe("measures (step 5.2)", () => {
+  const measures = {
+    words: 40,
+    speaking_seconds: 20.5,
+    short: false,
+    speech_rate: 117.1,
+    articulation_rate: 130.2,
+    pauses: {
+      count: 4,
+      per_minute: 11.7,
+      between_clauses: 3,
+      inside_clause: 1,
+      long: 0,
+      longest_seconds: 1.2,
+      total_seconds: 3.0,
+      unplaced: 0,
+    },
+    fillers: { count: 2 },
+    longest_run: { words: 12, seconds: 5.1 },
+    asked_seconds: 40,
+    share_of_time: 0.51,
+  };
+  const base = {
+    id: "s1",
+    test_id: "t01",
+    title: "Home",
+    keep: false,
+    started_at: "2026-11-28T09:00:00+00:00",
+    finished_at: "2026-11-28T09:14:00+00:00",
+    cue_card: {
+      task: "Describe a journey.",
+      points: ["a", "b", "c"],
+      explain: "and why.",
+    },
+    part3_theme: "travel",
+  };
+  const answer = (over: Record<string, unknown>) => ({
+    ...base,
+    questions: [
+      {
+        id: "p1-1-1",
+        part: 1,
+        text: "Q?",
+        answer: {
+          id: "a1",
+          seconds: 20,
+          problems: [],
+          audio: true,
+          delete_after: null,
+          transcript: "done",
+          text: "Um, I went home.",
+          words: [],
+          measures,
+          ...over,
+        },
+      },
+    ],
+    summary: null,
+  });
+
+  it("reads the numbers and the pooled summary", () => {
+    const r = parseResult({
+      ...answer({}),
+      summary: {
+        answers: 1,
+        words: 40,
+        speaking_seconds: 20.5,
+        speech_rate: 117.1,
+        pauses_per_minute: 11.7,
+        between_clauses: 3,
+        inside_clause: 1,
+        long: 0,
+        fillers: 2,
+        longest_run_words: 12,
+      },
+    });
+    const m = r.questions[0]!.answer!.measures!;
+    expect(m.pauses.between_clauses).toBe(3);
+    expect(m.fillers).toBe(2);
+    expect(m.longest_run).toEqual({ words: 12, seconds: 5.1 });
+    expect(r.summary?.longest_run_words).toBe(12);
+    expect("band" in m || "score" in m).toBe(false);
+  });
+
+  it("accepts an answer without measures and refuses measures without a transcript", () => {
+    expect(
+      parseResult(answer({ measures: null })).questions[0]!.answer!.measures,
+    ).toBeNull();
+    expect(
+      parseResult({ ...answer({ measures: undefined }) }).questions[0]!.answer!
+        .measures,
+    ).toBeNull();
+    expect(() =>
+      parseResult(answer({ transcript: "waiting", text: null })),
+    ).toThrow(DataError);
+  });
+
+  it("refuses a malformed number", () => {
+    expect(() =>
+      parseResult(answer({ measures: { ...measures, speech_rate: "fast" } })),
+    ).toThrow(DataError);
+    expect(() =>
+      parseResult(answer({ measures: { ...measures, fillers: 2 } })),
+    ).toThrow(DataError);
+  });
+
+  it("keeps a null rate for an answer with no words", () => {
+    const empty = {
+      ...measures,
+      words: 0,
+      speech_rate: null,
+      articulation_rate: null,
+      short: true,
+    };
+    expect(
+      parseResult(answer({ measures: empty })).questions[0]!.answer!.measures!
+        .speech_rate,
+    ).toBeNull();
+  });
+});

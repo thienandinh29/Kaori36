@@ -14,6 +14,9 @@ import httpx
 import psycopg
 from psycopg.types.json import Jsonb
 
+from app.speaking.clauses import clause_boundaries
+from app.speaking.measures import FRAME_SECONDS, Word, measure, pauses, speech_frames
+
 Transcribe = Callable[[bytes], dict[str, Any]]
 
 
@@ -69,37 +72,57 @@ def stored(result: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def measures_of(
+    audio: bytes, transcript: dict[str, Any], nlp: Callable[[str], Any] | None = None
+) -> dict[str, Any]:
+    """The answer's fluency measures (step 5.2): pauses from the raw audio, placed on the words'
+    gaps and called between or inside a clause. Without a parser only punctuation marks a clause."""
+    words = [Word(w["word"], w["start"], w["end"]) for w in transcript.get("words", [])]
+    frames = speech_frames(audio)
+    boundaries = clause_boundaries([w.text for w in words], nlp or (lambda text: []))
+    return measure(words, pauses(frames), boundaries, len(frames) * FRAME_SECONDS)
+
+
 def process_next(
     conn: psycopg.Connection[Any],
     transcribe: Transcribe,
     now: Callable[[], datetime] = lambda: datetime.now(UTC),
+    nlp: Callable[[str], Any] | None = None,
 ) -> bool:
-    """Transcribe one waiting answer; False when none waits."""
+    """Transcribe, and measure, one waiting answer; False when none waits. An answer transcribed
+    before measures existed is measured while its audio is still there."""
     row = conn.execute(
-        "select id,audio from speaking_answers where transcript_status is null "
-        "and audio is not null order by recorded_at limit 1 for update skip locked"
+        "select id,audio,transcript,transcript_status from speaking_answers where audio is not null"
+        " and (transcript_status is null or (transcript_status='done' and measures is null)) "
+        "order by recorded_at limit 1 for update skip locked"
     ).fetchone()
     if row is None:
         conn.commit()
         return False
-    answer, audio = row
-    try:
-        result = transcribe(bytes(audio))
-    except Refused as exc:
+    answer, audio, transcript, status = row
+    if status is None:
+        try:
+            result = transcribe(bytes(audio))
+        except Refused as exc:
+            conn.execute(
+                "update speaking_answers set transcript=%s,transcript_status='failed',"
+                "transcribed_at=%s where id=%s",
+                (Jsonb({"error": str(exc)}), now(), answer),
+            )
+            conn.commit()
+            return True
+        except Unavailable:
+            conn.rollback()
+            raise
+        transcript = stored(result)
         conn.execute(
-            "update speaking_answers set transcript=%s,transcript_status='failed',transcribed_at=%s"
-            " where id=%s",
-            (Jsonb({"error": str(exc)}), now(), answer),
+            "update speaking_answers set transcript=%s,transcript_status='done',transcribed_at=%s "
+            "where id=%s",
+            (Jsonb(transcript), now(), answer),
         )
-        conn.commit()
-        return True
-    except Unavailable:
-        conn.rollback()
-        raise
     conn.execute(
-        "update speaking_answers set transcript=%s,transcript_status='done',transcribed_at=%s "
-        "where id=%s",
-        (Jsonb(stored(result)), now(), answer),
+        "update speaking_answers set measures=%s,measured_at=%s where id=%s",
+        (Jsonb(measures_of(bytes(audio), transcript, nlp)), now(), answer),
     )
     conn.commit()
     return True

@@ -22,6 +22,7 @@ from psycopg_pool import ConnectionPool
 from app.pronunciation.quality import check
 from app.services.backend import learner_uuid
 from app.services.recordings import RETENTION
+from app.speaking.measures import pooled
 from app.speaking.tests import (
     CLOSING_SECONDS,
     LONG_TURN_SECONDS,
@@ -62,7 +63,12 @@ def purge_expired(conn: psycopg.Connection[Any], now: datetime | None = None) ->
 
 
 def _transcript(
-    status: str | None, data: dict[str, Any] | None, audio: bool, enabled: bool
+    status: str | None,
+    data: dict[str, Any] | None,
+    audio: bool,
+    enabled: bool,
+    measures: dict[str, Any] | None = None,
+    asked: int | None = None,
 ) -> dict[str, Any]:
     """The answer's transcript for the page (step 5.1): done, failed, waiting (only when a
     recogniser is configured and the audio is still there), or none."""
@@ -74,10 +80,25 @@ def _transcript(
                 {"word": w["word"], "start": w["start"], "end": w["end"]}
                 for w in data.get("words", [])
             ],
+            "measures": _with_share(measures, asked),
         }
     if status == "failed":
-        return {"transcript": "failed", "text": None, "words": []}
-    return {"transcript": "waiting" if audio and enabled else "none", "text": None, "words": []}
+        return {"transcript": "failed", "text": None, "words": [], "measures": None}
+    waiting = "waiting" if audio and enabled else "none"
+    return {"transcript": waiting, "text": None, "words": [], "measures": None}
+
+
+def _with_share(measures: dict[str, Any] | None, asked: int | None) -> dict[str, Any] | None:
+    """The stored measures with the time asked and the share of it spoken (known from the question,
+    not from the audio)."""
+    if measures is None:
+        return None
+    out = dict(measures)
+    out["asked_seconds"] = asked
+    out["share_of_time"] = (
+        round(min(measures["speaking_seconds"] / asked, 9.99), 2) if asked else None
+    )
+    return out
 
 
 class SpeakingTests:
@@ -280,13 +301,13 @@ class SpeakingTests:
             ).fetchone()
             rows = conn.execute(
                 "select question_id,id,question,seconds,quality,audio is not null,delete_after,"
-                "transcript_status,transcript from speaking_answers where sitting_id=%s",
+                "transcript_status,transcript,measures from speaking_answers where sitting_id=%s",
                 (sitting,),
             ).fetchall()
         assert started is not None
         answers = {r[0]: r for r in rows}
         content = self._content(loaded)
-        items = []
+        items: list[dict[str, Any]] = []
         for q in questions(loaded.test):
             r = answers.get(q.id)
             items.append(
@@ -303,7 +324,7 @@ class SpeakingTests:
                         "problems": list(r[4].get("problems", [])),
                         "audio": bool(r[5]),
                         "delete_after": r[6].isoformat() if r[6] else None,
-                        **_transcript(r[7], r[8], bool(r[5]), self.transcripts),
+                        **_transcript(r[7], r[8], bool(r[5]), self.transcripts, r[9], q.seconds),
                     },
                 }
             )
@@ -317,6 +338,13 @@ class SpeakingTests:
             "cue_card": content["cue_card"],
             "part3_theme": content["part3_theme"],
             "questions": items,
+            "summary": pooled(
+                [
+                    i["answer"]["measures"]
+                    for i in items
+                    if i["answer"] and i["answer"].get("measures")
+                ]
+            ),
         }
 
     def audio(self, learner_id: str, answer_id: str) -> bytes:

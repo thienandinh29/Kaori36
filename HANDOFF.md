@@ -4,7 +4,7 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 27 Nov 2026, `main` at `cca973b` (#154 merged), plus T6 and Speaking 5.1 on `feat/speaking-transcripts`.
+**Last updated:** 28 Nov 2026, `main` at `c5f518a` (#156 merged), plus Speaking 5.2 on `feat/speaking-fluency`.
 
 ## Just finished
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
@@ -37,9 +37,14 @@ wins; fix this page.
   recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
   test at real speed is not done.
 
-## Built, not yet merged (`feat/speaking-transcripts`)
+## Just finished, merged in #156
 - **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
   Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
+
+## Built, not yet merged (`feat/speaking-fluency`)
+- **Speaking 5.2, fluency numbers** (migration `0047`): speech rate, pauses found in the raw audio and counted between and
+  inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts only. The
+  clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
 
 ## In progress
 Writing step 2.12 part 1 (descriptor caps and features, `specs/writing/step-2.12.md`, "Build note, part 1") in pull
@@ -50,7 +55,7 @@ measurement waits on the owner's examiner-banded essays. The Reading diagnosis d
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: 5.2, fluency measures from the word timings (pauses from the raw audio, between and inside clauses).
+2. Next build: 5.3, grammar and vocabulary checks on the transcript (LanguageTool and ERRANT as hints, never mastery) with feedback whose quotes are checked against it. The owner also checks 5.2's pause counts on five answers (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam
