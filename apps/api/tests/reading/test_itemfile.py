@@ -7,8 +7,9 @@ from typing import Any
 
 import psycopg
 import yaml  # type: ignore[import-untyped]
+from psycopg.types.json import Jsonb
 
-from app.reading.itemfile import export, import_
+from app.reading.itemfile import STALE, drop_stale, export, import_
 from app.reading.pipeline import generate_text
 from app.validation.cli import backfill
 
@@ -183,3 +184,63 @@ def test_a_newer_check_of_a_decided_row_comes_in_without_touching_the_decision(
         )
         assert import_(conn, main, {"bees": PASSAGE})["updated"] == 0
         conn.rollback()
+
+
+def _count(conn: psycopg.Connection[Any], sql: str, *params: object) -> int:
+    row = conn.execute(sql, params).fetchone()
+    assert row is not None
+    return int(row[0])
+
+
+def test_a_stale_unchecked_row_is_dropped_carried_by_import_and_never_labelled(
+    database_url: str, tmp_path: Path
+) -> None:
+    stale = Jsonb([STALE])
+    with psycopg.connect(database_url) as conn:
+
+        async def gen(system: str, text: str):  # type: ignore[no-untyped-def]
+            return generated()
+
+        asyncio.run(generate_text(conn, "bees", PASSAGE, gen, NOW))
+        conn.execute(
+            "update reading_items set status='verified', checker_answer='TRUE', "
+            "checker_model='baidu/ernie', checked_at=%s where id='bees-tfng-1'",
+            (NOW,),
+        )
+        conn.commit()
+        unchecked = _count(
+            conn, "select count(*) from reading_items where text_slug='bees' and status='generated'"
+        )
+        assert unchecked >= 1
+        # The text is unchanged, or gone from the bank: nothing is dropped.
+        assert drop_stale(conn, {"bees": PASSAGE}) == 0
+        assert drop_stale(conn, {}) == 0
+        # Before the drop, another copy of the database (the owner's laptop) has these files.
+        export(conn, {"bees": ("openstax-reading", PASSAGE)}, tmp_path / "before")
+        # The passage is replaced: only the unchecked rows are dropped; the check is kept.
+        edited = PASSAGE + "\n\nEdited."
+        assert drop_stale(conn, {"bees": edited}) == unchecked
+        status = _count(
+            conn, "select count(*) from reading_items where id='bees-tfng-1' and status='verified'"
+        )
+        assert status == 1
+        sql = "select count(*) from reading_items where text_slug='bees' and problems=%s"
+        assert _count(conn, sql + " and status='dropped'", stale) == unchecked
+        # The backfill gives the stale drops no code-check label.
+        backfill(conn)
+        labelled = (
+            "select count(*) from labels where content_type='reading_item' and content_id in "
+            "(select id from reading_items where problems=%s)"
+        )
+        assert _count(conn, labelled, stale) == 0
+        # The laptop: its rows are still unchecked; importing the new files carries the drop.
+        export(conn, {"bees": ("openstax-reading", PASSAGE)}, tmp_path / "after")
+        conn.execute("delete from labels where content_type='reading_item'")
+        conn.execute("delete from reading_items where text_slug='bees'")
+        import_(conn, tmp_path / "before", {"bees": PASSAGE})
+        assert _count(conn, sql, stale) == 0
+        counts = import_(conn, tmp_path / "after", {"bees": edited})
+        assert counts["updated"] == unchecked
+        assert _count(conn, sql + " and status='dropped'", stale) == unchecked
+        conn.execute("delete from reading_items where text_slug='bees'")
+        conn.commit()

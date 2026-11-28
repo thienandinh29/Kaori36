@@ -14,6 +14,7 @@ from datetime import UTC, datetime
 
 import psycopg
 
+from app.reading.itemfile import STALE
 from app.services.backend import learner_uuid
 from app.services.reading_review import load_passages
 from app.services.review_portal import (
@@ -52,10 +53,12 @@ def backfill(conn: psycopg.Connection) -> dict[str, int]:
         )
         counts["speech_target"] += 1
     rows = conn.execute(
-        "select id,status,review_was,checker_model,checked_at,reviewed_at,review_note "
+        "select id,status,review_was,checker_model,checked_at,reviewed_at,review_note,problems "
         "from reading_items where status <> 'generated'"
     ).fetchall()
-    for item_id, status, was, model, checked_at, reviewed_at, note in rows:
+    for item_id, status, was, model, checked_at, reviewed_at, note, problems in rows:
+        if status == "dropped" and problems == [STALE]:
+            continue  # never checked and not found faulty: its passage was replaced
         base = {"content_type": "reading_item", "content_id": item_id, "aspect": "item_ok"}
         add_label(
             conn,

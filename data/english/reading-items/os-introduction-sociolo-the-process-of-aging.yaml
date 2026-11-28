@@ -375,7 +375,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-headings-1
     kind: headings
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-headings-1
       key:
@@ -404,7 +404,8 @@ versions:
       - Cultural attitudes toward aging
       - The role of medical technology in aging
       - How to study sexuality in older adults
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -415,7 +416,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-mcq-1
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-mcq-1
       key: 0
@@ -434,7 +435,8 @@ versions:
       - As human beings grow older, they go through different phases or stages of life.
       - Each phase comes with different responsibilities and expectations, which of course vary by individual and
         culture.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -445,7 +447,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-mcq-2
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-mcq-2
       key: 1
@@ -462,7 +464,8 @@ versions:
       - Encourage them to live with family.
       evidence:
       - He wanted to treat the aging, especially those who were poor and had no one to care for them.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -473,7 +476,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-mcq-3
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-mcq-3
       key: 1
@@ -491,7 +494,8 @@ versions:
       evidence:
       - Many of the elderly poor were sent to live in “almshouses,” or public old-age homes.
       - Conditions were often terrible in these almshouses, where the aging were often sent and just forgotten.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -502,7 +506,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-1
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-tfng-1
       key: 'true'
@@ -514,7 +518,8 @@ versions:
       evidence:
       - At birth, newborns are dependent on caregivers for everything.
       statement: Newborns rely on caregivers for all their needs.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -525,7 +530,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-2
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-tfng-2
       key: 'false'
@@ -538,7 +543,8 @@ versions:
       - Nascher saw the practice of caring for the elderly as separate from the practice of caring for the young,
         just as pediatrics (caring for children) is different from caring for grown adults.
       statement: Nascher believed that caring for the elderly should be part of pediatrics.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -549,7 +555,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-3
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-tfng-3
       key: 'false'
@@ -562,7 +568,8 @@ versions:
       - For example, while many children look forward to gaining independence, Packer and Chasteen (2006) suggest
         that even in children, age prejudice leads to a negative view of aging.
       statement: Age prejudice is only found in adults, not in children.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -573,7 +580,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-4
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-tfng-4
       key: 'true'
@@ -585,7 +592,8 @@ versions:
       evidence:
       - 'In 1914, he published his views in his book Geriatrics: The Diseases of Old Age and Their Treatment.'
       statement: Nascher published his book on geriatrics in 1914.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -596,7 +604,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-the-process-of-aging-tfng-5
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-the-process-of-aging-tfng-5
       key: not_given
@@ -607,7 +615,8 @@ versions:
       status: draft
       evidence: []
       statement: Nascher lived to see geriatrics become a highly respected field.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'

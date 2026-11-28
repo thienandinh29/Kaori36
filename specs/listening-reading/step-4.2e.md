@@ -35,7 +35,9 @@ rest are checked over the next days and the item files updated.
 - [x] T2 Long passages, chapter skip, citations; the scaled prompt; blanks; drafts of drops kept.
 - [x] T3 The simulation; the speed fixes it found; the missing Bronze test.
 - [x] T4 Fetch and generate the 20 texts.
-- [ ] T5 Blind-check the rest in daily batches; export after each.
+- [x] T5 Blind-check the rest in daily batches; export after each. Done 28 Nov 2026 (daily task 19–28 Nov, turned off):
+  267 verified, 14 needs_review, 2 approved, 6 rejected; the 76 unchecked questions of replaced passages dropped as
+  stale (Fix below); 1 headings question left unchecked (the free checker never answered it, 3 days running).
 
 ## Cleaned passages (20 Nov 2026, found in the owner's review)
 The owner rejected a headings question because two OpenStax "Link to Learning" captions ("PBS provides an
@@ -64,3 +66,14 @@ When the free checker gave no usable reply (quota, provider error, unreadable ou
 questions as already for re-checks: the question stays unchecked and is tried again on the next run, counted as `no_reply`.
 Tests: `test_no_usable_reply_leaves_a_new_question_unchecked`; the bank simulation's unusable replies stay unchecked and
 never reach the owner's queue.
+
+## Fix (28 Nov 2026): unchecked questions of a replaced passage
+The daily batch counted every `generated` question as "remaining", but 76 of them belonged to passage versions replaced when
+the texts were cleaned (20 Nov). The checker reads only the current text, so they could never be checked, the count never
+reached zero, and the batches reported 93 and then 77 "remaining" when one was checkable. Owner's decision (28 Nov): drop them.
+`python -m app.reading.itemfile drop-stale` drops each unchecked question whose passage is no longer the bank's text, with the
+problem "passage replaced; questions were generated again for the current text"; a text no longer in the bank at all is left
+alone. Import now carries such a drop to a copy where the question is still unchecked (the owner's laptop), and the label
+backfill gives these questions no code-check label (they were never found faulty). Checked questions of old versions keep their
+status. Test: `test_a_stale_unchecked_row_is_dropped_carried_by_import_and_never_labelled`. Run on the bank: 76 dropped,
+code-check labels unchanged at 325.

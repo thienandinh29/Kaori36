@@ -23,8 +23,8 @@ not loaded: read it when you need a path, and update it when you add one. This f
 - Wikimedia refuses the sandbox (HTTP 429): Simple English Wikipedia is fetched on the owner's laptop.
 - When the owner says "merge it when CI is green": push, open the pull request, schedule one check about 8–10 minutes later,
   and squash-merge with the full head SHA as the expected SHA once all 18 checks pass (16 before the `asr` job, step 5.1). Do not poll in a loop.
-- A daily scheduled task runs the Reading blind checks (up to 45 questions, US$0.10 cap), exports the item files and merges
-  them through a pull request. It never touches the owner's review decisions.
+- The daily Reading blind-check task (19–28 Nov 2026) is turned off: the bank is checked (`step-4.2e.md`, T5). New questions
+  are checked with `python -m app.reading.pipeline --no-generate --max-checks 45 --max-cost 0.10` when needed.
 
 ## Writing for the owner
 Reply in the owner's language with the reasoning behind each decision. Lead with the outcome, then what to do next. Name

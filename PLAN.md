@@ -62,7 +62,7 @@ target is recorded with the number and the reason, never hidden.
 | CP | Work | Status |
 |---|---|---|
 | CP1 | Texts: 30 OpenStax texts (B2–C1, licence read by the owner); Simple English Wikipedia (A2–B1) must be fetched on the owner's laptop | partly done (OpenStax done) |
-| CP2a | Generation (DeepSeek) and blind check (free Ernie), every call logged with a cost cap; a daily batch checks up to 45 questions | built, running daily |
+| CP2a | Generation (DeepSeek) and blind check (free Ernie), every call logged with a cost cap; a daily batch checked up to 45 questions (19–28 Nov) | done: 267 verified, 14 needs_review; 76 stale unchecked dropped; daily task off |
 | CP2b | Planted-error test of the checker on Reading items (50 faulty + 50 good) | next (needs the bank; "two defensible answers" faults need a teacher) |
 | CP3 | Owner's review queue (`/duyet-doc`, by passage, keyboard) and the agreement report | built; the owner's review of 52 questions pending |
 | CP4 | Reading practice and timed tests (`/doc`), Silver questions only | built |
@@ -91,7 +91,7 @@ target is recorded with the number and the reason, never hidden.
    structure checks are built (2.11b); then the blind check of claims (planted test first), "Sửa trước" to 3 items. Writing's main measure is
    errors per opportunity next to sentence complexity, not a band. A band closer to the examiner's (step 2.12: descriptor caps,
    a model per criterion) is specified; it is measured only on examiner-banded essays.
-5. **Ongoing:** the daily Reading blind-check batch; fixes from the owner's use.
+5. **Ongoing:** fixes from the owner's use (the daily Reading blind-check batch ended 28 Nov).
 
 ## Research tracks (`research/`)
 | Id | Question | Status |
@@ -146,6 +146,7 @@ report against a teacher (phase 4); fluency measures and the tester report (phas
 ## Log
 | Date | Change |
 |---|---|
+| 2026-11-28 | Reading blind checks done (CP2a, `step-4.2e.md` T5), owner's decision: the daily task is off; 267 verified, 14 needs_review, 2 approved, 6 rejected. The 76 unchecked questions of passages replaced on 20 Nov (never checkable) dropped as stale by the new `itemfile drop-stale`; import carries the drop and the label backfill skips them. 1 headings question stays unchecked (the free checker never answered) |
 | 2026-11-27 | Writing 2.12 part 1 built: the official Task 2 band descriptors read (ielts.org PDF, May 2023; the owner's environment now allows ielts.org); four caps in `data/writing/caps.yaml` with their quoted lines (no paragraphing → CC ≤ 5 by code; part missing → TR ≤ 5, no position → TR ≤ 4, position flips → TR ≤ 6 from 2.11b, notes only); the proposed two-paragraph cap dropped (no descriptor line supports it). Descriptor features per criterion in `descriptor_features.py`. Nothing applied or wired in; nothing a learner sees changes |
 | 2026-11-27 | Speaking 5.1 built, owner's decision Whisper small.en: the recognition service `asr/` (faster-whisper int8, the verbatim prompt, no previous-window conditioning, voice activity detection, words under 50 ms dropped; weights pinned by revision and SHA-256; compose profile `asr`; a ninth CI job, so 18 checks), the worker transcribes each examiner-test answer, the result page shows it labelled "Máy chép lại, có thể sai", the WER tool for the owner's typed references. Consent `speaking-v1` (the transcript outlives the 24-hour audio). Migration 0046. Run here on espeak speech: learner errors and fillers kept, 12 s in 2 s, 0.76 GB; nothing invented over 8 s of noise. Real-voice WER is the owner's |
 | 2026-11-27 | Progress study T6 built: a rated Writing or Speaking sitting stores the rater's four criterion bands (`--criteria fc=7,lr=7,gra=6,p=7`; Writing tr, cc, lr, gra), checked whole bands 0–9 from a rater or self, never with an answer key; the report names the lowest and its change since the last sitting with criteria. The skill's band stays the rater's. Migration 0045 |

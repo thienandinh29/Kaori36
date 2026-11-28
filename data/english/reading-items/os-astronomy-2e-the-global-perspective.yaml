@@ -5,7 +5,7 @@ versions:
   items:
   - id: os-astronomy-2e-the-global-perspective-completion-1
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-completion-1
       kind: completion
@@ -20,7 +20,8 @@ versions:
       sentence: The oceanic crust is typically about 6 kilometers thick and is composed of volcanic rocks called
         ___.
       max_words: 1
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -31,7 +32,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-completion-2
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-completion-2
       kind: completion
@@ -46,7 +47,8 @@ versions:
         a depth of 2900 kilometers.
       sentence: The mantle stretches from the base of the crust downward to a depth of ___ kilometers.
       max_words: 1
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -57,7 +59,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-completion-3
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-completion-3
       kind: completion
@@ -72,7 +74,8 @@ versions:
         of sorting the major components of a planet by density.
       sentence: The process of sorting a planet's components by density is called ___.
       max_words: 1
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -97,7 +100,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-mcq-1
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-mcq-1
       key: 1
@@ -114,7 +117,8 @@ versions:
       - Core
       evidence:
       - Oceanic crust covers 55% of Earth’s surface and lies mostly submerged under the oceans.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -125,7 +129,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-mcq-2
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-mcq-2
       key: 2
@@ -143,7 +147,8 @@ versions:
       evidence:
       - Evidence for differentiation comes from comparing the planet’s bulk density (5.5 g/cm^3) with the surface
         materials (3 g/cm^3) to suggest that denser material must be buried in the core.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -154,7 +159,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-mcq-3
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-mcq-3
       key: 1
@@ -172,7 +177,8 @@ versions:
       evidence:
       - The structure of material in Earth’s interior has been probed in considerable detail by measuring the transmission
         of seismic waves through Earth.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -183,7 +189,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-tfng-1
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-tfng-1
       key: 'true'
@@ -196,7 +202,8 @@ versions:
       - The crust is the easiest layer for geologists to study, but it makes up only about 0.3% of the total mass
         of Earth.
       statement: The crust makes up less than one percent of Earth's total mass.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -207,7 +214,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-tfng-2
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-tfng-2
       key: 'false'
@@ -220,7 +227,8 @@ versions:
       - The mantle is more or less solid, but at the temperatures and pressures found there, mantle rock can deform
         and flow slowly.
       statement: The mantle is entirely liquid.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -231,7 +239,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-tfng-3
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-tfng-3
       key: 'true'
@@ -243,7 +251,8 @@ versions:
       evidence:
       - With a diameter of 7000 kilometers, our core is substantially larger than the entire planet Mercury.
       statement: The core is larger than the planet Mercury.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -254,7 +263,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-tfng-4
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-tfng-4
       key: 'false'
@@ -267,7 +276,8 @@ versions:
       - Samples of upper mantle material are occasionally ejected from volcanoes, permitting a detailed analysis
         of its chemistry.
       statement: Scientists have directly sampled the entire mantle.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -278,7 +288,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-global-perspective-tfng-5
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-global-perspective-tfng-5
       key: not_given
@@ -289,7 +299,8 @@ versions:
       status: draft
       evidence: []
       statement: The inner core is composed entirely of iron.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'

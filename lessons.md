@@ -6,6 +6,11 @@ that becomes a product rule moves into `SPEC.md` (Contract); one about how we wo
 pointer here.
 
 ## Data and pipelines
+- **A count of "remaining" must count only what can still be done (28 Nov 2026).** The Reading batch reported every unchecked
+  question as remaining, but 76 of 77 sat on replaced passages the checker skips by design, so "93 remaining" was really 17 and
+  the batch's stop rule ("none left") could never fire. Found only when a batch checked 17 instead of 45. Now `drop-stale` drops
+  them and import carries the drop. **Rule:** a progress or stop count uses the same filter as the worker that does the work;
+  when a run does less than its cap, find out why before reporting the remaining number. (`step-4.2e.md`, "Fix", 28 Nov)
 - **A failed model call is not a judgement (22 Nov 2026).** When the free checker gave no usable reply (quota, provider error,
   unreadable output), new Reading questions were marked `needs_review` with no checker answer, so the owner's queue showed
   never-judged questions as if the checker doubted them (8 by 22 Nov). Now an unusable reply changes nothing: the question stays

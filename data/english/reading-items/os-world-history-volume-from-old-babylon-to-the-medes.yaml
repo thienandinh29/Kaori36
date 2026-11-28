@@ -332,7 +332,7 @@ versions:
   items:
   - id: os-world-history-volume-from-old-babylon-to-the-medes-completion-1
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-completion-1
       kind: completion
@@ -348,7 +348,8 @@ versions:
       sentence: The Hittite king Suppiluliumas tried to arrange a marriage between one of his sons and the Egyptian
         ___ family.
       max_words: 1
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -359,7 +360,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-completion-2
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-completion-2
       kind: completion
@@ -373,7 +374,8 @@ versions:
       - An even greater risk was borne by the spies themselves, who could expect a painful death if caught.
       sentence: Spies who were caught could expect a ___ death.
       max_words: 1
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -384,7 +386,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-completion-3
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-completion-3
       kind: completion
@@ -399,7 +401,8 @@ versions:
         alongside the old one after years of wear.
       sentence: Because of wear, local authorities often carved a new road ___ the old one.
       max_words: 1
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -410,7 +413,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-headings-1
     kind: headings
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-headings-1
       key:
@@ -439,7 +442,8 @@ versions:
       - The threat of flooding in the river valleys
       - Buying protection on the road
       - Long-distance trade and merchant colonies
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -450,7 +454,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-1
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-1
       key: 0
@@ -469,7 +473,8 @@ versions:
       - Ambassadors were a key part of Mesopotamia’s complex diplomatic world.
       - A wrong move could start a war.
       - But if war broke out between the two kingdoms, an ambassador could get caught in the middle.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -480,7 +485,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-2
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-2
       key: 1
@@ -497,7 +502,8 @@ versions:
       - To keep the roads and bridges in good repair
       evidence:
       - This exchange of gifts demonstrated respect and goodwill between the rulers.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -508,7 +514,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-3
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-3
       key: 2
@@ -526,7 +532,8 @@ versions:
       evidence:
       - The most common uses of this intelligence were to anticipate war, learn about troop movements, and assess
         the strength of a foreign kingdom before putting an army into the field.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -537,7 +544,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-4
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-mcq-4
       key: 1
@@ -555,7 +562,8 @@ versions:
       evidence:
       - The Assyrians even established merchant colonies in Anatolia where they exchanged tin and textiles for silver
         and gold.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -566,7 +574,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-1
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-1
       key: 'false'
@@ -578,7 +586,8 @@ versions:
       evidence:
       - Kings preferred to avoid war if possible and maintain healthy diplomatic relationships with others instead.
       statement: Kings in Mesopotamia generally preferred to settle disagreements by fighting rather than by negotiation.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -589,7 +598,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-2
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-2
       key: 'true'
@@ -602,7 +611,8 @@ versions:
       - In ordinary situations, they could expect to be free to leave unharmed when the situation demanded it, to
         be exempt from certain taxes, and to have their property respected.
       statement: Ambassadors could normally expect to be allowed to leave without being harmed.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -613,7 +623,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-3
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-3
       key: 'true'
@@ -627,7 +637,8 @@ versions:
         hostile.
       statement: A returning ambassador who brought no gift was seen as a sign that relations with his kingdom had
         worsened.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -638,7 +649,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-4
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-4
       key: 'true'
@@ -652,7 +663,8 @@ versions:
         intelligence bureau in the palace at Mari to collect, translate, and analyze documents provided by his many
         spies.
       statement: Hammurabi set up a special office at Mari to gather and study information supplied by his agents.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -663,7 +675,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-5
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-5
       key: not_given
@@ -674,7 +686,8 @@ versions:
       status: draft
       evidence: []
       statement: Spies in Mesopotamia were paid more than ambassadors were.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -685,7 +698,7 @@ versions:
     check_view: null
   - id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-6
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-world-history-volume-from-old-babylon-to-the-medes-tfng-6
       key: 'true'
@@ -699,7 +712,8 @@ versions:
         the movement of goods and especially of soldiers proceeded unhindered.
       statement: The Neo-Assyrian Empire's roads were controlled by a central authority so that goods and soldiers
         could move without obstruction.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'

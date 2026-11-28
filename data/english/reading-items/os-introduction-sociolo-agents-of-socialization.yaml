@@ -333,7 +333,7 @@ versions:
   items:
   - id: os-introduction-sociolo-agents-of-socialization-completion-1
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-completion-1
       kind: completion
@@ -348,7 +348,8 @@ versions:
       sentence: Peer groups are made up of people who are similar in age and social status and who share ___ (max
         2 words).
       max_words: 2
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -359,7 +360,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-completion-2
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-completion-2
       kind: completion
@@ -375,7 +376,8 @@ versions:
       sentence: Formal institutions such as schools, workplaces, and the government teach people how to behave in
         and navigate ___ (max 2 words).
       max_words: 2
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -386,7 +388,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-completion-3
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-completion-3
       kind: completion
@@ -402,7 +404,8 @@ versions:
       sentence: Sixty-five years old is the start of “old age” since most people become ___ for senior benefits
         at that point (max 2 words).
       max_words: 2
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -427,7 +430,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-mcq-1
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-mcq-1
       key: 0
@@ -446,7 +449,8 @@ versions:
       - Socialization helps people learn to function successfully in their social worlds.
       - Our direct interactions with social groups, like families and peers, teach us how others expect us to behave.
         Likewise, a society’s formal and informal institutions socialize its population.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -457,7 +461,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-mcq-2
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-mcq-2
       key: 1
@@ -474,7 +478,8 @@ versions:
       - Senior benefits and discounts
       evidence:
       - Peer groups provide adolescents’ first major socialization experience outside the realm of their families.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -485,7 +490,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-mcq-3
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-mcq-3
       key: 2
@@ -505,7 +510,8 @@ versions:
         new role.
       - When U.S. males turn eighteen, they must register with the Selective Service System within thirty days to
         be entered into a database for possible military service.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -516,7 +522,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-1
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-tfng-1
       key: 'true'
@@ -529,7 +535,8 @@ versions:
       - Peer group socialization begins in the earliest years, such as when kids on a playground teach younger children
         the norms about taking turns, the rules of a game, or how to shoot a basket.
       statement: Peer group socialization starts when children are very young.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -540,7 +547,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-2
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-tfng-2
       key: 'false'
@@ -553,7 +560,8 @@ versions:
       - Interestingly, studies have shown that although friendships rank high in adolescents’ priorities, this is
         balanced by parental influence.
       statement: Studies show that parental influence outweighs friendships in adolescents' priorities.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -564,7 +572,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-3
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-tfng-3
       key: 'false'
@@ -577,7 +585,8 @@ versions:
       - When U.S. males turn eighteen, they must register with the Selective Service System within thirty days to
         be entered into a database for possible military service.
       statement: In the United States, men must register with the Selective Service System when they turn twenty-one.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -588,7 +597,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-4
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-tfng-4
       key: 'true'
@@ -602,7 +611,8 @@ versions:
       - From ceremonial rites of passage that reinforce the family unit to power dynamics that reinforce gender
         roles, organized religion fosters a shared set of socialized values that are passed on through society.
       statement: Religious institutions can help to maintain gender roles.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -613,7 +623,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-agents-of-socialization-tfng-5
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-agents-of-socialization-tfng-5
       key: not_given
@@ -624,7 +634,8 @@ versions:
       status: draft
       evidence: []
       statement: The passage states how much money governments spend on socializing new adults.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'

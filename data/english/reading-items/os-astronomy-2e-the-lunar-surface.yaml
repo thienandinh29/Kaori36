@@ -387,7 +387,7 @@ versions:
   items:
   - id: os-astronomy-2e-the-lunar-surface-completion-1
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-completion-1
       kind: completion
@@ -402,7 +402,8 @@ versions:
         than most of the rocks on Earth.
       sentence: The solidification ages of the lunar samples ranged from about 3.3 to 4.4 ___ years old.
       max_words: 3
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -413,7 +414,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-completion-2
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-completion-2
       kind: completion
@@ -428,7 +429,8 @@ versions:
         eruptions billions of years ago.
       sentence: The maria consist mostly of dark-colored basalt laid down in volcanic eruptions ___ of years ago.
       max_words: 3
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -439,7 +441,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-completion-3
     kind: completion
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-completion-3
       kind: completion
@@ -455,7 +457,8 @@ versions:
       sentence: The major mare volcanism, which involved the release of lava from hundreds of kilometers below the
         surface, ended about 3.3 billion years ___.
       max_words: 3
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -480,7 +483,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-mcq-1
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-mcq-1
       key: 1
@@ -498,7 +501,8 @@ versions:
       evidence:
       - The Moon, like Earth, was formed about 4.5 billion years ago. The Moon’s heavily cratered highlands are
         made of rocks more than 4 billion years old.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -509,7 +513,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-mcq-2
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-mcq-2
       key: 1
@@ -527,7 +531,8 @@ versions:
       evidence:
       - Centuries ago, early lunar observers thought that the Moon had continents and oceans and that it was a possible
         abode of life.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -538,7 +543,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-mcq-3
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-mcq-3
       key: 2
@@ -557,7 +562,8 @@ versions:
       - Because there is no atmosphere or water on the Moon, there has been no wind, water, or ice to carve them
         into cliffs and sharp peaks, the way we have seen them shaped on Earth. Their smooth features are attributed
         to gradual erosion, mostly due to impact cratering.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -568,7 +574,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-tfng-1
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-tfng-1
       key: 'true'
@@ -582,7 +588,8 @@ versions:
         names, Mare Nubium (Sea of Clouds), Mare Tranquillitatis (Sea of Tranquility), and so on, are still in use
         today.
       statement: Early lunar observers gave the dark areas of the Moon names that are still used today.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -593,7 +600,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-tfng-2
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-tfng-2
       key: 'false'
@@ -605,7 +612,8 @@ versions:
       evidence:
       - In contrast, the “land” areas between the seas are not named.
       statement: The lighter “land” areas between the lunar seas were also given individual names by early observers.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -616,7 +624,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-tfng-3
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-tfng-3
       key: 'true'
@@ -631,7 +639,8 @@ versions:
       - The maria are much less cratered than the highlands, and cover just 17% of the lunar surface, mostly on
         the side of the Moon that faces Earth.
       statement: The Moon's highlands cover a larger share of the lunar surface than the maria do.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -642,7 +651,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-tfng-4
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-tfng-4
       key: 'false'
@@ -655,7 +664,8 @@ versions:
       - Unlike the mountains on Earth, the Moon’s highlands do not have any sharp folds in their ranges. The highlands
         have low, rounded profiles that resemble the oldest, most eroded mountains on Earth.
       statement: The Moon's highlands have sharper peaks and more folded ranges than the mountains of Earth.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -666,7 +676,7 @@ versions:
     check_view: null
   - id: os-astronomy-2e-the-lunar-surface-tfng-5
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-astronomy-2e-the-lunar-surface-tfng-5
       key: not_given
@@ -678,7 +688,8 @@ versions:
       evidence: []
       statement: The Apollo astronauts brought back samples from the lunar highlands that were dated to more than
         4.5 billion years old.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'

@@ -355,7 +355,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-headings-1
     kind: headings
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-headings-1
       key:
@@ -380,7 +380,8 @@ versions:
       - A natural response to unfamiliar surroundings
       - The history of sociological research on groups
       - How to research cyberbullying statistics
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -391,7 +392,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-mcq-1
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-mcq-1
       key: 0
@@ -410,7 +411,8 @@ versions:
       - Often, reference groups convey competing messages.
       - At all ages, we use reference groups to help guide our behavior and establish our social norms.
       - You may not recognize a reference group, but it still influences the way you act.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -421,7 +423,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-mcq-2
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-mcq-2
       key: 0
@@ -439,7 +441,8 @@ versions:
       evidence:
       - Say you are a strong athlete who wants to play intramural sports, and your favorite musicians are a local
         punk band. You may find yourself engaged with two very different reference groups.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -450,7 +453,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-mcq-3
     kind: mcq
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-mcq-3
       key: 0
@@ -468,7 +471,8 @@ versions:
       evidence:
       - This immediate categorization into in-groups and out-groups means that students must choose carefully, since
         whatever group they associate with might define their friends for several years to come.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -479,7 +483,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-tfng-1
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-tfng-1
       key: 'true'
@@ -491,7 +495,8 @@ versions:
       evidence:
       - In U.S. society, peer groups are common reference groups.
       statement: Peer groups are a frequent example of reference groups in American society.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -502,7 +507,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-tfng-2
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-tfng-2
       key: 'false'
@@ -515,7 +520,8 @@ versions:
       - Most people have more than one reference group, so a middle school boy might look not just at his classmates
         but also at his older brother’s friends and see a different set of norms.
       statement: The passage states that most people have only one reference group.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -526,7 +532,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-tfng-3
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-tfng-3
       key: 'true'
@@ -539,7 +545,8 @@ versions:
       - You may not recognize a reference group, but it still influences the way you act.
       statement: According to the passage, a person can be influenced by a reference group without being aware of
         it.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -550,7 +557,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-tfng-4
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-tfng-4
       key: 'false'
@@ -563,7 +570,8 @@ versions:
       - While most campus groups refrain from insulting competing groups, there is a definite sense of an in-group
         versus an out-group.
       statement: The passage says that most campus groups openly insult the groups they compete with.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'
@@ -574,7 +582,7 @@ versions:
     check_view: null
   - id: os-introduction-sociolo-types-of-groups-tfng-5
     kind: tfng
-    status: generated
+    status: dropped
     item:
       id: os-introduction-sociolo-types-of-groups-tfng-5
       key: not_given
@@ -585,7 +593,8 @@ versions:
       status: draft
       evidence: []
       statement: The passage reports how many students at U.S. colleges join fraternities or sororities each year.
-    problems: []
+    problems:
+    - passage replaced; questions were generated again for the current text
     checker_answer: null
     checker_model: null
     generated_at: '2026-11-19T03:36:57.225960+00:00'

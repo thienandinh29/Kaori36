@@ -29,8 +29,8 @@ wins; fix this page.
   explained with CP4b's trap list and labelled "chưa kiểm chứng". Owners only; one BKT observation per answered question, once
   per test fingerprint; migration `0040`. Tested with a scripted model only.
 - **Writing 2.11b** (#139): Task 2 structure checks (every part answered, position, a hint on undeveloped paragraphs).
-- **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
-  2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
+- **Daily Reading blind checks done** (#137–#146, 28 Nov): 267 verified, 14 needs_review, 2 approved, 6 rejected,
+  112 dropped (76 of them stale questions of replaced passages, `itemfile drop-stale`), 1 unchecked. The daily task is off.
 
 ## Just finished, merged in #154
 - **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
@@ -72,11 +72,10 @@ measurement waits on the owner's examiner-banded essays. The Reading diagnosis d
   licences (L2-ARCTIC, Simple English Wikipedia). Full list: `dolater.md`.
 
 ## Running on its own
-The daily Reading blind-check batch (scheduled task, 03:13 UTC, up to 45 questions, US$0.10 cap) exports the item files and
-merges its own data PR. It never touches the owner's review decisions.
+Nothing. The daily Reading blind-check task was turned off on 28 Nov (the bank is checked, `step-4.2e.md` T5).
 
 ## Known issues and risks right now
-- The free checker fails often (15 of 59 calls on 24 Nov); unanswered questions stay unchecked and are retried.
+- The free checker fails often (15 of 59 calls on 24 Nov). One headings question stays unchecked: it never answered in 3 runs.
 - 4.3d explanations have no blind check yet (Gemini, after a planted test); keep the "chưa kiểm chứng" label.
 - No phase gate is measured yet; all content is still draft until a teacher reviews it.
 

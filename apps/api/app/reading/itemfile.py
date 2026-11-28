@@ -2,6 +2,7 @@
 
     uv run python -m app.reading.itemfile export [--out DIR]
     uv run python -m app.reading.itemfile import [DIR]
+    uv run python -m app.reading.itemfile drop-stale     # unchecked rows of replaced passages
 
 Generation runs where model calls are possible, review runs on the owner's laptop, and a sandbox's
 database is thrown away; so questions travel as one YAML file per text. Import adds missing rows,
@@ -9,6 +10,11 @@ and brings a newer blind check into a row still undecided here (step 4.3c: befor
 imported while waiting for its check never received it). A decided row keeps its decision, but a
 newer check of it (a re-check in the shown order, made elsewhere) is brought in too, so the next
 export does not write the older check back over it (fixed 21 Nov 2026).
+
+An unchecked question whose passage has since been replaced can never be checked (the checker
+reads the current text only), so `drop-stale` drops it with `STALE`; import carries that drop to
+a row still unchecked elsewhere, and the label backfill gives it no code-check label, since the
+question was not found faulty (fixed 28 Nov 2026).
 """
 
 import argparse
@@ -31,6 +37,7 @@ COLUMNS = (
 )  # fmt: skip
 _TIMES = ("generated_at", "checked_at", "reviewed_at")
 _MARKS = ", ".join(["%s"] * len(COLUMNS))
+STALE = "passage replaced; questions were generated again for the current text"
 
 
 def export(conn: psycopg.Connection[Any], texts: Mapping[str, tuple[str, str]], out: Path) -> int:
@@ -71,6 +78,34 @@ _NEWER_CHECK = (
     "and status in ('generated','verified','needs_review') "
     "and (checked_at is null or checked_at < %s)"
 )
+
+# A drop made elsewhere reaches a row still unchecked here (a stale version, `drop_stale`).
+_DROPPED = (
+    "update reading_items set status='dropped', problems=%s "
+    "where id=%s and passage_sha256=%s and status='generated'"
+)
+
+
+def drop_stale(conn: psycopg.Connection[Any], passages: Mapping[str, str]) -> int:
+    """Drop unchecked rows whose passage version is no longer the bank's text; return how many.
+
+    A text no longer in the bank at all is left alone (it may be restored).
+    """
+    rows = conn.execute(
+        "select id, text_slug, passage_sha256 from reading_items where status='generated'"
+    ).fetchall()
+    n = 0
+    for item_id, slug, digest in rows:
+        current = passages.get(slug)
+        if current is None or sha256(current) == digest:
+            continue
+        n += conn.execute(
+            "update reading_items set status='dropped', problems=%s where id=%s",
+            (Jsonb([STALE]), item_id),
+        ).rowcount
+    conn.commit()
+    return n
+
 
 # A newer check of a row the owner has decided here: the checker's fields only, never the decision.
 _NEWER_CHECK_DECIDED = (
@@ -120,6 +155,8 @@ def import_(
                          got["checked_at"], got["check_view"], got["id"], digest,
                          got["checked_at"]),
                     ).rowcount  # fmt: skip
+                if got["status"] == "dropped":
+                    updated = conn.execute(_DROPPED, (got["problems"], got["id"], digest)).rowcount
                 if not updated and got["checked_at"]:
                     updated = conn.execute(
                         _NEWER_CHECK_DECIDED,
@@ -143,12 +180,15 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover - database
     ex.add_argument("--out", type=Path, default=DEFAULT_DIR)
     im = sub.add_parser("import")
     im.add_argument("folder", type=Path, nargs="?", default=DEFAULT_DIR)
+    sub.add_parser("drop-stale")
     args = parser.parse_args(argv)
     bank = load_bank(TEXTS, load_candidates(DEFAULT_CANDIDATES))
     with psycopg.connect(get_settings().database_url) as conn:
         if args.cmd == "export":
             texts = {t.entry.slug: (t.entry.source, t.text) for t in bank.texts}
             print(f"exported {export(conn, texts, args.out)} items to {args.out}")
+        elif args.cmd == "drop-stale":
+            print(f"dropped {drop_stale(conn, {t.entry.slug: t.text for t in bank.texts})} stale")
         else:
             counts = import_(conn, args.folder, {t.entry.slug: t.text for t in bank.texts})
             print(f"imported: {counts}")
