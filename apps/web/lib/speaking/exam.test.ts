@@ -345,3 +345,116 @@ describe("measures (step 5.2)", () => {
     ).toBeNull();
   });
 });
+
+describe("language checks (step 5.3a)", () => {
+  const checked = {
+    skipped: null,
+    guard: {
+      templates: ["in this day and age"],
+      template_words: 5,
+      repeated_words: 0,
+      repeated_sentences: [],
+      prompt_overlap: 0.4,
+      off_topic: false,
+    },
+    vocabulary: {
+      words: 60,
+      mtld: 48.2,
+      beyond_b1_share: 0.1,
+      unknown_share: 0.02,
+      repeated: [{ word: "people", count: 4 }],
+    },
+    hints: [
+      {
+        kind: "ending",
+        text: "cat",
+        suggestion: "cats",
+        message_en: "m",
+        rule_id: "R",
+        errant_type: null,
+        start_s: 2.2,
+        end_s: 2.8,
+      },
+      {
+        kind: "grammar",
+        text: "have",
+        suggestion: "has",
+        message_en: "Use has.",
+        rule_id: "R",
+        errant_type: "R:VERB:SVA",
+        start_s: null,
+        end_s: null,
+      },
+    ],
+  };
+  const withLanguage = (
+    language: unknown,
+    transcript = "done",
+    text: string | null = "x",
+  ) =>
+    parseResult({
+      id: "s1",
+      test_id: "t01",
+      title: "Home",
+      keep: false,
+      started_at: "2026-11-28T09:00:00+00:00",
+      finished_at: null,
+      cue_card: {
+        task: "Describe a journey.",
+        points: ["a", "b", "c"],
+        explain: "and why.",
+      },
+      part3_theme: "travel",
+      questions: [
+        {
+          id: "p1-1-1",
+          part: 1,
+          text: "Q?",
+          answer: {
+            id: "a1",
+            seconds: 20,
+            problems: [],
+            audio: true,
+            delete_after: null,
+            transcript,
+            text,
+            words: [],
+            measures: null,
+            language,
+          },
+        },
+      ],
+      summary: null,
+    }).questions[0]!.answer!.language;
+
+  it("reads the checks, the hints and an ending apart from grammar", () => {
+    const l = withLanguage(checked);
+    expect(l?.state).toBe("checked");
+    if (l?.state !== "checked") return;
+    expect(l.guard.templates).toEqual(["in this day and age"]);
+    expect(l.vocabulary.mtld).toBe(48.2);
+    expect(l.hints?.map((h) => h.kind)).toEqual(["ending", "grammar"]);
+    expect(l.hints?.[1]?.start_s).toBeNull();
+  });
+
+  it("reads short, failed and not-checked, and a LanguageTool that was not configured", () => {
+    expect(withLanguage({ skipped: "short" })?.state).toBe("short");
+    expect(withLanguage({ failed: "ValueError: x" })?.state).toBe("failed");
+    expect(withLanguage(null)).toBeNull();
+    const none = withLanguage({ ...checked, hints: null });
+    expect(none?.state === "checked" && none.hints).toBeNull();
+  });
+
+  it("refuses an unknown kind, an unknown skip reason and checks without a transcript", () => {
+    const bad = { ...checked, hints: [{ ...checked.hints[0], kind: "error" }] };
+    expect(() => withLanguage(bad)).toThrow(DataError);
+    expect(() => withLanguage({ skipped: "later" })).toThrow(DataError);
+    expect(() => withLanguage(checked, "waiting", null)).toThrow(DataError);
+    expect(() =>
+      withLanguage({
+        ...checked,
+        vocabulary: { ...checked.vocabulary, words: "60" },
+      }),
+    ).toThrow(DataError);
+  });
+});

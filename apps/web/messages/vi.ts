@@ -1272,6 +1272,32 @@ export const vi = {
         `đoạn liền dài nhất ${words} từ (${seconds.toFixed(1)} giây)`,
       measuresShare: (share: number) =>
         `nói ${Math.round(share * 100)}% thời gian cho phép`,
+      languageGuard: "Kiểm tra trước khi góp ý",
+      guardTemplates: (list: string) => `Cụm giống mẫu học thuộc: ${list}.`,
+      guardRepeated: (n: number) => `${n} từ nằm trong đoạn lặp lại.`,
+      guardSentences: "Câu nói hai lần trở lên:",
+      guardOffTopic:
+        "Rất ít từ của câu hỏi xuất hiện trong câu trả lời. Đây chỉ là cảnh báo, không phải đánh giá.",
+      hintsTitle: "Gợi ý ngữ pháp (có thể sai)",
+      hintsNote:
+        "Văn nói không giống văn viết, và máy chép lời có thể nghe nhầm hoặc tự sửa lỗi của bạn, nên đây chỉ là gợi ý. Không có gợi ý nào ảnh hưởng đến mức thành thạo của bạn.",
+      hintsNone: "Không có gợi ý nào.",
+      hintsNotChecked: "Chưa kiểm tra ngữ pháp (chưa bật LanguageTool).",
+      hintEnding:
+        "có thể thiếu đuôi -s/-ed: có thể do phát âm (đuôi /s/ /z/ /t/ /d/ hay bị nuốt), do ngữ pháp, hoặc do máy chép lời",
+      hintSuggest: (text: string, suggestion: string) =>
+        `“${text}” → “${suggestion}”`,
+      hintPlay: "Nghe đoạn này",
+      vocabTitle: "Vốn từ (số đo)",
+      vocabDiversity: (n: number) => `đa dạng từ (MTLD) ${n.toFixed(0)}`,
+      vocabTooShort: "đa dạng từ: cần ít nhất 50 từ",
+      vocabBeyond: (share: number) => `${Math.round(share * 100)}% từ trên B1`,
+      vocabUnknown: (share: number) =>
+        `${Math.round(share * 100)}% từ chưa có trong danh sách`,
+      vocabRepeated: (list: string) => `từ lặp nhiều: ${list}`,
+      languageShort:
+        "Câu trả lời dưới 15 giây nói: chỉ có số đo, chưa có góp ý ngôn ngữ.",
+      languageFailed: "Không kiểm tra được ngôn ngữ của câu này.",
       summaryTitle: "Cả bài thi",
       summaryLine: (answers: number, words: number) =>
         `${words} từ trong ${answers} câu trả lời`,

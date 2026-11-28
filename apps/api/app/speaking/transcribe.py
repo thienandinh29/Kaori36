@@ -15,6 +15,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from app.speaking.clauses import clause_boundaries
+from app.speaking.language import LanguageStep
 from app.speaking.measures import FRAME_SECONDS, Word, measure, pauses, speech_frames
 
 Transcribe = Callable[[bytes], dict[str, Any]]
@@ -87,22 +88,48 @@ def measures_of(
 MAX_ATTEMPTS = 3
 
 
+def language_of(
+    step: LanguageStep, transcript: dict[str, Any], question: str, measures: dict[str, Any]
+) -> dict[str, Any]:
+    """The answer's grammar and vocabulary checks (step 5.3a). LanguageTool unreachable raises
+    `Unavailable` (retried later); any other failure is stored as failed, not retried in a loop."""
+    try:
+        return step.analyse(transcript, question, measures)
+    except httpx.HTTPError as exc:
+        raise Unavailable(str(exc)) from None
+    except Exception as exc:  # one answer must not stop the worker
+        return {"failed": f"{type(exc).__name__}: {exc}"[:300]}
+
+
 def _finish(
     conn: psycopg.Connection[Any],
     answer: Any,
     audio: bytes,
     transcript: dict[str, Any],
     measures: dict[str, Any] | None,
+    checked: bool,
+    question: str,
     nlp: Callable[[str], Any] | None,
+    language: LanguageStep | None,
     now: Callable[[], datetime],
 ) -> None:
-    """Measure a transcribed answer while its audio is still there. Written only if it has no
-    measures yet; nothing is held locked."""
+    """Measure, and check, a transcribed answer while its audio is still there. Each result is
+    written only if the answer does not have it yet; nothing is held locked while the (slow)
+    checks run. LanguageTool unreachable raises `Unavailable` after the measures are kept."""
     if measures is None:
+        measures = measures_of(audio, transcript, nlp)
         conn.execute(
             "update speaking_answers set measures=%s,measured_at=%s where id=%s "
             "and measures is null",
-            (Jsonb(measures_of(audio, transcript, nlp)), now(), answer),
+            (Jsonb(measures), now(), answer),
+        )
+        conn.commit()
+    if language is not None and not checked:
+        found = language_of(language, transcript, question, measures)
+        conn.execute(
+            "update speaking_answers set language=%s,language_at=%s where id=%s "
+            "and language is null",
+            (Jsonb(found), now(), answer),
         )
         conn.commit()
 
@@ -112,33 +139,39 @@ def process_next(
     transcribe: Transcribe,
     now: Callable[[], datetime] = lambda: datetime.now(UTC),
     nlp: Callable[[str], Any] | None = None,
+    language: LanguageStep | None = None,
 ) -> bool:
-    """Transcribe, and measure, one waiting answer; False when none waits.
+    """Transcribe, measure and (with a language step) check one waiting answer; False when none
+    waits.
 
     The row is read and the transaction closed before the service is called (a transcript can take
     minutes), and the result is written only if the answer is still waiting. One worker transcribes,
     so no row lock is needed. A refusal fails the answer at once; a service failure is counted and,
     on the third, fails it too. Answers with fewer failures go first. An answer transcribed
-    before measures existed is measured while its audio is still there.
+    in an earlier step is finished while its audio is still there.
     """
     row = conn.execute(
-        "select id,audio,transcript_attempts from speaking_answers "
+        "select id,audio,transcript_attempts,question from speaking_answers "
         "where transcript_status is null and audio is not null "
         "order by transcript_attempts, recorded_at limit 1"
     ).fetchone()
     conn.commit()
     if row is None:
-        unmeasured = conn.execute(
-            "select id,audio,transcript from speaking_answers where audio is not null "
-            "and transcript_status='done' and measures is null order by recorded_at limit 1"
+        unfinished = conn.execute(
+            "select id,audio,transcript,measures,language is not null,question "
+            "from speaking_answers where audio is not null and transcript_status='done' "
+            "and (measures is null or (%s and language is null)) order by recorded_at limit 1",
+            (language is not None,),
         ).fetchone()
         conn.commit()
-        if unmeasured is None:
+        if unfinished is None:
             return False
-        answer, audio, transcript = unmeasured
-        _finish(conn, answer, bytes(audio), transcript, None, nlp, now)
+        answer, audio, transcript, measures, checked, question = unfinished
+        _finish(
+            conn, answer, bytes(audio), transcript, measures, checked, question, nlp, language, now
+        )
         return True
-    answer, audio, attempts = row
+    answer, audio, attempts, question = row
     try:
         result = transcribe(bytes(audio))
     except Refused as exc:
@@ -177,5 +210,5 @@ def process_next(
     )
     conn.commit()
     if done.rowcount:  # the answer may have been deleted or already finished meanwhile
-        _finish(conn, answer, bytes(audio), transcript, None, nlp, now)
+        _finish(conn, answer, bytes(audio), transcript, None, False, question, nlp, language, now)
     return True

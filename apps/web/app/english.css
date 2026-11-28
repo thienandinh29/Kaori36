@@ -2660,3 +2660,15 @@ details[data-testid="all-issues"] > summary {
 .nt-exam-transcript p {
   margin: 2px 0;
 }
+.nt-exam-language {
+  margin: 6px 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--nt-line, #e5ded3);
+}
+.nt-exam-language p {
+  margin: 2px 0;
+}
+.nt-exam-hints {
+  margin: 4px 0;
+  padding-left: 18px;
+}
