@@ -14,6 +14,12 @@ evals/writing/develop-report.json; with --write-calibration it stores the calibr
 data/writing/scorer.yaml. `test` scores the held-out essays once (a second run needs --again with a
 reason, which is recorded) and checks robustness; it writes evals/writing/score-report.json.
 Only metrics are written; essay texts never leave data/private/.
+
+Step 2.12 adds two methods to the same comparison, on the same folds: `criteria` (a model per
+criterion on descriptor features, `app.writing.criteria_model`) and `blend` (the mean of the
+pinned scorer and `criteria`), plus the effect of each descriptor cap and a recommendation
+(`app.evalkit.writing_compare`). `develop --write-descriptors criteria|blend` stores the chosen
+method in data/writing/scorer.yaml; the owner decides which, after reading the report.
 """
 
 import argparse
@@ -21,12 +27,22 @@ import hashlib
 import json
 import re
 import sys
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import yaml  # type: ignore[import-untyped]
+
+from app.evalkit.writing_compare import (
+    DescriptorRun,
+    EssayRow,
+    develop_descriptors,
+    held_out_methods,
+)
+from app.writing.caps import CapRule, load_caps
+from app.writing.descriptor_model import DescriptorsIn
 from app.writing.scoring import (
     CalibrationIn,
     Ridge,
@@ -56,11 +72,26 @@ FEATURES = ("words", "avg_sentence_words", "clauses_per_sentence", "linking_grou
             "errors_per_100_words")  # fmt: skip
 
 
+CRITERION_KEYS = ("tr", "cc", "lr", "gra")
+MARKERS = ("examiner", "trained_rater")
+
+
 @dataclass(frozen=True)
 class Essay:
     id: str
     text: str
     band: float
+    question: str = ""
+    criteria: Mapping[str, float] | None = None  # examiner bands per criterion, all four or none
+    marked_by: str = ""
+    source: str = ""
+
+
+def _band(value: Any, where: str) -> float:
+    band = float(value)
+    if band * 2 != int(band * 2) or not 0 <= band <= 9:
+        raise ValueError(f"{where}: band {band} is not an IELTS band")
+    return band
 
 
 def load_essays(path: Path) -> list[Essay]:
@@ -69,10 +100,22 @@ def load_essays(path: Path) -> list[Essay]:
         if not line.strip():
             continue
         d = json.loads(line)
-        band = float(d["band"])
-        if band * 2 != int(band * 2) or not 0 <= band <= 9:
-            raise ValueError(f"line {n}: band {band} is not an IELTS band")
-        out.append(Essay(str(d["id"]), str(d["text"]), band))
+        where = f"line {n}"
+        band = _band(d["band"], where)
+        marked_by, source = str(d.get("marked_by", "")), str(d.get("source", ""))
+        if marked_by and marked_by not in MARKERS:
+            raise ValueError(f"{where}: marked_by must be one of {MARKERS}, not {marked_by!r}")
+        if source.startswith(("http://", "https://")) and not marked_by:
+            raise ValueError(
+                f"{where}: a web essay needs marked_by ({' or '.join(MARKERS)}); a site's own "
+                "marking is not an examiner band"
+            )
+        given = [k for k in CRITERION_KEYS if d.get(k) is not None]
+        if given and len(given) != len(CRITERION_KEYS):
+            raise ValueError(f"{where}: give all four criterion bands (tr, cc, lr, gra) or none")
+        criteria = {k: _band(d[k], f"{where} {k}") for k in given} or None
+        out.append(Essay(str(d["id"]), str(d["text"]), band, str(d.get("question", "")), criteria,
+                         marked_by, source))  # fmt: skip
     if len({e.id for e in out}) != len(out):
         raise ValueError("essay ids must be unique")
     return out
@@ -266,10 +309,64 @@ def _features(essays: Sequence[Essay], languagetool_url: str) -> dict[str, list[
     return out
 
 
+def _row(e: Essay) -> EssayRow:
+    return EssayRow(e.id, e.text, e.band, e.criteria)
+
+
+def _descriptors(
+    essays: Sequence[Essay], languagetool_url: str
+) -> dict[str, dict[str, float | int | None]]:
+    """The descriptor features of each essay, computed exactly as the app computes them."""
+    from app.services.writing import load_grammar_step
+    from app.writing import guardrails
+    from app.writing.analysis import load_linking_words
+    from app.writing.descriptor_features import load_word_index, measure_essay
+    from app.writing.grammar import analyse_grammar
+
+    writing = ROOT / "data" / "writing"
+    step = load_grammar_step(writing, ROOT / "data" / "courses", languagetool_url)
+    linking = load_linking_words(writing / "linking-words.yaml")
+    index = load_word_index(ROOT / "data-sa" / "vocabulary" / "forms.yaml")
+    templates = guardrails.load_templates(writing / "templates.yaml")
+    out: dict[str, dict[str, float | int | None]] = {}
+    for e in essays:
+        grammar = None
+        if step.client is not None:
+            grammar = analyse_grammar(
+                e.text, step.client.matches(e.text), step.nlp, step.annotator, step.error_map
+            )
+        guard = guardrails.check(e.text, e.question or None, templates)
+        out[e.id] = measure_essay(
+            e.text,
+            e.question,
+            grammar=grammar,
+            nlp=step.nlp,
+            index=index,
+            linking_groups=linking,
+            guard=guard,
+        ).as_dict()
+    return out
+
+
+def _regions(text: str) -> tuple[str, str, str]:
+    """scorer.yaml as (everything before `calibration:`, the calibration block, the descriptors
+    block). The comments and the pinned model stay in the first part."""
+    start = text.index("\ncalibration:") + 1
+    at = text.find("\ndescriptors:", start)
+    if at == -1:
+        return text[:start], text[start:], ""
+    return text[:start], text[start : at + 1], text[at + 1 :]
+
+
+def _store(path: Path, text: str) -> None:
+    """Write scorer.yaml only if the app could read the result."""
+    ScorerConfig.model_validate(yaml.safe_load(text))
+    path.write_text(text, encoding="utf-8")
+
+
 def write_calibration(calibration: CalibrationIn, path: Path = SCORER_YAML) -> None:
-    """Replace the `calibration:` block (the last key) and keep the file's comments."""
-    text = path.read_text(encoding="utf-8")
-    head = text[: text.index("\ncalibration:") + 1]
+    """Replace the `calibration:` block and keep the comments and any `descriptors:` block."""
+    head, _, tail = _regions(path.read_text(encoding="utf-8"))
     c = calibration.model_dump()
     block = (
         "calibration:\n"
@@ -280,8 +377,30 @@ def write_calibration(calibration: CalibrationIn, path: Path = SCORER_YAML) -> N
         f"  essays: {c['essays']}\n"
         f"  fitted_on: {json.dumps(c['fitted_on'])}\n"
     )
-    path.write_text(head + block, encoding="utf-8")
-    load_scorer_config(path)  # refuse to leave a file the worker cannot read
+    _store(path, head + block + tail)
+
+
+def write_descriptors(block: DescriptorsIn, method: str, path: Path = SCORER_YAML) -> None:
+    """Store the descriptor model and the chosen method (`descriptors` or `blend`)."""
+    if method not in ("descriptors", "blend"):
+        raise ValueError(f"method must be descriptors or blend, not {method!r}")
+    head, calibration, _ = _regions(path.read_text(encoding="utf-8"))
+    lines = [ln for ln in head.splitlines() if not ln.startswith("method:")]
+    head = "\n".join(lines) + f"\nmethod: {method}  # chosen by the owner, step 2.12\n"
+    body = yaml.safe_dump(
+        {"descriptors": block.model_dump(mode="json")}, sort_keys=False, width=100
+    )
+    _store(path, head + calibration + body)
+
+
+def _write_chosen(run: DescriptorRun, chosen: str, essays: int, path: Path) -> None:
+    low, high = run.residuals[chosen]
+    fitted_on = f"{datetime.now(UTC).date()}, {essays} development essays, 5-fold; {run.how}"
+    write_descriptors(
+        run.model.to_in(low, high, essays, fitted_on),
+        "descriptors" if chosen == "criteria" else "blend",
+        path,
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -291,6 +410,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--scorer-url", required=True)
     parser.add_argument("--languagetool-url", default="")
     parser.add_argument("--write-calibration", action="store_true")
+    parser.add_argument(
+        "--write-descriptors",
+        choices=["criteria", "blend"],
+        help="store the descriptor model as the method (develop only; the owner decides)",
+    )
     parser.add_argument("--again", default="", help="why the test set is scored again")
     args = parser.parse_args(argv)
     if "private" not in args.essays.resolve().parts:
@@ -302,15 +426,29 @@ def main(argv: Sequence[str] | None = None) -> int:
     test_ids = _test_ids(essays, create=args.phase == "develop")
     features = _features(essays, args.languagetool_url)
     feature_note = "" if args.languagetool_url else " (no LanguageTool: errors feature is 0)"
+    descriptors = _descriptors(essays, args.languagetool_url)
+    rules = load_caps().rules
     if args.phase == "develop":
-        report, calibration = develop(essays, {e.id: raw(e.text) for e in essays}, features,
-                                      test_ids)  # fmt: skip
+        raws = {e.id: raw(e.text) for e in essays}
+        report, calibration = develop(essays, raws, features, test_ids)
+        run = develop_descriptors(
+            [_row(e) for e in essays if e.id not in test_ids], raws, descriptors,
+            {e.id: features[e.id][0] for e in essays}, rules, report["methods"], seed=SEED,
+        )  # fmt: skip
+        report["methods"] |= run.report.pop("methods")
+        report["ranges"] = {"model": report["range"], **run.report.pop("ranges")}
+        report["descriptors"] = run.report
         report["features"] = list(FEATURES)
         report["note"] += feature_note
+        if not args.languagetool_url:
+            report["note"] += "; the descriptor features that count errors are missing (imputed)"
         _write(EVALS / "develop-report.json", report)
         if args.write_calibration:
-            write_calibration(calibration)
+            write_calibration(calibration, SCORER_YAML)
+        if args.write_descriptors:
+            _write_chosen(run, args.write_descriptors, report["essays"], SCORER_YAML)
         print(json.dumps(report["methods"], indent=2))
+        print(json.dumps(report["descriptors"]["choice"], indent=2))
         return 0
     path = EVALS / "score-report.json"
     previous = json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
@@ -322,7 +460,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print("refusing: no calibration in data/writing/scorer.yaml (run develop first)",
               file=sys.stderr)  # fmt: skip
         return 2
-    report = final_test(essays, raw, features, test_ids, config)
+    report = final_test(essays, raw, features, test_ids, config, descriptors, rules)
     report["features"] = list(FEATURES)
     report["scored_at"] = datetime.now(UTC).isoformat(timespec="seconds")
     report["again"] = [*(previous or {}).get("again", []), args.again] if args.again else []
@@ -337,6 +475,8 @@ def final_test(
     features: dict[str, list[float]],
     test_ids: set[str],
     config: ScorerConfig,
+    descriptors: Mapping[str, Mapping[str, Any]] | None = None,
+    rules: Sequence[CapRule] = (),
 ) -> dict[str, Any]:
     assert config.calibration is not None
     cal = config.calibration.build()
@@ -352,6 +492,11 @@ def final_test(
         "constant": method_metrics(examiner, [mean] * len(test), words, SEED),
         "features": method_metrics(examiner, [ridge(features[e.id]) for e in test], words, SEED),
     }
+    if descriptors is not None:
+        methods |= held_out_methods(
+            [_row(e) for e in dev], [_row(e) for e in test], descriptors, model, words, rules,
+            seed=SEED,
+        )  # fmt: skip
     robust = robustness({e.id: e.text for e in test}, lambda t: cal.isotonic(raw(t)))
     q = methods["model"]["qwk"]
     met = q is not None and q >= GATE_QWK and all(r["over_half_band"] == 0 for r in robust.values())
@@ -361,7 +506,13 @@ def final_test(
         "band_counts": dict(sorted(_counts(examiner).items())),
         "methods": methods,
         "robustness": robust,
-        "gate": {"qwk_needed": GATE_QWK, "met": met},
+        "gate": {
+            "qwk_needed": GATE_QWK,
+            "met": met,
+            "by_method": {
+                m: v["qwk"] is not None and v["qwk"] >= GATE_QWK for m, v in methods.items()
+            },
+        },
         "note": "Scored once on the held-out essays; a spelling-fix perturbation is not run yet.",
     }
 

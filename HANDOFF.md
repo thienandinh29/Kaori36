@@ -71,8 +71,9 @@ wins; fix this page.
   synthetic transcript (4 points, US$0.002); whether the points are right is the owner's judgement of 20 (`dolater.md`).
 
 ## In progress
-Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
-the owner's examiner-banded essays.
+Writing 2.12 part 2 (`feat/writing-2.12-eval`, pull request #168): the comparison of five band methods, the
+per-criterion descriptor model, its store in `scorer.yaml` (`method`, `descriptors`) and the served band. Run end to end on
+synthetic essays only; the measurement waits on the owner's examiner-banded essays (`dolater.md`, Phase 2, has the commands).
 
 ## Open from the code review (28 Nov, none urgent)
 - Writing stage timings are recorded (`_timings` in each new essay's result; the query is in `specs/writing/step-2.1.md`). Read them on

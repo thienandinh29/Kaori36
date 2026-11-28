@@ -96,6 +96,17 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
     `marked_by` (`examiner` or `trained_rater`) and `source`. Good sources: the sample answers with examiner comments in
     the Cambridge IELTS books, the official sample scripts (IELTS, British Council, IDP), your own essays banded by a
     trained rater; a website's own marking is not an examiner band. Step 2.12 needs criterion bands on at least 40;
+  - **then run the comparison** (step 2.12, from `apps/api`; the heavy services one at a time on the 4 GB VM: first
+    `docker compose --profile scoring up -d` with `--scorer-url http://localhost:8020` so the raw scores are cached in
+    `data/private/writing/raw-cache.json`, then stop it and start `--profile writing` for `--languagetool-url
+    http://localhost:8010`; a second run reads the cache):
+    `uv run python -m app.evalkit.writing_score develop ../../data/private/writing/essays.jsonl --scorer-url http://localhost:8020 --languagetool-url http://localhost:8010`
+    then read `evals/writing/develop-report.json`: `methods` (QWK with intervals for the five methods), `descriptors.choice`
+    (the recommendation and whether it clearly beats the feature baseline), `descriptors.descriptor_model` (which features
+    were kept), `descriptors.per_criterion`, `descriptors.caps` (does each cap help where it fires) and `ranges`. **Without
+    LanguageTool the grammar features are missing, so the model is not the one the app will use.** Your decision: add
+    `--write-calibration` (the pinned scorer) and/or `--write-descriptors criteria|blend` to store a method in
+    `data/writing/scorer.yaml`, then `test` once for the held-out essays. The app shows nothing until you do;
   - LanguageTool's misses and the feedback/correction ratings: by the teacher, on 10 essays (`docs/v2/writing-eval.md`
     has every number to fill).
 - [ ] **Phase 3:** write the pronunciation gate report, `docs/v2/pronunciation-eval.md`.
