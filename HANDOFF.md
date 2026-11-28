@@ -4,13 +4,25 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `c5f518a` (#156 merged), plus Speaking 5.2 on `feat/speaking-fluency`.
+**Last updated:** 28 Nov 2026, `main` at `04a968b` (#160 merged). Nothing is waiting in an unmerged branch.
 
 ## Just finished
-- **Worker fixes** (28 Nov, branch `claude/festive-babbage-2ei6lw`, pull request open): stuck `analysing` essays requeued at start,
-  failed essays not counted in the daily limit, Speaking transcripts tried three times (migration `0047`) with no row lock
-  during the call, essays before transcription, and `part_missing` demoted to a hint. Still open: the same retry cap for
-  pronunciation recordings, timings per Writing stage, and whether `POLL_LIMIT` needs raising.
+- **Speaking 5.2, fluency numbers** (#160, 28 Nov; migration `0048`): speech rate, pauses found in the raw audio and counted
+  between and inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts
+  only. The clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
+- **Worker fixes** (#159, 28 Nov): an essay left `analysing` by a stopped worker is queued again when the worker starts
+  (one worker assumed); failed essays no longer count towards the day's limit; a Speaking answer is tried three times, then
+  `failed`, a failing one going behind untried ones, and no row lock is held during the transcript call (migration `0047`);
+  essays run before transcription. **Owner's decision:** Writing's `part_missing` is a hint, not an issue (the model's
+  "answers" lists have no quote for code to check; `step-2.11.md`). Side effect: it no longer reaches 2.12's notes, so the
+  `part_missing` rule in `data/writing/caps.yaml` cannot fire until the finding is promoted again.
+- **Writing 2.12 part 1** (#158, 27 Nov): descriptor caps (`data/writing/caps.yaml`) and descriptor features per criterion;
+  nothing applied or shown to learners.
+- **Speaking 5.1 and progress study T6** (#156, 27 Nov): transcripts with Whisper small.en in the `asr/` service (migration
+  `0046`, consent `speaking-v1`, the WER tool) and the rater's four criterion bands (migration `0045`).
+- **Speaking 5.4a, the examiner test** (`/noi/thi`, #154): five draft tests, voice examiner with the real timing, answers
+  recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
+  test at real speed is not done.
 - **Home page extras** (#151, owner's request 27 Nov): today's plan fixed for the day with "Đã xong" marks from today's
   answers, estimated minutes and "1/4 đã xong" (`specs/two-layer-map/step-m5.md`, migration `0043`); this week's study days
   as a calendar, no streak (`GET /today/week`); dictionary search `/tu-dien` (`specs/vocabulary/step-dictionary.md`).
@@ -36,25 +48,17 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
-## Just finished, merged in #154
-- **Speaking 5.4a, the examiner test** (`/noi/thi`): five draft tests, voice examiner with the real timing, answers
-  recorded and replayed, no score; migration `0044`. Checked with the fake microphone at shortened timing; the owner's real
-  test at real speed is not done.
-
-## Just finished, merged in #156
-- **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
-  Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
-
-## Built, not yet merged (`feat/speaking-fluency`)
-- **Speaking 5.2, fluency numbers** (migration `0047`): speech rate, pauses found in the raw audio and counted between and
-  inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts only. The
-  clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
-
 ## In progress
-Writing step 2.12 part 1 (descriptor caps and features, `specs/writing/step-2.12.md`, "Build note, part 1") in pull
-request #158; nothing wired into the app. Part 2 (the evaluation and the served path) follows once it is merged; the
-measurement waits on the owner's examiner-banded essays. The Reading diagnosis docs wait for review on
-`claude/compassionate-newton-d4dkru`.
+Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
+the owner's examiner-banded essays.
+
+## Open from the code review (28 Nov, none urgent)
+- Pronunciation recordings still retry forever on a transient service failure (`pronunciation/analysis.py`); give them the
+  same three-try cap as Speaking answers.
+- No timings per Writing stage; `POLL_LIMIT` (`essay-view.tsx`, 60 × 2 s) is unchanged. Measure before changing either.
+- An essay that crashes the worker process itself would be requeued at the next start and crash it again.
+- Still not promoted: asking the model to quote the sentence that answers each question part, so `part_missing` can be
+  checked and measured with `export_review` before it is an issue again.
 
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
