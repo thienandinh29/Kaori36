@@ -29,7 +29,7 @@ and appears under the answer, labelled **"gợi ý từ AI, dựa trên bản m�
 - The notice version is stored with the request (`speaking-feedback-v1`). The transcript is sent only on that request.
 
 ## How it is built
-- **Migration 0052 (additive):** on `speaking_answers`: `feedback_status` (`queued`, `working`, `done`, `failed`), `feedback`,
+- **Migration 0053 (additive):** on `speaking_answers`: `feedback_status` (`queued`, `working`, `done`, `failed`), `feedback`,
   `feedback_consent`, `feedback_requested_at`, `feedback_at`, `feedback_tries`.
 - `app/speaking/feedback.py` (pure, tested): the prompt, the output schema, the quote check and the other drop rules.
   `app/speaking/feedback_job.py`: the worker step (claims one queued answer, calls the model outside any open transaction, stores
@@ -51,13 +51,13 @@ That a point is correct; that no error was missed; anything about fluency or pro
 
 ## Tasks
 - [x] T1 `feedback.py` with tests
-- [x] T2 Migration 0052; the worker step; routing; tests
+- [x] T2 Migration 0053; the worker step; routing; tests
 - [x] T3 The service and route; tests
 - [x] T4 The page: button, notice, points; decoders; Vitest; Playwright on a mocked result
 - [x] T5 Run for real; docs
 
 ## Built (28 Nov 2026)
-- Migration `0052_speaking_feedback.sql`; `app/speaking/feedback.py` (prompt, schema, quote check, drop rules) and
+- Migration `0053_speaking_feedback.sql`; `app/speaking/feedback.py` (prompt, schema, quote check, drop rules) and
   `feedback_job.py` (the worker step, `requeue_stuck`); task `speaking_feedback` in `routing.yaml`; `SpeakingTests.request_feedback`,
   `feedback_state` and the `feedback` on every answer of the result and practice views; `POST` and `GET
   /speaking/answers/{id}/feedback`; web `components/speaking/answer-feedback.tsx`, `parseFeedback`, the proxy path, texts.
