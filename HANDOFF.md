@@ -7,7 +7,7 @@ wins; fix this page.
 **Last updated:** 27 Nov 2026, `main` at `cca973b` (#154 merged), plus T6 and Speaking 5.1 on `feat/speaking-transcripts`.
 
 ## Just finished
-- **Worker fixes** (28 Nov, branch `claude/festive-babbage-2ei6lw`, not pushed): stuck `analysing` essays requeued at start,
+- **Worker fixes** (28 Nov, branch `claude/festive-babbage-2ei6lw`, pull request open): stuck `analysing` essays requeued at start,
   failed essays not counted in the daily limit, Speaking transcripts tried three times (migration `0047`) with no row lock
   during the call, essays before transcription, and `part_missing` demoted to a hint. Still open: the same retry cap for
   pronunciation recordings, timings per Writing stage, and whether `POLL_LIMIT` needs raising.
