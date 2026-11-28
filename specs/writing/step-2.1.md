@@ -30,6 +30,17 @@ paragraphs split on blank lines).
 everyone, spent today" and "may this learner call a model now" against `LLM_DAILY_COST_CAP_USD` (whole service) and
 `LLM_DAILY_CALLS_PER_LEARNER`. Nothing calls it for a model yet; it is tested now so 2.4 only wires it in.
 
+## Stage timings (28 Nov 2026, a fix note)
+The worker records the seconds each stage of an essay's analysis takes in the stored result under `_timings`
+(`app/writing/timing.py`; a key starting with `_` never reaches the browser): `analyse` (LanguageTool, spaCy, ERRANT),
+`checks` (the guard, Task 1 facts), `band` (the band model's service), `corrections`, `feedback` and `structure` (one
+model call each, run one after another), `evidence` (mastery evidence, in the transaction) and `total`; the same numbers go
+to the log as "essay analysed". Wall-clock seconds on the worker, one machine, not a quality measure. Read them before
+changing the web page's polling limit or running the model calls in parallel:
+```sql
+select submitted_at, (result->'_timings') from essays where status = 'done' order by submitted_at desc limit 20;
+```
+
 ## Web (second PR of the step)
 `/viet` lists prompts and the learner's essays; `/viet/{prompt}` is the editor with a live word count and the consent
 notice before the first submission; `/bai-viet/{id}` follows the status and shows the result, with a delete button.

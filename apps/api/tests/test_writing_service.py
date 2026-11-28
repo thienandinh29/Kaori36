@@ -84,6 +84,12 @@ def test_an_essay_is_queued_then_analysed_by_the_worker(setup: Setup) -> None:
     assert done["status"] == "done"
     assert done["result"]["words"] == 10 and done["result"]["paragraphs"] == 2
     assert done["result"]["long_enough"] is False and "note_vi" in done["result"]
+    assert "_timings" not in done["result"]  # measurements stay on the server
+    with psycopg.connect(db) as conn:
+        row = conn.execute("select result from essays where id=%s", (essay_id,)).fetchone()
+    assert row is not None
+    stages = row[0]["_timings"]
+    assert {"analyse", "checks", "total"} <= set(stages) and stages["total"] >= stages["analyse"]
     assert svc.list(learner)[0] == {**svc.list(learner)[0], "id": essay_id, "words": 10}
 
 
@@ -974,6 +980,13 @@ def test_a_task_2_essay_gets_structure_checks_from_one_recorded_call(setup: Setu
     r = essay["result"]
     st = r["structure"]
     assert r["structure_unavailable_vi"] is None and st["model"] == "deepseek-test"
+    with psycopg.connect(db) as conn:
+        stored = conn.execute(
+            "select result from essays where learner_id=%s order by submitted_at", (learner,)
+        )
+        stages = stored.fetchall()[-1][0]["_timings"]
+    # each model call and the structure step have their own seconds
+    assert {"analyse", "band", "feedback", "structure", "evidence", "total"} <= set(stages)
     assert [p["answered"] for p in st["parts"]] == [True] and st["dropped"] == 0
     found = [(f["kind"], f["level"], f["paragraph"]) for f in st["findings"]]
     assert found == [("undeveloped", "hint", 3)]
