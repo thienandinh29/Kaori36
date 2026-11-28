@@ -1532,7 +1532,7 @@ export const vi = {
       findingHint: "Gợi ý",
       findings: {
         part_missing:
-          "Chưa thấy đoạn thân bài nào trả lời phần này của đề: {part}",
+          "Có thể chưa có đoạn thân bài nào trả lời phần này của đề: {part}. Công cụ có thể hiểu nhầm, bạn hãy tự đọc lại bài.",
         position_missing:
           "Chưa thấy ý kiến của bạn (đề hỏi: {part}). Hãy nêu rõ ở mở bài và nhắc lại ở kết bài.",
         position_changed:

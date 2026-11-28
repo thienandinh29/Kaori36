@@ -3,9 +3,11 @@
 The model only describes the essay: the position stated in the introduction and the conclusion,
 each body paragraph's main idea, which parts of the question it answers, and how it develops
 its point. Every description must quote the paragraph it describes; code checks each quote and
-then decides the findings: a part of the question no body paragraph answers, no position, a
-position that flips between introduction and conclusion, and (a hint, never an error) a body
-paragraph that only asserts its point. Nothing here is evidence: no finding moves mastery.
+then decides the findings: no position and a position that flips between introduction and
+conclusion (issues), and, as hints only, a part of the question no body paragraph seems to answer
+and a body paragraph that only asserts its point. The "answers" lists are the model's own claim
+and have no quote to check, so `part_missing` stays a hint until export_review has measured it.
+Nothing here is evidence: no finding moves mastery.
 
 A finding is made only from checked descriptions. When a description fails its quote check the
 code does not know, and says nothing rather than guess.
@@ -218,7 +220,7 @@ def verify(paragraphs: Sequence[str], parts: Sequence[Part], out: StructureOut) 
             answered.append(True)
         elif complete:
             answered.append(False)
-            findings.append(Finding("part_missing", "tr", "issue", i, None, ()))
+            findings.append(Finding("part_missing", "tr", "hint", i, None, ()))
         else:
             answered.append(None)
     if any(p.position for p in parts) and (intro.stance, concl.stance) in FLIPS:

@@ -69,36 +69,63 @@ def stored(result: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+MAX_ATTEMPTS = 3
+
+
 def process_next(
     conn: psycopg.Connection[Any],
     transcribe: Transcribe,
     now: Callable[[], datetime] = lambda: datetime.now(UTC),
 ) -> bool:
-    """Transcribe one waiting answer; False when none waits."""
+    """Transcribe one waiting answer; False when none waits.
+
+    The row is read and the transaction closed before the service is called (a transcript can take
+    minutes), and the result is written only if the answer is still waiting. One worker transcribes,
+    so no row lock is needed. A refusal fails the answer at once; a service failure is counted and,
+    on the third, fails it too. Answers with fewer failures go first.
+    """
     row = conn.execute(
-        "select id,audio from speaking_answers where transcript_status is null "
-        "and audio is not null order by recorded_at limit 1 for update skip locked"
+        "select id,audio,transcript_attempts from speaking_answers "
+        "where transcript_status is null and audio is not null "
+        "order by transcript_attempts, recorded_at limit 1"
     ).fetchone()
+    conn.commit()
     if row is None:
-        conn.commit()
         return False
-    answer, audio = row
+    answer, audio, attempts = row
     try:
         result = transcribe(bytes(audio))
     except Refused as exc:
         conn.execute(
-            "update speaking_answers set transcript=%s,transcript_status='failed',transcribed_at=%s"
-            " where id=%s",
-            (Jsonb({"error": str(exc)}), now(), answer),
+            "update speaking_answers set transcript=%s,transcript_status='failed',"
+            "transcript_error=%s,transcribed_at=%s where id=%s and transcript_status is null",
+            (Jsonb({"error": str(exc)}), str(exc)[:200], now(), answer),
         )
         conn.commit()
         return True
-    except Unavailable:
-        conn.rollback()
+    except Unavailable as exc:
+        failed = attempts + 1 >= MAX_ATTEMPTS
+        conn.execute(
+            "update speaking_answers set transcript_attempts=transcript_attempts+1,"
+            "transcript_error=%s"
+            + (",transcript_status='failed',transcript=%s,transcribed_at=%s" if failed else "")
+            + " where id=%s and transcript_status is null",
+            (
+                (
+                    str(exc)[:200],
+                    Jsonb({"error": f"service unavailable: {exc}"[:200]}),
+                    now(),
+                    answer,
+                )
+                if failed
+                else (str(exc)[:200], answer)
+            ),
+        )
+        conn.commit()
         raise
     conn.execute(
         "update speaking_answers set transcript=%s,transcript_status='done',transcribed_at=%s "
-        "where id=%s",
+        "where id=%s and transcript_status is null",
         (Jsonb(stored(result)), now(), answer),
     )
     conn.commit()

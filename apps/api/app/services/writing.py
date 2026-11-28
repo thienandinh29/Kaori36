@@ -421,7 +421,8 @@ class WritingService:
                 over = (now - started[2]).total_seconds() > started[3] + TEST_GRACE_SECONDS
             prompt = self._checked_prompt(prompt_id, own, learner, own_parts)
             today = conn.execute(
-                "select count(*) from essays where learner_id=%s and submitted_at >= %s",
+                "select count(*) from essays where learner_id=%s and submitted_at >= %s "
+                "and status <> 'failed'",  # a failed analysis is not the learner's try
                 (learner, start_of_day(now)),
             ).fetchone()
             assert today is not None
@@ -864,6 +865,15 @@ def _competency_allowed(step: "GrammarStep", learner: UUID) -> bool:
     return competency_evidence.rules(step.writing_dir).status == "reviewed" or (
         learner in step.draft_learners
     )
+
+
+def requeue_stuck_essays(database_url: str) -> int:
+    """At worker start: an essay left `analysing` by a stopped worker goes back to the queue.
+
+    One worker claims essays, so at start nothing can legitimately be analysing.
+    """
+    with psycopg.connect(database_url) as conn:
+        return conn.execute("update essays set status='queued' where status='analysing'").rowcount
 
 
 def process_next_essay(

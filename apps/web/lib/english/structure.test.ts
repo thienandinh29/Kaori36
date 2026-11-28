@@ -30,7 +30,7 @@ const STRUCTURE = {
     {
       kind: "part_missing",
       criterion: "tr",
-      level: "issue",
+      level: "hint",
       part: 2,
       paragraph: null,
       quotes: [],

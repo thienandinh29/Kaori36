@@ -54,10 +54,11 @@ def test_a_complete_essay_gets_only_the_development_hint() -> None:
     }
 
 
-def test_an_unanswered_part_is_an_issue_only_when_every_body_paragraph_was_checked() -> None:
+def test_an_unanswered_part_is_a_hint_only_when_every_body_paragraph_was_checked() -> None:
     s = verify(PARAS, PARTS, out(body=[FIRST, {**SECOND, "answers": [1]}]))
     assert s.answered[1] is False and "part_missing" in kinds(s)
-    assert next(f for f in s.findings if f.kind == "part_missing").part == 2
+    missing = next(f for f in s.findings if f.kind == "part_missing")
+    assert missing.part == 2 and missing.level == "hint"  # the model's "answers" claim has no quote
     # paragraph 3's quote is not in it: the code cannot tell whether part 2 was answered
     s = verify(PARAS, PARTS, out(body=[FIRST, {**SECOND, "main_idea": "words not there at all"}]))
     assert s.answered[1] is None and "part_missing" not in kinds(s) and s.dropped == 1
