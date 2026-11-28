@@ -237,7 +237,11 @@ def loop(
 ) -> None:
     from app.services.reading_own import process_next_own_test
     from app.services.rewrites import process_next_rewrite
-    from app.services.writing import load_grammar_step, process_next_essay
+    from app.services.writing import (
+        load_grammar_step,
+        process_next_essay,
+        requeue_stuck_essays,
+    )
 
     settings = get_settings()
     writing_dir = settings.writing_dir
@@ -250,6 +254,9 @@ def loop(
         settings.scorer_url,
         writing_model(settings),
     )
+    stuck = requeue_stuck_essays(settings.database_url)
+    if stuck:
+        logger.warning("requeued %d essay(s) left analysing by a stopped worker", stuck)
     purged_at = 0.0
     analyse = recording_analyser(settings)
     transcribe = transcriber(settings)
@@ -261,10 +268,10 @@ def loop(
                 purged_at = time.monotonic()
             if analyse is not None and analyse():
                 continue  # one recording at a time; the service is the slow part
-            if transcribe is not None and transcribe():
-                continue  # one Speaking answer at a time (step 5.1)
             if process_next_essay(database_url, writing_dir, grammar):
                 continue  # essays are short: drain them before the next topic job
+            if transcribe is not None and transcribe():
+                continue  # one Speaking answer at a time (step 5.1)
             if process_next_rewrite(database_url, grammar):
                 continue
             if process_next_own_test(database_url, own_model):

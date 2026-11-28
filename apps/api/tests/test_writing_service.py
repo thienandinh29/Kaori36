@@ -23,6 +23,7 @@ from app.services.writing import (
     WritingService,
     load_grammar_step,
     process_next_essay,
+    requeue_stuck_essays,
 )
 from app.writing.languagetool import LanguageToolClient, Match, parse_matches
 
@@ -132,6 +133,24 @@ def test_a_failed_analysis_is_reported_not_hidden(setup: Setup, tmp_path: Path) 
     assert drain(db, tmp_path) >= 1  # no prompts or linking files there
     failed = svc.get(learner, essay_id)
     assert failed["status"] == "failed" and failed["failure_vi"]
+    # a failed analysis is not one of the day's tries
+    svc.submit(learner, "t2-city-traffic", ESSAY, CONSENT, now=NOW)
+    svc.submit(learner, "t2-city-traffic", ESSAY, CONSENT, now=NOW)
+
+
+def test_an_essay_left_analysing_by_a_stopped_worker_is_queued_again(
+    setup: Setup,
+) -> None:
+    svc, learner, db = setup
+    with psycopg.connect(db) as conn:  # the test database is shared: leave no other essay queued
+        conn.execute("update essays set status='done' where status in ('queued','analysing')")
+    essay_id = svc.submit(learner, "t2-plastic-ban", ESSAY, CONSENT, now=NOW)
+    with psycopg.connect(db) as conn:
+        conn.execute("update essays set status='analysing' where id=%s", (essay_id,))
+    assert process_next_essay(db, WRITING) is False  # nobody claims an analysing essay
+    assert requeue_stuck_essays(db) == 1
+    assert svc.get(learner, essay_id)["status"] == "queued"
+    assert requeue_stuck_essays(db) == 0
 
 
 def test_the_daily_budget(setup: Setup) -> None:
