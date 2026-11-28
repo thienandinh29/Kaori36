@@ -1255,6 +1255,27 @@ export const vi = {
       transcriptNote:
         "Bản chép lời do máy làm: máy có thể nghe nhầm giọng, và có thể tự sửa mất lỗi của bạn. Đây không phải bằng chứng về điều bạn đã nói.",
       transcribing: "Đang chép lời…",
+      measuresNote:
+        "Số đo lấy từ âm thanh và thời gian từng từ, không phải điểm hay nhận xét. Máy không biết vì sao bạn ngừng, nó chỉ đếm. Câu trả lời ngắn cho số đo thiếu chắc chắn.",
+      measuresShort:
+        "Dưới 15 giây nói: tốc độ và số lần ngắt chỉ để tham khảo.",
+      measuresRate: (wpm: number) => `${Math.round(wpm)} từ/phút`,
+      measuresPauses: (
+        n: number,
+        between: number,
+        inside: number,
+        long: number,
+      ) =>
+        `${n} lần ngắt (${between} giữa mệnh đề, ${inside} trong mệnh đề${long > 0 ? `, ${long} dài từ 2 giây` : ""})`,
+      measuresFillers: (n: number) => `${n} từ đệm (um, uh…)`,
+      measuresRun: (words: number, seconds: number) =>
+        `đoạn liền dài nhất ${words} từ (${seconds.toFixed(1)} giây)`,
+      measuresShare: (share: number) =>
+        `nói ${Math.round(share * 100)}% thời gian cho phép`,
+      summaryTitle: "Cả bài thi",
+      summaryLine: (answers: number, words: number) =>
+        `${words} từ trong ${answers} câu trả lời`,
+      summaryPerMinute: (n: number) => `${n.toFixed(1)} lần ngắt mỗi phút`,
       transcriptFailed: "Không chép lời được câu này.",
       seconds: (s: number) => `${Math.round(s)} giây`,
       gone: "Bản ghi đã tự xóa sau 24 giờ.",

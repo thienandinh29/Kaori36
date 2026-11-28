@@ -5,11 +5,60 @@ import { useEffect, useRef, useState } from "react";
 import { Problem } from "@/components/english/problem";
 import { useLearner } from "@/components/english/use-learner";
 import { englishClient } from "@/lib/english/client";
-import type { Part, Result } from "@/lib/speaking/exam";
+import type { Measures, Part, Result, Summary } from "@/lib/speaking/exam";
 import { vi } from "@/messages/vi";
 import { makeExaminer } from "./examiner";
 
 const t = vi.english.speakingTest;
+
+/** The numbers of one answer, said plainly: counts only, no verdict (step 5.2). */
+function MeasuresLine({ m }: { m: Measures }) {
+  if (m.words === 0) return null;
+  const parts = [
+    m.speech_rate === null ? null : t.measuresRate(m.speech_rate),
+    t.measuresPauses(
+      m.pauses.count,
+      m.pauses.between_clauses,
+      m.pauses.inside_clause,
+      m.pauses.long,
+    ),
+    t.measuresFillers(m.fillers),
+    t.measuresRun(m.longest_run.words, m.longest_run.seconds),
+    m.share_of_time === null ? null : t.measuresShare(m.share_of_time),
+  ].filter((x): x is string => x !== null);
+  return (
+    <p className="en-muted small" data-testid="exam-measures">
+      {parts.join(" · ")}
+      {m.short && <> · {t.measuresShort}</>}
+    </p>
+  );
+}
+
+function SummaryBlock({ s }: { s: Summary }) {
+  const parts = [
+    s.speech_rate === null ? null : t.measuresRate(s.speech_rate),
+    s.pauses_per_minute === null
+      ? null
+      : t.summaryPerMinute(s.pauses_per_minute),
+    t.measuresPauses(
+      s.between_clauses + s.inside_clause,
+      s.between_clauses,
+      s.inside_clause,
+      s.long,
+    ),
+    t.measuresFillers(s.fillers),
+    t.summaryLine(s.answers, s.words),
+  ].filter((x): x is string => x !== null);
+  return (
+    <div className="nt-exam-transcript" data-testid="exam-summary">
+      <p>
+        <strong>{t.summaryTitle}</strong>
+      </p>
+      <p className="en-muted small">{parts.join(" · ")}</p>
+      <p className="en-muted small">{t.measuresNote}</p>
+    </div>
+  );
+}
 
 function playOne(url: string, signal: AbortSignal): Promise<void> {
   return new Promise((resolve) => {
@@ -93,6 +142,7 @@ export function ExamResult({ sittingId }: { sittingId: string }) {
         {result.finished_at === null && ` · ${t.unfinished}`}
       </p>
       <p className="en-muted">{t.resultIntro}</p>
+      {result.summary && <SummaryBlock s={result.summary} />}
       {result.questions.some((q) => q.answer?.transcript === "done") && (
         <p className="en-muted small">{t.transcriptNote}</p>
       )}
@@ -158,6 +208,9 @@ export function ExamResult({ sittingId }: { sittingId: string }) {
                           <p className="en-muted small">{t.transcript}</p>
                           <p lang="en">{q.answer.text}</p>
                         </div>
+                      )}
+                      {q.answer.measures && (
+                        <MeasuresLine m={q.answer.measures} />
                       )}
                       {q.answer.transcript === "waiting" && (
                         <p className="en-muted small">{t.transcribing}</p>

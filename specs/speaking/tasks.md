@@ -15,9 +15,8 @@
 
 **Build (agent), in order:**
 - [x] 5.4a the examiner test before transcription (`step-5.4a.md`, owner's go-ahead 27 Nov): voice examiner, real timing, answers recorded, replay; no model call
-- [ ] 5.2 addition: pauses between clauses and inside a clause (27 Nov)
 - [x] 5.1 recognition service `asr/`, transcripts of the examiner test's answers, word error rate tool (`step-5.1.md`, 27 Nov)
-- [ ] 5.2 fluency measures
+- [x] 5.2 fluency measures, with pauses between and inside clauses (`step-5.2.md`, 28 Nov)
 - [ ] 5.3 transcript checks and feedback with checked quotes
 - [ ] 5.4 mock test flow (no band); guided mode: idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time
 - [ ] 5.5 limits, cost cap, tester report

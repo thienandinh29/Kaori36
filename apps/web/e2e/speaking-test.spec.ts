@@ -84,3 +84,94 @@ test("other learners cannot sit the test yet", async ({ page }) => {
     0,
   );
 });
+
+test("the result page shows the numbers of each answer and of the whole test, never a score (step 5.2)", async ({
+  page,
+}) => {
+  const id = "11111111-1111-4111-8111-111111111111";
+  const measures = {
+    words: 24,
+    speaking_seconds: 10.4,
+    short: true,
+    speech_rate: 139,
+    articulation_rate: 167.1,
+    pauses: {
+      count: 3,
+      per_minute: 17.3,
+      between_clauses: 2,
+      inside_clause: 1,
+      long: 1,
+      total_seconds: 4.1,
+      longest_seconds: 2.2,
+      unplaced: 0,
+    },
+    fillers: { count: 2 },
+    longest_run: { words: 15, seconds: 4.6 },
+    asked_seconds: 40,
+    share_of_time: 0.26,
+  };
+  await asLearner(page, LEARNER);
+  await page.route(`**/api/backend/speaking/tests/${id}?*`, (route) =>
+    route.fulfill({
+      json: {
+        id,
+        test_id: "t01",
+        title: "Home, music and a journey",
+        keep: false,
+        started_at: "2026-11-28T09:00:00+00:00",
+        finished_at: "2026-11-28T09:14:00+00:00",
+        cue_card: {
+          task: "Describe a journey.",
+          points: ["a", "b", "c"],
+          explain: "and why.",
+        },
+        part3_theme: "travel",
+        questions: [
+          {
+            id: "p1-1-1",
+            part: 1,
+            text: "Do you live in a house or an apartment?",
+            answer: {
+              id: "22222222-2222-4222-8222-222222222222",
+              seconds: 12.2,
+              problems: [],
+              audio: false,
+              delete_after: null,
+              transcript: "done",
+              text: "Um, I live in a flat.",
+              words: [],
+              measures,
+            },
+          },
+        ],
+        summary: {
+          answers: 1,
+          words: 24,
+          speaking_seconds: 10.4,
+          speech_rate: 139,
+          pauses_per_minute: 17.3,
+          between_clauses: 2,
+          inside_clause: 1,
+          long: 1,
+          fillers: 2,
+          longest_run_words: 15,
+        },
+      },
+    }),
+  );
+  await page.goto(`/noi/thi/${id}`);
+  const line = page.getByTestId("exam-measures");
+  await expect(line).toContainText("139 từ/phút");
+  await expect(line).toContainText(
+    "3 lần ngắt (2 giữa mệnh đề, 1 trong mệnh đề, 1 dài từ 2 giây)",
+  );
+  await expect(line).toContainText("2 từ đệm");
+  await expect(line).toContainText("đoạn liền dài nhất 15 từ");
+  await expect(line).toContainText("Dưới 15 giây nói");
+  const summary = page.getByTestId("exam-summary");
+  await expect(summary).toContainText("17.3 lần ngắt mỗi phút");
+  await expect(summary).toContainText("Máy không biết vì sao bạn ngừng");
+  await expect(
+    page.getByTestId("exam-result").getByText(/điểm số|band|Band/),
+  ).toHaveCount(0);
+});
