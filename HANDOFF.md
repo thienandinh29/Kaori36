@@ -4,7 +4,7 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `cd964ab` (#166 merged). Nothing is waiting in an unmerged branch.
+**Last updated:** 28 Nov 2026, `main` at `c355b92` (#167 merged); Speaking 5.3b in the open pull request from `feat/speaking-feedback-pr`.
 
 ## Just finished
 - **Pronunciation retry cap** (#166, 28 Nov; migration `0052`): a recording the service answered 5xx or 429 to, or hung on, is counted; the
@@ -63,6 +63,13 @@ wins; fix this page.
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
 
+## Built, not yet merged (5.3b, `feat/speaking-feedback-pr`)
+- **Speaking 5.3b, the model's feedback** (`specs/speaking/step-5.3b.md`, migration `0053`): on a result page, "Nhận xét bằng AI" under an
+  answer with a transcript and 15 s of speech (owner only): the notice first (**a draft, labelled "Bản nháp": set its wording**, `dolater.md`),
+  then the worker writes 2–5 points through the gateway (task `speaking_feedback`), each quoting the transcript; code drops a point whose
+  quote is not an exact substring, a missing-ending point and any talk of a band. Never a score, never evidence. Run for real on a
+  synthetic transcript (4 points, US$0.002); whether the points are right is the owner's judgement of 20 (`dolater.md`).
+
 ## In progress
 Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
 the owner's examiner-banded essays.
@@ -76,7 +83,7 @@ the owner's examiner-banded essays.
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: 5.3b once the owner sets the transcript consent wording (`dolater.md`); 5.5 is built and waits on the privacy review. The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
+2. Next build: the owner's call (5.6 SPK-001 waits on the corpus licence; CP4b/CP4c/CP6 per `PLAN.md`). 5.3b is built and waits on the owner's notice wording and judgement of 20 points; 5.5 is merged and shut: it waits on the privacy review. The owner tries guided practice for a week, judges 20 hints and checks 5.2's pause counts (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

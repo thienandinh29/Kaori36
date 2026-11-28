@@ -1233,6 +1233,31 @@ export const vi = {
         `Hôm nay còn: ${mock} bài thi thử, ${tries} lần luyện.`,
       dailyLimit: "Hôm nay bạn đã dùng hết lượt. Mai quay lại nhé.",
     },
+    speakingFeedback: {
+      button: "Nhận xét bằng AI",
+      title: "Nhận xét của AI",
+      label:
+        "Gợi ý từ AI, dựa trên bản máy chép lại, có thể sai. Không phải điểm và không dùng để tính mức thành thạo.",
+      noticeTitle: "Trước khi gửi bản chép cho AI",
+      noticeDraft:
+        "Bản nháp: chủ dự án sẽ chốt lời lẽ này. Hiện chỉ chủ dự án dùng được nút này.",
+      noticeText:
+        "Khi bạn bấm gửi, chỉ bản chép chữ của câu trả lời này và câu hỏi được gửi tới nhà cung cấp mô hình AI (DeepSeek, qua máy chủ của NodeTrail) để viết nhận xét. Âm thanh không được gửi, tên bạn cũng không. Nhận xét được lưu cùng bài thi cho đến khi bạn xóa bài thi.",
+      noticeAgree: "Tôi đã đọc và đồng ý gửi bản chép này",
+      send: "Gửi và nhận nhận xét",
+      waiting: "Đang viết nhận xét… thường mất khoảng nửa phút.",
+      tooLong: "Nhận xét lâu hơn dự kiến. Tải lại trang sau ít phút để xem.",
+      strength: "Điểm tốt",
+      issue: "Có thể cải thiện",
+      better: "Có thể nói",
+      areas: {
+        answer: "Câu trả lời",
+        grammar: "Ngữ pháp",
+        vocabulary: "Từ vựng",
+        linking: "Liên kết ý",
+      } as Record<string, string>,
+      retry: "Thử lại",
+    },
     speakingPractice: {
       title: "Luyện nói có hướng dẫn",
       intro:

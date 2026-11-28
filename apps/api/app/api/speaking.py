@@ -30,6 +30,11 @@ class PracticeIn(BaseModel):
     previous_id: str | None = Field(default=None, max_length=64)  # a try to repeat
 
 
+class FeedbackIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    consent: str = Field(min_length=1, max_length=40)  # the notice's version (step 5.3b)
+
+
 async def _body(request: Request, limit: int) -> bytes | None:
     """The request body, or None once it passes the limit (read no further)."""
     data = bytearray()
@@ -115,6 +120,21 @@ def create_router(service: SpeakingTests) -> APIRouter:
     ) -> Response:
         service.delete(learner_id, sitting_id, session)
         return Response(status_code=204)
+
+    @router.get("/speaking/answers/{answer_id}/feedback")
+    def feedback_state(
+        answer_id: str, learner_id: str = LEARNER, session: str | None = SESSION
+    ) -> dict[str, Any]:
+        return service.feedback_state(learner_id, answer_id, session)
+
+    @router.post("/speaking/answers/{answer_id}/feedback", status_code=202)
+    def feedback(
+        answer_id: str,
+        body: FeedbackIn,
+        learner_id: str = LEARNER,
+        session: str | None = SESSION,
+    ) -> dict[str, Any]:
+        return service.request_feedback(learner_id, answer_id, body.consent, session)
 
     @router.get("/speaking/answers/{answer_id}/audio")
     def audio(answer_id: str, learner_id: str = LEARNER, session: str | None = SESSION) -> Response:

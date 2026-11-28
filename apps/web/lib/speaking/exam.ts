@@ -142,6 +142,28 @@ export type Language =
       /** null: LanguageTool is not configured, the grammar was not checked */
       hints: Hint[] | null;
     };
+/** Step 5.3b: the model's feedback on an answer, its quotes already checked by the server. */
+export type FeedbackStatus = "none" | "queued" | "working" | "done" | "failed";
+export type FeedbackArea = "answer" | "grammar" | "vocabulary" | "linking";
+
+export interface FeedbackPoint {
+  kind: "strength" | "issue";
+  area: FeedbackArea;
+  point_vi: string;
+  quote: string;
+  better: string | null;
+}
+
+export interface Feedback {
+  status: FeedbackStatus;
+  points: FeedbackPoint[];
+  failed: string | null;
+  /** The owner may ask now (a transcript, 15 s of speech, tries left). */
+  can_ask: boolean;
+  /** The version of the notice the learner accepts. */
+  consent: string;
+}
+
 export interface Answered {
   id: string;
   seconds: number;
@@ -154,6 +176,7 @@ export interface Answered {
   words: TimedWord[];
   measures: Measures | null;
   language: Language | null;
+  feedback: Feedback | null;
 }
 export interface Result {
   id: string;
@@ -408,6 +431,50 @@ export function parseOverview(value: unknown): Overview {
 }
 
 /** One stored answer with its transcript, numbers and checks (steps 5.1 to 5.3a), strictly. */
+const FEEDBACK_STATES: readonly FeedbackStatus[] = [
+  "none",
+  "queued",
+  "working",
+  "done",
+  "failed",
+];
+const FEEDBACK_AREAS: readonly FeedbackArea[] = [
+  "answer",
+  "grammar",
+  "vocabulary",
+  "linking",
+];
+
+export function parseFeedback(value: unknown): Feedback | null {
+  if (value === null || value === undefined) return null;
+  const f = record(value);
+  const status = string(f.status) as FeedbackStatus;
+  if (!FEEDBACK_STATES.includes(status)) throw new DataError("contract");
+  return {
+    status,
+    points: list(f.points).map((p) => {
+      const o = record(p);
+      const kind = string(o.kind);
+      const area = string(o.area) as FeedbackArea;
+      if (
+        (kind !== "strength" && kind !== "issue") ||
+        !FEEDBACK_AREAS.includes(area)
+      )
+        throw new DataError("contract");
+      return {
+        kind,
+        area,
+        point_vi: string(o.point_vi),
+        quote: string(o.quote),
+        better: maybe(o.better),
+      };
+    }),
+    failed: maybe(f.failed),
+    can_ask: flag(f.can_ask),
+    consent: string(f.consent),
+  };
+}
+
 export function parseAnswered(value: unknown): Answered {
   const a = record(value);
   const answer: Answered = {
@@ -420,6 +487,7 @@ export function parseAnswered(value: unknown): Answered {
     text: maybe(a.text),
     measures: parseMeasures(a.measures),
     language: parseLanguage(a.language),
+    feedback: parseFeedback(a.feedback),
     words: list(a.words).map((w) => {
       const x = record(w);
       return { word: string(x.word), start: num(x.start), end: num(x.end) };
