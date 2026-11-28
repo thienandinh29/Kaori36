@@ -113,7 +113,11 @@ contact, payment or thanks) and tick the jobs you want from that person. Add the
   200-question bank takes about 5 days. US$10 of credit raises this to 1,000 a day. It's optional, and nothing is
   blocked without it.
 - [ ] **Before anyone but you records their voice:** a privacy review of the voice policy (consent, retention, where
-  audio goes). Recording is owner-only until then; a reviewer only *listens* to your kept recordings.
+  audio goes). Recording is owner-only until then; a reviewer only *listens* to your kept recordings. Testers (step 5.5)
+  are built: after the review, set `TESTERS_MAY_RECORD=true` (add it to `.env.example`; this session could not read that
+  file), make testers with `python -m app.testers.cli add --label ...` and send each their `invite` link.
+- [ ] **Set the wording of the optional research notice** (`research-v1`, on the tester join page, labelled "Bản nháp" until
+  you do): what numbers you see, for how long, how a tester withdraws. Change the version if the meaning changes.
 - [ ] **Before any paid tier:**
   - replace or relicense the NonCommercial sources (OpenStax reading texts; the Bissonnette, Explorations and Hall &
     Wallace grammar books);

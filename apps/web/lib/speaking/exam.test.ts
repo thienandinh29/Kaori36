@@ -175,6 +175,7 @@ describe("decoders", () => {
         },
       ],
       max_tries: 3,
+      left_today: { mock_tests: 2, practice_tries: 17 },
       past: [
         {
           id: "s1",
@@ -188,6 +189,7 @@ describe("decoders", () => {
         },
       ],
     });
+    expect(o.left_today).toEqual({ mock_tests: 2, practice_tries: 17 });
     expect(o.past[0]?.finished_at).toBeNull();
     expect(o.tests[0]?.practice[0]).toEqual({
       id: "p3-1",

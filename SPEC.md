@@ -109,11 +109,15 @@ the trace.
 - Daily limits per plan (`apps/api/app/plans.yaml`: free 3 essays and 6 model calls, pro 15 and 40, owner 100 and 300) and a
   service-wide daily cost cap (`LLM_DAILY_COST_CAP_USD`), checked before every model call; every call logged in `llm_calls`.
 - Offline batches (question generation, blind checks, imports) run with an explicit cost cap per run.
+- Speaking testers: 3 mock tests and 20 practice tries a Vietnam day (`app/speaking/limits.yaml`, assumptions); the owner is
+  unlimited.
 
 **Privacy**
 - A voice is personal data. Consent (`voice-v1`) before recording; owner only until a privacy review; recordings deleted
   after 24 hours unless kept; said words keep per-sound scores only, one attempt per recording. Only the owner's kept
-  recordings may be played to a reviewer the owner chose, through the portal, after an explicit command.
+  recordings may be played to a reviewer the owner chose, through the portal, after an explicit command. Invited Speaking
+  testers (step 5.5: a one-time invite link, a 30-day session) cannot record until the owner sets `TESTERS_MAY_RECORD`
+  after that review; their report holds their own numbers only if they accepted the optional research notice.
 - Writing sent to a model provider needs the consent notice. Private evaluation data (copyrighted essays, recordings,
   labels) stays in git-ignored `data/private/`; only metrics are committed.
 
@@ -128,13 +132,13 @@ ShareAlike flagged; no real exam passages or past papers.
 ## Interfaces
 - **Web** (`apps/web`, Next.js, Vietnamese UI): `/`, `/ban-do`, `/kiem-tra`, `/lo-trinh`, `/on-tap/{kind}/{slug}`, `/hoc/{slug}`,
   `/tu-vung`, `/tu-dien`, `/viet`, `/viet/{prompt}`, `/bai-viet/{id}`, `/phat-am`, `/doc`, `/doc/{slug}`, `/doc/{slug}/thi`, `/nghe`,
-  `/nghe/{slug}`, `/nghe/bai/{slug}`, `/noi-duoi`, `/noi/thi`, `/noi/thi/{id}`, `/noi/luyen`, `/noi/luyen/{id}`, `/duyet-doc` (owner), `/kiem-duyet` (reviewers), `/gioi-thieu`; the contest's
+  `/nghe/{slug}`, `/nghe/bai/{slug}`, `/noi-duoi`, `/noi/thi`, `/noi/thi/{id}`, `/noi/luyen`, `/noi/luyen/{id}`, `/vao/{token}` (a tester's invite), `/duyet-doc` (owner), `/kiem-duyet` (reviewers), `/gioi-thieu`; the contest's
   topic research at `/kham-pha`. The browser calls the API only through the server proxy `app/api/backend/[...path]`, which
   adds the API key and forwards an allow-listed set of query parameters.
 - **API** (`apps/api`, FastAPI, every route except `/health` behind `X-API-Key`), by group: `/today`, `/today/week`, `/maps`; `/level-tests`, `/roadmap`,
   `/milestones`, `/nodes`, `/grammar-runs`, `/rechecks`; `/vocab/*` (session, answers, say, search), `/phrases`; `/lessons`;
   `/writing/prompts` (and `/check`), `/writing/tests`, `/essays` (corrections, rewrites, patterns); `/recordings`, `/pronunciation/prompts`; `/reading/*`
-  (texts, items, tests, review); `/listening/*` (texts, items, passages); `/shadowing/texts`; `/speaking/*` (the examiner test and guided practice: tests, practice, answers, audio, microphone check); `/speech`; `/review/*` (reviewer
+  (texts, items, tests, review); `/listening/*` (texts, items, passages); `/shadowing/texts`; `/speaking/*` (the examiner test and guided practice: tests, practice, answers, audio, microphone check); `/speech`; `/testers/*` (redeem an invite, who am I, the research notice); `/review/*` (reviewer
   token in `X-Reviewer-Token`); `/learners` creates a learner id. Contest-era groups (`/topics`, `/graph`, `/tutor`,
   `/placement`, `/next-item`, `/reviews/due`, `/exam-plan`, `/ask`, `/uploads`, `/code`) remain for other subjects; 79 paths in
   all on 20 Nov 2026.
