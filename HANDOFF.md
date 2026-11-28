@@ -4,9 +4,12 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `c5f518a` (#156 merged), plus Speaking 5.2 on `feat/speaking-fluency`.
+**Last updated:** 28 Nov 2026, `main` at `04a968b` (#160 merged), plus Speaking 5.3a on `feat/speaking-grammar-pr`.
 
 ## Just finished
+- **Speaking 5.2, fluency numbers** (#160, migration `0048`): speech rate, pauses found in the raw audio and counted between and
+  inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts only. The
+  clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
 - **Worker fixes** (28 Nov, branch `claude/festive-babbage-2ei6lw`, pull request open): stuck `analysing` essays requeued at start,
   failed essays not counted in the daily limit, Speaking transcripts tried three times (migration `0047`) with no row lock
   during the call, essays before transcription, and `part_missing` demoted to a hint. Still open: the same retry cap for
@@ -45,10 +48,10 @@ wins; fix this page.
 - **Progress study T6** (criterion bands from the rater; migration `0045`) and **Speaking 5.1** (transcripts with
   Whisper small.en in the new `asr/` service, migration `0046`, consent `speaking-v1`, the WER tool).
 
-## Built, not yet merged (`feat/speaking-fluency`)
-- **Speaking 5.2, fluency numbers** (migration `0047`): speech rate, pauses found in the raw audio and counted between and
-  inside clauses, fillers, the longest fluent run, shown under each transcript and pooled for the test; counts only. The
-  clause split uses a parse of the words, not the recogniser's punctuation (it writes full stops at long pauses).
+## Built, not yet merged (`feat/speaking-grammar-pr`)
+- **Speaking 5.3a, grammar and vocabulary checks by code** (migration `0049`): memorised-phrase and repeated-text check, LanguageTool and
+  ERRANT hints each playable at its moment, a possibly-missing -s/-ed ending kept apart, vocabulary numbers; answers under 15 s
+  skipped; no model call; never mastery. The model's feedback (5.3b) waits on the owner's consent wording.
 
 ## In progress
 Writing step 2.12 part 1 (descriptor caps and features, `specs/writing/step-2.12.md`, "Build note, part 1") in pull
@@ -59,7 +62,7 @@ measurement waits on the owner's examiner-banded essays. The Reading diagnosis d
 ## Next (build)
 1. The owner edits the five draft tests (`data/speaking/tests/`) and takes two full tests on `/noi/thi`; rated mocks are
    recorded with `--criteria`; about 20 typed references give 5.1's word error rate (`dolater.md`).
-2. Next build: 5.3, grammar and vocabulary checks on the transcript (LanguageTool and ERRANT as hints, never mastery) with feedback whose quotes are checked against it. The owner also checks 5.2's pause counts on five answers (`dolater.md`).
+2. Next build: 5.3b once the owner sets the transcript consent wording (`dolater.md`), or 5.4 (the mock test flow, guided mode). The owner also judges 20 hints and checks 5.2's pause counts (`dolater.md`).
 
 ## Next
 1. **Owner first: try 4.3d on a real test** (`dolater.md`, section 1, ~40 min): one Cambridge Reading passage under exam

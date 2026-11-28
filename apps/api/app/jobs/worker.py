@@ -203,17 +203,38 @@ def recording_analyser(settings: Any) -> Callable[[], bool] | None:
     return run
 
 
-def transcriber(settings: Any) -> Callable[[], bool] | None:
-    """Transcribes one Speaking answer per call when the recognition service is configured
-    (specs/speaking/step-5.1.md); waits 30 s after the service fails to answer."""
+def transcriber(settings: Any, grammar: Any = None) -> Callable[[], bool] | None:
+    """Transcribes, measures and checks one Speaking answer per call when the recognition service
+    is configured (specs/speaking/step-5.1.md to 5.3.md); waits 30 s after a service fails to
+    answer. `grammar` is the Writing grammar step the worker already loaded: its parser, ERRANT
+    and LanguageTool are reused for the grammar hints."""
     if not settings.asr_url:
         return None
     import spacy
 
+    from app.lessons.graded import build_index
+    from app.speaking.language import LanguageStep
     from app.speaking.transcribe import Unavailable, process_next, service_transcribe
+    from app.vocabulary.wordlist import load_wordlist
+    from app.writing import guardrails
 
     transcribe = service_transcribe(settings.asr_url)
-    nlp = spacy.load("en_core_web_sm")  # clause boundaries for the fluency measures (step 5.2)
+    # the parser is shared with the Writing grammar step when there is one (spaCy takes a second)
+    nlp = grammar.nlp if grammar is not None else spacy.load("en_core_web_sm")
+    language = None
+    if grammar is not None:
+        authored = load_wordlist(settings.vocab_dir / "core-seed.yaml")
+        language = LanguageStep(
+            nlp=grammar.nlp,
+            annotator=grammar.annotator,
+            error_map=grammar.error_map,
+            index=build_index(
+                settings.vocab_imported_dir / "forms.yaml",
+                [(w.lemma, w.level) for w in authored.words],
+            ),
+            templates=guardrails.load_templates(settings.writing_dir / "templates.yaml"),
+            matches=grammar.client.matches if grammar.client is not None else None,
+        )
     retry_at = 0.0
 
     def run() -> bool:
@@ -222,7 +243,7 @@ def transcriber(settings: Any) -> Callable[[], bool] | None:
             return False
         try:
             with psycopg.connect(settings.database_url) as conn:
-                return process_next(conn, transcribe, nlp=nlp)
+                return process_next(conn, transcribe, nlp=nlp, language=language)
         except Unavailable as exc:
             logger.warning("recognition service unavailable, retrying in 30 s: %s", exc)
             retry_at = time.monotonic() + 30
@@ -262,7 +283,7 @@ def loop(
         logger.warning("requeued %d essay(s) left analysing by a stopped worker", stuck)
     purged_at = 0.0
     analyse = recording_analyser(settings)
-    transcribe = transcriber(settings)
+    transcribe = transcriber(settings, grammar)
     own_model = writing_model(settings)  # Reading tests taken elsewhere (step 4.3d)
     while True:
         try:

@@ -69,6 +69,7 @@ def _transcript(
     enabled: bool,
     measures: dict[str, Any] | None = None,
     asked: int | None = None,
+    language: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """The answer's transcript for the page (step 5.1): done, failed, waiting (only when a
     recogniser is configured and the audio is still there), or none."""
@@ -81,11 +82,24 @@ def _transcript(
                 for w in data.get("words", [])
             ],
             "measures": _with_share(measures, asked),
+            "language": language,
         }
     if status == "failed":
-        return {"transcript": "failed", "text": None, "words": [], "measures": None}
+        return {
+            "transcript": "failed",
+            "text": None,
+            "words": [],
+            "measures": None,
+            "language": None,
+        }
     waiting = "waiting" if audio and enabled else "none"
-    return {"transcript": waiting, "text": None, "words": [], "measures": None}
+    return {
+        "transcript": waiting,
+        "text": None,
+        "words": [],
+        "measures": None,
+        "language": None,
+    }
 
 
 def _with_share(measures: dict[str, Any] | None, asked: int | None) -> dict[str, Any] | None:
@@ -301,7 +315,8 @@ class SpeakingTests:
             ).fetchone()
             rows = conn.execute(
                 "select question_id,id,question,seconds,quality,audio is not null,delete_after,"
-                "transcript_status,transcript,measures from speaking_answers where sitting_id=%s",
+                "transcript_status,transcript,measures,language "
+                "from speaking_answers where sitting_id=%s",
                 (sitting,),
             ).fetchall()
         assert started is not None
@@ -324,7 +339,9 @@ class SpeakingTests:
                         "problems": list(r[4].get("problems", [])),
                         "audio": bool(r[5]),
                         "delete_after": r[6].isoformat() if r[6] else None,
-                        **_transcript(r[7], r[8], bool(r[5]), self.transcripts, r[9], q.seconds),
+                        **_transcript(
+                            r[7], r[8], bool(r[5]), self.transcripts, r[9], q.seconds, r[10]
+                        ),
                     },
                 }
             )

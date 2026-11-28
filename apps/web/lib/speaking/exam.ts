@@ -90,6 +90,40 @@ export interface Summary {
   fillers: number;
   longest_run_words: number;
 }
+/** Step 5.3a: checks by code on the transcript. Hints, never evidence; never a score. */
+export interface Hint {
+  kind: "grammar" | "word" | "ending";
+  text: string;
+  suggestion: string | null;
+  message_en: string;
+  start_s: number | null;
+  end_s: number | null;
+}
+export interface Vocabulary {
+  words: number;
+  mtld: number | null;
+  beyond_b1_share: number | null;
+  unknown_share: number | null;
+  repeated: { word: string; count: number }[];
+}
+export interface Guard {
+  templates: string[];
+  template_words: number;
+  repeated_words: number;
+  repeated_sentences: string[];
+  prompt_overlap: number | null;
+  off_topic: boolean;
+}
+export type Language =
+  | { state: "short" }
+  | { state: "failed" }
+  | {
+      state: "checked";
+      guard: Guard;
+      vocabulary: Vocabulary;
+      /** null: LanguageTool is not configured, the grammar was not checked */
+      hints: Hint[] | null;
+    };
 export interface Answered {
   id: string;
   seconds: number;
@@ -101,6 +135,7 @@ export interface Answered {
   text: string | null;
   words: TimedWord[];
   measures: Measures | null;
+  language: Language | null;
 }
 export interface Result {
   id: string;
@@ -132,6 +167,57 @@ function num(value: unknown): number {
   if (typeof value !== "number" || !Number.isFinite(value) || value < 0)
     throw new DataError("contract");
   return value;
+}
+const KINDS = ["grammar", "word", "ending"] as const;
+function parseHint(value: unknown): Hint {
+  const h = record(value);
+  const kind = string(h.kind);
+  if (!(KINDS as readonly string[]).includes(kind))
+    throw new DataError("contract");
+  return {
+    kind: kind as Hint["kind"],
+    text: string(h.text),
+    suggestion: maybe(h.suggestion),
+    message_en: string(h.message_en),
+    start_s: maybeNum(h.start_s),
+    end_s: maybeNum(h.end_s),
+  };
+}
+function parseLanguage(value: unknown): Language | null {
+  if (value === null || value === undefined) return null;
+  const l = record(value);
+  if (l.failed !== undefined) return { state: "failed" };
+  if (l.skipped !== null && l.skipped !== undefined) {
+    if (l.skipped !== "short") throw new DataError("contract");
+    return { state: "short" };
+  }
+  const g = record(l.guard);
+  const v = record(l.vocabulary);
+  return {
+    state: "checked",
+    guard: {
+      templates: strings(g.templates),
+      template_words: num(g.template_words),
+      repeated_words: num(g.repeated_words),
+      repeated_sentences: strings(g.repeated_sentences),
+      prompt_overlap: maybeNum(g.prompt_overlap),
+      off_topic: flag(g.off_topic),
+    },
+    vocabulary: {
+      words: num(v.words),
+      mtld: maybeNum(v.mtld),
+      beyond_b1_share: maybeNum(v.beyond_b1_share),
+      unknown_share: maybeNum(v.unknown_share),
+      repeated: list(v.repeated).map((x) => {
+        const r = record(x);
+        return { word: string(r.word), count: num(r.count) };
+      }),
+    },
+    hints:
+      l.hints === null || l.hints === undefined
+        ? null
+        : list(l.hints).map(parseHint),
+  };
 }
 function maybeNum(value: unknown): number | null {
   return value === null || value === undefined ? null : num(value);
@@ -301,6 +387,7 @@ export function parseResult(value: unknown): Result {
           transcript: transcriptState(a.transcript),
           text: maybe(a.text),
           measures: parseMeasures(a.measures),
+          language: parseLanguage(a.language),
           words: list(a.words).map((w) => {
             const x = record(w);
             return {
@@ -312,7 +399,10 @@ export function parseResult(value: unknown): Result {
         };
         if ((answer.transcript === "done") !== (answer.text !== null))
           throw new DataError("contract");
-        if (answer.measures !== null && answer.transcript !== "done")
+        if (
+          (answer.measures !== null || answer.language !== null) &&
+          answer.transcript !== "done"
+        )
           throw new DataError("contract");
       }
       return {

@@ -175,3 +175,122 @@ test("the result page shows the numbers of each answer and of the whole test, ne
     page.getByTestId("exam-result").getByText(/điểm số|band|Band/),
   ).toHaveCount(0);
 });
+
+test("the result page shows the memorised-phrase check, the grammar hints with an ending apart, and the vocabulary numbers (step 5.3a)", async ({
+  page,
+}) => {
+  const id = "33333333-3333-4333-8333-333333333333";
+  const language = {
+    skipped: null,
+    guard: {
+      templates: ["in this day and age"],
+      template_words: 5,
+      repeated_words: 0,
+      repeated_sentences: [],
+      prompt_overlap: 0.4,
+      off_topic: false,
+    },
+    vocabulary: {
+      words: 60,
+      mtld: 48.2,
+      beyond_b1_share: 0.1,
+      unknown_share: 0.02,
+      repeated: [{ word: "people", count: 4 }],
+    },
+    hints: [
+      {
+        kind: "ending",
+        text: "cat",
+        suggestion: "cats",
+        message_en: "m",
+        start_s: 2.2,
+        end_s: 2.8,
+      },
+      {
+        kind: "grammar",
+        text: "have",
+        suggestion: "has",
+        message_en: "Use has.",
+        start_s: 1.7,
+        end_s: 2.0,
+      },
+    ],
+  };
+  await asLearner(page, LEARNER);
+  await page.route(`**/api/backend/speaking/tests/${id}?*`, (route) =>
+    route.fulfill({
+      json: {
+        id,
+        test_id: "t01",
+        title: "Home, music and a journey",
+        keep: false,
+        started_at: "2026-11-28T09:00:00+00:00",
+        finished_at: "2026-11-28T09:14:00+00:00",
+        cue_card: {
+          task: "Describe a journey.",
+          points: ["a", "b", "c"],
+          explain: "and why.",
+        },
+        part3_theme: "travel",
+        questions: [
+          {
+            id: "p1-1-1",
+            part: 1,
+            text: "Do you live in a house or an apartment?",
+            answer: {
+              id: "44444444-4444-4444-8444-444444444444",
+              seconds: 20,
+              problems: [],
+              audio: true,
+              delete_after: null,
+              transcript: "done",
+              text: "Um, my sister have two cat.",
+              words: [],
+              measures: null,
+              language,
+            },
+          },
+          {
+            id: "p1-1-2",
+            part: 1,
+            text: "What do you like most about the place where you live?",
+            answer: {
+              id: "55555555-5555-4555-8555-555555555555",
+              seconds: 6,
+              problems: [],
+              audio: true,
+              delete_after: null,
+              transcript: "done",
+              text: "It is quiet.",
+              words: [],
+              measures: null,
+              language: { skipped: "short" },
+            },
+          },
+        ],
+        summary: null,
+      },
+    }),
+  );
+  await page.goto(`/noi/thi/${id}`);
+  const guard = page.getByTestId("exam-guard");
+  await expect(guard).toContainText("in this day and age");
+  const hints = page.getByTestId("exam-hints");
+  await expect(hints).toContainText("“have” → “has”");
+  await expect(hints).toContainText("có thể thiếu đuôi -s/-ed");
+  await expect(
+    hints.getByRole("button", { name: "Nghe đoạn này" }),
+  ).toHaveCount(2);
+  await expect(page.getByText("Gợi ý ngữ pháp (có thể sai)")).toBeVisible();
+  await expect(
+    page.getByText("Không có gợi ý nào ảnh hưởng đến mức thành thạo"),
+  ).toBeVisible();
+  const vocab = page.getByTestId("exam-vocab");
+  await expect(vocab).toContainText("đa dạng từ (MTLD) 48");
+  await expect(vocab).toContainText("10% từ trên B1");
+  await expect(vocab).toContainText("people (4)");
+  await expect(page.getByText("Câu trả lời dưới 15 giây nói")).toBeVisible();
+  await expect(
+    page.getByTestId("exam-result").getByText(/điểm số|band|Band/),
+  ).toHaveCount(0);
+});
