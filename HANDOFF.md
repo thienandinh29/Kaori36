@@ -4,9 +4,18 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `36faf02` (#165 merged), plus the pronunciation retry cap on `fix/pronunciation-retry-cap`.
+**Last updated:** 28 Nov 2026, `main` at `cd964ab` (#166 merged). Nothing is waiting in an unmerged branch.
 
 ## Just finished
+- **Pronunciation retry cap** (#166, 28 Nov; migration `0052`): a recording the service answered 5xx or 429 to, or hung on, is counted; the
+  third failure marks it `failed` (audio cleared unless kept) and one with fewer failures goes first. A refused connection or a
+  service still loading its weights is not counted. Tested with scripted failures only.
+- **Speaking 5.5, testers, built and shut** (#165, 28 Nov; `specs/speaking/step-5.5.md`, migration `0051`): `python -m app.testers.cli add --label X`
+  then `invite --tester ID` prints a one-time link `/vao/{token}` (7 days; the button on the page spends it, a link preview does
+  not); the tester gets a 30-day HttpOnly session; limits of 3 mock tests and 20 practice tries a Vietnam day; `report` writes
+  `data/private/testers-report.json` (counts, retention with an interval, own numbers only for testers who accepted the optional
+  research notice). **Recording stays owner-only until you set `TESTERS_MAY_RECORD=true`** after the privacy review. The research
+  notice wording is a draft on the join page.
 - **Speaking 5.4b, guided practice** (#163, 28 Nov; `/noi/luyen`, migration `0050`): idea building for Part 2 and 3 before speaking (a shape, three
   opening questions, authored topic words; never a script), the same question again up to three times with 100%/75%/50% of the time,
   the numbers side by side; only the first try counts as evidence. A try is a `guided` sitting, so the worker is unchanged.
@@ -53,14 +62,6 @@ wins; fix this page.
 - **Writing 2.11b** (#139): Task 2 structure checks (every part answered, position, a hint on undeveloped paragraphs).
 - **Daily Reading blind checks** (#137, #141, #143, #144): item files on `main` now hold 251 verified, 14 needs_review,
   2 approved, 6 rejected, 36 dropped and 93 still unchecked questions.
-
-## Built, not yet merged (5.5, `feat/speaking-testers`, not pushed)
-- **Speaking 5.5, testers, built and shut** (`specs/speaking/step-5.5.md`, migration `0051`): `python -m app.testers.cli add --label X`
-  then `invite --tester ID` prints a one-time link `/vao/{token}` (7 days; the button on the page spends it, a link preview does
-  not); the tester gets a 30-day HttpOnly session; limits of 3 mock tests and 20 practice tries a Vietnam day; `report` writes
-  `data/private/testers-report.json` (counts, retention with an interval, own numbers only for testers who accepted the optional
-  research notice). **Recording stays owner-only until you set `TESTERS_MAY_RECORD=true`** after the privacy review. The research
-  notice wording is a draft on the join page.
 
 ## In progress
 Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
