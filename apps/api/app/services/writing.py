@@ -7,6 +7,7 @@ SKIP LOCKED, analyses them (`writing.analysis`) and stores the result.
 
 import logging
 import re
+import time
 import unicodedata
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass, replace
@@ -70,6 +71,8 @@ from app.writing.scoring import (
     no_band_reason,
     residual_band_range,
 )
+from app.writing.timing import KEY as TIMINGS
+from app.writing.timing import timed
 
 logger = logging.getLogger(__name__)
 CONSENT = (
@@ -622,9 +625,10 @@ def model_features(
             sents = [Sentence(s.start_char, s.text) for s in step.nlp(text).sents if words(s.text)]
             todo = unflagged(sents, grammar.issues)
             if todo:
-                out = model.complete(learner, "writing_correct", llm_corrections.SYSTEM,
-                                     llm_corrections.prompt([s.text for s in todo]),
-                                     CorrectionsOut)  # fmt: skip
+                with timed(result, "corrections"):  # one model call
+                    out = model.complete(learner, "writing_correct", llm_corrections.SYSTEM,
+                                         llm_corrections.prompt([s.text for s in todo]),
+                                         CorrectionsOut)  # fmt: skip
                 found, discarded = llm_corrections.corrections(
                     todo, out, step.annotator, step.error_map, first_id=len(grammar.issues)
                 )
@@ -641,7 +645,8 @@ def model_features(
             user = feedback.task1_prompt(task_prompt, text, measures, task1.describe(prompt.figure))
         else:
             system, user = feedback.SYSTEM, feedback.prompt(task_prompt, text, measures)
-        out_fb = model.complete(learner, "writing_feedback", system, user, FeedbackOut)
+        with timed(result, "feedback"):  # one model call
+            out_fb = model.complete(learner, "writing_feedback", system, user, FeedbackOut)
         fb = feedback.verify(text, out_fb)
         result["feedback"] = fb.to_json(model.last_model)
         result["feedback_unavailable_vi"] = None
@@ -1008,56 +1013,69 @@ def process_next_essay(
                 load_prompts(writing_dir / "prompts.yaml"), prompt_id, own, own_parts
             )
             task = prompt.task if prompt else 2
-            result, grammar = _analyse(text, task, writing_dir, step)
+            clock: dict[str, Any] = {}
+            started = time.perf_counter()
+            with timed(clock, "analyse"):  # LanguageTool, spaCy and ERRANT
+                result, grammar = _analyse(text, task, writing_dir, step)
+            result[TIMINGS] = clock[TIMINGS]
             result["task"] = task
             # Step 2.7: text that is not the learner's own answer does not count towards a band.
-            guard = guardrails.check(
-                text,
-                prompt.prompt if prompt else None,
-                guardrails.load_templates(writing_dir / "templates.yaml"),
-            )
-            result["guard"] = guard.to_json()
-            if prompt is not None and prompt.figure is not None:
-                result["task1"] = task1.check(text, prompt.figure).to_json()
+            with timed(result, "checks"):  # the guard and, for Task 1, the chart's facts
+                guard = guardrails.check(
+                    text,
+                    prompt.prompt if prompt else None,
+                    guardrails.load_templates(writing_dir / "templates.yaml"),
+                )
+                result["guard"] = guard.to_json()
+                if prompt is not None and prompt.figure is not None:
+                    result["task1"] = task1.check(text, prompt.figure).to_json()
             ai_issues: list[Issue] = []
             if step is not None and guard.padded and task == 2:
                 result["score"], result["score_unavailable_vi"] = None, BAND_REASONS_VI["padded"]
             elif step is not None:
-                result["score"], result["score_unavailable_vi"] = band_for(
-                    text, task, guard.own_words, learner, step,
-                    _descriptor_features(text, prompt, task, grammar, guard, step, writing_dir),
-                )  # fmt: skip
-                if result["score"] is None:
-                    result["score_preview"] = score_preview(
+                with timed(result, "band"):  # descriptor features and the band model's service
+                    result["score"], result["score_unavailable_vi"] = band_for(
                         text, task, guard.own_words, learner, step,
-                        _earlier_raw(conn, learner, essay_id),
+                        _descriptor_features(text, prompt, task, grammar, guard, step, writing_dir),
                     )  # fmt: skip
+                    if result["score"] is None:
+                        result["score_preview"] = score_preview(
+                            text, task, guard.own_words, learner, step,
+                            _earlier_raw(conn, learner, essay_id),
+                        )  # fmt: skip
             if step is not None:
                 ai_issues = model_features(text, prompt, result, grammar, learner, step)
-                structure_check(text, prompt, result, learner, step)
+                with timed(result, "structure"):  # one model call
+                    structure_check(text, prompt, result, learner, step)
             with conn.transaction():
-                if grammar is not None and step is not None:
-                    issues, moved = _apply_evidence(
-                        conn, learner, essay_id, grammar, step, now or datetime.now(UTC)
-                    )
-                    names = {c.slug: c.name_vi for c in step.course.concepts}
-                    result["grammar"]["issues"] = [
-                        i.to_json() | {"node_vi": names.get(i.node) if i.node else None}
-                        for i in [*issues, *ai_issues]
-                    ]
-                    result["evidence"] = moved
-                if step is not None and _competency_allowed(step, learner):
-                    rules = competency_evidence.rules(writing_dir)
-                    found = competency.observations(
-                        rules, result, text, task, competency_evidence.known_b1()
-                    )
-                    result["competency_evidence"] = competency_evidence.apply(
-                        conn, learner, essay_id, found, rules.params(), now or datetime.now(UTC)
-                    )
+                with timed(result, "evidence"):  # mastery evidence, in this transaction
+                    if grammar is not None and step is not None:
+                        issues, moved = _apply_evidence(
+                            conn, learner, essay_id, grammar, step, now or datetime.now(UTC)
+                        )
+                        names = {c.slug: c.name_vi for c in step.course.concepts}
+                        result["grammar"]["issues"] = [
+                            i.to_json() | {"node_vi": names.get(i.node) if i.node else None}
+                            for i in [*issues, *ai_issues]
+                        ]
+                        result["evidence"] = moved
+                    if step is not None and _competency_allowed(step, learner):
+                        rules = competency_evidence.rules(writing_dir)
+                        found = competency.observations(
+                            rules, result, text, task, competency_evidence.known_b1()
+                        )
+                        result["competency_evidence"] = competency_evidence.apply(
+                            conn, learner, essay_id, found, rules.params(), now or datetime.now(UTC)
+                        )
+                result[TIMINGS]["total"] = round(time.perf_counter() - started, 3)
                 conn.execute(
                     "update essays set status='done', result=%s, analysed_at=now() where id=%s",
                     (Jsonb(result), essay_id),
                 )
+            logger.info(
+                "essay analysed",
+                extra={"essay_id": str(essay_id), "seconds": result[TIMINGS]},
+            )
         except Exception:
             logger.exception("essay analysis failed", extra={"essay_id": str(essay_id)})
             with conn.transaction():
