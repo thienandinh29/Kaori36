@@ -22,6 +22,8 @@ from psycopg_pool import ConnectionPool
 from app.pronunciation.quality import check
 from app.services.backend import learner_uuid
 from app.services.recordings import RETENTION
+from app.speaking.feedback import CONSENT as FEEDBACK_CONSENT
+from app.speaking.feedback import MAX_TRIES as FEEDBACK_TRIES
 from app.speaking.measures import pooled
 from app.speaking.tests import (
     CLOSING_SECONDS,
@@ -530,6 +532,7 @@ class SpeakingTests:
                 }
             )
         answered = sum(1 for x in out if x["answer"] is not None)
+        self._attach_feedback(learner, [x["answer"] for x in out if x["answer"] is not None])
         content = self._content(loaded)
         part = question.part
         words = {2: loaded.test.part2.words, 3: loaded.test.part3.words}.get(part, ())
@@ -582,6 +585,7 @@ class SpeakingTests:
                     "answer": None if r is None else self._item(r, q.seconds),
                 }
             )
+        self._attach_feedback(learner, [i["answer"] for i in items if i["answer"]])
         return {
             "id": sitting_id,
             "test_id": loaded.test.id,
@@ -600,6 +604,97 @@ class SpeakingTests:
                 ]
             ),
         }
+
+    def _attach_feedback(self, learner: UUID, answers: list[dict[str, Any]]) -> None:
+        """Each answer's AI feedback state (step 5.3b): `status` none, queued, working, done or
+        failed, the checked points, and whether the learner may ask now (the owner, a transcript
+        with 15 s of speech, fewer than MAX_TRIES asks)."""
+        if not answers:
+            return
+        with self.pool().connection() as conn:
+            rows = {
+                str(r[0]): r
+                for r in conn.execute(
+                    "select id,feedback_status,feedback,feedback_tries from speaking_answers "
+                    "where id = any(%s)",
+                    ([UUID(a["id"]) for a in answers],),
+                ).fetchall()
+            }
+        for a in answers:
+            r = rows.get(a["id"])
+            status, data, tries = (r[1], r[2], r[3]) if r else (None, None, 0)
+            measures = a.get("measures") or {}
+            spoke = a.get("transcript") == "done" and not measures.get("short", True)
+            data = data or {}
+            a["feedback"] = {
+                "status": status or "none",
+                "points": data.get("points", []),
+                "failed": data.get("failed"),
+                "can_ask": (
+                    learner in self.owners
+                    and spoke
+                    and status in (None, "failed")
+                    and tries < FEEDBACK_TRIES
+                ),
+                "consent": FEEDBACK_CONSENT,
+            }
+
+    def feedback_state(
+        self, learner_id: str, answer_id: str, session: str | None = None
+    ) -> dict[str, Any]:
+        """One answer's AI feedback state, for the page that waits for it (step 5.3b)."""
+        learner = learner_uuid(learner_id)
+        answer = _uuid(answer_id, "câu trả lời")
+        with self.pool().connection() as conn:
+            row = conn.execute(
+                "select a.transcript_status,a.measures from speaking_answers a "
+                "join speaking_tests t on t.id=a.sitting_id where a.id=%s and t.learner_id=%s",
+                (answer, learner),
+            ).fetchone()
+        if row is None:
+            raise HTTPException(404, "Không tìm thấy câu trả lời.")
+        item = {"id": str(answer), "transcript": row[0], "measures": row[1]}
+        self._attach_feedback(learner, [item])
+        state: dict[str, Any] = item["feedback"]
+        return state
+
+    def request_feedback(
+        self, learner_id: str, answer_id: str, consent: str, session: str | None = None
+    ) -> dict[str, Any]:
+        """Queue the model's feedback on one answer's transcript (step 5.3b). Owner only for now;
+        the transcript is sent to a model provider only after this request, with the notice's
+        version."""
+        learner = learner_uuid(learner_id)
+        if learner not in self.owners:
+            raise HTTPException(403, "Nhận xét bằng AI hiện chỉ mở cho chủ dự án.")
+        if consent != FEEDBACK_CONSENT:
+            raise HTTPException(422, "Hãy đọc và đồng ý thông báo trước khi gửi.")
+        answer = _uuid(answer_id, "câu trả lời")
+        with self.pool().connection() as conn:
+            row = conn.execute(
+                "select a.transcript_status,a.measures,a.feedback_status,a.feedback_tries "
+                "from speaking_answers a join speaking_tests t on t.id=a.sitting_id "
+                "where a.id=%s and t.learner_id=%s",
+                (answer, learner),
+            ).fetchone()
+            if row is None:
+                raise HTTPException(404, "Không tìm thấy câu trả lời.")
+            transcript, measures, status, tries = row
+            if transcript != "done" or measures is None:
+                raise HTTPException(409, "Câu trả lời này chưa có bản chép lời.")
+            if measures.get("short", True):
+                raise HTTPException(409, "Câu trả lời dưới 15 giây nên chưa có nhận xét bằng AI.")
+            if status in ("queued", "working", "done"):
+                return {"status": status}
+            if tries >= FEEDBACK_TRIES:
+                raise HTTPException(409, "Đã thử nhiều lần, bạn quay lại sau nhé.")
+            conn.execute(
+                "update speaking_answers set feedback_status='queued', feedback=null, "
+                "feedback_consent=%s, feedback_requested_at=%s, feedback_tries=feedback_tries+1 "
+                "where id=%s",
+                (consent, self.clock(), answer),
+            )
+        return {"status": "queued"}
 
     def audio(self, learner_id: str, answer_id: str, session: str | None = None) -> bytes:
         learner = self._owner(learner_id, session)

@@ -266,6 +266,7 @@ def loop(
         process_next_essay,
         requeue_stuck_essays,
     )
+    from app.speaking.feedback_job import process_next_feedback, requeue_stuck
 
     settings = get_settings()
     writing_dir = settings.writing_dir
@@ -281,6 +282,11 @@ def loop(
     stuck = requeue_stuck_essays(settings.database_url)
     if stuck:
         logger.warning("requeued %d essay(s) left analysing by a stopped worker", stuck)
+    asked_again = requeue_stuck(
+        settings.database_url
+    )  # Speaking feedback left `working` (step 5.3b)
+    if asked_again:
+        logger.warning("queued %d Speaking feedback request(s) again", asked_again)
     purged_at = 0.0
     analyse = recording_analyser(settings)
     transcribe = transcriber(settings, grammar)
@@ -296,6 +302,8 @@ def loop(
                 continue  # essays are short: drain them before the next topic job
             if transcribe is not None and transcribe():
                 continue  # one Speaking answer at a time (step 5.1)
+            if process_next_feedback(database_url, own_model):
+                continue  # the model's feedback on a Speaking answer (step 5.3b)
             if process_next_rewrite(database_url, grammar):
                 continue
             if process_next_own_test(database_url, own_model):

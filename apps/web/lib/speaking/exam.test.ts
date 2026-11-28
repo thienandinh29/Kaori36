@@ -6,6 +6,7 @@ import {
   cueText,
   examSpeed,
   ms,
+  parseFeedback,
   parseOverview,
   parseResult,
   parseSitting,
@@ -484,5 +485,77 @@ describe("language checks (step 5.3a)", () => {
         vocabulary: { ...checked.vocabulary, words: "60" },
       }),
     ).toThrow(DataError);
+  });
+});
+
+describe("the model's feedback on an answer (step 5.3b)", () => {
+  const done = {
+    status: "done",
+    points: [
+      {
+        kind: "issue",
+        area: "vocabulary",
+        point_vi: "Từ này hơi chung chung.",
+        quote: "the city is very crowded",
+        better: "the city is packed",
+      },
+      {
+        kind: "strength",
+        area: "answer",
+        point_vi: "Bạn có một lý do rõ ràng.",
+        quote: "because it is cheap",
+        better: null,
+      },
+    ],
+    failed: null,
+    can_ask: false,
+    consent: "speaking-feedback-v1",
+  };
+
+  it("reads the checked points, with the better way only on an issue", () => {
+    const f = parseFeedback(done);
+    expect(f?.status).toBe("done");
+    expect(f?.points.map((p) => p.kind)).toEqual(["issue", "strength"]);
+    expect(f?.points[0]?.better).toBe("the city is packed");
+    expect(f?.points[1]?.better).toBeNull();
+    expect(f?.consent).toBe("speaking-feedback-v1");
+  });
+
+  it("reads none and a failure with its message, and absence as null", () => {
+    const none = parseFeedback({
+      status: "none",
+      points: [],
+      failed: null,
+      can_ask: true,
+      consent: "speaking-feedback-v1",
+    });
+    expect(none?.can_ask).toBe(true);
+    const failed = parseFeedback({
+      ...done,
+      status: "failed",
+      points: [],
+      failed: "x",
+    });
+    expect(failed?.failed).toBe("x");
+    expect(parseFeedback(undefined)).toBeNull();
+    expect(parseFeedback(null)).toBeNull();
+  });
+
+  it("refuses a status, a kind or an area it does not know", () => {
+    expect(() => parseFeedback({ ...done, status: "weird" })).toThrow(
+      DataError,
+    );
+    expect(() =>
+      parseFeedback({
+        ...done,
+        points: [{ ...done.points[0], kind: "score" }],
+      }),
+    ).toThrow(DataError);
+    expect(() =>
+      parseFeedback({ ...done, points: [{ ...done.points[0], area: "band" }] }),
+    ).toThrow(DataError);
+    expect(() =>
+      parseFeedback({ ...done, points: [{ kind: "issue" }] }),
+    ).toThrow();
   });
 });

@@ -48,7 +48,7 @@ anything about pronunciation; a score or a band.
 - [x] T2 Migration 0049; the worker step; the API result; tests
 - [x] T3 The page: decoders, the three blocks, play-from-here, texts; Vitest; a Playwright test on a mocked result
 - [x] T4 Run for real; docs
-- [ ] 5.3b (not built): the model's feedback with checked quotes, after the owner's consent wording
+- [x] 5.3b built 28 Nov in `step-5.3b.md` (owner's go; the consent wording is still a draft the owner must set)
 
 ## Built (28 Nov 2026)
 - `app/speaking/language.py`; migration `0049_speaking_language.sql`; `transcribe.process_next` takes a `LanguageStep` (the Writing

@@ -14,6 +14,7 @@ import type {
   Summary,
 } from "@/lib/speaking/exam";
 import { vi } from "@/messages/vi";
+import { FeedbackBlock } from "./answer-feedback";
 import { makeExaminer } from "./examiner";
 
 const t = vi.english.speakingTest;
@@ -161,6 +162,10 @@ export function AnswerView({ answer, url }: { answer: Answered; url: string }) {
           onPlay={answer.audio ? play : undefined}
         />
       )}
+      {answer.feedback &&
+        (answer.feedback.status !== "none" || answer.feedback.can_ask) && (
+          <FeedbackBlock answerId={answer.id} initial={answer.feedback} />
+        )}
       {answer.transcript === "waiting" && (
         <p className="en-muted small">{t.transcribing}</p>
       )}
