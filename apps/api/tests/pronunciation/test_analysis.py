@@ -12,7 +12,7 @@ from fastapi.testclient import TestClient
 from psycopg_pool import ConnectionPool
 
 from app.api import pronunciation as routes
-from app.pronunciation.analysis import process_next, summarise
+from app.pronunciation.analysis import ServiceUnavailable, process_next, summarise
 from app.pronunciation.canonical import (
     Word,
     check,
@@ -342,8 +342,6 @@ def test_an_unreachable_service_leaves_the_recording_queued_with_its_audio(stack
     import urllib.error
     from email.message import Message
 
-    from app.pronunciation.analysis import ServiceUnavailable
-
     client, owner, pool = stack
     _, prompts = load_prompts(FOLDER)
     canonical = load_checked_canonical(FOLDER, prompts)
@@ -370,10 +368,48 @@ def test_an_unreachable_service_leaves_the_recording_queued_with_its_audio(stack
                 "select status, length(audio) from speech_recordings where id=%s", (rid,)
             ).fetchone() or (None, 0)
         assert status == "stored" and size > 1000
+    with pool.connection() as conn:
+        counted = conn.execute("select attempts from speech_recordings where id=%s", (rid,))
+        # a refused connection (the service is starting or down) is not counted, a 503 is
+        assert counted.fetchone() == (1,)
     with pool.connection() as conn:  # a problem with this recording: recorded, audio cleared
         assert process_next(conn, refused, canonical, sounds)
     out = client.get(f"/recordings/{rid}", params={"learner_id": owner}).json()
     assert out["status"] == "failed"
+
+
+def test_the_third_service_failure_fails_the_recording_and_the_next_one_goes_first(stack) -> None:  # type: ignore[no-untyped-def]
+    client, owner, pool = stack
+    _, prompts = load_prompts(FOLDER)
+    canonical = load_checked_canonical(FOLDER, prompts)
+    sounds = {p.id: p.targets for p in prompts}
+    with pool.connection() as conn:  # the test database is shared: start with an empty queue
+        conn.execute("update speech_recordings set status='failed' where status='stored'")
+    bad = post(client, owner, speech_like())["id"]
+    other = post(client, owner, speech_like())["id"]
+
+    def down(a: bytes, p: list[str]) -> dict[str, Any]:
+        raise TimeoutError("timed out")
+
+    def tries(rid: str) -> int:
+        with pool.connection() as conn:
+            row = conn.execute("select attempts from speech_recordings where id=%s", (rid,))
+            return int((row.fetchone() or (-1,))[0])
+
+    for _ in range(2):  # the first recording fails once, then the second gets its turn
+        with pool.connection() as conn, pytest.raises(ServiceUnavailable):
+            process_next(conn, down, canonical, sounds)
+    assert (tries(bad), tries(other)) == (1, 1)  # not (2, 0): one failure does not hold up the next
+    for _ in range(4):
+        with pool.connection() as conn, pytest.raises(ServiceUnavailable):
+            process_next(conn, down, canonical, sounds)
+    for rid in (bad, other):
+        out = client.get(f"/recordings/{rid}", params={"learner_id": owner}).json()
+        assert out["status"] == "failed" and out["failed"] and tries(rid) == 3
+    with pool.connection() as conn:
+        assert not process_next(conn, down, canonical, sounds)  # nothing left to retry
+        size = conn.execute("select length(audio) from speech_recordings where id=%s", (bad,))
+        assert size.fetchone() == (0,)  # a failed recording's audio is cleared unless kept
 
 
 def test_labels_only_on_kept_recordings(stack) -> None:  # type: ignore[no-untyped-def]

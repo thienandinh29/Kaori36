@@ -32,6 +32,11 @@ set, and each target sound occurs at least once. The API and the worker refuse t
 - If the service cannot be reached (still starting, down or overloaded: no connection, a timeout, HTTP 5xx or
   429), nothing changes. The recording stays queued with its audio, and the worker tries again 30 s later. On first
   start the service downloads its weights for several minutes, so this is the normal case.
+  **Fix (28 Nov 2026):** when the service was reachable but failed on the recording (HTTP 5xx or 429, or a hang past
+  the timeout), the failure is counted in `speech_recordings.attempts` (migration `0051`); the third marks the recording
+  `failed` (audio cleared unless kept) and a recording with fewer failures is tried first, so one bad recording never holds
+  up the rest. A service that is not there (a refused connection, still loading its weights) is not counted: that says
+  nothing about the recording, and failing recordings during the first-start download would lose them.
 - If the recording itself cannot be scored (HTTP 4xx, such as "cannot align"), it stores a short reason with the status
   `failed`. It is not retried.
 

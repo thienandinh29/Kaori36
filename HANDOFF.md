@@ -4,7 +4,7 @@ The state of the work for whoever picks it up next. **Update it at the end of ev
 the sections below, do not append history (history goes in `PLAN.md`, "Log"). If this page disagrees with `PLAN.md`, `PLAN.md`
 wins; fix this page.
 
-**Last updated:** 28 Nov 2026, `main` at `47b83e0` (#161 merged); Speaking 5.4b in the open pull request from `feat/speaking-guided-pr`.
+**Last updated:** 28 Nov 2026, `main` at `0ca7ae0` (#163 merged), plus the pronunciation retry cap on `fix/pronunciation-retry-cap`.
 
 ## Just finished
 - **Speaking 5.3a, grammar and vocabulary checks by code** (#161, 28 Nov; migration `0049`): memorised-phrase and repeated-text check, LanguageTool and
@@ -61,8 +61,6 @@ Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is nex
 the owner's examiner-banded essays.
 
 ## Open from the code review (28 Nov, none urgent)
-- Pronunciation recordings still retry forever on a transient service failure (`pronunciation/analysis.py`); give them the
-  same three-try cap as Speaking answers.
 - No timings per Writing stage; `POLL_LIMIT` (`essay-view.tsx`, 60 × 2 s) is unchanged. Measure before changing either.
 - An essay that crashes the worker process itself would be requeued at the next start and crash it again.
 - Still not promoted: asking the model to quote the sentence that answers each question part, so `part_missing` can be
