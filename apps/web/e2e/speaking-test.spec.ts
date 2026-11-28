@@ -294,3 +294,112 @@ test("the result page shows the memorised-phrase check, the grammar hints with a
     page.getByTestId("exam-result").getByText(/điểm số|band|Band/),
   ).toHaveCount(0);
 });
+
+test("an answer's AI feedback: the notice first, then checked points with their quotes, no score (step 5.3b)", async ({
+  page,
+}) => {
+  const id = "77777777-7777-4777-8777-777777777771";
+  const answer = "88888888-8888-4888-8888-888888888881";
+  let asked = 0;
+  let polls = 0;
+  const base = {
+    consent: "speaking-feedback-v1",
+    failed: null,
+  };
+  await asLearner(page, LEARNER);
+  await page.route(`**/api/backend/speaking/tests/${id}?*`, (route) =>
+    route.fulfill({
+      json: {
+        id,
+        test_id: "t01",
+        title: "Home, music and a journey",
+        keep: false,
+        started_at: "2026-11-28T09:00:00+00:00",
+        finished_at: "2026-11-28T09:14:00+00:00",
+        cue_card: {
+          task: "Describe a journey.",
+          points: ["a", "b", "c"],
+          explain: "and why.",
+        },
+        part3_theme: "travel",
+        questions: [
+          {
+            id: "p1-1-1",
+            part: 1,
+            text: "Do you live in a city?",
+            answer: {
+              id: answer,
+              seconds: 24,
+              problems: [],
+              audio: false,
+              delete_after: null,
+              transcript: "done",
+              text: "I think the city is very crowded because it is cheap.",
+              words: [],
+              measures: null,
+              language: null,
+              feedback: { ...base, status: "none", points: [], can_ask: true },
+            },
+          },
+        ],
+        summary: null,
+      },
+    }),
+  );
+  await page.route(
+    `**/api/backend/speaking/answers/${answer}/feedback?*`,
+    async (route) => {
+      if (route.request().method() === "POST") {
+        asked += 1;
+        expect(route.request().postDataJSON()).toEqual({
+          consent: "speaking-feedback-v1",
+        });
+        return route.fulfill({ status: 202, json: { status: "queued" } });
+      }
+      polls += 1;
+      // the first read after asking says queued, the next says done
+      const done = polls > 1;
+      return route.fulfill({
+        json: {
+          ...base,
+          status: done ? "done" : "queued",
+          can_ask: false,
+          points: done
+            ? [
+                {
+                  kind: "issue",
+                  area: "vocabulary",
+                  point_vi:
+                    "Từ này hơi chung chung, có thể chọn từ cụ thể hơn.",
+                  quote: "the city is very crowded",
+                  better: "the city is packed",
+                },
+                {
+                  kind: "strength",
+                  area: "answer",
+                  point_vi: "Bạn đã đưa ra một lý do rõ ràng.",
+                  quote: "because it is cheap",
+                  better: null,
+                },
+              ]
+            : [],
+        },
+      });
+    },
+  );
+  await page.goto(`/noi/thi/${id}`);
+  await page.getByRole("button", { name: "Nhận xét bằng AI" }).click();
+  await expect(page.getByText("Bản nháp", { exact: false })).toBeVisible();
+  const send = page.getByRole("button", { name: "Gửi và nhận nhận xét" });
+  await expect(send).toBeDisabled(); // nothing is sent before the notice is ticked
+  expect(asked).toBe(0);
+  await page.getByLabel("Tôi đã đọc và đồng ý gửi bản chép này").check();
+  await send.click();
+  const block = page.getByTestId("speaking-feedback");
+  await expect(block).toBeVisible({ timeout: 15_000 });
+  await expect(block).toContainText("“the city is very crowded”");
+  await expect(block).toContainText("the city is packed");
+  await expect(block).toContainText("Gợi ý từ AI");
+  await expect(block).not.toContainText(/band|điểm số/i);
+  expect(asked).toBe(1);
+});

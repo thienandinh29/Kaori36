@@ -66,9 +66,11 @@ import {
 import {
   parseAnswerSaved,
   parseMicCheck,
+  parseFeedback,
   parseOverview,
   parseResult,
   parseSitting,
+  type Feedback,
   type MicCheck,
   type Overview,
   type Result as SpeakingResult,
@@ -883,6 +885,31 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
       return parseResult(
         await request(`speaking/tests/${encodeURIComponent(sittingId)}?${q}`),
       );
+    },
+    /** Step 5.3b: ask for the model's feedback on an answer's transcript (after the notice). */
+    async requestSpeakingFeedback(
+      learnerId: string,
+      answerId: string,
+      consent: string,
+    ): Promise<void> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      await post(
+        `speaking/answers/${encodeURIComponent(answerId)}/feedback?${q}`,
+        { consent },
+      );
+    },
+    async speakingFeedback(
+      learnerId: string,
+      answerId: string,
+    ): Promise<Feedback> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      const f = parseFeedback(
+        await request(
+          `speaking/answers/${encodeURIComponent(answerId)}/feedback?${q}`,
+        ),
+      );
+      if (f === null) throw new DataError("contract");
+      return f;
     },
     speakingAudioUrl(learnerId: string, answerId: string): string {
       const q = new URLSearchParams({ learner_id: learnerId });
