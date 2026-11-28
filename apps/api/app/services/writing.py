@@ -26,6 +26,7 @@ from app.curriculum.store import sync_course
 from app.engine import bkt
 from app.engine.graph import UNSEEN_P_KNOWN
 from app.engine.trace import fmt_p
+from app.lessons.graded import WordIndex
 from app.services import competency_evidence
 from app.services.backend import learner_uuid, save_trace
 from app.services.learning import save_mastery
@@ -43,6 +44,8 @@ from app.writing import (
     tracker,
 )
 from app.writing.analysis import analyse, load_linking_words, paragraphs, words
+from app.writing.caps import CapRule, applied_caps, load_caps
+from app.writing.descriptor_features import DescriptorFeatures, load_word_index, measure_essay
 from app.writing.error_map import ErrorMap, load_error_map
 from app.writing.feedback import FeedbackOut
 from app.writing.grammar import (
@@ -59,11 +62,13 @@ from app.writing.model_calls import BudgetExceeded, WritingModel
 from app.writing.prompts import Prompt, PromptBank, load_prompts
 from app.writing.scorer_client import ScorerClient
 from app.writing.scoring import (
+    MIN_WORDS_FOR_BAND,
     ScorerConfig,
     band_range,
     compare_raw,
     load_scorer_config,
     no_band_reason,
+    residual_band_range,
 )
 
 logger = logging.getLogger(__name__)
@@ -114,6 +119,10 @@ BAND_OFF_VI = "Chưa ước lượng band: máy chủ chưa bật mô hình ch�
 BAND_HIDDEN_VI = "Ước lượng band đang được kiểm chứng với điểm giám khảo, chưa mở cho mọi người."
 BAND_DOWN_VI = "Chưa ước lượng được band: mô hình chấm không phản hồi. Bạn thử gửi lại sau nhé."
 BAND_MISMATCH_VI = "Chưa ước lượng band: mô hình đang chạy khác với mô hình đã được hiệu chỉnh."
+BAND_NO_GRAMMAR_VI = (
+    "Chưa ước lượng band: chưa kiểm tra được ngữ pháp của bài này (LanguageTool), "
+    "nên các số đo chưa đủ."
+)
 BAND_REASONS_VI = {
     "task1": "Chưa ước lượng band cho Task 1.",
     "too_short": "Bài dưới 150 từ: chưa đủ dài để ước lượng band.",
@@ -523,6 +532,9 @@ class GrammarStep:
     scorer_config: ScorerConfig | None = None
     model: WritingModel | None = None  # None: no model key; no feedback (step 2.4)
     writing_dir: Path = Path("data/writing")
+    # Step 2.12: only loaded when scorer.yaml's method is not "scorer"
+    word_index: WordIndex | None = None
+    cap_rules: tuple[CapRule, ...] = ()
     _ids: tuple[UUID, dict[str, UUID]] | None = None
 
     def evidence_allowed(self, learner: UUID) -> bool:
@@ -546,6 +558,7 @@ def load_grammar_step(
     draft_learners: str = "",
     scorer_url: str = "",
     model: WritingModel | None = None,
+    forms_yaml: Path | None = None,
 ) -> GrammarStep:
     import errant
     import spacy
@@ -555,6 +568,15 @@ def load_grammar_step(
     course = load_course(courses_dir / f"{error_map.course}.yaml")
     if problems := error_map.problems(course):
         raise ValueError("; ".join(problems))
+    scorer_config = load_scorer_config(writing_dir / "scorer.yaml")
+    word_index: WordIndex | None = None
+    cap_rules: tuple[CapRule, ...] = ()
+    if scorer_config.method != "scorer":
+        # A band from descriptor features needs the word index it was fitted with: fail at start.
+        if forms_yaml is None or not forms_yaml.exists():
+            raise ValueError(f"scorer.yaml method {scorer_config.method} needs {forms_yaml}")
+        word_index = load_word_index(forms_yaml)
+        cap_rules = load_caps(writing_dir / "caps.yaml").rules
     return GrammarStep(
         nlp=nlp,
         annotator=errant.load("en", nlp),
@@ -565,9 +587,11 @@ def load_grammar_step(
             learner_uuid(x.strip()) for x in draft_learners.split(",") if x.strip()
         ),
         scorer=ScorerClient(scorer_url) if scorer_url else None,
-        scorer_config=load_scorer_config(writing_dir / "scorer.yaml"),
+        scorer_config=scorer_config,
         model=model,
         writing_dir=writing_dir,
+        word_index=word_index,
+        cap_rules=cap_rules,
     )
 
 
@@ -676,7 +700,12 @@ def structure_check(
 
 
 def band_for(
-    text: str, task: int, words: int, learner: UUID, step: GrammarStep
+    text: str,
+    task: int,
+    words: int,
+    learner: UUID,
+    step: GrammarStep,
+    features: DescriptorFeatures | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
     """The band range for this essay and learner, or why there is none (Vietnamese).
 
@@ -686,10 +715,13 @@ def band_for(
     if task != 2:  # Task 1 never gets a band, whatever the scorer's state (step 2.5)
         return None, BAND_REASONS_VI["task1"]
     config = step.scorer_config
-    if config is None or step.scorer is None:
+    if config is None or (config.method == "scorer" and step.scorer is None):
         return None, BAND_OFF_VI
     if config.status == "draft" and learner not in step.draft_learners:
         return None, BAND_HIDDEN_VI
+    if config.method != "scorer":
+        return _descriptor_band(text, words, step, config, features)
+    assert step.scorer is not None
     calibration = config.calibration.build() if config.calibration else None
     reason = no_band_reason(task, words, calibration)
     if reason is not None or calibration is None:
@@ -712,6 +744,54 @@ def band_for(
         "revision": config.revision,
         "status": config.status,
         "truncated": raw.truncated,
+    }, None
+
+
+def _descriptor_band(
+    text: str,
+    words: int,
+    step: GrammarStep,
+    config: ScorerConfig,
+    features: DescriptorFeatures | None,
+) -> tuple[dict[str, Any] | None, str | None]:
+    """The range from the descriptor model, or its blend with the pinned scorer (step 2.12).
+
+    Only the overall range is returned; the criterion bands stay hidden until each one passes its
+    own gate (`specs/writing/spec.md`, 8b). Without a grammar analysis there is no band: the
+    features that count errors would otherwise read as an essay with none.
+    """
+    block = config.descriptors
+    assert block is not None  # ScorerConfig refuses a method without its block
+    if words < MIN_WORDS_FOR_BAND:
+        return None, BAND_REASONS_VI["too_short"]
+    if features is None:
+        return None, BAND_NO_GRAMMAR_VI
+    value = block.build().predict(features.as_dict(), applied_caps(step.cap_rules, text)).overall
+    truncated = False
+    if config.method == "blend":
+        assert config.calibration is not None
+        if step.scorer is None:
+            return None, BAND_OFF_VI
+        try:
+            raw = step.scorer.score(text)
+        except httpx.HTTPError:
+            logger.exception("the scorer did not answer")
+            return None, BAND_DOWN_VI
+        if (raw.model, raw.revision) != (config.model, config.revision) or config.output >= len(
+            raw.raw
+        ):
+            return None, BAND_MISMATCH_VI
+        value = (config.calibration.build().isotonic(raw.raw[config.output]) + value) / 2
+        truncated = raw.truncated
+    r = residual_band_range(value, block.residual_low, block.residual_high)
+    return {
+        "band_low": r.low,
+        "band_high": r.high,
+        "uncertain": r.uncertain,
+        "model": config.method,
+        "revision": block.fitted_on,
+        "status": config.status,
+        "truncated": truncated,
     }, None
 
 
@@ -808,6 +888,31 @@ def _analyse(
         "evidence": [],
     }
     return result, grammar
+
+
+def _descriptor_features(
+    text: str,
+    prompt: Prompt | None,
+    task: int,
+    grammar: GrammarResult | None,
+    guard: guardrails.Guard,
+    step: GrammarStep,
+    writing_dir: Path,
+) -> DescriptorFeatures | None:
+    """The features for a band from descriptors, or None when none are needed or possible."""
+    config = step.scorer_config
+    if config is None or config.method == "scorer" or task != 2 or grammar is None:
+        return None
+    assert step.word_index is not None  # load_grammar_step loads it for these methods
+    return measure_essay(
+        text,
+        prompt.prompt if prompt else "",
+        grammar=grammar,
+        nlp=step.nlp,
+        index=step.word_index,
+        linking_groups=load_linking_words(writing_dir / "linking-words.yaml"),
+        guard=guard,
+    )
 
 
 def _apply_evidence(
@@ -919,8 +1024,9 @@ def process_next_essay(
                 result["score"], result["score_unavailable_vi"] = None, BAND_REASONS_VI["padded"]
             elif step is not None:
                 result["score"], result["score_unavailable_vi"] = band_for(
-                    text, task, guard.own_words, learner, step
-                )
+                    text, task, guard.own_words, learner, step,
+                    _descriptor_features(text, prompt, task, grammar, guard, step, writing_dir),
+                )  # fmt: skip
                 if result["score"] is None:
                     result["score_preview"] = score_preview(
                         text, task, guard.own_words, learner, step,

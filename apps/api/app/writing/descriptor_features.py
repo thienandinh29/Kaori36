@@ -15,14 +15,23 @@ served model, for the same reason as their caps (a band never comes from an LLM)
 
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
+from pathlib import Path
+from typing import Any
 
 from app.curriculum.course import LEVELS
-from app.lessons.graded import WORD, WordIndex
+from app.lessons.graded import WORD, WordIndex, build_index
 from app.writing.analysis import linking_found, paragraphs, words
 from app.writing.caps import Criterion
-from app.writing.grammar import Complexity, Issue
-from app.writing.guardrails import _STOP, _stem
+from app.writing.grammar import Complexity, GrammarResult, Issue, complexity
+from app.writing.guardrails import _STOP, Guard, _stem
+
+
+def load_word_index(forms_yaml: Path) -> WordIndex:
+    """The word index the features use: the NGSL/NAWL forms only. The evaluation and the app must
+    build it the same way, or a band fitted on one is applied to the other's numbers."""
+    return build_index(forms_yaml)
+
 
 MTLD_THRESHOLD = 0.72
 MIN_MTLD_TOKENS = 50  # below this MTLD is unstable: no value
@@ -146,7 +155,7 @@ def linking(text: str, groups: Mapping[str, Sequence[str]]) -> Linking:
 @dataclass(frozen=True)
 class DescriptorFeatures:
     # Grammatical Range and Accuracy
-    grammar_errors_per_100: float
+    grammar_errors_per_100: float | None  # None: grammar was not checked (no LanguageTool)
     error_free_sentence_share: float | None
     clauses_per_sentence: float
     complex_sentence_share: float
@@ -154,7 +163,7 @@ class DescriptorFeatures:
     mtld: float | None
     beyond_b1_share: float | None
     unknown_word_share: float | None
-    spelling_word_errors_per_100: float
+    spelling_word_errors_per_100: float | None
     prompt_words_per_100: float
     # Coherence and Cohesion
     paragraphs: int
@@ -202,6 +211,43 @@ def measure(
         own_words=own_words,
         prompt_overlap=prompt_overlap,
     )
+
+
+def measure_essay(
+    text: str,
+    prompt: str,
+    *,
+    grammar: GrammarResult | None,
+    nlp: Any,
+    index: WordIndex,
+    linking_groups: Mapping[str, Sequence[str]],
+    guard: Guard,
+) -> DescriptorFeatures:
+    """The features of one essay, the one way the evaluation and the app both compute them.
+
+    Without a grammar analysis (LanguageTool off or down) the three features that count its
+    errors are None, never 0: an essay is not error-free because nobody looked.
+    """
+    parsed = [s for s in nlp(text).sents if words(s.text)]
+    f = measure(
+        text,
+        prompt,
+        issues=grammar.issues if grammar else (),
+        sentences=list(grammar.sentences) if grammar else [s.text for s in parsed],
+        complexity=grammar.complexity if grammar else complexity(parsed),
+        index=index,
+        linking_groups=linking_groups,
+        own_words=guard.own_words,
+        prompt_overlap=guard.prompt_overlap,
+    )
+    if grammar is None:
+        return replace(
+            f,
+            grammar_errors_per_100=None,
+            error_free_sentence_share=None,
+            spelling_word_errors_per_100=None,
+        )
+    return f
 
 
 # What the evaluation may choose from, per criterion (at most four each, on the development folds).

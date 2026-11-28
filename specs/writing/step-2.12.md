@@ -1,8 +1,8 @@
 # Step 2.12: a band closer to the examiner's (descriptor caps, a model per criterion)
 
-Owner's request, 27 Nov 2026: "grade the point closer to the reality". **Specified, not built.** No band is shown today
-(`data/writing/scorer.yaml`, `calibration: null`), and nothing here changes that until the owner's examiner-banded essays
-exist (`dolater.md`, Phase 2). This step adds two things that can then be measured against the pinned scorer
+Owner's request, 27 Nov 2026: "grade the point closer to the reality". **Built in two parts (27–28 Nov); measured on
+nothing real yet.** No band is shown today (`data/writing/scorer.yaml`, `method: scorer`, `calibration: null`), and
+nothing here changes that until the owner's examiner-banded essays exist (`dolater.md`, Phase 2). This step adds two things that can then be measured against the pinned scorer
 (`step-2.3.md`) on the same splits, and keeps whichever is better.
 
 ## Why
@@ -75,6 +75,11 @@ wins when the QWK intervals overlap**: if 2.12b is as good as the network, no Py
 The owner chooses; the choice and the numbers go into `scorer.yaml` (a new `method:` key; per-criterion calibration) and
 `evals/writing/score-report.json`.
 
+*Refined while building (part 2):* only `criteria`, `model` and `blend` can be recommended, because they are what the
+app can serve; the constant and the feature baseline are what they must beat (step 2.3: a scorer that does not clearly
+beat the baselines is not used). The report says, for the pick, whether its interval lies wholly above the baseline's
+QWK. Without that, the first trial recommended the baseline itself, which no code serves.
+
 ## Data it needs (the owner's, `data/private/writing/essays.jsonl`)
 - One line per essay: `id`, `question`, `text`, `band`, and **optional** `tr`, `cc`, `lr`, `gra` (examiner bands per
   criterion), `marked_by` (`examiner` or `trained_rater`), `source`. `load_essays` reads the new fields; an essay without
@@ -124,12 +129,56 @@ The owner chooses; the choice and the numbers go into `scorer.yaml` (a new `meth
   "considerably", "workforce" count as unknown, not advanced). Whether any feature tracks examiner bands is not known
   until the owner's essays exist.
 
+## Build note, part 2 (28 Nov 2026): the comparison and the served path
+- **The essay file** (`load_essays`): `question`, `tr`/`cc`/`lr`/`gra` (all four or none), `marked_by` (`examiner` or
+  `trained_rater`) and `source` are read. An essay whose `source` is a web address needs `marked_by`; a site's own marking
+  is refused. Old lines (`id`, `text`, `band`) load as before.
+- **The model** (`app/writing/criteria_model.py`): per model, forward selection of at most four features by
+  cross-validated MAE inside the training essays only (a feature stays only if it saves 0.005 band), the ridge penalty
+  chosen the same way, then an isotonic map. A missing value takes the training median; a feature present in under half
+  the essays is not used; with nothing earning its place the model is the training mean. One model per criterion when at
+  least 40 essays carry all four criterion bands, else one model of the overall band (`choose_kind`).
+- **A flaw the first test found, fixed:** the kind was decided inside each fold, and a fold of 39 essays fell back to the
+  overall model while the final model was per criterion, so the cross-validation did not evaluate what it reported. The
+  kind is now decided once from the whole development set and forced in every fold.
+- **The comparison** (`app/evalkit/writing_compare.py`, run by `writing_score develop`): `criteria` and `blend` on the same
+  folds as the existing three methods; QWK with a bootstrap interval, MAE, share within half a band, length correlation,
+  per-criterion QWK (`per_criterion`), how often the examiner's band falls inside each method's range, the effect of each
+  cap (MAE with and without it where it fired), and the recommendation. The 2.11b rules are listed as "not evaluated": they
+  need a model call per essay and are never applied. `test` adds both methods to the held-out report once, with
+  `gate.by_method`.
+- **The store** (`data/writing/scorer.yaml`): `method` (`scorer` by default) and a `descriptors` block (ridge weights,
+  isotonic points, residual quantiles, what it was fitted on). `develop --write-descriptors criteria|blend` writes them,
+  the owner's choice, never automatic; the file is validated before it is written, a method without its block is refused,
+  and `--write-calibration` keeps a `descriptors` block that is already there.
+- **The served band** (`band_for`, `_descriptor_band`): the same range rules as the scorer (a range, never a point, a
+  draft shown to the owner only, none under 150 own words, none for Task 1). `descriptors` needs no scoring service;
+  `blend` also calls it and checks the pinned model. Features go through one function, `measure_essay`, for the evaluation
+  and the worker alike. **No band when LanguageTool did not check the essay** (the error features would read as an essay
+  with none), and the worker refuses to start when the method needs the word index and `forms.yaml` is missing. Applied
+  caps lower the criterion before the mean; there are none (`applied: false` everywhere). Only the overall range is
+  returned: criterion bands stay hidden until each passes spec 8b's gate.
+- **Run for real, on synthetic essays only** (80 essays of random words from the word list with planted signal: paragraphs
+  drive Coherence and Cohesion, the share of words above B1 drives Lexical Resource, Task Response and Grammar random; the
+  raw scores faked; no LanguageTool, so the grammar features were missing; the real spaCy, word index and guardrails;
+  everything redirected to a temporary folder): the model found `paragraphs` for CC (QWK 0.87) and `beyond_b1_share` for LR
+  (0.91) and nothing for the two random criteria (QWK about 0). Overall on the 56 development essays: criteria 0.67
+  (interval 0.47–0.81), the pinned scorer's faked output 0.49, the feature baseline 0.52, the constant −0.25; the
+  recommendation was `criteria`, with the note that it does not clearly beat the feature baseline. A band was served from
+  the stored file in about 25 ms per essay, within one band of the planted one. This shows the plumbing and that the
+  features can carry a signal; it says nothing about real essays.
+- **Not done, not claimed:** nothing is measured on examiner-banded essays; the real scorer, LanguageTool and real essays
+  were not used; criterion bands are not shown (8b); the code caps are not features yet (the paragraph count already is
+  one); 2.11b's findings still do not reach the band (and `part_missing` is a hint since #159, so that rule cannot fire);
+  no page shows the caps' note; the Vietnamese refusal text for "no grammar" is new and unreviewed.
+
 ## Build order (each part runs for real before the next)
 1. `caps.yaml` with the descriptor lines read from the published page; `caps.py` and its unit tests. **Built.**
 2. The features of 2.12b as pure functions with unit tests (MTLD on known texts, linking overuse, error-free share). **Built.**
 3. `writing_score` extended: the new fields, the per-criterion models, the five-way comparison, coverage; tested on
-   synthetic essays (the report is then labelled synthetic).
-4. Served path behind the calibration: `scoring.py` uses the method in `scorer.yaml`; nothing shows while it is `null`.
+   synthetic essays (the report is then labelled synthetic). **Built (part 2).**
+4. Served path behind the calibration: `scorer.yaml`'s `method` decides; nothing shows while it is `scorer` with no
+   calibration. **Built (part 2).**
 5. The owner's run on the real essays (`dolater.md`), then the choice.
 
-Cost: no model calls. Roughly two pull requests (1–2, then 3–4).
+Cost: no model calls. Two pull requests (1–2, then 3–4).

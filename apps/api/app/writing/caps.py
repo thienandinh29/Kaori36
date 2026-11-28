@@ -21,6 +21,7 @@ import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.writing.analysis import paragraphs, words
+from app.writing.descriptor_model import lowest_caps
 from app.writing.structure import Structure
 
 Criterion = Literal["tr", "cc", "lr", "gra"]
@@ -135,6 +136,14 @@ def apply_caps(bands: Mapping[Criterion, float], fired: Sequence[Fired]) -> dict
         if f.applies and f.rule.criterion in out:
             out[f.rule.criterion] = min(out[f.rule.criterion], float(f.rule.cap))
     return out
+
+
+def applied_caps(rules: Sequence[CapRule], text: str) -> dict[str, int]:
+    """The caps that may clip a criterion for this essay: applied rules found by code, only."""
+    found = code_findings(text)
+    return lowest_caps(
+        [(r.criterion, r.cap) for r in rules if r.applied and r.source == "code" and r.id in found]
+    )
 
 
 def notes(fired: Sequence[Fired]) -> tuple[Fired, ...]:
