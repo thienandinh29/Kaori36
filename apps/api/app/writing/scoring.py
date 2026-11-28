@@ -19,6 +19,8 @@ from typing import Literal
 import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.writing.descriptor_model import DescriptorsIn
+
 BAND_MIN, BAND_MAX = 0.0, 9.0
 MIN_WORDS_FOR_BAND = 150
 MAX_RANGE_WIDTH = 1.5  # wider than this is shown as "không chắc"
@@ -111,10 +113,15 @@ class BandRange:
     uncertain: bool  # wider than MAX_RANGE_WIDTH: shown as "không chắc"
 
 
-def band_range(predicted: float, calibration: Calibration) -> BandRange:
-    low = floor_half(predicted + calibration.residual_low)
-    high = ceil_half(predicted + calibration.residual_high)
+def residual_band_range(predicted: float, residual_low: float, residual_high: float) -> BandRange:
+    """The range around a prediction from cross-validated residual quantiles, outward to halves."""
+    low = floor_half(predicted + residual_low)
+    high = ceil_half(predicted + residual_high)
     return BandRange(low, high, uncertain=high - low > MAX_RANGE_WIDTH)
+
+
+def band_range(predicted: float, calibration: Calibration) -> BandRange:
+    return residual_band_range(predicted, calibration.residual_low, calibration.residual_high)
 
 
 def no_band_reason(task: int, words: int, calibration: Calibration | None) -> str | None:
@@ -326,6 +333,18 @@ class ScorerConfig(BaseModel):
     output: int = Field(ge=0)
     status: Literal["draft", "validated"]
     calibration: CalibrationIn | None = None
+    # Step 2.12: which method gives the band. The owner chooses it after the comparison
+    # (`writing_score develop --write-descriptors`); until then the pinned scorer, as before.
+    method: Literal["scorer", "descriptors", "blend"] = "scorer"
+    descriptors: DescriptorsIn | None = None
+
+    @model_validator(mode="after")
+    def _method_has_what_it_needs(self) -> "ScorerConfig":
+        if self.method != "scorer" and self.descriptors is None:
+            raise ValueError(f"method {self.method} needs the descriptors block")
+        if self.method == "blend" and self.calibration is None:
+            raise ValueError("method blend needs the pinned scorer's calibration too")
+        return self
 
 
 def load_scorer_config(path: Path) -> ScorerConfig:

@@ -57,8 +57,9 @@ wins; fix this page.
   the numbers side by side; only the first try counts as evidence. A try is a `guided` sitting, so the worker is unchanged.
 
 ## In progress
-Nothing in code. Writing 2.12 part 2 (the evaluation and the served path) is next in that spec but its measurement waits on
-the owner's examiner-banded essays.
+Writing 2.12 part 2 (`feat/writing-2.12-eval`, pull request not yet opened): the comparison of five band methods, the
+per-criterion descriptor model, its store in `scorer.yaml` (`method`, `descriptors`) and the served band. Run end to end on
+synthetic essays only; the measurement waits on the owner's examiner-banded essays (`dolater.md`, Phase 2, has the commands).
 
 ## Open from the code review (28 Nov, none urgent)
 - Pronunciation recordings still retry forever on a transient service failure (`pronunciation/analysis.py`); give them the

@@ -277,6 +277,7 @@ def loop(
         settings.draft_item_learners,
         settings.scorer_url,
         writing_model(settings),
+        settings.vocab_imported_dir / "forms.yaml",
     )
     stuck = requeue_stuck_essays(settings.database_url)
     if stuck:
