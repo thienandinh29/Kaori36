@@ -6,6 +6,8 @@ const t = vi.english;
 export function problemText(error: unknown): string {
   if (error instanceof DataError) {
     if (error.code === "failed" && error.status === 409) return t.noItems;
+    if (error.code === "failed" && error.status === 429)
+      return t.tester.dailyLimit;
     if (error.code === "contract") return t.contract;
   }
   return t.offline;

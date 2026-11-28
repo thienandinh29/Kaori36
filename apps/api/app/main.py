@@ -178,6 +178,9 @@ def create_app(
     )
     from app.api import speaking as speaking_routes
     from app.services.speaking_tests import SpeakingTests
+    from app.testers.limits import load_limits as load_tester_limits
+
+    tester_limits = load_tester_limits()
 
     app.include_router(
         speaking_routes.create_router(
@@ -186,7 +189,16 @@ def create_app(
                 settings.speaking_tests_dir,
                 settings.draft_item_learners,
                 transcripts=bool(settings.asr_url),
+                testers_may_record=settings.testers_may_record,
+                limits=tester_limits,
             )
+        )
+    )
+    from app.api import testers as testers_routes
+
+    app.include_router(
+        testers_routes.create_router(
+            lambda: app.state.pool, settings.testers_may_record, tester_limits
         )
     )
     from app.api import reading_review as reading_review_routes

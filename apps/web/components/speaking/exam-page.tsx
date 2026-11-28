@@ -384,6 +384,14 @@ export function ExamPage() {
     <section className="en-card nt-exam" data-testid="speaking-test">
       <h1>{t.title}</h1>
       <p className="en-muted">{t.intro}</p>
+      {overview.left_today && (
+        <p className="en-muted small" data-testid="left-today">
+          {vi.english.tester.leftToday(
+            overview.left_today.mock_tests,
+            overview.left_today.practice_tries,
+          )}
+        </p>
+      )}
       {!overview.can_record ? (
         <p className="en-badge draft">{t.ownerOnly}</p>
       ) : !consented ? (
