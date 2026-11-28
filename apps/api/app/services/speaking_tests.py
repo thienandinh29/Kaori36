@@ -25,7 +25,9 @@ from app.services.recordings import RETENTION
 from app.speaking.measures import pooled
 from app.speaking.tests import (
     CLOSING_SECONDS,
+    GRACE_SECONDS,
     LONG_TURN_SECONDS,
+    MAX_TRIES,
     PART1_SECONDS,
     PART3_SECONDS,
     PREPARE_SECONDS,
@@ -34,6 +36,7 @@ from app.speaking.tests import (
     load_tests,
     max_answer_seconds,
     questions,
+    try_seconds,
 )
 
 BYTES_PER_SECOND = 32_000  # 16 kHz mono 16-bit
@@ -172,14 +175,22 @@ class SpeakingTests:
         learner = learner_uuid(learner_id)
         can = learner in self.owners
         past: list[dict[str, Any]] = []
+        practices: list[dict[str, Any]] = []
         if can:
             with self.pool().connection() as conn:
                 purge_expired(conn, self.clock())
                 rows = conn.execute(
                     "select t.id,t.test_id,t.keep,t.started_at,t.finished_at,count(a.id),"
                     "count(a.audio) from speaking_tests t left join speaking_answers a "
-                    "on a.sitting_id=t.id where t.learner_id=%s group by t.id "
+                    "on a.sitting_id=t.id where t.learner_id=%s and t.mode='exam' group by t.id "
                     "order by t.started_at desc limit 30",
+                    (learner,),
+                ).fetchall()
+                practised = conn.execute(
+                    "select t.id,t.test_id,t.question_id,t.started_at,"
+                    "(select count(*) from speaking_tests c where c.practice_of=t.id)+1 "
+                    "from speaking_tests t where t.learner_id=%s and t.mode='guided' "
+                    "and t.practice_of is null order by t.started_at desc limit 30",
                     (learner,),
                 ).fetchall()
             past = [
@@ -195,6 +206,19 @@ class SpeakingTests:
                 }
                 for r in rows
             ]
+            for r in practised:
+                test = self.tests.get(r[1])
+                q = next((q for q in questions(test.test) if q.id == r[2]), None) if test else None
+                if test is not None and q is not None:
+                    practices.append(
+                        {
+                            "id": str(r[0]),
+                            "title": test.test.title,
+                            "question": q.text,
+                            "started_at": r[3].isoformat(),
+                            "tries": int(r[4]),
+                        }
+                    )
         return {
             "can_record": can,
             "consent": CONSENT,
@@ -204,10 +228,16 @@ class SpeakingTests:
                     "title": x.test.title,
                     "draft": x.test.status == "draft",
                     "questions": len(questions(x.test)),
+                    "practice": [
+                        {"id": q.id, "part": q.part, "text": q.text, "seconds": q.seconds}
+                        for q in questions(x.test)
+                    ],
                 }
                 for x in self.tests.values()
             ],
             "past": past,
+            "practices": practices,
+            "max_tries": MAX_TRIES,
         }
 
     def mic_check(self, learner_id: str, audio: bytes) -> dict[str, Any]:
@@ -262,11 +292,17 @@ class SpeakingTests:
             )
             if question is None:
                 raise HTTPException(404, "Không có câu hỏi này trong bài thi.")
-            quality = check(
-                audio,
-                min_seconds=MIN_ANSWER_SECONDS,
-                max_seconds=max_answer_seconds(question),
-            )
+            guided = conn.execute(
+                "select question_id,asked_seconds from speaking_tests "
+                "where id=%s and mode='guided'",
+                (sitting,),
+            ).fetchone()
+            limit = max_answer_seconds(question)
+            if guided is not None:
+                if guided[0] != question.id:
+                    raise HTTPException(422, "Lần luyện này chỉ có một câu hỏi.")
+                limit = int(guided[1]) + GRACE_SECONDS
+            quality = check(audio, min_seconds=MIN_ANSWER_SECONDS, max_seconds=limit)
             if "format" in quality.problems:
                 raise HTTPException(422, "Bản ghi không đúng định dạng WAV 16 kHz mono.")
             if "too_long" in quality.problems:
@@ -303,6 +339,144 @@ class SpeakingTests:
             )
         return self.result(learner_id, sitting_id)
 
+    def _item(self, r: Any, asked: int) -> dict[str, Any]:
+        """One stored answer as the pages see it (`r` is a row of the answers query)."""
+        return {
+            "id": str(r[1]),
+            "seconds": r[3],
+            "problems": list(r[4].get("problems", [])),
+            "audio": bool(r[5]),
+            "delete_after": r[6].isoformat() if r[6] else None,
+            **_transcript(r[7], r[8], bool(r[5]), self.transcripts, r[9], asked, r[10]),
+        }
+
+    def start_practice(
+        self,
+        learner_id: str,
+        test_id: str,
+        question_id: str,
+        consent: str,
+        keep: bool,
+        previous_id: str | None,
+    ) -> dict[str, Any]:
+        """Start a try of one question: the first, or a repeat of `previous_id`'s question with
+        less time. A fourth try, a repeat of a try nobody answered, or another question: refused."""
+        learner = self._owner(learner_id)
+        if consent != CONSENT:
+            raise HTTPException(409, "Cần đồng ý với thông báo về ghi âm trước.")
+        loaded = self.tests.get(test_id)
+        question = (
+            next((q for q in questions(loaded.test) if q.id == question_id), None)
+            if loaded
+            else None
+        )
+        if loaded is None or question is None:
+            raise HTTPException(404, "Không tìm thấy câu hỏi.")
+        root: UUID | None = None
+        try_no = 1
+        with self.pool().connection() as conn:
+            if previous_id is not None:
+                prev = _uuid(previous_id, "lần luyện")
+                row = conn.execute(
+                    "select coalesce(practice_of,id),test_id,question_id,keep from speaking_tests "
+                    "where id=%s and learner_id=%s and mode='guided'",
+                    (prev, learner),
+                ).fetchone()
+                if row is None:
+                    raise HTTPException(404, "Không tìm thấy lần luyện trước.")
+                root = row[0]
+                if (row[1], row[2]) != (test_id, question_id):
+                    raise HTTPException(422, "Chỉ nói lại đúng câu hỏi đó.")
+                keep = bool(row[3])  # the repeats follow the first try's choice
+                tries = conn.execute(
+                    "select count(*), count(a.id) from speaking_tests t "
+                    "left join speaking_answers a on a.sitting_id=t.id "
+                    "where t.id=%s or t.practice_of=%s",
+                    (root, root),
+                ).fetchone()
+                assert tries is not None
+                if tries[0] >= MAX_TRIES:
+                    raise HTTPException(409, f"Mỗi câu hỏi luyện tối đa {MAX_TRIES} lần.")
+                if tries[1] < tries[0]:
+                    raise HTTPException(409, "Hãy trả lời lần trước đã.")
+                try_no = int(tries[0]) + 1
+            asked = try_seconds(question, try_no)
+            if not conn.execute("select 1 from learners where id=%s", (learner,)).fetchone():
+                raise HTTPException(404, "Không tìm thấy người học.")
+            made = conn.execute(
+                "insert into speaking_tests(learner_id,test_id,test_sha256,consent,keep,started_at,"
+                "mode,question_id,try_no,practice_of,asked_seconds) "
+                "values (%s,%s,%s,%s,%s,%s,'guided',%s,%s,%s,%s) returning id",
+                (learner, test_id, loaded.sha256, consent, keep, self.clock(),
+                 question_id, try_no, root, asked),
+            ).fetchone()  # fmt: skip
+        assert made is not None
+        return {"id": str(made[0]), "keep": keep, "try_no": try_no, "asked_seconds": asked}
+
+    def practice(self, learner_id: str, sitting_id: str) -> dict[str, Any]:
+        """A question's tries, in order, each with its answer's transcript, numbers and checks, and
+        the time the next try would have. Only the first try counts as evidence of fluency."""
+        learner = self._owner(learner_id)
+        sitting = _uuid(sitting_id, "lần luyện")
+        with self.pool().connection() as conn:
+            purge_expired(conn, self.clock())
+            head = conn.execute(
+                "select coalesce(practice_of,id),test_id,question_id,keep from speaking_tests "
+                "where id=%s and learner_id=%s and mode='guided'",
+                (sitting, learner),
+            ).fetchone()
+            if head is None or head[1] not in self.tests:
+                raise HTTPException(404, "Không tìm thấy lần luyện.")
+            root, test_id, question_id, keep = head
+            tries = conn.execute(
+                "select t.id,t.try_no,t.asked_seconds,t.finished_at from speaking_tests t "
+                "where t.id=%s or t.practice_of=%s order by t.try_no",
+                (root, root),
+            ).fetchall()
+            rows = {
+                r[0]: r
+                for r in conn.execute(
+                    "select sitting_id,id,question,seconds,quality,audio is not null,delete_after,"
+                    "transcript_status,transcript,measures,language from speaking_answers "
+                    "where sitting_id = any(%s)",
+                    ([t[0] for t in tries],),
+                ).fetchall()
+            }
+        loaded = self.tests[test_id]
+        question = next(q for q in questions(loaded.test) if q.id == question_id)
+        out = []
+        for t in tries:
+            r = rows.get(t[0])
+            out.append(
+                {
+                    "id": str(t[0]),
+                    "try_no": t[1],
+                    "asked_seconds": t[2],
+                    "finished": t[3] is not None,
+                    "counts_as_evidence": t[1] == 1,
+                    "answer": None if r is None else self._item(r, t[2]),
+                }
+            )
+        answered = sum(1 for x in out if x["answer"] is not None)
+        content = self._content(loaded)
+        part = question.part
+        words = {2: loaded.test.part2.words, 3: loaded.test.part3.words}.get(part, ())
+        return {
+            "id": str(root),
+            "keep": bool(keep),
+            "test_id": test_id,
+            "title": loaded.test.title,
+            "question": {"id": question.id, "part": part, "text": question.text},
+            "cue_card": content["cue_card"] if part == 2 else None,
+            "theme": loaded.test.part3.theme if part == 3 else None,
+            "words": list(words),
+            "tries": out,
+            "max_tries": MAX_TRIES,
+            "next_seconds": try_seconds(question, len(out) + 1)
+            if len(out) < MAX_TRIES and answered == len(out)
+            else None,
+        }
+
     def result(self, learner_id: str, sitting_id: str) -> dict[str, Any]:
         """Every question of the sitting, with its answer when there is one (no score)."""
         learner = self._owner(learner_id)
@@ -331,18 +505,7 @@ class SpeakingTests:
                     "part": q.part,
                     # The question as it was asked, should the file have changed since.
                     "text": r[2] if r else q.text,
-                    "answer": None
-                    if r is None
-                    else {
-                        "id": str(r[1]),
-                        "seconds": r[3],
-                        "problems": list(r[4].get("problems", [])),
-                        "audio": bool(r[5]),
-                        "delete_after": r[6].isoformat() if r[6] else None,
-                        **_transcript(
-                            r[7], r[8], bool(r[5]), self.transcripts, r[9], q.seconds, r[10]
-                        ),
-                    },
+                    "answer": None if r is None else self._item(r, q.seconds),
                 }
             )
         return {

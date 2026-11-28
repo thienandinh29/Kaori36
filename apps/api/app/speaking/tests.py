@@ -52,28 +52,44 @@ class Topic(BaseModel):
         return tuple(_question(q) for q in value)
 
 
+def _words(value: tuple[str, ...]) -> tuple[str, ...]:
+    """Topic words: single lower-case English words, no repeats (they must be in the word list)."""
+    for w in value:
+        if not (w.isascii() and w.isalpha() and w == w.lower()):
+            raise ValueError(f"a topic word is one lower-case English word: {w!r}")
+    if len(set(value)) != len(value):
+        raise ValueError("a topic word repeats")
+    return value
+
+
 class CueCard(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     task: str = Field(min_length=10, max_length=120)  # "Describe a journey you remember well."
     points: tuple[str, ...] = Field(min_length=3, max_length=4)  # "You should say: ..."
     explain: str = Field(min_length=10, max_length=120)  # "and explain why ..."
     closing: str  # the rounding-off question after the long turn
+    words: tuple[str, ...] = Field(min_length=5, max_length=8)  # topic words (guided mode)
 
     @field_validator("closing")
     @classmethod
     def _closing(cls, value: str) -> str:
         return _question(value)
 
+    _topic_words = field_validator("words")(_words)
+
 
 class Discussion(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     theme: str = Field(min_length=3, max_length=60)  # "We've been talking about <theme> ..."
     questions: tuple[str, ...] = Field(min_length=4, max_length=6)
+    words: tuple[str, ...] = Field(min_length=5, max_length=8)  # topic words (guided mode)
 
     @field_validator("questions")
     @classmethod
     def _questions(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         return tuple(_question(q) for q in value)
+
+    _topic_words = field_validator("words")(_words)
 
 
 class SpeakingTest(BaseModel):
@@ -110,6 +126,18 @@ def questions(test: SpeakingTest) -> list[Question]:
 
 def max_answer_seconds(question: Question) -> int:
     return question.seconds + GRACE_SECONDS
+
+
+# Guided practice (step 5.4b): the same question again, up to three tries, with less time each.
+MAX_TRIES = 3
+SHRINK = (1.0, 0.75, 0.5)  # the share of the question's time, per try (assumptions)
+
+
+def try_seconds(question: Question, try_no: int) -> int:
+    """The time allowed on a try: a share of the question's time to the nearest 5 s, at least 10."""
+    if not 1 <= try_no <= MAX_TRIES:
+        raise ValueError(f"a question is tried at most {MAX_TRIES} times")
+    return max(10, round(question.seconds * SHRINK[try_no - 1] / 5) * 5)
 
 
 @dataclass(frozen=True)

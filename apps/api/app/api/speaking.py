@@ -18,6 +18,15 @@ class StartIn(BaseModel):
     keep: bool = False
 
 
+class PracticeIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    test_id: str = Field(pattern=r"^t\d{2}$")
+    question_id: str = Field(pattern=r"^p(1-\d-\d|2-long|2-closing|3-\d)$")
+    consent: str = Field(min_length=1, max_length=20)
+    keep: bool = False
+    previous_id: str | None = Field(default=None, max_length=64)  # a try to repeat
+
+
 async def _body(request: Request, limit: int) -> bytes | None:
     """The request body, or None once it passes the limit (read no further)."""
     data = bytearray()
@@ -38,6 +47,16 @@ def create_router(service: SpeakingTests) -> APIRouter:
     @router.post("/speaking/tests")
     def start(body: StartIn, learner_id: str = LEARNER) -> dict[str, Any]:
         return service.start(learner_id, body.test_id, body.consent, body.keep)
+
+    @router.post("/speaking/practice")
+    def start_practice(body: PracticeIn, learner_id: str = LEARNER) -> dict[str, Any]:
+        return service.start_practice(
+            learner_id, body.test_id, body.question_id, body.consent, body.keep, body.previous_id
+        )
+
+    @router.get("/speaking/practice/{sitting_id}")
+    def practice(sitting_id: str, learner_id: str = LEARNER) -> dict[str, Any]:
+        return service.practice(learner_id, sitting_id)
 
     @router.post("/speaking/mic-check")
     async def mic_check(request: Request, learner_id: str = LEARNER) -> dict[str, Any]:

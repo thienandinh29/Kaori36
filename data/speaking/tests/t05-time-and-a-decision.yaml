@@ -30,8 +30,11 @@ part2:
     - who you asked for advice
   explain: and explain why it was important to you.
   closing: Do you usually make decisions quickly?
+  # topic words from the word list for the idea-building screen (guided mode, step 5.4b)
+  words: [decision, advice, consequence, choose, option, risk, regret, opinion]
 part3:
   theme: decisions and advice
+  words: [advice, influence, experience, opinion, reliable, pressure, independent, consider]
   questions:
     - Who do young people in your country usually ask for advice?
     - Are big decisions harder to make today than they were in the past?

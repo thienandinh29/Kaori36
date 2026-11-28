@@ -6,6 +6,7 @@ import { Problem } from "@/components/english/problem";
 import { useLearner } from "@/components/english/use-learner";
 import { englishClient } from "@/lib/english/client";
 import {
+  CONSENT_KEY,
   SPEED_KEY,
   clock,
   examSpeed,
@@ -27,7 +28,6 @@ import {
 
 const t = vi.english.speakingTest;
 // The test's own notice (speaking-v1: the voice policy plus the transcript kept with the sitting).
-const CONSENT_KEY = "nodetrail_speaking_consent";
 const MIC_CHECK_SECONDS = 3;
 
 function stored(key: string): string | null {

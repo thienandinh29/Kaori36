@@ -57,6 +57,12 @@ import {
   type ListeningTexts,
 } from "@/lib/listening/practice";
 import {
+  parsePractice,
+  parseStartedTry,
+  type Practice,
+  type StartedTry,
+} from "@/lib/speaking/practice";
+import {
   parseAnswerSaved,
   parseMicCheck,
   parseOverview,
@@ -880,6 +886,37 @@ export function englishClient(fetcher: Fetch = (...a) => fetch(...a)) {
     speakingAudioUrl(learnerId: string, answerId: string): string {
       const q = new URLSearchParams({ learner_id: learnerId });
       return `/api/backend/speaking/answers/${encodeURIComponent(answerId)}/audio?${q}`;
+    },
+    /** Guided practice (specs/speaking/step-5.4b.md): a try of one question, or a repeat of one. */
+    async startSpeakingPractice(
+      learnerId: string,
+      pick: {
+        testId: string;
+        questionId: string;
+        consent: string;
+        keep: boolean;
+        previousId: string | null;
+      },
+    ): Promise<StartedTry> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parseStartedTry(
+        await post(`speaking/practice?${q}`, {
+          test_id: pick.testId,
+          question_id: pick.questionId,
+          consent: pick.consent,
+          keep: pick.keep,
+          previous_id: pick.previousId,
+        }),
+      );
+    },
+    async speakingPractice(
+      learnerId: string,
+      tryId: string,
+    ): Promise<Practice> {
+      const q = new URLSearchParams({ learner_id: learnerId });
+      return parsePractice(
+        await request(`speaking/practice/${encodeURIComponent(tryId)}?${q}`),
+      );
     },
     async deleteSpeakingTest(
       learnerId: string,

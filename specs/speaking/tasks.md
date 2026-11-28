@@ -19,6 +19,6 @@
 - [x] 5.2 fluency measures, with pauses between and inside clauses (`step-5.2.md`, 28 Nov)
 - [x] 5.3a transcript checks by code (`step-5.3.md`, 28 Nov): grammar hints, endings apart, vocabulary numbers, the memorised-phrase check
 - [ ] 5.3b the model's feedback with checked quotes: waits on the owner's transcript consent wording
-- [ ] 5.4 mock test flow (no band); guided mode: idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time
+- [x] 5.4b guided mode (`step-5.4b.md`, 28 Nov; the strict mock is 5.4a): idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time, numbers side by side; was: 5.4 mock test flow (no band); guided mode: idea building for Part 2/3 (no scripts), the same question up to three times with shrinking time
 - [ ] 5.5 limits, cost cap, tester report
 - [ ] 5.6 SPK-001's corpus loader and measures on its audio; the level on the result page only after the bar
